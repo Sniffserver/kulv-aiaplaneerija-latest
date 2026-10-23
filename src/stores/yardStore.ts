@@ -5,6 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 import { current } from 'immer';
 import { YardPlan, GardenEntity, YardLayer, DEFAULT_YARD_LAYERS, Point2D } from '../types';
 import { GardenSpatialIndex } from '../logic/spatialIndex';
+import { SolarSeasonPresetId } from '../logic/solarEngine';
 
 export interface YardState {
   plan: YardPlan;
@@ -14,6 +15,7 @@ export interface YardState {
   panOffset: { x: number; y: number };
   snapToGrid: boolean;
   solarHour: number;
+  solarSeasonId: SolarSeasonPresetId;
   viewMode: '2d' | '3d';
   spatialIndex: GardenSpatialIndex;
 
@@ -50,6 +52,7 @@ export interface YardState {
   setPanOffset: (offset: { x: number; y: number }) => void;
   setSnapToGrid: (snap: boolean) => void;
   setSolarHour: (hour: number) => void;
+  setSolarSeasonId: (seasonId: SolarSeasonPresetId) => void;
   setViewMode: (mode: '2d' | '3d') => void;
 }
 
@@ -85,6 +88,7 @@ export const useYardStore = create<YardState>()(
         panOffset: { x: 40, y: 40 },
         snapToGrid: true,
         solarHour: 14.0,
+        solarSeasonId: 'midsummer',
         viewMode: '2d',
         spatialIndex,
 
@@ -330,6 +334,7 @@ export const useYardStore = create<YardState>()(
         setPanOffset: (panOffset) => set({ panOffset }),
         setSnapToGrid: (snapToGrid) => set({ snapToGrid }),
         setSolarHour: (solarHour) => set({ solarHour }),
+        setSolarSeasonId: (solarSeasonId) => set({ solarSeasonId }),
         setViewMode: (viewMode) => set({ viewMode })
       };
     }),

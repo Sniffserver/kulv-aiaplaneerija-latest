@@ -1,5 +1,7 @@
+export type SolarSeasonPresetId = 'midsummer' | 'late_summer' | 'spring_equinox' | 'autumn_equinox';
+
 export interface SolarSeasonPreset {
-  id: 'midsummer' | 'spring_equinox' | 'autumn_equinox' | 'late_summer';
+  id: SolarSeasonPresetId;
   dayOfYear: number;
   labelEt: string;
   labelEn: string;

@@ -99,6 +99,25 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
     return beds.filter((b) => b.id === filterBedId);
   }, [beds, filterBedId]);
 
+  // Agronomic successor recommendations for the active/filtered bed
+  const targetBedForRec = useMemo(() => {
+    return filterBedId !== 'all' ? beds.find((b) => b.id === filterBedId) : beds[0];
+  }, [beds, filterBedId]);
+
+  const priorFamilyForRec = useMemo(() => {
+    if (!targetBedForRec) return 'Fabaceae';
+    const bedSlots = successionSlots.filter((s) => s.bedId === targetBedForRec.id);
+    if (bedSlots.length > 0) {
+      return bedSlots[bedSlots.length - 1].botanicalFamily;
+    }
+    const hist = historyRecords.filter((h) => h.bedId === targetBedForRec.id).sort((a, b) => b.year - a.year);
+    return hist[0]?.plantings[0]?.family || 'Fabaceae';
+  }, [targetBedForRec, successionSlots, historyRecords]);
+
+  const timelineSuccessorRecs = useMemo(() => {
+    return CropRotationEngine.getSuccessorRecommendations(priorFamilyForRec, plants, 4);
+  }, [priorFamilyForRec, plants]);
+
   // Dynamic Year Choices starting strictly from current season (2026+), no past years
   const [availableYears, setAvailableYears] = useState<number[]>([2026, 2027, 2028, 2029]);
 
@@ -126,9 +145,34 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
   const springFrostPct = getTimelinePct(frostData.springFrostDoy);
   const autumnFrostPct = getTimelinePct(frostData.autumnFrostDoy);
 
-  const handleOpenAddForBed = (bedId: string) => {
+  const handleOpenAddForBed = (bedId: string, preselectedPlantId?: string) => {
     setDialogBedId(bedId);
-    setActiveSlotToEdit(null);
+    if (preselectedPlantId) {
+      const pl = plants.find((p) => p.id === preselectedPlantId);
+      if (pl) {
+        setActiveSlotToEdit({
+          id: '',
+          bedId,
+          year: selectedYear,
+          seasonSlot: 'main_crop',
+          plantId: preselectedPlantId,
+          plantName: pl.name,
+          plantNameEn: pl.nameEn,
+          plantIcon: pl.icon || '🌱',
+          botanicalFamily: CropRotationEngine.resolveFamilyId(pl),
+          guild: CropRotationEngine.resolveGuild(pl),
+          sowDate: pl.optimalPlantOutDate || '05-20',
+          harvestDate: pl.optimalHarvestDate || '08-25',
+          daysToMaturity: pl.daysToMaturity || 80,
+          protectionType: 'none',
+          notes: ''
+        });
+      } else {
+        setActiveSlotToEdit(null);
+      }
+    } else {
+      setActiveSlotToEdit(null);
+    }
     setIsAddDialogOpen(true);
   };
 
@@ -380,6 +424,93 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Agronomic Next-Crop Recommendations Drawer */}
+      {targetBedForRec && timelineSuccessorRecs.length > 0 && (
+        <div
+          style={{
+            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+            border: '1.5px solid rgba(79, 107, 69, 0.35)',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            boxShadow: 'var(--kulv-shadow-card, 0 1px 3px rgba(0,0,0,0.05))'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(79, 107, 69, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--kulv-primary, #4F6B45)'
+              }}
+            >
+              <Sparkles size={18} />
+            </div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+                {language === 'en'
+                  ? `Agronomic Next-Crop Recommendations for "${targetBedForRec.name}":`
+                  : `Agronoomilised järgluskultuuri soovitused peenrale "${targetBedForRec.name}":`}
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                {language === 'en'
+                  ? `Optimized for preceding family ${priorFamilyForRec} & soil regeneration cycle`
+                  : `Optimeeritud eelvilja (${priorFamilyForRec}) ja mulla toitaineringluse põhjal`}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {timelineSuccessorRecs.map((rec) => (
+              <button
+                key={rec.plant.id}
+                onClick={() => handleOpenAddForBed(targetBedForRec.id, rec.plant.id)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                  color: 'var(--kulv-text, #2A2E24)',
+                  transition: 'all 0.15s ease'
+                }}
+                title={language === 'en' ? rec.reasonEn : rec.reasonEt}
+              >
+                <span>{rec.plant.icon || '🌱'}</span>
+                <span>{rec.plant.name}</span>
+                <span
+                  style={{
+                    fontSize: '9px',
+                    backgroundColor: 'rgba(79, 107, 69, 0.15)',
+                    color: 'var(--kulv-primary, #4F6B45)',
+                    borderRadius: '4px',
+                    padding: '1px 5px',
+                    fontWeight: 700
+                  }}
+                >
+                  {rec.synergyBadge}
+                </span>
+                <Plus size={12} color="var(--kulv-primary, #4F6B45)" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Botanical Family Color Legend */}
       <div

@@ -8,8 +8,9 @@ import {
 } from '../../types/rotation';
 import { CropRotationEngine, BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
 import { EstonianFrostEngine, PROTECTION_OFFSETS, ESTONIAN_REGIONS } from '../../logic/estonianFrostEngine';
+import { CompanionEngine } from '../../logic/companionEngine';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
-import { X, Calendar, AlertTriangle, ShieldCheck, Sprout, Info } from 'lucide-react';
+import { X, Calendar, AlertTriangle, ShieldCheck, Sprout, Info, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface AddSuccessionDialogProps {
   isOpen: boolean;
@@ -119,6 +120,20 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
     selectedRegion,
     selectedPlant
   );
+
+  // Determine prior botanical family to compute optimal successor crops
+  const sameBedPriorSlots = successionSlots.filter(
+    (s) => s.bedId === bedId && s.year === targetYear && s.id !== initialSlot?.id
+  );
+  const bedHistoryPrev = historyRecords
+    .filter((h) => h.bedId === bedId && h.year < targetYear)
+    .sort((a, b) => b.year - a.year);
+  const priorFamily = sameBedPriorSlots.length > 0
+    ? sameBedPriorSlots[sameBedPriorSlots.length - 1].botanicalFamily
+    : bedHistoryPrev[0]?.plantings[0]?.family || 'Fabaceae';
+
+  const successorRecs = CropRotationEngine.getSuccessorRecommendations(priorFamily, plants, 4);
+  const suggestedCompanions = CompanionEngine.getSuggestedCompanions(plantId, plants);
 
   const handlePlantChange = (newPlantId: string) => {
     setPlantId(newPlantId);
@@ -355,6 +370,73 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
             </div>
           </div>
 
+          {/* Agronomic Succession Recommendations */}
+          {successorRecs.length > 0 && (
+            <div
+              style={{
+                backgroundColor: 'rgba(79, 107, 69, 0.08)',
+                border: '1px solid rgba(79, 107, 69, 0.25)',
+                borderRadius: '10px',
+                padding: '8px 12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Sparkles size={13} />
+                  <span>{language === 'en' ? 'Agronomic Next-Crop Suggestions:' : 'Agronoomilised soovitused eelvilja põhjal:'}</span>
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  {language === 'en' ? 'Click to select' : 'Klõpsa valimiseks'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {successorRecs.map((rec) => {
+                  const isCurrent = rec.plant.id === plantId;
+                  return (
+                    <button
+                      key={rec.plant.id}
+                      type="button"
+                      onClick={() => handlePlantChange(rec.plant.id)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                        border: isCurrent
+                          ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                          : '1px solid var(--kulv-border, #C9BFA9)',
+                        backgroundColor: isCurrent ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
+                        color: isCurrent ? '#FFFFFF' : 'var(--kulv-text, #252A22)',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title={language === 'en' ? rec.reasonEn : rec.reasonEt}
+                    >
+                      <span>{rec.plant.icon || '🌱'}</span>
+                      <span style={{ fontWeight: 600 }}>{rec.plant.name}</span>
+                      <span
+                        style={{
+                          fontSize: '9px',
+                          padding: '1px 4px',
+                          borderRadius: '4px',
+                          backgroundColor: isCurrent ? 'rgba(255,255,255,0.2)' : 'rgba(79, 107, 69, 0.12)',
+                          color: isCurrent ? '#FFFFFF' : 'var(--kulv-primary, #4F6B45)'
+                        }}
+                      >
+                        {rec.synergyBadge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Plant Selector */}
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
@@ -419,6 +501,87 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Companion Synergy Helpers */}
+          {(suggestedCompanions.good.length > 0 || suggestedCompanions.bad.length > 0) && (
+            <div
+              style={{
+                padding: '8px 12px',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #252A22)' }}>
+                {language === 'en' ? `🌿 Companion Interactions for ${selectedPlant.name}:` : `🌿 Seltsilistaimede seosed taimele ${selectedPlant.name}:`}
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '11px' }}>
+                {suggestedCompanions.good.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                    <span style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 700 }}>
+                      ✓ {language === 'en' ? 'Good with:' : 'Hea naaber:'}
+                    </span>
+                    {suggestedCompanions.good.slice(0, 3).map((gp) => (
+                      <button
+                        key={gp.id}
+                        type="button"
+                        onClick={() => handlePlantChange(gp.id)}
+                        style={{
+                          backgroundColor: 'rgba(79, 107, 69, 0.15)',
+                          color: 'var(--kulv-primary, #4F6B45)',
+                          borderRadius: '4px',
+                          padding: '2px 7px',
+                          fontWeight: 600,
+                          fontSize: '11px',
+                          border: '1px solid rgba(79, 107, 69, 0.3)',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                        title={language === 'en' ? `Click to switch to companion ${gp.name}` : `Klõpsa seltsilise ${gp.name} valimiseks`}
+                      >
+                        <span>{gp.icon || '🌱'}</span>
+                        <span>{gp.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {suggestedCompanions.bad.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                    <span style={{ color: 'var(--kulv-danger, #B85C33)', fontWeight: 700 }}>
+                      ✕ {language === 'en' ? 'Avoid with:' : 'Väldi kõrval:'}
+                    </span>
+                    {suggestedCompanions.bad.slice(0, 3).map((bp) => (
+                      <span
+                        key={bp.id}
+                        style={{
+                          backgroundColor: 'rgba(184, 92, 51, 0.15)',
+                          color: 'var(--kulv-danger, #B85C33)',
+                          borderRadius: '4px',
+                          padding: '2px 7px',
+                          fontWeight: 600,
+                          fontSize: '11px',
+                          border: '1px solid rgba(184, 92, 51, 0.25)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <span>{bp.icon || '🌱'}</span>
+                        <span>{bp.name}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Dates & DTM */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>

@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy } from 'react';
 import { useGarden } from '../context/GardenContext';
-import { WeatherWidget } from '../components/WeatherWidget';
+import { WeatherOverview } from '../components/WeatherOverview';
 import { TaskCard } from '../components/TaskCard';
 import {
   Grid,
@@ -127,11 +127,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* Real-time Weather Forecast Widget */}
-      <WeatherWidget
-        weather={weather}
-        isLoading={isWeatherLoading}
-        onRefresh={refreshWeather}
-      />
+      <WeatherOverview />
 
       {/* 5-Day Recharts Temperature Visualization (Lazy Loaded) */}
       <Suspense
@@ -545,20 +541,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           style={{
             backgroundColor: 'var(--kulv-surface, #FFFDF8)',
             border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '12px',
-            padding: '14px',
-            boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))',
-            cursor: 'pointer'
+            borderRadius: '16px',
+            padding: '20px',
+            boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
+            cursor: 'pointer',
+            transition: 'transform 0.2s, box-shadow 0.2s',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))'; }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+            <span style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Peenrad & kastid
             </span>
-            <Grid size={15} color="var(--kulv-primary, #4F6B45)" />
+            <Grid size={18} color="var(--kulv-primary, #4F6B45)" />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)', marginTop: '2px' }}>
-            {beds.length} tk
+          <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)', marginTop: '8px' }}>
+            {beds.length}
           </div>
         </div>
 
@@ -567,20 +566,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           style={{
             backgroundColor: 'var(--kulv-surface, #FFFDF8)',
             border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '12px',
-            padding: '14px',
-            boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))',
-            cursor: 'pointer'
+            borderRadius: '16px',
+            padding: '20px',
+            boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
+            cursor: 'pointer',
+            transition: 'transform 0.2s, box-shadow 0.2s',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))'; }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+            <span style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Istutatud taimi
             </span>
-            <Sprout size={15} color="var(--kulv-primary, #4F6B45)" />
+            <Sprout size={18} color="var(--kulv-primary, #4F6B45)" />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--kulv-primary, #4F6B45)', marginTop: '2px' }}>
-            {totalPlantings} tk
+          <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--kulv-primary, #4F6B45)', marginTop: '8px' }}>
+            {totalPlantings}
           </div>
         </div>
       </div>

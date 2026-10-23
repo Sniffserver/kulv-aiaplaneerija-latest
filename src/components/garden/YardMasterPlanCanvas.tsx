@@ -51,6 +51,8 @@ import {
   BoundarySegmentSnapResult,
   checkEntityBoundaryContainment
 } from '../../logic/cadastralSnapping';
+import { CompanionOverlayLayer } from './CompanionOverlayLayer';
+import { CompanionInspectorPanel } from './CompanionInspectorPanel';
 
 interface YardMasterPlanCanvasProps {
   onSelectBedDetail?: (bedId: string) => void;
@@ -112,6 +114,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
   const [showShortcutsModal, setShowShortcutsModal] = useState<boolean>(false);
   const [showPresetsModal, setShowPresetsModal] = useState<boolean>(false);
   const [presetToast, setPresetToast] = useState<string | null>(null);
+
+  // Companion Intelligence overlay state
+  const [showCompanionOverlay, setShowCompanionOverlay] = useState<boolean>(false);
+  const [companionFilter, setCompanionFilter] = useState<'all' | 'beneficial' | 'incompatible' | 'uncertain'>('all');
 
   // Dragging state (with high-performance preview to avoid rebuilding RBush during pointermove)
   const [draggedEntityId, setDraggedEntityId] = useState<string | null>(null);
@@ -407,26 +413,15 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
     setEntityOrigPos({ x: entity.x, y: entity.y });
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!svgRef.current) return;
+  // Unified drag coordinate calculation with grid snap, RBush magnetic snap, and cadastral edge alignment
+  const processDragMove = useCallback((clientX: number, clientY: number) => {
+    if (!draggedEntityId) return;
 
-    // 1. RBush Spatial Index Hover Query (sub-millisecond O(log N) lookup)
-    if (!draggedEntityId) {
-      const rect = svgRef.current.getBoundingClientRect();
-      const worldX = (e.clientX - rect.left - panOffset.x) / zoom;
-      const worldY = (e.clientY - rect.top - panOffset.y) / zoom;
-      const hits = spatialIndex.searchPoint(worldX, worldY, 0.35);
-      const topHit = hits.find((h) => isLayerVisible(h.layerId));
-      setHoveredEntityId(topHit ? topHit.id : null);
-      return;
-    }
-
-    // 2. Dragging & Snapping calculation
     const currentEntity = activeEntities.find((item) => item.id === draggedEntityId);
     if (!currentEntity) return;
 
-    const dxMetres = (e.clientX - dragStartPos.x) / zoom;
-    const dyMetres = (e.clientY - dragStartPos.y) / zoom;
+    const dxMetres = (clientX - dragStartPos.x) / zoom;
+    const dyMetres = (clientY - dragStartPos.y) / zoom;
 
     let targetX = entityOrigPos.x + dxMetres;
     let targetY = entityOrigPos.y + dyMetres;
@@ -495,9 +490,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
 
     // High-performance visual preview: DO NOT rebuild spatial index on every pointermove
     setDragPreviewPos({ id: draggedEntityId, x: targetX, y: targetY });
-  };
+  }, [draggedEntityId, activeEntities, dragStartPos, zoom, entityOrigPos, snapToGrid, spatialIndex, plan.boundaryPolygon, activeBoundarySnap, yardWidth, yardLength]);
 
-  const handleMouseUp = () => {
+  const commitDragEnd = useCallback(() => {
     setActiveBoundarySnap(null);
     if (dragPreviewPos) {
       let finalX = dragPreviewPos.x;
@@ -506,12 +501,151 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
         finalX = Math.round(finalX * 2) / 2;
         finalY = Math.round(finalY * 2) / 2;
       }
-      // Commit final position to store: triggers single undo history entry and RBush update
       moveEntity(dragPreviewPos.id, finalX, finalY);
       setDragPreviewPos(null);
     }
     setDraggedEntityId(null);
     setSnapGuide({ x: null, y: null });
+  }, [dragPreviewPos, moveEntity, snapToGrid]);
+
+  // Touch gesture refs for responsive iPad, iPhone, and Android canvas interaction
+  const touchStateRef = useRef<{
+    isPinching: boolean;
+    initialPinchDist: number;
+    initialZoom: number;
+    initialPan: { x: number; y: number };
+    initialMidpoint: { x: number; y: number };
+    touchStartPos: { x: number; y: number };
+    isPanningCanvas: boolean;
+  }>({
+    isPinching: false,
+    initialPinchDist: 0,
+    initialZoom: 24,
+    initialPan: { x: 40, y: 40 },
+    initialMidpoint: { x: 0, y: 0 },
+    touchStartPos: { x: 0, y: 0 },
+    isPanningCanvas: false
+  });
+
+  const handleEntityTouchStart = (e: React.TouchEvent, entity: GardenEntity) => {
+    e.stopPropagation();
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      setSelectedEntityId(entity.id);
+      if (!entity.locked) {
+        setDraggedEntityId(entity.id);
+        setDragStartPos({ x: touch.clientX, y: touch.clientY });
+        setEntityOrigPos({ x: entity.x, y: entity.y });
+      }
+    }
+  };
+
+  const handleCanvasTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      // Two-finger pinch zoom & canvas pan
+      const t0 = e.touches[0];
+      const t1 = e.touches[1];
+      const dist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+      const midX = (t0.clientX + t1.clientX) / 2;
+      const midY = (t0.clientY + t1.clientY) / 2;
+
+      // Cancel any ongoing entity drag so pinch takes over cleanly
+      if (draggedEntityId) {
+        setDraggedEntityId(null);
+        setDragPreviewPos(null);
+      }
+
+      touchStateRef.current = {
+        isPinching: true,
+        initialPinchDist: Math.max(10, dist),
+        initialZoom: zoom,
+        initialPan: { ...panOffset },
+        initialMidpoint: { x: midX, y: midY },
+        touchStartPos: { x: midX, y: midY },
+        isPanningCanvas: false
+      };
+    } else if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      if (!draggedEntityId) {
+        // Single finger touch on empty canvas starts canvas pan
+        touchStateRef.current.isPanningCanvas = true;
+        touchStateRef.current.touchStartPos = { x: touch.clientX, y: touch.clientY };
+        touchStateRef.current.initialPan = { ...panOffset };
+      }
+    }
+  };
+
+  const handleCanvasTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && touchStateRef.current.isPinching) {
+      // Two-finger pinch zoom & pan
+      if (e.cancelable) e.preventDefault();
+      const t0 = e.touches[0];
+      const t1 = e.touches[1];
+      const currentDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+      const scale = currentDist / touchStateRef.current.initialPinchDist;
+      const newZoom = Math.max(12, Math.min(56, Math.round(touchStateRef.current.initialZoom * scale)));
+
+      const currentMidX = (t0.clientX + t1.clientX) / 2;
+      const currentMidY = (t0.clientY + t1.clientY) / 2;
+      const dMidX = currentMidX - touchStateRef.current.initialMidpoint.x;
+      const dMidY = currentMidY - touchStateRef.current.initialMidpoint.y;
+
+      setZoom(newZoom);
+      setPanOffset({
+        x: Math.round(touchStateRef.current.initialPan.x + dMidX),
+        y: Math.round(touchStateRef.current.initialPan.y + dMidY)
+      });
+    } else if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      if (draggedEntityId) {
+        // Dragging an entity
+        if (e.cancelable) e.preventDefault();
+        processDragMove(touch.clientX, touch.clientY);
+      } else if (touchStateRef.current.isPanningCanvas) {
+        // Panning canvas on background
+        if (e.cancelable) e.preventDefault();
+        const dx = touch.clientX - touchStateRef.current.touchStartPos.x;
+        const dy = touch.clientY - touchStateRef.current.touchStartPos.y;
+        setPanOffset({
+          x: Math.round(touchStateRef.current.initialPan.x + dx),
+          y: Math.round(touchStateRef.current.initialPan.y + dy)
+        });
+      }
+    }
+  };
+
+  const handleCanvasTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length === 0) {
+      touchStateRef.current.isPinching = false;
+      touchStateRef.current.isPanningCanvas = false;
+      if (draggedEntityId) {
+        commitDragEnd();
+      }
+    } else if (e.touches.length === 1 && touchStateRef.current.isPinching) {
+      touchStateRef.current.isPinching = false;
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!svgRef.current) return;
+
+    // 1. RBush Spatial Index Hover Query (sub-millisecond O(log N) lookup)
+    if (!draggedEntityId) {
+      const rect = svgRef.current.getBoundingClientRect();
+      const worldX = (e.clientX - rect.left - panOffset.x) / zoom;
+      const worldY = (e.clientY - rect.top - panOffset.y) / zoom;
+      const hits = spatialIndex.searchPoint(worldX, worldY, 0.35);
+      const topHit = hits.find((h) => isLayerVisible(h.layerId));
+      setHoveredEntityId(topHit ? topHit.id : null);
+      return;
+    }
+
+    // 2. Dragging & Snapping calculation
+    processDragMove(e.clientX, e.clientY);
+  };
+
+  const handleMouseUp = () => {
+    commitDragEnd();
   };
 
   // Drag and drop preset from dock onto canvas
@@ -989,6 +1123,36 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             <Box size={14} />
             <span>3D Vaade</span>
           </button>
+
+          {/* Toggleable Companion Intelligence Overlay */}
+          <button
+            type="button"
+            onClick={() => setShowCompanionOverlay((prev) => !prev)}
+            data-testid="companion_overlay_toggle_btn"
+            title={
+              showCompanionOverlay
+                ? (language === 'en' ? 'Hide Companion Intelligence Overlay' : 'Peida kaaslastaimede kiht')
+                : (language === 'en' ? 'Show Companion Intelligence' : 'Kaaslastaimede sünergia ja seosed')
+            }
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              padding: '6px 10px',
+              borderRadius: '6px',
+              border: showCompanionOverlay ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+              backgroundColor: showCompanionOverlay ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
+              color: showCompanionOverlay ? '#FFFDF8' : 'var(--kulv-text, #2A2E24)',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+              boxShadow: showCompanionOverlay ? '0 1px 3px rgba(0,0,0,0.15)' : 'none',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Leaf size={14} />
+            <span>{language === 'en' ? 'Companions' : 'Kaaslased'}</span>
+          </button>
         </div>
 
         {/* Right: Real-time Sun Simulation Slider */}
@@ -1105,10 +1269,11 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
         </div>
       )}
 
-      {/* Main Layout: Canvas + Right Inspector */}
-      <div style={{ display: 'flex', gap: '12px', minHeight: '520px', position: 'relative' }}>
+      {/* Main Layout: Canvas + Right Inspector (Responsive stacking for iPad/iPhone/Android) */}
+      <div className="flex flex-col lg:flex-row gap-3 min-h-[520px] relative">
         {/* SVG Interactive Plan Canvas */}
         <div
+          data-testid="yard_canvas_touch_wrapper"
           style={{
             flex: 1,
             height: '560px',
@@ -1117,10 +1282,15 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             border: '1.5px solid var(--kulv-border, #C9BFA9)',
             overflow: 'auto',
             position: 'relative',
+            touchAction: 'none',
             cursor: draggedEntityId ? 'grabbing' : 'default'
           }}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
+          onTouchStart={handleCanvasTouchStart}
+          onTouchMove={handleCanvasTouchMove}
+          onTouchEnd={handleCanvasTouchEnd}
+          onTouchCancel={handleCanvasTouchEnd}
         >
           <svg
             ref={svgRef}
@@ -1128,6 +1298,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             height={Math.max(600, yardLength * zoom + panOffset.y * 2)}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
+            onTouchStart={handleCanvasTouchStart}
+            onTouchMove={handleCanvasTouchMove}
+            onTouchEnd={handleCanvasTouchEnd}
+            onTouchCancel={handleCanvasTouchEnd}
             onClick={(e) => {
               if (toolMode !== 'select') {
                 const pt = svgPointToWorld(e.clientX, e.clientY);
@@ -1145,6 +1319,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             }}
             style={{
               userSelect: 'none',
+              touchAction: 'none',
               cursor: toolMode !== 'select' ? 'crosshair' : draggedEntityId ? 'grabbing' : 'default'
             }}
           >
@@ -1360,7 +1535,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                     data-testid={`yard_entity_${entity.id}`}
                     transform={`translate(${posX}, ${posY}) rotate(${entity.rotation}, ${widthPx / 2}, ${lengthPx / 2})`}
                     onMouseDown={(e) => handleEntityMouseDown(e, entity)}
-                    style={{ cursor: entity.locked ? 'pointer' : 'grab' }}
+                    onTouchStart={(e) => handleEntityTouchStart(e, entity)}
+                    style={{ cursor: entity.locked ? 'pointer' : 'grab', touchAction: 'none' }}
                   >
                     {/* Gentle boundary crossing dashed indicator (free placement allowed everywhere) */}
                     {boundaryStatus.isPartiallyOutside && (
@@ -1501,6 +1677,20 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                 );
               })}
 
+              {/* Toggleable Companion Intelligence Overlay Layer */}
+              {showCompanionOverlay && (
+                <CompanionOverlayLayer
+                  entities={activeEntities}
+                  selectedEntityId={selectedEntityId}
+                  hoveredEntityId={hoveredEntityId}
+                  zoom={zoom}
+                  allPlants={plants || []}
+                  language={language}
+                  filter={companionFilter}
+                  onSelectEntity={(id) => setSelectedEntityId(id)}
+                />
+              )}
+
               {/* In-progress interactive drawing preview */}
               {toolMode !== 'select' && drawPoints.length > 0 && (
                 <g pointerEvents="none">
@@ -1568,6 +1758,20 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               )}
             </g>
           </svg>
+
+          {/* Contextual Companion Intelligence Inspector Panel */}
+          {showCompanionOverlay && (
+            <CompanionInspectorPanel
+              selectedEntity={selectedEntity}
+              allEntities={activeEntities}
+              allPlants={plants || []}
+              language={language}
+              filter={companionFilter}
+              onFilterChange={setCompanionFilter}
+              onClose={() => setShowCompanionOverlay(false)}
+              onSelectEntity={(id) => setSelectedEntityId(id)}
+            />
+          )}
 
           {/* Always-visible Ground Distance Scale Bar */}
           <div
@@ -1670,13 +1874,159 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               </div>
             </div>
           )}
+
+          {/* Mobile Touch Quick Controls (Floating bottom-left dock with 44x44px touch targets) */}
+          <div
+            data-testid="canvas_mobile_touch_dock"
+            style={{
+              position: 'absolute',
+              bottom: '12px',
+              left: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(255, 253, 248, 0.95)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid var(--kulv-border, #C9BFA9)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              zIndex: 6
+            }}
+          >
+            <button
+              onClick={() => setZoom((z) => Math.min(56, z + 4))}
+              title="Suurenda vaadet (+)"
+              aria-label="Suurenda"
+              style={{
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
+                minHeight: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                color: 'var(--kulv-text, #2A2E24)',
+                cursor: 'pointer'
+              }}
+            >
+              <ZoomIn size={18} />
+            </button>
+            <button
+              onClick={() => setZoom((z) => Math.max(12, z - 4))}
+              title="Vähenda vaadet (-)"
+              aria-label="Vähenda"
+              style={{
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
+                minHeight: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                color: 'var(--kulv-text, #2A2E24)',
+                cursor: 'pointer'
+              }}
+            >
+              <ZoomOut size={18} />
+            </button>
+            <button
+              onClick={() => {
+                setZoom(22);
+                setPanOffset({ x: 30, y: 30 });
+              }}
+              title="Sobita vaade krundile"
+              aria-label="Sobita"
+              style={{
+                padding: '0 10px',
+                height: '40px',
+                minHeight: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                color: 'var(--kulv-text, #2A2E24)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              <Maximize2 size={16} />
+              <span className="hidden sm:inline">Sobita</span>
+            </button>
+
+            {/* Quick action controls when an entity is selected */}
+            {selectedEntity && (
+              <>
+                <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }} />
+                {!selectedEntity.locked && (
+                  <button
+                    onClick={handleRotateSelected}
+                    title="Pööra 45°"
+                    aria-label="Pööra"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(217, 122, 61, 0.15)',
+                      border: '1px solid var(--kulv-accent, #D97A3D)',
+                      color: 'var(--kulv-accent, #D97A3D)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <RotateCw size={18} />
+                  </button>
+                )}
+                {!selectedEntity.locked && (
+                  <button
+                    onClick={() => {
+                      deleteEntity(selectedEntity.id, true);
+                      setSelectedEntityId(null);
+                    }}
+                    title="Kustuta valitud objekt"
+                    aria-label="Kustuta"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      minWidth: '40px',
+                      minHeight: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(180, 35, 58, 0.12)',
+                      border: '1px solid var(--kulv-danger, #B4233A)',
+                      color: 'var(--kulv-danger, #B4233A)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         {/* Right Inspector & Layer Control Panel */}
         <div
           data-testid="yard_entity_inspector"
+          className="w-full lg:w-[290px] shrink-0"
           style={{
-            width: '280px',
             backgroundColor: 'var(--kulv-surface, #FFFDF8)',
             border: '1px solid var(--kulv-border, #C9BFA9)',
             borderRadius: '10px',

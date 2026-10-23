@@ -50,7 +50,7 @@ export const Yard3DViewWrapper: React.FC<Yard3DViewWrapperProps> = ({ onBackTo2D
     <ThreeErrorBoundary onFallbackTo2D={onBackTo2D}>
       <Suspense
         fallback={
-          <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)] min-h-[500px] bg-slate-900 rounded-xl border border-slate-700 text-slate-400">
+          <div className="flex flex-col items-center justify-center h-[calc(100dvh-130px)] min-h-[500px] bg-slate-900 rounded-xl border border-slate-700 text-slate-400">
             <Loader2 className="w-9 h-9 animate-spin text-emerald-400 mb-3" />
             <p className="text-sm font-medium text-slate-200">Laadin 3D aiamootorit...</p>
             <p className="text-xs text-slate-500 mt-1">Eraldi kerglaetav Three.js moodul</p>

@@ -1096,5 +1096,102 @@ export const CropRotationEngine = {
     }
 
     return filtered.slice(0, 4);
+  },
+
+  /**
+   * Generates rich botanical and agronomic recommendations for successor crops
+   * based on soil nutrient dynamics, root depth stratification, and pathogen disruption.
+   */
+  getSuccessorRecommendations(
+    priorFamily: BotanicalFamilyId | string,
+    availablePlants: Plant[],
+    limit = 4
+  ): {
+    plant: Plant;
+    family: BotanicalFamilyId;
+    reasonEt: string;
+    reasonEn: string;
+    synergyBadge: string;
+  }[] {
+    const normPrior = this.normalizeFamily(priorFamily);
+    const resolvedPrior = this.resolveFamilyId(normPrior);
+
+    // Rule-based target botanical families & agronomic rationales
+    let targetFamilies: BotanicalFamilyId[] = [];
+    let reasonEt = '';
+    let reasonEn = '';
+    let badge = 'Sünergia';
+
+    if (resolvedPrior === 'Fabaceae') {
+      targetFamilies = ['Brassicaceae', 'Cucurbitaceae', 'Solanaceae'];
+      reasonEt = 'Liblikõieliste mügarbakterite seotud orgaaniline lämmastik toidab suurepäraselt toitainenõudlikke kapsalisi ja kõrvitsaid.';
+      reasonEn = 'Rhizobium-fixed nitrogen provides organic fertility for nitrogen-hungry brassicas and cucurbits.';
+      badge = 'Lämmastiku kasu';
+    } else if (resolvedPrior === 'Brassicaceae' || resolvedPrior === 'Solanaceae') {
+      targetFamilies = ['Allioideae', 'Apiaceae', 'Amaranthaceae', 'Fabaceae'];
+      reasonEt = 'Pärast rasket toitainevajadust vajab muld kergemat kultuuri (sibulad, porgandid), mis ei kurna sama mullakihti.';
+      reasonEn = 'Following heavy feeders, light root crops or legumes break pathogen spore buildup and allow soil rest.';
+      badge = 'Mulla puhkus';
+    } else if (resolvedPrior === 'Apiaceae' || resolvedPrior === 'Amaranthaceae') {
+      targetFamilies = ['Fabaceae', 'Brassicaceae', 'Asteraceae'];
+      reasonEt = 'Juurikate kobestatud pinnasesse sobib ideaalselt lämmastikku siduv liblikõieline või pealmine lehekultuur.';
+      reasonEn = 'Loosened root soil is ideal for nitrogen-fixing legumes or shallow-rooted salad greens.';
+      badge = 'Struktuuri taastus';
+    } else if (resolvedPrior === 'Allioideae') {
+      targetFamilies = ['Solanaceae', 'Brassicaceae', 'Fabaceae', 'Cucurbitaceae'];
+      reasonEt = 'Lauguliste looduslikud allitsiinid ja fütontsiidid desinfitseerivad pinnast seenhaigustest.';
+      reasonEn = 'Natural allium phytoncides suppress soilborne fungi, offering sanitized beds for next plantings.';
+      badge = 'Fütontsiidne kaitse';
+    } else {
+      targetFamilies = ['Fabaceae', 'Allioideae', 'Brassicaceae'];
+      reasonEt = 'Tasakaalustatud viljavaheldus hoiab mulla mikrobiomi elujõulisena.';
+      reasonEn = 'Balanced rotation maintains microbial diversity and avoids nutrient exhaustion.';
+      badge = 'Viljavaheldus';
+    }
+
+    const matchedPlants: {
+      plant: Plant;
+      family: BotanicalFamilyId;
+      reasonEt: string;
+      reasonEn: string;
+      synergyBadge: string;
+    }[] = [];
+
+    // Filter available plants matching target families, avoiding same family
+    for (const plant of availablePlants) {
+      const fam = this.resolveFamilyId(plant);
+      if (fam === resolvedPrior && fam !== 'Fabaceae') continue;
+      if (targetFamilies.includes(fam)) {
+        matchedPlants.push({
+          plant,
+          family: fam,
+          reasonEt,
+          reasonEn,
+          synergyBadge: badge
+        });
+      }
+      if (matchedPlants.length >= limit) break;
+    }
+
+    // Fallback if not enough matches found
+    if (matchedPlants.length < limit) {
+      for (const plant of availablePlants) {
+        const fam = this.resolveFamilyId(plant);
+        if (fam === resolvedPrior) continue;
+        if (!matchedPlants.some((m) => m.plant.id === plant.id)) {
+          matchedPlants.push({
+            plant,
+            family: fam,
+            reasonEt: 'Hea viljavahelduslik alternatiiv mulla mitmekesistamiseks.',
+            reasonEn: 'Solid crop rotation choice to foster soil biodiversity.',
+            synergyBadge: 'Soovitus'
+          });
+        }
+        if (matchedPlants.length >= limit) break;
+      }
+    }
+
+    return matchedPlants;
   }
 };
+

@@ -8,7 +8,8 @@ import { GardenBed } from '../types';
 import { EntityPreset } from '../data/gardenEntityPresets';
 import { useYardStore } from '../stores/yardStore';
 import { CropRotationTimeline } from '../components/garden/CropRotationTimeline';
-import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calendar } from 'lucide-react';
+import { PrintableGardenReport } from '../components/garden/PrintableGardenReport';
+import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calendar, Printer } from 'lucide-react';
 
 const LazyYard3DViewWrapper = lazy(() =>
   import('../components/garden3d/Yard3DViewWrapper').then((m) => ({ default: m.Yard3DViewWrapper }))
@@ -224,6 +225,23 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
             <span>{language === 'en' ? 'Back to Yard Plan' : 'Tagasi krundiplaanile'}</span>
           </button>
         )}
+        <button
+          onClick={() => window.print()}
+          style={{
+            padding: '8px 14px',
+            borderRadius: '8px',
+            border: '1px solid var(--kulv-border, #C9BFA9)',
+            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            cursor: 'pointer',
+            fontSize: '12px'
+          }}
+        >
+          <Printer size={15} />
+          <span>Print Report</span>
+        </button>
       </div>
 
       {/* MODE 1: YARD MASTER PLAN (2D Canvas or 3D R3F View) */}
@@ -435,6 +453,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
         }}
         onCancel={() => setBedToDelete(null)}
       />
+      <PrintableGardenReport />
     </div>
   );
 };
