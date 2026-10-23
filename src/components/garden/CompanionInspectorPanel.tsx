@@ -114,6 +114,9 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
       data-testid="companion_inspector_panel"
       role="region"
       aria-label={language === 'en' ? 'Companion Planting Intelligence Panel' : 'Kaaslastaimede sünergia paneel'}
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-2.5 border-b border-[var(--kulv-border,#C9BFA9)]/60">
