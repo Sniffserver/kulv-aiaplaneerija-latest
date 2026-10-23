@@ -178,8 +178,6 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
     );
   }, [searchQuery]);
 
-  if (!isOpen) return null;
-
   // Compute active preview geometry
   const previewData = useMemo(() => {
     if (isCustomMode) {
@@ -224,6 +222,8 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
     }
     return selectedParcel;
   }, [isCustomMode, selectedParcel, customWidth, customLength, customShape]);
+
+  if (!isOpen) return null;
 
   const handleApplyToPlan = () => {
     applyCadastralPlot({

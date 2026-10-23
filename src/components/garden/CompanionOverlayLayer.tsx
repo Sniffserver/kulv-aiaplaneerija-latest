@@ -18,7 +18,7 @@ interface CompanionOverlayLayerProps {
   onSelectEntity: (entityId: string) => void;
 }
 
-export const CompanionOverlayLayer: React.FC<CompanionOverlayLayerProps> = ({
+export const CompanionOverlayLayer: React.FC<CompanionOverlayLayerProps> = React.memo(({
   entities,
   selectedEntityId,
   hoveredEntityId,
@@ -269,4 +269,4 @@ export const CompanionOverlayLayer: React.FC<CompanionOverlayLayerProps> = ({
       })}
     </g>
   );
-};
+});

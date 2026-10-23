@@ -53,6 +53,7 @@ import {
 } from '../../logic/cadastralSnapping';
 import { CompanionOverlayLayer } from './CompanionOverlayLayer';
 import { CompanionInspectorPanel } from './CompanionInspectorPanel';
+import { CompanionLegend } from './CompanionLegend';
 
 interface YardMasterPlanCanvasProps {
   onSelectBedDetail?: (bedId: string) => void;
@@ -1761,16 +1762,19 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
 
           {/* Contextual Companion Intelligence Inspector Panel */}
           {showCompanionOverlay && (
-            <CompanionInspectorPanel
-              selectedEntity={selectedEntity}
-              allEntities={activeEntities}
-              allPlants={plants || []}
-              language={language}
-              filter={companionFilter}
-              onFilterChange={setCompanionFilter}
-              onClose={() => setShowCompanionOverlay(false)}
-              onSelectEntity={(id) => setSelectedEntityId(id)}
-            />
+            <>
+              <CompanionInspectorPanel
+                selectedEntity={selectedEntity}
+                allEntities={activeEntities}
+                allPlants={plants || []}
+                language={language}
+                filter={companionFilter}
+                onFilterChange={setCompanionFilter}
+                onClose={() => setShowCompanionOverlay(false)}
+                onSelectEntity={(id) => setSelectedEntityId(id)}
+              />
+              <CompanionLegend language={language} visible={showCompanionOverlay} />
+            </>
           )}
 
           {/* Always-visible Ground Distance Scale Bar */}
