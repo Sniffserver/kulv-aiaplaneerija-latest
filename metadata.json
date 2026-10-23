@@ -1,0 +1,8 @@
+{
+  "name": "Remix kulv-aiaplaneerija",
+  "description": "Imported from GitHub: Sniffserver/kulv-aiaplaneerija",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

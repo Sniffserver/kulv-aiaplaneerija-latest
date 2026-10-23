@@ -1,0 +1,94 @@
+{
+  "presets": [
+    {
+      "id": "tallinn",
+      "name": "Tallinn (Põhja-Eesti)",
+      "lat": 59.437,
+      "lng": 24.754,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-15",
+      "autumnFrostDefault": "10-01",
+      "description": "Rannikuline kliima, kevad hilisem, sügis pikem ja pehmem."
+    },
+    {
+      "id": "tartu",
+      "name": "Tartu (Lõuna-Eesti)",
+      "lat": 58.378,
+      "lng": 26.729,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-20",
+      "autumnFrostDefault": "09-25",
+      "description": "Mandrilisem kliima, soojem suvi, varasemad sügiskülmad."
+    },
+    {
+      "id": "parnu",
+      "name": "Pärnu (Lääne-Eesti)",
+      "lat": 58.385,
+      "lng": 24.497,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-10",
+      "autumnFrostDefault": "10-10",
+      "description": "Mere lähedus leevendab öökülmasid, pikem kasvuperiood."
+    },
+    {
+      "id": "kuressaare",
+      "name": "Kuressaare (Saaremaa)",
+      "lat": 58.253,
+      "lng": 22.486,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-05",
+      "autumnFrostDefault": "10-20",
+      "description": "Mereline saarekliima, mahedam sügis, soodne jahedusekartlikele taimedele."
+    },
+    {
+      "id": "narva",
+      "name": "Narva (Ida-Virumaa)",
+      "lat": 59.379,
+      "lng": 28.179,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-25",
+      "autumnFrostDefault": "09-20",
+      "description": "Külmem talv ja hilisem kevad (tsoon 5a), nõuab vastupidavaid varajasi sorte."
+    },
+    {
+      "id": "kardla",
+      "name": "Kärdla (Hiiumaa)",
+      "lat": 58.997,
+      "lng": 22.748,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-08",
+      "autumnFrostDefault": "10-18",
+      "description": "Mereline saarekliima (tsoon 6a/5b), pehme sügis ja madalam kevadkülmade risk."
+    },
+    {
+      "id": "pandivere",
+      "name": "Väike-Maarja (Pandivere kõrgustik)",
+      "lat": 59.13,
+      "lng": 26.25,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-30",
+      "autumnFrostDefault": "09-15",
+      "description": "Kõrgustikuline külmatasku (tsoon 4b/5a), esineb hiliseid mai lõpu ja juuni öökülmasid."
+    },
+    {
+      "id": "voru",
+      "name": "Võru & Haanja (Kagu-Eesti)",
+      "lat": 57.843,
+      "lng": 27.003,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-22",
+      "autumnFrostDefault": "09-20",
+      "description": "Kontinentaalne kuplistik (tsoon 5a), soe suvi, ent jahedad orud ja varajased sügisööd."
+    },
+    {
+      "id": "viljandi",
+      "name": "Viljandi (Kesk-Eesti)",
+      "lat": 58.363,
+      "lng": 25.59,
+      "timezone": "Europe/Tallinn",
+      "springFrostDefault": "05-18",
+      "autumnFrostDefault": "09-28",
+      "description": "Klassikaline Kesk-Eesti viljakas aiavöönd, stabiilne parasvöötmeline rütm."
+    }
+  ]
+}

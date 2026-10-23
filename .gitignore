@@ -1,0 +1,17 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+server/.env*
+!server/.env.example
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+test-results/
+playwright-report/
+

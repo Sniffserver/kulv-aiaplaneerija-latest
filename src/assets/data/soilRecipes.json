@@ -1,0 +1,129 @@
+{
+  "recipes": [
+    {
+      "id": "living_soil_111",
+      "name": "Elav muld (Living Soil 1:1:1)",
+      "category": "muld",
+      "description": "Isetoitev orgaaniline mullapõhi püsivalt elujõulise mikrobioloogiaga kõrgpeenardele ja pottidele.",
+      "baseRatio": [
+        { "ingredient": "Hästi laagerdunud kompost või ussisõnnik (vermikompost)", "parts": 1, "note": "Orgaaniline aine ja mikrobioloogia" },
+        { "ingredient": "Kvaliteetne turbasammal või kookoskiud", "parts": 1, "note": "Struktuur ja veehoidvus" },
+        { "ingredient": "Õhusti: pimss, perliit või laavakivi (2–6 mm)", "parts": 1, "note": "Drenaaž ja juurte hapnikuvarustus" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Puutuhk või dolomiidijahu", "amount": "150 g", "purpose": "pH tasakaal (6.2–6.8), kaltsium ja magneesium" },
+        { "name": "Kelmipulber (pruunvetikas / kelp meal)", "amount": "200 g", "purpose": "Mikroelemendid, jood, looduslikud kasvuhormoonid" },
+        { "name": "Kondijahu või pehme fosforiit", "amount": "200 g", "purpose": "Aeglaselt vabanev fosfor juurtele" },
+        { "name": "Verejahu või lutsfalfa jahu", "amount": "150 g", "purpose": "Looduslik lämmastik" },
+        { "name": "Biochar (aktiveeritud puusüsi)", "amount": "5-10 L", "purpose": "Pikaajaline mikroomi ja toitainete kodu" }
+      ],
+      "instructions": "Sega kuivad osad, niisuta õrnalt vihmaveega ja lase segul 2–3 nädalat varjus 'küpseda' (cooking period), enne kui istutad noori taimi."
+    },
+    {
+      "id": "hugel_lasagna",
+      "name": "Hügelkultur & Lasanje peenar (Kõrgpeenra kihiline ehitus)",
+      "category": "muld",
+      "description": "Isemuldav ja vett talletav süsteem põhjamaistesse aedadesse. Põhja kõdunevad palgid ja oksad, peale rohelised ja pruunid kihid.",
+      "baseRatio": [
+        { "ingredient": "Põhjakiht (40%): Jämedad lehtpuupalgid ja oksad (haab, kask, lepp)", "parts": 4, "note": "Käsnana niiskuse salvestaja ja pikaajaline süsinik" },
+        { "ingredient": "Vahekiht (30%): Peenemad oksad, muruhake, aiajäätmed ja lehekõdu", "parts": 3, "note": "Aeglaselt lagunev biomass ja soojuse tootja" },
+        { "ingredient": "Pealiskiht (30%): Valmis kompostimuld ja aiamuld 1:1 segus", "parts": 3, "note": "Viljakas juurte kasvukiht köögiviljadele" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Papp/kartong peenra põhja", "amount": "1 kiht", "purpose": "Takistab mitmeaastaste umbrohtude läbikasvamist" },
+        { "name": "Hobusesõnnik või kanakompost vahekihti", "amount": "10-20 L", "purpose": "Käivitab kuumenemise ja kiirendab kõdunemist" },
+        { "name": "Heina- või õlemultš pealispinnale", "amount": "5-8 cm", "purpose": "Hoiab mullaniiskust ja takistab kooriku teket" }
+      ],
+      "instructions": "Laota põhja papp ja paksud tüved. Täida tüvede vahed okste ja muruhakkega. Kasta kihid läbimärjaks! Lisa 20 cm komposti-aiamulla segu. Esimestel aastatel soojeneb muld kevadel kuni 5°C kiiremini."
+    },
+    {
+      "id": "blueberry_acid",
+      "name": "Happeline mustikamuld (pH 4.0–4.8)",
+      "category": "muld",
+      "description": "Spetsiaalne happeline ja kohev substraat aedmustikale, pohla- ja jõhvikapeenrale Põhjamaades.",
+      "baseRatio": [
+        { "ingredient": "Happeline väetamata rabaturvas (pH 3.5–4.5)", "parts": 2, "note": "Põhiline happelisuse looja ja veemahutavus" },
+        { "ingredient": "Männikoorehake või männiokkad (peenestatud)", "parts": 1, "note": "Hapendav struktuur ja mükoriisakeskkond" },
+        { "ingredient": "Jäme liiv või pestud kruus (1–3 mm)", "parts": 0.5, "note": "Tagab hädavajaliku vee äravoolu" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Väävlijahu (elementaarne väävel)", "amount": "50-100 g", "purpose": "Hoiab pH püsivalt alla 4.8 ja takistab kloroosi" },
+        { "name": "Männimetsa seenemuld / erikoidmükoriisa", "amount": "2 L", "purpose": "Elutähtis sümbioos aedmustika juurtele" },
+        { "name": "Männikooremultš pinnakattena", "amount": "7-10 cm", "purpose": "Kaitseb pinnapealset juurestikku kuivamise ja külma eest" }
+      ],
+      "instructions": "Kaeva peenrale sügavus 40 cm. Ära kunagi lisa puutuhka ega lupja! Istutusauk täida seguga ja kasta ohtra vihmaveega (kraanivesi võib mulla leelistada). Multši igal kevadel uue männikoorega."
+    },
+    {
+      "id": "clay_amelioration",
+      "name": "Savimulla struktuuriparandaja",
+      "category": "muld",
+      "description": "Raske ja külma savimulla muutmine õhuliseks, kiiremini soojenevaks ja vett läbi laskvaks huumusmullaks.",
+      "baseRatio": [
+        { "ingredient": "Kvaliteetne küps aia- või lehekompost", "parts": 2, "note": "Lagundab saviosakeste liiteid ja toidab vihmausse" },
+        { "ingredient": "Jämedateraline ehitusliiv või peen killustik (1–4 mm)", "parts": 1, "note": "Füüsiline pooride avamine ja dreenivus" },
+        { "ingredient": "Kookoskiud või hele turvas", "parts": 1, "note": "Hoiab struktuuri ilma kokku vajumata" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Kips (kaltsiumsulfaat)", "amount": "300 g", "purpose": "Flokuleerib savi ilma pinnase pH-d tõstmata" },
+        { "name": "Biochar (puusüsi leotatud virtsas/tees)", "amount": "5 L", "purpose": "Püsiv poorne maht ja õhukanalid" }
+      ],
+      "instructions": "Sega olemasoleva savimullaga 15–25 cm sügavuselt. Ära kaeva märga savimulda! Parim aeg tegemiseks on kuiv varasügis või hiliskevad. Vältida peenikest rannaliiva, mis teeb savi betooniks."
+    },
+    {
+      "id": "kulvimuld",
+      "name": "Külvimuld (õrn seemnesegu)",
+      "category": "muld",
+      "description": "Kerge, toitainetevaene ja puhas segu seemnete idanemiseks ilma noori juuri põletamata.",
+      "baseRatio": [
+        { "ingredient": "Peenestatud kookoskiud või hele turvas", "parts": 2, "note": "Õhuline substraat" },
+        { "ingredient": "Peen perliit või vermikuliit", "parts": 1, "note": "Niiskuse ühtlane hoidmine" },
+        { "ingredient": "Sõelutud valmis vermikompost", "parts": 0.5, "note": "Õrn algtoite element" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Mükoriisa seenespoorid (Mycorrhizae)", "amount": "50 g", "purpose": "Varajane juurestiku sümbioos" }
+      ],
+      "instructions": "Sõelu läbi 4 mm sõela. Enne külvi niisuta toasooja veega, et muld oleks niiske nagu väljaväänatud käsn."
+    },
+    {
+      "id": "nogesetee",
+      "name": "Nõgeseleotis (Nõgesetee - lämmastikurikas)",
+      "category": "vaetistee",
+      "description": "Kevadine ja varasuvine võimas rohelise massi kasvataja. Rikas lämmastiku, raua ja klorofülli poolest.",
+      "baseRatio": [
+        { "ingredient": "Värsked noored kõrvenõgesed (enne õitsemist)", "parts": 1, "note": "Täida ämber nõgestega lahtiselt" },
+        { "ingredient": "Vihmavesi või seisnud kraanivesi", "parts": 10, "note": "Vala vesi peale, jättes käärimisruumi" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Kivistusjahu (basalt/graniit)", "amount": "2 spl ämbri kohta", "purpose": "Vähendab käärimislõhna ja lisab räni" }
+      ],
+      "instructions": "Käärita varjulises kohas 10–14 päeva, segades iga päev kord. Valmis lahus ei vahuta enam. Kasta lahjendatult 1:10 (1 liiter leotist 10 liitri vee kohta) juurele. Lõpeta kasutamine juuli keskel."
+    },
+    {
+      "id": "karuohakatee",
+      "name": "Varemerohutee / Karuohakatee (kaaliumirikas)",
+      "category": "vaetistee",
+      "description": "Suvine õitsemise ja viljumise soodustaja. Eriti vajalik tomatitele, kurkidele ja kõrvitsatele.",
+      "baseRatio": [
+        { "ingredient": "Hariliku varemerohu (Symphytum) või karuohaka lehed", "parts": 1, "note": "Haki lehed jämedalt" },
+        { "ingredient": "Vihmavesi", "parts": 10, "note": "Kata lehed veega" }
+      ],
+      "amendmentsPer100L": [],
+      "instructions": "Käärita 2–3 nädalat. Lahjenda 1:10 juurele või 1:20 lehekaudseks pritsimiseks. Kasuta alates õiepungade moodustumisest kuni saagi valmimiseni."
+    },
+    {
+      "id": "kompostitee",
+      "name": "Õhustatud kompostitee (Aakt - mikrobioloogiline eliksiir)",
+      "category": "vaetistee",
+      "description": "Paljundab miljardeid kasulikke baktereid ja seeni, mis kaitsevad taime lehti haiguste eest ja elustavad mulda.",
+      "baseRatio": [
+        { "ingredient": "Kvaliteetne küps kompost või vihmaussisõnnik", "parts": 0.5, "note": "Pannakse marli- või spetsiaalkotti" },
+        { "ingredient": "Kloorivaba vesi", "parts": 10, "note": "10 liitrit vett ämbris" }
+      ],
+      "amendmentsPer100L": [
+        { "name": "Must melass (suhkruroo melass)", "amount": "20 ml 10 L kohta", "purpose": "Bakterite toit käärimisel" },
+        { "name": "Kelmiekstrakt", "amount": "10 ml 10 L kohta", "purpose": "Seente ja mikroobide toiteallikas" }
+      ],
+      "instructions": "Õhusta akvaariumipumbaga 24–36 tundi. Kasuta kohe 4 tunni jooksul pärast õhustamise lõpetamist, et mikroobid ei hukkuks hapnikupuuduses."
+    }
+  ]
+}

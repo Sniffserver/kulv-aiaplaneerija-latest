@@ -1,0 +1,111 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Automatic Pages deployment is paused until the repository enables Pages for Actions.
+  # Manual dispatch remains available and validates the exact target commit's CI status.
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: "Exact main commit SHA to deploy (must have successful CI)"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve and validate deployment commit
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MANUAL_SHA: ${{ inputs.commit_sha }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          target_sha="$MANUAL_SHA"
+
+          if [[ ! "$target_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Invalid full commit SHA."
+            exit 1
+          fi
+
+          # Only deploy commits already reachable from main.
+          gh api "repos/$REPOSITORY/commits/$target_sha" --jq '.sha' >/dev/null
+          if ! gh api "repos/$REPOSITORY/compare/$target_sha...main" --jq '.status' | grep -Eq 'ahead|identical'; then
+            echo "Manual target must be an ancestor of main."
+            exit 1
+          fi
+
+          # Require a successful CI workflow run for this exact commit.
+          successful_runs="$(gh api "repos/$REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$target_sha&status=completed&per_page=100" --jq --arg sha "$target_sha" '[.workflow_runs[] | select(.head_sha == $sha and .conclusion == "success")] | length')"
+          if [[ "$successful_runs" -lt 1 ]]; then
+            echo "No successful CI run found for requested commit $target_sha."
+            exit 1
+          fi
+
+          echo "sha=$target_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout the exact commit validated above
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build
+        env:
+          VITE_BASE: '/kulv-aiaplaneerija/'
+
+      # GITHUB_TOKEN cannot create a new Pages site. The repository owner must enable
+      # Settings > Pages > Build and deployment > Source > GitHub Actions once.
+      - name: Verify GitHub Pages is enabled for Actions deployments
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! pages_json="$(gh api "repos/$REPOSITORY/pages" 2>/dev/null)"; then
+            echo "::error title=GitHub Pages is not enabled::Open repository Settings > Pages, select GitHub Actions as the source, and save. This workflow cannot create the initial Pages site using GITHUB_TOKEN."
+            exit 1
+          fi
+          build_type="$(printf '%s' "$pages_json" | jq -r '.build_type // empty')"
+          if [[ "$build_type" != "workflow" ]]; then
+            echo "::error title=GitHub Pages source is not Actions::Open repository Settings > Pages and set Build and deployment > Source to GitHub Actions."
+            exit 1
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

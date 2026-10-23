@@ -1,0 +1,2336 @@
+[
+  {
+    "id": "tomat",
+    "name": "Tomat",
+    "scientificName": "Solanum lycopersicum",
+    "family": "Maavitsalised (Solanaceae)",
+    "familyId": "solanaceae",
+    "icon": "🍅",
+    "nordicVarieties": [
+      "Malle (Eesti klassik)",
+      "Maike (Eesti aretus)",
+      "Terma (varajane Eesti)",
+      "Mato",
+      "Vilja",
+      "Erk",
+      "Black Cherry"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 50,
+    "depthCm": 1.5,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 8,
+    "weeksAfterFrostPlantOut": 2,
+    "greenhouseShiftWeeks": 4,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "basiilik",
+      "saialill",
+      "petersell",
+      "sibul",
+      "kurgirohi",
+      "tagetes"
+    ],
+    "companionsBad": [
+      "kartul",
+      "apteegitill",
+      "kapsas",
+      "mais"
+    ],
+    "description": "Eesti suves kasvatatakse peamiselt kasvuhoones või päikeselises tuulevarjulises terrassinurgas. Vajab soojust, toestamist ja külgvõrsete näpistamist."
+  },
+  {
+    "id": "kurk",
+    "name": "Harilik kurk",
+    "scientificName": "Cucumis sativus",
+    "family": "Kõrvitsalised (Cucurbitaceae)",
+    "familyId": "cucurbitaceae",
+    "icon": "🥒",
+    "nordicVarieties": [
+      "Väike roheline",
+      "Dirigent F1",
+      "Rodnitšok",
+      "Sonja"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 40,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 4,
+    "weeksAfterFrostPlantOut": 1,
+    "greenhouseShiftWeeks": 3,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "till",
+      "uba",
+      "hernes",
+      "mais",
+      "päevalill",
+      "saialill"
+    ],
+    "companionsBad": [
+      "kartul",
+      "aroomitaimed",
+      "tomat"
+    ],
+    "description": "Armastab sooja niisket õhku ja rikkalikku kastmist leige veega. Eriti tänulik sooja peenrapõhja (hobusesõnnik/kompost) eest."
+  },
+  {
+    "id": "porgand",
+    "name": "Aedporgand",
+    "scientificName": "Daucus carota",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🥕",
+    "nordicVarieties": [
+      "Nantes 4",
+      "Kardame",
+      "Bolero F1",
+      "Jõgeva Nantes"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 7,
+    "depthCm": 1.5,
+    "cellsPerSquareMeter": 16,
+    "weeksBeforeFrostSowIndoors": null,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "sibul",
+      "porrulauk",
+      "salat",
+      "rosmariin",
+      "redis"
+    ],
+    "companionsBad": [
+      "till",
+      "seller",
+      "pastinaak"
+    ],
+    "description": "Külvatakse otse maasse varakevadel. Sibulaga koos kasvatamine hoiab eemale porgandikärbse ja sibulakärbse."
+  },
+  {
+    "id": "sibul",
+    "name": "Harilik sibul",
+    "scientificName": "Allium cepa",
+    "family": "Laugalised (Amaryllidaceae)",
+    "familyId": "allium",
+    "icon": "🧅",
+    "nordicVarieties": [
+      "Peipsi sibul (Eesti pärandsort)",
+      "Stuttgarter Riesen",
+      "Red Baron",
+      "Birnformige"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 12,
+    "depthCm": 3,
+    "cellsPerSquareMeter": 16,
+    "weeksBeforeFrostSowIndoors": 10,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "porgand",
+      "peet",
+      "salat",
+      "maasikas",
+      "tomat"
+    ],
+    "companionsBad": [
+      "hernes",
+      "aeduba",
+      "kapsas"
+    ],
+    "description": "Peipsi sibul on hinnatud vürtsika maitse ja suurepärase säilivuse poolest. Ei talu liigniiskust ega värsket sõnnikut."
+  },
+  {
+    "id": "kuuslauk",
+    "name": "Küüslauk",
+    "scientificName": "Allium sativum",
+    "family": "Laugalised (Amaryllidaceae)",
+    "familyId": "allium",
+    "icon": "🧄",
+    "nordicVarieties": [
+      "Ljubasha",
+      "Kente",
+      "Talveküüslauk Ziemiai",
+      "Valgevene kohalik"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 15,
+    "depthCm": 6,
+    "cellsPerSquareMeter": 9,
+    "autumnPlantWeeksBeforeFrost": 3,
+    "daysToMaturity": 120,
+    "companionsGood": [
+      "tomat",
+      "paprika",
+      "maasikas",
+      "peet",
+      "roos"
+    ],
+    "companionsBad": [
+      "hernes",
+      "aeduba",
+      "spargel"
+    ],
+    "description": "Taliküüslauk pannakse maha septembris-oktoobris enne maa külmumist. Looduslik seenevastane naaber maasikatele."
+  },
+  {
+    "id": "hernes",
+    "name": "Aedhernes",
+    "scientificName": "Pisum sativum",
+    "family": "Liblikõielised (Fabaceae)",
+    "familyId": "fabaceae",
+    "icon": "🫛",
+    "nordicVarieties": [
+      "Aamisepp (Eesti sort)",
+      "Kupits (Eesti varajane)",
+      "Valma",
+      "Erme",
+      "Alderman",
+      "Avola"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 10,
+    "depthCm": 4,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 4,
+    "daysToMaturity": 65,
+    "companionsGood": [
+      "porgand",
+      "mais",
+      "kurk",
+      "redis",
+      "spinat"
+    ],
+    "companionsBad": [
+      "sibul",
+      "küüslauk",
+      "porrulauk"
+    ],
+    "description": "Seob juurenurgakestega õhulämmastikku mulda. Suurepärane eelvili kapsale ja tomatile."
+  },
+  {
+    "id": "peet",
+    "name": "Punapeet",
+    "scientificName": "Beta vulgaris",
+    "family": "Rebasheinalised (Amaranthaceae)",
+    "familyId": "amaranthaceae",
+    "icon": "🪴",
+    "nordicVarieties": [
+      "Bona",
+      "Cylindra",
+      "Pablo F1",
+      "Detroit Dark Red"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 12,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 1,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "sibul",
+      "kapsas",
+      "aeduba",
+      "salat"
+    ],
+    "companionsBad": [
+      "põlduba",
+      "sinep"
+    ],
+    "description": "Toidurikas ja vastupidav juurvili. Lehti saab kasutada värsketes salatites ja külmsuppides."
+  },
+  {
+    "id": "suvikorvits",
+    "name": "Suvikõrvits (Tsukiini)",
+    "scientificName": "Cucurbita pepo",
+    "family": "Kõrvitsalised (Cucurbitaceae)",
+    "familyId": "cucurbitaceae",
+    "icon": "🥒",
+    "nordicVarieties": [
+      "Astra Polka",
+      "Black Beauty",
+      "Goldena",
+      "Nimba"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 80,
+    "depthCm": 3,
+    "cellsPerSquareMeter": 1,
+    "weeksBeforeFrostSowIndoors": 3,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 55,
+    "companionsGood": [
+      "mais",
+      "uba",
+      "saialill",
+      "kurgirohi",
+      "mungalill"
+    ],
+    "companionsBad": [
+      "kartul"
+    ],
+    "description": "Väga saagikas taim, ühest-kahest taimest piisab tervele perele. Korja viljad noorelt (15–20 cm)."
+  },
+  {
+    "id": "korvits",
+    "name": "Harilik kõrvits",
+    "scientificName": "Cucurbita maxima",
+    "family": "Kõrvitsalised (Cucurbitaceae)",
+    "familyId": "cucurbitaceae",
+    "icon": "🎃",
+    "nordicVarieties": [
+      "Uchiki Kuri (Hokkaido)",
+      "Gele Reuzen",
+      "Musquee de Provence",
+      "Butternut"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 120,
+    "depthCm": 3,
+    "cellsPerSquareMeter": 1,
+    "weeksBeforeFrostSowIndoors": 3,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 100,
+    "companionsGood": [
+      "mais",
+      "uba",
+      "päevalill",
+      "kurgirohi"
+    ],
+    "companionsBad": [
+      "kartul"
+    ],
+    "description": "Vajab palju ruumi ja toitainerikast mulda (nt otse kompostihunnikus). Hokkaido valmib Eesti kliimas kindlalt."
+  },
+  {
+    "id": "kartul",
+    "name": "Harilik kartul",
+    "scientificName": "Solanum tuberosum",
+    "family": "Maavitsalised (Solanaceae)",
+    "familyId": "solanaceae",
+    "icon": "🥔",
+    "nordicVarieties": [
+      "Jõgeva kollane (Eesti kultussort)",
+      "Teele (Eesti sort)",
+      "Maret (Eesti)",
+      "Reet",
+      "Ando",
+      "Laura",
+      "Solist (varajane)"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 35,
+    "depthCm": 10,
+    "cellsPerSquareMeter": 4,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 80,
+    "companionsGood": [
+      "aeduba",
+      "kapsas",
+      "mais",
+      "saialill",
+      "mädarõigas"
+    ],
+    "companionsBad": [
+      "tomat",
+      "kurk",
+      "kõrvits",
+      "päevalill"
+    ],
+    "description": "Eesti toidulaua kuningas. Varajase saagi saamiseks idanda mugulaid 3–4 nädalat valgusküllases soojas toas."
+  },
+  {
+    "id": "lehtsalat",
+    "name": "Aedsalat / Lehtsalat",
+    "scientificName": "Lactuca sativa",
+    "family": "Korvõielised (Asteraceae)",
+    "familyId": "asteraceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Lollo Bionda",
+      "Lollo Rossa",
+      "Grand Rapids",
+      "Kasseler Strünk"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 45,
+    "companionsGood": [
+      "porgand",
+      "redis",
+      "maasikas",
+      "kurk",
+      "sibul"
+    ],
+    "companionsBad": [
+      "petersell",
+      "seller"
+    ],
+    "description": "Kiirekasvuline ja mahe. Külva korduskülvidena iga 2–3 nädala tagant kevadest sügiseni."
+  },
+  {
+    "id": "spinat",
+    "name": "Aedspinat",
+    "scientificName": "Spinacia oleracea",
+    "family": "Rebasheinalised (Amaranthaceae)",
+    "familyId": "amaranthaceae",
+    "icon": "🍃",
+    "nordicVarieties": [
+      "Matador",
+      "Bloomsdale",
+      "Monnopa"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 1.5,
+    "cellsPerSquareMeter": 12,
+    "directSowWeeksBeforeFrost": 4,
+    "daysToMaturity": 40,
+    "companionsGood": [
+      "maasikas",
+      "uba",
+      "hernes",
+      "kapsas",
+      "tomat"
+    ],
+    "companionsBad": [],
+    "description": "Pika päeva taim – suve keskel läheb kergesti õitsema. Parim saak varakevadel ja augusti lõpu külvidest."
+  },
+  {
+    "id": "redis",
+    "name": "Aedredis",
+    "scientificName": "Raphanus sativus",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🌱",
+    "nordicVarieties": [
+      "Saxa",
+      "Cherry Belle",
+      "French Breakfast",
+      "Jõgeva 169"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 8,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 16,
+    "directSowWeeksBeforeFrost": 4,
+    "daysToMaturity": 28,
+    "companionsGood": [
+      "porgand",
+      "salat",
+      "spinat",
+      "kurk",
+      "hernes"
+    ],
+    "companionsBad": [
+      "iiskapsas",
+      "kapsas"
+    ],
+    "description": "Kõige kiirem kevadine saak (3–4 nädalat). Ideaalne peenravahede täitmiseks enne hilisemaid kultuure."
+  },
+  {
+    "id": "kapsas",
+    "name": "Peakapsas",
+    "scientificName": "Brassica oleracea var. capitata",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Jõgeva (hapenduskapsas)",
+      "Ditmarscher",
+      "Golden Acre",
+      "Krautman F1"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 6,
+    "weeksAfterFrostPlantOut": 0,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "till",
+      "seller",
+      "piparmünt",
+      "rosmariin",
+      "kartul"
+    ],
+    "companionsBad": [
+      "tomat",
+      "maasikas",
+      "sibul"
+    ],
+    "description": "Rikkalikult lupja ja niiskust nõudev põhjamaa klassik. Kasvuloor või putukavõrk kaitseb kapsaliblika röövikute eest."
+  },
+  {
+    "id": "lehtkapsas",
+    "name": "Lehtkapsas (Kale)",
+    "scientificName": "Brassica oleracea var. sabellica",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Nero di Toscana (palmikapsas)",
+      "Westland Winter",
+      "Redbor F1",
+      "Halbhoher Grüner Krauser"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 5,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 65,
+    "companionsGood": [
+      "uba",
+      "peet",
+      "seller",
+      "kurk",
+      "till"
+    ],
+    "companionsBad": [
+      "tomat",
+      "maasikas"
+    ],
+    "description": "Ülimalt külmakindel supertoit. Lehti saab korjata otse lumest kuni südatalveni – külm muudab maitse veelgi magusamaks."
+  },
+  {
+    "id": "brokoli",
+    "name": "Brokoli (Spargelkapsas)",
+    "scientificName": "Brassica oleracea var. italica",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥦",
+    "nordicVarieties": [
+      "Calabrese",
+      "Ironman F1",
+      "Belstar F1"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "high",
+    "spacingCm": 45,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 5,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "till",
+      "seller",
+      "rosmariin",
+      "kartul"
+    ],
+    "companionsBad": [
+      "tomat",
+      "maasikas"
+    ],
+    "description": "Pärast peapea äralõikamist kasvatab lehekaenaldest terve suve jooksul rohkelt maitsvaid lisasaake."
+  },
+  {
+    "id": "lillkapsas",
+    "name": "Lillkapsas",
+    "scientificName": "Brassica oleracea var. botrytis",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥦",
+    "nordicVarieties": [
+      "Snowball",
+      "Fremont F1",
+      "Clapton F1"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 45,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 6,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 80,
+    "companionsGood": [
+      "seller",
+      "spinat",
+      "uba"
+    ],
+    "companionsBad": [
+      "tomat",
+      "maasikas"
+    ],
+    "description": "Nõuab ühtlast niiskust ja toitainerikast mulda. Valge pea hoidmiseks murtakse pealmised lehed pea kohale varjuks."
+  },
+  {
+    "id": "nuikapsas",
+    "name": "Nuikapsas (Koolrabi)",
+    "scientificName": "Brassica oleracea var. gongylodes",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Delikatess Weisser",
+      "Delikatess Blauer",
+      "Superschmelz"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 25,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 9,
+    "weeksBeforeFrostSowIndoors": 4,
+    "directSowWeeksBeforeFrost": 1,
+    "daysToMaturity": 55,
+    "companionsGood": [
+      "peet",
+      "kurk",
+      "salat",
+      "sibul"
+    ],
+    "companionsBad": [
+      "tomat",
+      "apteegitill"
+    ],
+    "description": "Mahlane, õrn ja pähklise maitsega köögivili. Laste suur lemmik toorelt krõbistamiseks."
+  },
+  {
+    "id": "kaalikas",
+    "name": "Kaalikas",
+    "scientificName": "Brassica napus var. napobrassica",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥔",
+    "nordicVarieties": [
+      "Kohalik sinine (Eesti pärand)",
+      "Wilhelmsburger",
+      "Östgöta"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 30,
+    "depthCm": 1.5,
+    "cellsPerSquareMeter": 6,
+    "directSowWeeksBeforeFrost": 0,
+    "daysToMaturity": 95,
+    "companionsGood": [
+      "hernes",
+      "uba",
+      "salat"
+    ],
+    "companionsBad": [
+      "kapsas",
+      "sinep"
+    ],
+    "description": "Traditsiooniline põhjamaine talvejuurvili. Suurepärane säilija keldris kevadeni."
+  },
+  {
+    "id": "naeris",
+    "name": "Naeris",
+    "scientificName": "Brassica rapa",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥔",
+    "nordicVarieties": [
+      "Kullake",
+      "Petrovski",
+      "Snowball"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 12,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 50,
+    "companionsGood": [
+      "hernes",
+      "salat",
+      "spinat"
+    ],
+    "companionsBad": [
+      "kapsas"
+    ],
+    "description": "Vana eestimaine kultuur enne kartuli saabumist. Valmib kiiresti ja sobib ka sügiseseks teiseks külviks."
+  },
+  {
+    "id": "aeduba",
+    "name": "Aeduba (Põõsasuba)",
+    "scientificName": "Phaseolus vulgaris",
+    "family": "Liblikõielised (Fabaceae)",
+    "familyId": "fabaceae",
+    "icon": "🫘",
+    "nordicVarieties": [
+      "Scuba",
+      "Maxi",
+      "Saxa",
+      "Purple Teepee"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 20,
+    "depthCm": 3,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 0,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "mais",
+      "kurk",
+      "kartul",
+      "porgand",
+      "aed-piparrohi"
+    ],
+    "companionsBad": [
+      "sibul",
+      "küüslauk",
+      "porrulauk"
+    ],
+    "description": "Soojalembene liblikõieline. Külva mulda alles siis, kui mulla temperatuur on vähemalt +10°C (mai lõpp)."
+  },
+  {
+    "id": "polduba",
+    "name": "Põlduba",
+    "scientificName": "Vicia faba",
+    "family": "Liblikõielised (Fabaceae)",
+    "familyId": "fabaceae",
+    "icon": "🫘",
+    "nordicVarieties": [
+      "Jõgeva (Eesti sort)",
+      "Helbi (Eesti)",
+      "Aquadulce",
+      "Hangdown"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 25,
+    "depthCm": 5,
+    "cellsPerSquareMeter": 6,
+    "directSowWeeksBeforeFrost": 4,
+    "daysToMaturity": 80,
+    "companionsGood": [
+      "kartul",
+      "kapsas",
+      "spinat"
+    ],
+    "companionsBad": [
+      "sibul"
+    ],
+    "description": "Külmakindel ja vana Eesti põllukultuur. Külva varakult aprillis; keedetud põldoad soolaga on rahvuslik suvemaius."
+  },
+  {
+    "id": "paprika",
+    "name": "Paprika (Maguspipar)",
+    "scientificName": "Capsicum annuum",
+    "family": "Maavitsalised (Solanaceae)",
+    "familyId": "solanaceae",
+    "icon": "🫑",
+    "nordicVarieties": [
+      "California Wonder",
+      "Ramiro",
+      "Yolo Wonder",
+      "Sweet Chocolate"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 10,
+    "weeksAfterFrostPlantOut": 2,
+    "greenhouseShiftWeeks": 4,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "basiilik",
+      "porgand",
+      "petersell",
+      "kurk"
+    ],
+    "companionsBad": [
+      "apteegitill",
+      "koolrabi"
+    ],
+    "description": "Pika kasvuajaga soojalemb. Vajab ettekasvatamist juba veebruaris-märtsis ja parima saagi annab kasvuhoones."
+  },
+  {
+    "id": "tsilli",
+    "name": "Tšillipipar",
+    "scientificName": "Capsicum annuum / chinense",
+    "family": "Maavitsalised (Solanaceae)",
+    "familyId": "solanaceae",
+    "icon": "🌶️",
+    "nordicVarieties": [
+      "Jalapeño",
+      "Cayenne",
+      "Habanero",
+      "Hungarian Hot Wax"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 11,
+    "weeksAfterFrostPlantOut": 2,
+    "greenhouseShiftWeeks": 4,
+    "daysToMaturity": 100,
+    "companionsGood": [
+      "basiilik",
+      "porgand",
+      "saialill"
+    ],
+    "companionsBad": [
+      "apteegitill"
+    ],
+    "description": "Sobib oivaliselt potti aknalauale või kasvuhoonesse. Taimed saab sügisel tuppa tuua ja ületalve pidada."
+  },
+  {
+    "id": "porrulauk",
+    "name": "Porrulauk",
+    "scientificName": "Allium ampeloprasum",
+    "family": "Laugalised (Amaryllidaceae)",
+    "familyId": "allium",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Elefant",
+      "Blaugrüner Winter",
+      "Carentan"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 9,
+    "weeksBeforeFrostSowIndoors": 10,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 110,
+    "companionsGood": [
+      "porgand",
+      "seller",
+      "tomat"
+    ],
+    "companionsBad": [
+      "hernes",
+      "uba"
+    ],
+    "description": "Külmakindel talvituja. Pikema valge varreosa saamiseks mulda taime kasvuperioodil järk-järgult üles."
+  },
+  {
+    "id": "pastinaak",
+    "name": "Aedpastinaak",
+    "scientificName": "Pastinaca sativa",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🥕",
+    "nordicVarieties": [
+      "White Gem",
+      "Halblange Weisse",
+      "Tender and True"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 120,
+    "companionsGood": [
+      "redis",
+      "salat",
+      "sibul"
+    ],
+    "companionsBad": [
+      "porgand",
+      "seller"
+    ],
+    "description": "Magusa pähklise maitsega juurvili. Talvitub mulla all ilma probleemideta ja maitseb pärast esimesi külmasid veel paremini."
+  },
+  {
+    "id": "seller_juur",
+    "name": "Juurseller",
+    "scientificName": "Apium graveolens var. rapaceum",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🥔",
+    "nordicVarieties": [
+      "Alabaster",
+      "Monarch",
+      "Ibis"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 35,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 12,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 130,
+    "companionsGood": [
+      "kapsas",
+      "tomat",
+      "porrulauk",
+      "põõsasuba"
+    ],
+    "companionsBad": [
+      "porgand",
+      "mais"
+    ],
+    "description": "Vajab väga varajast külvi (veebruar) ja rikkalikku toitaineid ning vett. Tugev aroom peletab kapsakahjureid."
+  },
+  {
+    "id": "seller_vars",
+    "name": "Varsseller",
+    "scientificName": "Apium graveolens var. dulce",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Utah",
+      "Tango",
+      "Golden Spartan"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "high",
+    "spacingCm": 25,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 6,
+    "weeksBeforeFrostSowIndoors": 10,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 100,
+    "companionsGood": [
+      "tomat",
+      "kapsas",
+      "porrulauk"
+    ],
+    "companionsBad": [
+      "porgand"
+    ],
+    "description": "Krõbe mahlane vars smuutideks ja salatiteks. Armastab suve jooksul rohkelt orgaanilist multši."
+  },
+  {
+    "id": "mangold",
+    "name": "Lehtpeet (Mangold)",
+    "scientificName": "Beta vulgaris subsp. vulgaris",
+    "family": "Rebasheinalised (Amaranthaceae)",
+    "familyId": "amaranthaceae",
+    "icon": "🥬",
+    "nordicVarieties": [
+      "Bright Lights (värvilised varred)",
+      "Fordhook Giant",
+      "Rhubarb Chard"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 25,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 6,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 55,
+    "companionsGood": [
+      "sibul",
+      "kapsas",
+      "salat"
+    ],
+    "companionsBad": [
+      "mais"
+    ],
+    "description": "Väga dekoratiivne ja visa lehtköögivili. Kasvatab uusi lehti kuni hilissügiseni."
+  },
+  {
+    "id": "rucola",
+    "name": "Põld-võõrkapsas (Rukola)",
+    "scientificName": "Eruca vesicaria",
+    "family": "Ristõielised (Brassicaceae)",
+    "familyId": "brassicaceae",
+    "icon": "🥗",
+    "nordicVarieties": [
+      "Coltivata",
+      "Wild Rocket (püsik-liivsinep)",
+      "Pronto"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 10,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 16,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 30,
+    "companionsGood": [
+      "salat",
+      "tomat",
+      "porgand"
+    ],
+    "companionsBad": [
+      "kapsas"
+    ],
+    "description": "Pähklise vürtsika maitsega salat. Kasvab suurepäraselt kevadest hilissügiseni ka jahedas."
+  },
+  {
+    "id": "rabarber",
+    "name": "Rabarber",
+    "scientificName": "Rheum rhabarbarum",
+    "family": "Tatralised (Polygonaceae)",
+    "familyId": "polygonaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Tukuma 5 (Eesti/Läti pärand)",
+      "Victoria",
+      "Holsteiner Blut"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 90,
+    "depthCm": 5,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "kapsas",
+      "lehtkapsas",
+      "küüslauk"
+    ],
+    "companionsBad": [],
+    "description": "Põhjamaa aia esimene kevadine kook ja kompott. Püsik, mis kasvab ühel kohal aastakümneid."
+  },
+  {
+    "id": "spargel",
+    "name": "Harilik spargel",
+    "scientificName": "Asparagus officinalis",
+    "family": "Sparglilised (Asparagaceae)",
+    "familyId": "asparagaceae",
+    "icon": "🌾",
+    "nordicVarieties": [
+      "Gijnlim",
+      "Mary Washington",
+      "Argenteuil"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 15,
+    "cellsPerSquareMeter": 2,
+    "perennial": true,
+    "daysToMaturity": 700,
+    "companionsGood": [
+      "tomat",
+      "petersell",
+      "basiilik",
+      "saialill"
+    ],
+    "companionsBad": [
+      "sibul",
+      "küüslauk",
+      "kartul"
+    ],
+    "description": "Luksuslik püsikköögivili. Esimese korraliku saagi saab 3. aastal, seejärel toodab saaki üle 15 aasta."
+  },
+  {
+    "id": "mais",
+    "name": "Suhkrumais",
+    "scientificName": "Zea mays",
+    "family": "Kõrrelised (Poaceae)",
+    "familyId": "poaceae",
+    "icon": "🌽",
+    "nordicVarieties": [
+      "Golden Bantam",
+      "Sweet Nugget F1",
+      "Earliking"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "high",
+    "spacingCm": 30,
+    "depthCm": 3,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 3,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 85,
+    "companionsGood": [
+      "uba",
+      "kõrvits",
+      "suvikõrvits",
+      "kurk",
+      "melon"
+    ],
+    "companionsBad": [
+      "tomat",
+      "seller"
+    ],
+    "description": "Traditsioonilise 'Kolme Õe' (mais, roniv uba, kõrvits) keskne tugitaim. Istuta alati plokina, mitte ühe pika reana, paremaks tolmlemiseks."
+  },
+  {
+    "id": "basiilik",
+    "name": "Vürtsbasiilik",
+    "scientificName": "Ocimum basilicum",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Genovese",
+      "Kreeka kääbusbasiilik",
+      "Tume opaal (punane)",
+      "Tai basiilik"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 9,
+    "weeksBeforeFrostSowIndoors": 6,
+    "weeksAfterFrostPlantOut": 2,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "tomat",
+      "paprika",
+      "oregano",
+      "kurk"
+    ],
+    "companionsBad": [
+      "aedruut",
+      "tüümian"
+    ],
+    "description": "Tomati parim sõber nii peenras kui köögis. Väga külmakartlik, õue alles peale öökülmade möödumist juuni algul."
+  },
+  {
+    "id": "till",
+    "name": "Aedtill",
+    "scientificName": "Anethum graveolens",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Mammut",
+      "Tetra",
+      "Superdukat",
+      "Sari"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 16,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 45,
+    "companionsGood": [
+      "kurk",
+      "kapsas",
+      "lehtsalat",
+      "sibul"
+    ],
+    "companionsBad": [
+      "porgand",
+      "tomat",
+      "apteegitill"
+    ],
+    "description": "Eesti aia asendamatu maitsetaim värskelt ja kurkide sissetegemiseks õisikutena."
+  },
+  {
+    "id": "petersell",
+    "name": "Aedpetersell (Leht ja lokkis)",
+    "scientificName": "Petroselinum crispum",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Gigante d'Italia (siledalehine)",
+      "Mooskrause (lokkis)",
+      "Berliini juurpetersell"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 9,
+    "weeksBeforeFrostSowIndoors": 6,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "tomat",
+      "spargel",
+      "porgand"
+    ],
+    "companionsBad": [
+      "salat",
+      "piparmünt"
+    ],
+    "description": "Kaheaastane taim; teisel aastal annab esimese varakevadise vitamiinilaksu enne õitsemist."
+  },
+  {
+    "id": "koriander",
+    "name": "Aedkoriander (Kinza)",
+    "scientificName": "Coriandrum sativum",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Marino",
+      "Santo",
+      "Caribe"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 12,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 45,
+    "companionsGood": [
+      "spinat",
+      "uba",
+      "kapsas"
+    ],
+    "companionsBad": [
+      "apteegitill"
+    ],
+    "description": "Armastab jahedamat kevadet ja sügist; kuumas läheb kiiresti seemnesse (koriandriseemned on samuti vürts)."
+  },
+  {
+    "id": "piparmunt",
+    "name": "Piparmünt",
+    "scientificName": "Mentha x piperita",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🍃",
+    "nordicVarieties": [
+      "Mitcham",
+      "Šokolaadimünt",
+      "Õunamünt",
+      "Maroko münt"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "high",
+    "spacingCm": 40,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "kapsas",
+      "tomat"
+    ],
+    "companionsBad": [
+      "petersell"
+    ],
+    "description": "Väga elujõuline püsik. Soovitatav kasvatada potis või piirdega peenras, et juured ei vallutaks tervet aeda."
+  },
+  {
+    "id": "meliss",
+    "name": "Sidrunmeliss",
+    "scientificName": "Melissa officinalis",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🍃",
+    "nordicVarieties": [
+      "Citronella",
+      "Lemonella",
+      "Quedlinburger"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 35,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "tomat",
+      "õunapuu"
+    ],
+    "companionsBad": [],
+    "description": "Rahustava toimega sidrunilõhnaline teetaim. Suurepärane mesilaste ja tolmeldajate meelitaja."
+  },
+  {
+    "id": "tuumian",
+    "name": "Aed-liivatee (Tüümian)",
+    "scientificName": "Thymus vulgaris",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Saksa talvetüümian",
+      "Prantsuse tüümian",
+      "Nõmm-liivatee (kohalik)"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 25,
+    "depthCm": 0.3,
+    "cellsPerSquareMeter": 6,
+    "perennial": true,
+    "daysToMaturity": 80,
+    "companionsGood": [
+      "kapsas",
+      "tomat",
+      "maasikas",
+      "kartul"
+    ],
+    "companionsBad": [],
+    "description": "Kuivalembene aromaatne igihaljas poolpõõsas. Peletab nälkjaid ja kapsakahjureid."
+  },
+  {
+    "id": "rosmariin",
+    "name": "Harilik rosmariin",
+    "scientificName": "Salvia rosmarinus",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Blue Winter",
+      "Tuscan Blue",
+      "Prostratus"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "low",
+    "spacingCm": 40,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "kapsas",
+      "uba",
+      "porgand"
+    ],
+    "companionsBad": [],
+    "description": "Eesti talvel õues ei talvitu – kasvata potis ja vii talveks jahedasse valgesse ruumi (verandale)."
+  },
+  {
+    "id": "salvei",
+    "name": "Aedsalvei",
+    "scientificName": "Salvia officinalis",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Berggarten",
+      "Purpurascens",
+      "Kollasekirju"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 40,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "rosmariin",
+      "kapsas",
+      "porgand"
+    ],
+    "companionsBad": [
+      "kurk",
+      "sibul"
+    ],
+    "description": "Kaunis hõbedane püsik, tuntud kurguvalu leevendaja ja liharoogade maitseandja."
+  },
+  {
+    "id": "oregano",
+    "name": "Harilik pune (Oregano)",
+    "scientificName": "Origanum vulgare",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Kreeka pune",
+      "Eesti kohalik pune",
+      "Aureum"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 30,
+    "depthCm": 0.3,
+    "cellsPerSquareMeter": 6,
+    "perennial": true,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "tomat",
+      "paprika",
+      "kapsas"
+    ],
+    "companionsBad": [],
+    "description": "Eesti looduslik teetaim ja klassikaline pitsamaitseaine. Väga talvekindel püsik."
+  },
+  {
+    "id": "murulauk",
+    "name": "Murulauk",
+    "scientificName": "Allium schoenoprasum",
+    "family": "Laugalised (Amaryllidaceae)",
+    "familyId": "allium",
+    "icon": "🌱",
+    "nordicVarieties": [
+      "Praga",
+      "Forescate",
+      "Marlau"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 20,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 9,
+    "perennial": true,
+    "daysToMaturity": 40,
+    "companionsGood": [
+      "porgand",
+      "tomat",
+      "maasikas",
+      "õunapuu"
+    ],
+    "companionsBad": [
+      "hernes",
+      "uba"
+    ],
+    "description": "Tärkab kevadel esimesena kohe kui lumi sulab. Kaunid lillad söödavad õied kaunistavad peenart ja salatit."
+  },
+  {
+    "id": "maasikas",
+    "name": "Aedmaasikas",
+    "scientificName": "Fragaria x ananassa",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🍓",
+    "nordicVarieties": [
+      "Polka (Eesti lemmik)",
+      "Sonata",
+      "Korona",
+      "Rumba",
+      "Senga Sengana"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 35,
+    "depthCm": 5,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "küüslauk",
+      "sibul",
+      "spinat",
+      "kurgirohi",
+      "tüümian"
+    ],
+    "companionsBad": [
+      "kapsas",
+      "brokoli"
+    ],
+    "description": "Küüslaugu vaheleistutamine peletab haigusi ja kahjureid. Multši männikoore või põhu abil."
+  },
+  {
+    "id": "vaarikas",
+    "name": "Harilik vaarikas",
+    "scientificName": "Rubus idaeus",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Helkal (Eesti kollane)",
+      "Tomo (Eesti)",
+      "Glen Ample",
+      "Polana (taasviljuv)"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 50,
+    "depthCm": 10,
+    "cellsPerSquareMeter": 2,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "küüslauk",
+      "saialill",
+      "kurgirohi"
+    ],
+    "companionsBad": [
+      "kartul",
+      "tomat",
+      "maasikas"
+    ],
+    "description": "Armastab happelisemat orgaanilist multši ja ühtlast niiskust. Hoia juurevõsud kontrolli all."
+  },
+  {
+    "id": "mustsorstar",
+    "name": "Must sõstar",
+    "scientificName": "Ribes nigrum",
+    "family": "Sõstralised (Grossulariaceae)",
+    "familyId": "grossulariaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Karri (Eesti sort)",
+      "Almo (Eesti)",
+      "Öjebyn",
+      "Titania"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 120,
+    "depthCm": 15,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "sibul",
+      "küüslauk",
+      "saialill"
+    ],
+    "companionsBad": [],
+    "description": "Põhjamaise aia C-vitamiini pomm. Tuntud haiguskindlad sordid tagavad rikkaliku marjasaagi."
+  },
+  {
+    "id": "punanesorstar",
+    "name": "Punane sõstar",
+    "scientificName": "Ribes rubrum",
+    "family": "Sõstralised (Grossulariaceae)",
+    "familyId": "grossulariaceae",
+    "icon": "🍒",
+    "nordicVarieties": [
+      "Hele (Eesti sort)",
+      "Rondom",
+      "Jonkheer van Tets"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 120,
+    "depthCm": 15,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "saialill",
+      "kummel"
+    ],
+    "companionsBad": [],
+    "description": "Klassikaline mahlapõõsas, mis peab vastu ka karmimatele talvedele."
+  },
+  {
+    "id": "karusmari",
+    "name": "Karusmari (Tikker)",
+    "scientificName": "Ribes uva-crispa",
+    "family": "Sõstralised (Grossulariaceae)",
+    "familyId": "grossulariaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Hinnonmäki kollane",
+      "Hinnonmäki punane",
+      "Malahhit"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 100,
+    "depthCm": 15,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "tomat",
+      "küüslauk"
+    ],
+    "companionsBad": [],
+    "description": "Hinnonmäki sordid on jahukastekindlad ja sobivad suurepäraselt Eesti ilmastikku."
+  },
+  {
+    "id": "mustikas",
+    "name": "Aedmustikas (Kultuurmustikas)",
+    "scientificName": "Vaccinium corymbosum",
+    "family": "Kanarbikulised (Ericaceae)",
+    "familyId": "ericaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Patriot",
+      "Northblue (ülimalt külmakindel)",
+      "Bluecrop",
+      "Polaris"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "high",
+    "spacingCm": 100,
+    "depthCm": 20,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "pohl",
+      "jõhvikas",
+      "kanarbik"
+    ],
+    "companionsBad": [
+      "kapsas",
+      "kartul"
+    ],
+    "description": "Vajab kindlasti haput turvast (pH 4.0–5.0) ja rohket kastmist. Tavalises aiamullas kiratseb."
+  },
+  {
+    "id": "ounapuu",
+    "name": "Õunapuu",
+    "scientificName": "Malus domestica",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🍎",
+    "nordicVarieties": [
+      "Valge klaar (suveõun)",
+      "Liivi kuldrenett (sügis)",
+      "Kuldrenett",
+      "Antonovka (talv)",
+      "Krista",
+      "Tiina"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 300,
+    "depthCm": 40,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "murulauk",
+      "nasturtium",
+      "kurgirohi",
+      "saialill"
+    ],
+    "companionsBad": [
+      "kartul",
+      "pähklipuu"
+    ],
+    "description": "Eesti aedade süda. Murulaugu ja kurgirohu istutamine võra alla vähendab kärntõbe."
+  },
+  {
+    "id": "ploomipuu",
+    "name": "Ploomipuu",
+    "scientificName": "Prunus domestica",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Liisu (Eesti sort)",
+      "Emma Leppermann",
+      "Julius",
+      "Ave"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 300,
+    "depthCm": 40,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "küüslauk",
+      "saialill"
+    ],
+    "companionsBad": [],
+    "description": "Armastab lubjarikkamat mulda ja tuulevaikset päikeselist kasvukohta."
+  },
+  {
+    "id": "kirsipuu",
+    "name": "Maguskirss / Hapu kirss",
+    "scientificName": "Prunus cerasus / avium",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🍒",
+    "nordicVarieties": [
+      "Nõmme liivakirss",
+      "Madissoni",
+      "Arthur",
+      "Läti madalkirss"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 300,
+    "depthCm": 40,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "saialill",
+      "kurgirohi"
+    ],
+    "companionsBad": [],
+    "description": "Varajane õitseja ja rikkalik marjakandja. Nõuab sooja ja kuivemat pinnast."
+  },
+  {
+    "id": "saialill",
+    "name": "Harilik saialill",
+    "scientificName": "Calendula officinalis",
+    "family": "Korvõielised (Asteraceae)",
+    "familyId": "asteraceae",
+    "icon": "🌼",
+    "nordicVarieties": [
+      "Orange King",
+      "Touch of Red",
+      "Radio"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 20,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 9,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 50,
+    "companionsGood": [
+      "tomat",
+      "kurk",
+      "porgand",
+      "kartul",
+      "kapsas"
+    ],
+    "companionsBad": [],
+    "description": "Peenarde universaalne kaitsja ja ravimtaim. Tõrjub mullas elavaid nematoodilisi parasiite ja meelitab lehetäisöödikuid."
+  },
+  {
+    "id": "tagetes",
+    "name": "Madal peiulill (Tagetes)",
+    "scientificName": "Tagetes patula",
+    "family": "Korvõielised (Asteraceae)",
+    "familyId": "asteraceae",
+    "icon": "🌼",
+    "nordicVarieties": [
+      "Carmen",
+      "Petite Orange",
+      "Durango"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 9,
+    "weeksBeforeFrostSowIndoors": 6,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "tomat",
+      "paprika",
+      "kurk",
+      "kartul"
+    ],
+    "companionsBad": [
+      "uba",
+      "hernes"
+    ],
+    "description": "Erksa lõhnaga väärtuslik kaaslane. Juured eritavad looduslikke ühendeid, mis puhastavad mulda kahjulikest ümarussidest."
+  },
+  {
+    "id": "kurgirohi",
+    "name": "Harilik kurgirohi",
+    "scientificName": "Borago officinalis",
+    "family": "Kurgirohulised (Boraginaceae)",
+    "familyId": "boraginaceae",
+    "icon": "🌸",
+    "nordicVarieties": [
+      "Sinine klassikaline",
+      "Valgeõieline Alba"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 50,
+    "companionsGood": [
+      "kurk",
+      "tomat",
+      "maasikas",
+      "kõrvits"
+    ],
+    "companionsBad": [],
+    "description": "Mesilaste absoluutne magnet! Õied ja noored lehed maitsevad täpselt nagu värske kurk."
+  },
+  {
+    "id": "mungalill",
+    "name": "Suur mungalill (Nasturtium)",
+    "scientificName": "Tropaeolum majus",
+    "family": "Mungalillelised (Tropaeolaceae)",
+    "familyId": "tropaeolaceae",
+    "icon": "🌺",
+    "nordicVarieties": [
+      "Alaska (kirjulehine)",
+      "Jewel of Africa",
+      "Empress of India"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 30,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 4,
+    "directSowWeeksBeforeFrost": 0,
+    "daysToMaturity": 55,
+    "companionsGood": [
+      "kurk",
+      "tomat",
+      "suvikõrvits",
+      "kapsas"
+    ],
+    "companionsBad": [],
+    "description": "Tõmbab lehetäid endale, säästes põhikultuure ('püünistaim'). Nii lehed kui ka õied on söödavad ja kergelt sinepised."
+  },
+  {
+    "id": "paevalill",
+    "name": "Harilik päevalill",
+    "scientificName": "Helianthus annuus",
+    "family": "Korvõielised (Asteraceae)",
+    "familyId": "asteraceae",
+    "icon": "🌻",
+    "nordicVarieties": [
+      "Russian Giant",
+      "Teddy Bear",
+      "Sunrich Orange"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 2.5,
+    "cellsPerSquareMeter": 4,
+    "directSowWeeksBeforeFrost": 1,
+    "daysToMaturity": 85,
+    "companionsGood": [
+      "kurk",
+      "kõrvits",
+      "mais"
+    ],
+    "companionsBad": [
+      "kartul"
+    ],
+    "description": "Aia uhkus ja lindude sügisene toidulaud. Toimib tuuletõkkena õrnematele taimedele."
+  },
+  {
+    "id": "kummel",
+    "name": "Teekummel",
+    "scientificName": "Matricaria chamomilla",
+    "family": "Korvõielised (Asteraceae)",
+    "familyId": "asteraceae",
+    "icon": "🌼",
+    "nordicVarieties": [
+      "Zloty Lan",
+      "Bodegold"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 15,
+    "depthCm": 0.2,
+    "cellsPerSquareMeter": 12,
+    "directSowWeeksBeforeFrost": 3,
+    "daysToMaturity": 60,
+    "companionsGood": [
+      "kapsas",
+      "sibul",
+      "kurk"
+    ],
+    "companionsBad": [],
+    "description": "Parandab naabertaimede aroomi ja tervist. Õitest saab parimat tervistavat teed."
+  },
+  {
+    "id": "arbuus",
+    "name": "Harilik arbuus (Külmakindel)",
+    "scientificName": "Citrullus lanatus",
+    "family": "Kõrvitsalised (Cucurbitaceae)",
+    "familyId": "cucurbitaceae",
+    "icon": "🍉",
+    "nordicVarieties": [
+      "Sugar Baby",
+      "Ogonyok (Põhjamaine vana lemmik)",
+      "Janosik (kollane viljaliha)"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 80,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 1,
+    "weeksBeforeFrostSowIndoors": 4,
+    "weeksAfterFrostPlantOut": 2,
+    "greenhouseShiftWeeks": 3,
+    "daysToMaturity": 80,
+    "companionsGood": [
+      "mais",
+      "saialill",
+      "kurgirohi"
+    ],
+    "companionsBad": [
+      "kartul"
+    ],
+    "description": "Ogonyok valmib soodsal suvel ka avamaal kile all, kasvuhoones aga kindlalt. Magus ja mahlane."
+  },
+  {
+    "id": "melon",
+    "name": "Melon (Kantalupp)",
+    "scientificName": "Cucumis melo",
+    "family": "Kõrvitsalised (Cucurbitaceae)",
+    "familyId": "cucurbitaceae",
+    "icon": "🍈",
+    "nordicVarieties": [
+      "Charentais",
+      "Sweet Granite (lühikese suve sort)",
+      "Emir F1"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 60,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 2,
+    "weeksBeforeFrostSowIndoors": 4,
+    "weeksAfterFrostPlantOut": 2,
+    "greenhouseShiftWeeks": 3,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "mais",
+      "päevalill"
+    ],
+    "companionsBad": [
+      "kartul"
+    ],
+    "description": "Aroomikas ja varajane melon, mis sobib Eesti kasvuhoonesse. Vajab tolmeldamist."
+  },
+  {
+    "id": "bataat",
+    "name": "Maguskartul (Bataat)",
+    "scientificName": "Ipomoea batatas",
+    "family": "Kivirikulised (Convolvulaceae)",
+    "familyId": "convolvulaceae",
+    "icon": "🍠",
+    "nordicVarieties": [
+      "Beauregard (varajane)",
+      "Erato Orange",
+      "Bonita"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 5,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 8,
+    "weeksAfterFrostPlantOut": 2,
+    "daysToMaturity": 100,
+    "companionsGood": [
+      "tüümian",
+      "till"
+    ],
+    "companionsBad": [],
+    "description": "Kasvatatakse pistikutest soojas musta kilega kaetud peenras või kasvuhoones."
+  },
+  {
+    "id": "lehtpetersell",
+    "name": "Juurpetersell",
+    "scientificName": "Petroselinum crispum var. tuberosum",
+    "family": "Sarikalised (Apiaceae)",
+    "familyId": "apiaceae",
+    "icon": "🥕",
+    "nordicVarieties": [
+      "Berliini poolpikk",
+      "Halblange",
+      "Alba"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 12,
+    "depthCm": 1.5,
+    "cellsPerSquareMeter": 12,
+    "directSowWeeksBeforeFrost": 2,
+    "daysToMaturity": 110,
+    "companionsGood": [
+      "tomat",
+      "spargel"
+    ],
+    "companionsBad": [
+      "salat"
+    ],
+    "description": "Maitsekas valge juur puljongitesse ja hautistesse. Säilib hästi talvel keldris liivas."
+  },
+  {
+    "id": "tatar",
+    "name": "Harilik tatar (Kattevili ja mesilastaim)",
+    "scientificName": "Fagopyrum esculentum",
+    "family": "Tatralised (Polygonaceae)",
+    "familyId": "polygonaceae",
+    "icon": "🌾",
+    "nordicVarieties": [
+      "Aiva",
+      "Demy",
+      "Kohalik mahetatar"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 10,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 25,
+    "directSowWeeksBeforeFrost": 0,
+    "daysToMaturity": 70,
+    "companionsGood": [
+      "kartul",
+      "kapsas"
+    ],
+    "companionsBad": [],
+    "description": "Suurepärane haljasväetis ja kattevili, mis kogub fosforit ja lämmatab umbrohtu."
+  },
+  {
+    "id": "metsmaasikas",
+    "name": "Metsmaasikas / Kuumaasikas",
+    "scientificName": "Fragaria vesca",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🍓",
+    "nordicVarieties": [
+      "Rügen",
+      "Alexandria",
+      "Yellow Wonder"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "partial",
+    "sunHoursMin": 4,
+    "waterNeed": "medium",
+    "spacingCm": 25,
+    "depthCm": 2,
+    "cellsPerSquareMeter": 6,
+    "perennial": true,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "küüslauk",
+      "sibul"
+    ],
+    "companionsBad": [],
+    "description": "Võsunditeta kuumaasikas kannab meeliülendavalt lõhnavaid marju juunist kuni sügiskülmadeni."
+  },
+  {
+    "id": "fuusal",
+    "name": "Füüsal (Maasikafüüsal)",
+    "scientificName": "Physalis pruinosa",
+    "family": "Maavitsalised (Solanaceae)",
+    "familyId": "solanaceae",
+    "icon": "🏮",
+    "nordicVarieties": [
+      "Aunt Molly's",
+      "Goldmurmel",
+      "Pineapple"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "medium",
+    "spacingCm": 40,
+    "depthCm": 1,
+    "cellsPerSquareMeter": 4,
+    "weeksBeforeFrostSowIndoors": 7,
+    "weeksAfterFrostPlantOut": 1,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "basiilik",
+      "petersell"
+    ],
+    "companionsBad": [],
+    "description": "Magusa ananassise maitsega marjad paberjas laternas. Valminult kukuvad ise maha."
+  },
+  {
+    "id": "lavendel",
+    "name": "Tähklavendel",
+    "scientificName": "Lavandula angustifolia",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🪻",
+    "nordicVarieties": [
+      "Munstead (Eesti talvekindel)",
+      "Hidcote Blue",
+      "Ellagance Purple"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "low",
+    "spacingCm": 35,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 4,
+    "perennial": true,
+    "daysToMaturity": 90,
+    "companionsGood": [
+      "roos",
+      "rosmariin",
+      "tüümian"
+    ],
+    "companionsBad": [],
+    "description": "Talvekindel sort nagu Munstead talvitub Eestis hästi, kui muld on liivane ja vett läbilaskev."
+  },
+  {
+    "id": "iisop",
+    "name": "Harilik iisop",
+    "scientificName": "Hyssopus officinalis",
+    "family": "Huuulõielised (Lamiaceae)",
+    "familyId": "lamiaceae",
+    "icon": "🌿",
+    "nordicVarieties": [
+      "Siniseõieline",
+      "Roosaõieline Rosea"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "cellsPerSquareMeter": 6,
+    "perennial": true,
+    "daysToMaturity": 75,
+    "companionsGood": [
+      "kapsas",
+      "viinapuu"
+    ],
+    "companionsBad": [
+      "redis"
+    ],
+    "description": "Iidne vürtsikas poolpõõsas ja suurepärane meetaim. Peletab kapsakahjureid."
+  },
+  {
+    "id": "viinapuu",
+    "name": "Viinapuu (Põhjamaine viinamari)",
+    "scientificName": "Vitis vinifera / labrusca",
+    "family": "Viinapuulised (Vitaceae)",
+    "familyId": "vitaceae",
+    "icon": "🍇",
+    "nordicVarieties": [
+      "Zilga (kuni -40°C külmakindel)",
+      "Juodupe",
+      "Supaga",
+      "Krassavets"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 7,
+    "waterNeed": "medium",
+    "spacingCm": 150,
+    "depthCm": 30,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "iisop",
+      "basiilik",
+      "oregano"
+    ],
+    "companionsBad": [
+      "kapsas"
+    ],
+    "description": "Zilga on Läti aretus, mis talvitub Eestis avamaal seina ääres ilma katmata ja annab rikkaliku magusa saagi."
+  },
+  {
+    "id": "astelpaju",
+    "name": "Harilik astelpaju",
+    "scientificName": "Hippophae rhamnoides",
+    "family": "Hõbepuulised (Elaeagnaceae)",
+    "familyId": "elaeagnaceae",
+    "icon": "🍊",
+    "nordicVarieties": [
+      "Botanitšeskaja",
+      "Trofimovskaja",
+      "Pollux (tolmeldaja isastaim)"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 6,
+    "waterNeed": "low",
+    "spacingCm": 200,
+    "depthCm": 30,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "ristik",
+      "tatar"
+    ],
+    "companionsBad": [],
+    "description": "Kahekojaline taim (marjade saamiseks vajab emas- ja isastaime). C-vitamiini ja tervisevaramu."
+  },
+  {
+    "id": "aroonia",
+    "name": "Must aroonia",
+    "scientificName": "Aronia melanocarpa",
+    "family": "Roosõielised (Rosaceae)",
+    "familyId": "rosaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Viking",
+      "Aron",
+      "Hugin"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "low",
+    "spacingCm": 150,
+    "depthCm": 25,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "saialill"
+    ],
+    "companionsBad": [],
+    "description": "Vähenõudlik, imekaunis sügisvärvides põõsas. Marjad alandavad vererõhku ja annavad mahla ning siirupit."
+  },
+  {
+    "id": "kuslapuu",
+    "name": "Söödav kuslapuu (Maikelluke/Kama)",
+    "scientificName": "Lonicera caerulea",
+    "family": "Kuslapuulised (Caprifoliaceae)",
+    "familyId": "caprifoliaceae",
+    "icon": "🫐",
+    "nordicVarieties": [
+      "Siniglazka",
+      "Amfora",
+      "Baktsarski Velikan",
+      "Jugana"
+    ],
+    "isNordicSuitable": true,
+    "sunNeed": "full",
+    "sunHoursMin": 5,
+    "waterNeed": "medium",
+    "spacingCm": 120,
+    "depthCm": 20,
+    "cellsPerSquareMeter": 1,
+    "perennial": true,
+    "daysToMaturity": 365,
+    "companionsGood": [
+      "saialill"
+    ],
+    "companionsBad": [],
+    "description": "Eesti aia kõige esimene marjakandja – marjad valmivad juba mai lõpus või juuni algul, enne maasikaid!"
+  }
+]

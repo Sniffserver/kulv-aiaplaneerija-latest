@@ -1,11 +1,21 @@
-<div align="center">
+# KÜLV – Aia- ja taimekasvatuse planeerija (React SPA)
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Põhjamaine aia- ja taimekasvatuse planeerija veebirakendus (React + Vite + TypeScript).
 
-  <h1>Built with AI Studio</h2>
+## Funktsioonid
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- **Kodu (Dashboard)**: Tänane reaalajas ilmateade (Tallinna ja Eesti koordinaatidele), öökülma hoiatused, agrotehnilised soovitused ning päeva aiatööde nimekiri.
+- **Peenrad (Aia plaan)**: Interaktiivne peenarde ja kasvuhoonete planeerija, 2D ruudustiku visualiseerija, interaktiivne lohista-ja-aseta (drag-and-drop) taimede dokk, naabrusmõjude kontroll (head ja halvad naabrid) ning päikesetundide analüüs.
+- **Taimed (Entsüklopeedia)**: Eesti kliimasse sobivate köögiviljade, ürtide ja marjade kataloog. Sordid, idanemisajad, külvisügavused ja vahekaugused. Võimalus lisada oma sorte.
+- **Kalender**: Põhjamaine külvi- ja saagikalender kevadise ja sügisese öökülma kuupäevade baasil.
+- **Päevik**: Aiapäevik tähelepanekute, saagikuse ja ilmamärkmete talletamiseks.
+- **Ettekasvatus & Telk**: Siseruumide ja kasvuhoone mikrokliima jälgimine (temperatuur, niiskus, VPD).
+- **Seaded & Värvipaletid**: Toetab palette "Päevakas aed" (Meadow), "KÜLV klassikaline", "Gruvbox" ja "Catppuccin" ning kohalikke Eesti asukohapresette.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Tehnoloogia
 
-</div>
+- **Raamistik**: React 18, Vite, TypeScript
+- **Ikoonid**: Lucide React
+- **Oleku haldus**: React Context + kohalik andmesalvestus (localStorage)
+- **Stiilid**: Kohandatud teemad ja CSS-muutujad (Meadow, KÜLV, Gruvbox, Catppuccin)
+- **Päikesearvutused**: Spetsiaalne põhjamaine päikesetrajektoori ja varjude mootor (Eesti laiuskraadid ~58.5°N - 59.5°N)
