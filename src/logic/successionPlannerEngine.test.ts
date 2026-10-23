@@ -1,25 +1,40 @@
 import { describe, it, expect } from 'vitest';
 import { SuccessionPlannerEngine } from './successionPlannerEngine';
 import { DEFAULT_PLANTS } from '../data/defaultPlants';
-import { BedSuccessionSlot, GardenBed } from '../types/rotation';
+import { BedSuccessionSlot } from '../types/rotation';
+import { GardenBed, Plant } from '../types';
 
 describe('SuccessionPlannerEngine - Pure Deterministic Engine', () => {
   const sampleBeds: GardenBed[] = [
     {
       id: 'bed_1',
       name: 'Peenar 1',
-      type: 'raised',
+      type: 'raisedBed',
+      x: 1,
+      y: 1,
       coverType: 'none',
       width: 1.2,
-      length: 3.0
+      length: 3.0,
+      height: 0.4,
+      rotation: 0,
+      notes: '',
+      plantings: [],
+      calculatedSunHours: 8
     },
     {
       id: 'bed_gh',
       name: 'Kasvuhoone',
       type: 'greenhouse',
+      x: 3,
+      y: 3,
       coverType: 'greenhouse',
       width: 2.0,
-      length: 4.0
+      length: 4.0,
+      height: 2.5,
+      rotation: 0,
+      notes: '',
+      plantings: [],
+      calculatedSunHours: 9
     }
   ];
 
@@ -33,6 +48,7 @@ describe('SuccessionPlannerEngine - Pure Deterministic Engine', () => {
         plantId: 'redis',
         plantName: 'Redis',
         botanicalFamily: 'Brassicaceae',
+        guild: 'light_feeder',
         sowDate: '04-10',
         harvestDate: '05-20',
         daysToMaturity: 35,
@@ -65,6 +81,7 @@ describe('SuccessionPlannerEngine - Pure Deterministic Engine', () => {
         plantId: 'tomat',
         plantName: 'Tomat',
         botanicalFamily: 'Solanaceae',
+        guild: 'heavy_feeder',
         sowDate: '05-20',
         harvestDate: '09-10', // Late harvest
         daysToMaturity: 90,
@@ -99,6 +116,7 @@ describe('SuccessionPlannerEngine - Pure Deterministic Engine', () => {
         plantId: 'kapsas',
         plantName: 'Kapsas',
         botanicalFamily: 'Brassicaceae',
+        guild: 'heavy_feeder',
         sowDate: '04-15',
         harvestDate: '07-15',
         daysToMaturity: 80,
@@ -125,12 +143,13 @@ describe('SuccessionPlannerEngine - Pure Deterministic Engine', () => {
     const plantsWithMissingDtm = [
       ...DEFAULT_PLANTS,
       {
+        ...DEFAULT_PLANTS[0],
         id: 'mysterious_plant',
         name: 'Tundmatu taim',
         family: 'Other',
         daysToMaturity: undefined as any
       }
-    ];
+    ] as Plant[];
 
     const recs = SuccessionPlannerEngine.evaluateFollowUpCrops(
       'bed_1',
