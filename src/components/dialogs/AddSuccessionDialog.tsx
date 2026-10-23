@@ -9,8 +9,9 @@ import {
 import { CropRotationEngine, BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
 import { EstonianFrostEngine, PROTECTION_OFFSETS, ESTONIAN_REGIONS } from '../../logic/estonianFrostEngine';
 import { CompanionEngine } from '../../logic/companionEngine';
+import { SuccessionPlannerEngine, SuccessionRecommendation } from '../../logic/successionPlannerEngine';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
-import { X, Calendar, AlertTriangle, ShieldCheck, Sprout, Info, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Calendar, AlertTriangle, ShieldCheck, Sprout, Info, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
 
 interface AddSuccessionDialogProps {
   isOpen: boolean;
@@ -133,6 +134,14 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
     : bedHistoryPrev[0]?.plantings[0]?.family || 'Fabaceae';
 
   const successorRecs = CropRotationEngine.getSuccessorRecommendations(priorFamily, plants, 4);
+  const successionEngineRecs = SuccessionPlannerEngine.evaluateFollowUpCrops(
+    bedId,
+    targetYear,
+    successionSlots,
+    plants,
+    beds,
+    selectedRegion
+  ).slice(0, 5);
   const suggestedCompanions = CompanionEngine.getSuggestedCompanions(plantId, plants);
 
   const handlePlantChange = (newPlantId: string) => {
@@ -431,6 +440,106 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                         {rec.synergyBadge}
                       </span>
                     </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Succession Planner Engine Ranked Recommendations */}
+          {successionEngineRecs.length > 0 && (
+            <div
+              style={{
+                backgroundColor: 'var(--kulv-surface-muted, #F4EFE6)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                borderRadius: '10px',
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #252A22)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Award size={14} style={{ color: 'var(--kulv-primary, #4F6B45)' }} />
+                  <span>{language === 'en' ? 'Smart Succession Planner Recommendations:' : 'Nutikas järjestikülvi planeerija (soovitatud kultuurid):'}</span>
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  {language === 'en' ? 'Ranked by Suitability & Rotation' : 'Reastatud sobivuse ja viljavahelduse järgi'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {successionEngineRecs.map((rec) => {
+                  const isCurrent = rec.plant.id === plantId;
+                  const scoreColor = rec.suitabilityScore >= 80 ? '#22C55E' : rec.suitabilityScore >= 60 ? '#3B82F6' : '#F59E0B';
+                  return (
+                    <div
+                      key={rec.plant.id}
+                      style={{
+                        padding: '8px 10px',
+                        borderRadius: '8px',
+                        backgroundColor: isCurrent ? 'rgba(79, 107, 69, 0.12)' : 'var(--kulv-surface, #FFFDF8)',
+                        border: isCurrent ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '14px' }}>{rec.plant.icon || '🌱'}</span>
+                          <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #252A22)' }}>
+                            {rec.plant.name}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: '10px',
+                              padding: '1px 6px',
+                              borderRadius: '4px',
+                              backgroundColor: `${scoreColor}22`,
+                              color: scoreColor,
+                              fontWeight: 700
+                            }}
+                          >
+                            {rec.suitabilityScore}% {rec.suitabilityCategory}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handlePlantChange(rec.plant.id);
+                            setSowDate(rec.earliestSowDate);
+                            setHarvestDate(rec.estimatedHarvestDate);
+                            setDaysToMaturity(rec.daysOccupyingBed);
+                          }}
+                          style={{
+                            padding: '3px 8px',
+                            fontSize: '11px',
+                            borderRadius: '5px',
+                            backgroundColor: isCurrent ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
+                            color: isCurrent ? '#FFFFFF' : 'var(--kulv-primary, #4F6B45)',
+                            border: '1px solid var(--kulv-primary, #4F6B45)',
+                            cursor: 'pointer',
+                            fontWeight: 600
+                          }}
+                        >
+                          {isCurrent ? (language === 'en' ? 'Selected' : 'Valitud') : (language === 'en' ? 'Use Crop' : 'Vali see')}
+                        </button>
+                      </div>
+
+                      <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span>📅 {language === 'en' ? 'Sow:' : 'Külv:'} <b>{rec.earliestSowDate}</b></span>
+                        <span>⏱️ {language === 'en' ? 'Harvest:' : 'Koristus:'} <b>{rec.estimatedHarvestDate}</b></span>
+                        <span>⏳ {rec.daysOccupyingBed}d</span>
+                        {rec.rotationCompatibility === 'warning' && (
+                          <span style={{ color: '#D97706' }}>⚠️ {language === 'en' ? 'Rotation Note' : 'Külvikorra hoiatus'}</span>
+                        )}
+                      </div>
+
+                      <div style={{ fontSize: '11px', color: 'var(--kulv-text, #252A22)' }}>
+                        {language === 'en' ? rec.explanationEn : rec.explanationEt}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
