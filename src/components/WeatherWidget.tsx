@@ -8,11 +8,7 @@ interface WeatherWidgetProps {
   onRefresh?: () => void;
 }
 
-export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
-  weather,
-  isLoading = false,
-  onRefresh
-}) => {
+export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ weather, isLoading = false, onRefresh }) => {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
 
   const forecast = weather.dailyForecast || [];
@@ -40,7 +36,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
               {weather.locationName}
             </span>
-            <span aria-hidden="true" style={{ color: 'var(--kulv-border, #C9BFA9)' }}>·</span>
+            <span aria-hidden="true" style={{ color: 'var(--kulv-border, #C9BFA9)' }}>
+              ·
+            </span>
             <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 500 }}>
               {weather.lat.toFixed(2)}°N, {weather.lng.toFixed(2)}°E
             </span>
@@ -73,7 +71,11 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
               minHeight: '40px'
             }}
           >
-            <RefreshCw size={15} className={isLoading ? 'spin-animation' : ''} style={{ animation: isLoading ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw
+              size={15}
+              className={isLoading ? 'spin-animation' : ''}
+              style={{ animation: isLoading ? 'spin 1s linear infinite' : 'none' }}
+            />
           </button>
         )}
       </div>
@@ -121,7 +123,16 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             textAlign: 'center'
           }}
         >
-          <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          <div
+            style={{
+              fontSize: '10px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2px'
+            }}
+          >
             <Thermometer size={11} /> Maks/Min
           </div>
           <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>
@@ -138,12 +149,19 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             textAlign: 'center'
           }}
         >
-          <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          <div
+            style={{
+              fontSize: '10px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2px'
+            }}
+          >
             <Droplets size={11} /> Õhuniiskus
           </div>
-          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>
-            {weather.relativeHumidity ?? 65}%
-          </div>
+          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{weather.relativeHumidity ?? 65}%</div>
         </div>
 
         <div
@@ -155,12 +173,19 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             textAlign: 'center'
           }}
         >
-          <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          <div
+            style={{
+              fontSize: '10px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2px'
+            }}
+          >
             <Wind size={11} /> Tuul
           </div>
-          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>
-            {weather.windSpeed} m/s
-          </div>
+          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{weather.windSpeed} m/s</div>
         </div>
 
         <div
@@ -172,12 +197,19 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             textAlign: 'center'
           }}
         >
-          <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          <div
+            style={{
+              fontSize: '10px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2px'
+            }}
+          >
             🌧️ Sademed
           </div>
-          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>
-            {weather.precipitation} mm
-          </div>
+          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{weather.precipitation} mm</div>
         </div>
       </div>
 
@@ -185,7 +217,16 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
       {forecast.length > 0 && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: 'var(--kulv-text-muted, #5F675A)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
               <Calendar size={12} /> 7-päevane ilmaprognoos (vali päev):
             </span>
             {selectedDay && (
@@ -206,7 +247,11 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
             {forecast.map((day, idx) => {
               const isSelected = selectedDayIndex === idx;
               const isFreezing = day.tempMin <= 0;
-              const hasFrostRisk = day.frostRisk === 'light' || day.frostRisk === 'moderate' || day.frostRisk === 'severe' || day.tempMin <= 3;
+              const hasFrostRisk =
+                day.frostRisk === 'light' ||
+                day.frostRisk === 'moderate' ||
+                day.frostRisk === 'severe' ||
+                day.tempMin <= 3;
               return (
                 <button
                   key={day.date}
@@ -219,15 +264,15 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
                     border: isSelected
                       ? '2px solid var(--kulv-primary, #4F6B45)'
                       : isFreezing
-                      ? '1px solid var(--kulv-danger, #B85C33)'
-                      : hasFrostRisk
-                      ? '1px solid var(--kulv-accent, #D97A3D)'
-                      : '1px solid var(--kulv-border, #C9BFA9)',
+                        ? '1px solid var(--kulv-danger, #B85C33)'
+                        : hasFrostRisk
+                          ? '1px solid var(--kulv-accent, #D97A3D)'
+                          : '1px solid var(--kulv-border, #C9BFA9)',
                     backgroundColor: isSelected
                       ? 'var(--kulv-accent-soft, #F3D8C2)'
                       : isFreezing
-                      ? 'rgba(184, 92, 51, 0.12)'
-                      : 'var(--kulv-surface-muted, #EFE6D4)',
+                        ? 'rgba(184, 92, 51, 0.12)'
+                        : 'var(--kulv-surface-muted, #EFE6D4)',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
@@ -250,8 +295,8 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
                       color: isFreezing
                         ? 'var(--kulv-danger, #B85C33)'
                         : hasFrostRisk
-                        ? 'var(--kulv-accent, #D97A3D)'
-                        : 'var(--kulv-text-muted, #5F675A)',
+                          ? 'var(--kulv-accent, #D97A3D)'
+                          : 'var(--kulv-text-muted, #5F675A)',
                       fontWeight: hasFrostRisk ? 700 : 500
                     }}
                   >
@@ -289,7 +334,11 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
                 alignItems: 'flex-start'
               }}
             >
-              <AlertTriangle size={18} color="var(--kulv-accent, #D97A3D)" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <AlertTriangle
+                size={18}
+                color="var(--kulv-accent, #D97A3D)"
+                style={{ flexShrink: 0, marginTop: '2px' }}
+              />
               <div>
                 <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                   {alert.title}
@@ -322,9 +371,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({
           }}
         >
           <Info size={16} color="var(--kulv-primary, #4F6B45)" style={{ flexShrink: 0, marginTop: '2px' }} />
-          <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', lineHeight: 1.4 }}>
-            {weather.tips[0]}
-          </div>
+          <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', lineHeight: 1.4 }}>{weather.tips[0]}</div>
         </div>
       )}
     </div>

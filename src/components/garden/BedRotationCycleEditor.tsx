@@ -63,9 +63,7 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
       const updatedYears = prev.years.map((y) => {
         if (y.yearOffset === offset) {
           const exists = y.targetFamilies.includes(family);
-          const newFamilies = exists
-            ? y.targetFamilies.filter((f) => f !== family)
-            : [...y.targetFamilies, family];
+          const newFamilies = exists ? y.targetFamilies.filter((f) => f !== family) : [...y.targetFamilies, family];
           return {
             ...y,
             targetFamilies: newFamilies.length > 0 ? newFamilies : ['Other' as BotanicalFamilyId]
@@ -137,7 +135,15 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
       }}
     >
       {/* Title & Controls */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '10px'
+        }}
+      >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <RotateCw size={18} color="var(--kulv-primary, #4F6B45)" />
@@ -185,7 +191,15 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
             }}
           >
             {savedBanner ? <Check size={14} /> : <Save size={14} />}
-            <span>{savedBanner ? (language === 'en' ? 'Plan Saved!' : 'Kava salvestatud!') : (language === 'en' ? 'Save Plan' : 'Salvesta kava')}</span>
+            <span>
+              {savedBanner
+                ? language === 'en'
+                  ? 'Plan Saved!'
+                  : 'Kava salvestatud!'
+                : language === 'en'
+                  ? 'Save Plan'
+                  : 'Salvesta kava'}
+            </span>
           </button>
         </div>
       </div>
@@ -205,7 +219,9 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
                 style={{
                   padding: '6px 12px',
                   borderRadius: '6px',
-                  border: isSelected ? '2px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                  border: isSelected
+                    ? '2px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
                   backgroundColor: isSelected ? 'rgba(79, 107, 69, 0.12)' : 'var(--kulv-surface-muted, #F8F5EC)',
                   color: isSelected ? 'var(--kulv-primary, #3E5A35)' : 'var(--kulv-text, #2A2E24)',
                   fontSize: '11px',
@@ -248,7 +264,9 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
                 alignItems: 'center',
                 padding: '10px 8px',
                 borderRadius: '8px',
-                border: isSelected ? `2px solid ${famInfo.borderColor || '#4F6B45'}` : '1px solid var(--kulv-border, #C9BFA9)',
+                border: isSelected
+                  ? `2px solid ${famInfo.borderColor || '#4F6B45'}`
+                  : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: isSelected ? '#FFFFFF' : 'var(--kulv-surface, #FFFDF8)',
                 boxShadow: isSelected ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
                 cursor: 'pointer',
@@ -282,8 +300,8 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
                 {yearPlan.targetGuild === 'heavy_feeder'
                   ? 'Rasketoiteline'
                   : yearPlan.targetGuild === 'nitrogen_fixer'
-                  ? 'Lämmastikurikastaja'
-                  : 'Mõõdukas toituja'}
+                    ? 'Lämmastikurikastaja'
+                    : 'Mõõdukas toituja'}
               </span>
             </button>
           );
@@ -302,7 +320,8 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-              📅 {currentPlan.startYear + activeYearPlan.yearOffset}. Aasta: {language === 'en' ? activeYearPlan.nameEn : activeYearPlan.nameEt}
+              📅 {currentPlan.startYear + activeYearPlan.yearOffset}. Aasta:{' '}
+              {language === 'en' ? activeYearPlan.nameEn : activeYearPlan.nameEt}
             </div>
             <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
               Tsükli samm {activeYearPlan.cycleStep} / {currentPlan.cycleLengthYears}
@@ -310,7 +329,14 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
           </div>
 
           <div style={{ marginBottom: '12px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '6px' }}>
+            <div
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                color: 'var(--kulv-text-muted, #5F675A)',
+                marginBottom: '6px'
+              }}
+            >
               Valitud botaanilised sugukonnad selleks aastaks (klõpsa kohandamiseks):
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -335,7 +361,9 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
                     style={{
                       padding: '4px 10px',
                       borderRadius: '6px',
-                      border: isFamilyActive ? `2px solid ${info.borderColor}` : '1px solid var(--kulv-border, #C9BFA9)',
+                      border: isFamilyActive
+                        ? `2px solid ${info.borderColor}`
+                        : '1px solid var(--kulv-border, #C9BFA9)',
                       backgroundColor: isFamilyActive ? info.bgTint : '#FFFFFF',
                       color: isFamilyActive ? info.borderColor : 'var(--kulv-text, #2A2E24)',
                       fontSize: '11px',
@@ -343,7 +371,8 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
                       cursor: 'pointer'
                     }}
                   >
-                    {isFamilyActive ? '✓ ' : ''}{info.nameEt}
+                    {isFamilyActive ? '✓ ' : ''}
+                    {info.nameEt}
                   </button>
                 );
               })}
@@ -351,17 +380,43 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-            <div style={{ padding: '10px', borderRadius: '8px', backgroundColor: '#FFFFFF', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+            <div
+              style={{
+                padding: '10px',
+                borderRadius: '8px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--kulv-border, #C9BFA9)'
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'var(--kulv-primary, #3E5A35)',
+                  marginBottom: '4px'
+                }}
+              >
                 🌾 Soovituslikud Põhjamaa kultuurid:
               </div>
-              <div style={{ fontSize: '12px' }}>
-                {activeYearPlan.recommendedCrops.join(', ')}
-              </div>
+              <div style={{ fontSize: '12px' }}>{activeYearPlan.recommendedCrops.join(', ')}</div>
             </div>
 
-            <div style={{ padding: '10px', borderRadius: '8px', backgroundColor: '#FFFFFF', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+            <div
+              style={{
+                padding: '10px',
+                borderRadius: '8px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--kulv-border, #C9BFA9)'
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'var(--kulv-primary, #3E5A35)',
+                  marginBottom: '4px'
+                }}
+              >
                 🧪 Mulla ettevalmistus & Agronoomiline töötlus:
               </div>
               <input
@@ -400,7 +455,9 @@ export const BedRotationCycleEditor: React.FC<BedRotationCycleEditorProps> = ({ 
               >
                 <BookOpen size={16} color="var(--kulv-primary, #4F6B45)" />
                 <div style={{ fontSize: '11px', color: 'var(--kulv-text, #2A2E24)' }}>
-                  <strong>{famInfo.nameEt} teaduslik viljavaheldusnorm:</strong> Minimaalne vahe <strong>{famInfo.minimumRotationYears} aastat</strong>. Peamised patogeenid: {famInfo.primaryDiseaseRisks.join(', ')}. (Allikas: {famInfo.evidenceCitation?.source || 'EMÜ'})
+                  <strong>{famInfo.nameEt} teaduslik viljavaheldusnorm:</strong> Minimaalne vahe{' '}
+                  <strong>{famInfo.minimumRotationYears} aastat</strong>. Peamised patogeenid:{' '}
+                  {famInfo.primaryDiseaseRisks.join(', ')}. (Allikas: {famInfo.evidenceCitation?.source || 'EMÜ'})
                 </div>
               </div>
             );

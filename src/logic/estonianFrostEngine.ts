@@ -33,7 +33,8 @@ export const ESTONIAN_REGIONS: Record<EstonianRegionId, EstonianRegionProfile> =
     springLastFrost: '05-30',
     autumnFirstFrost: '09-18',
     averageFrostFreeDays: 111,
-    descriptionEt: 'Kõrgustiku ja külmalohkude tõttu võivad öökülmad kesta mai lõpuni ja naasta juba septembri keskpaigas.',
+    descriptionEt:
+      'Kõrgustiku ja külmalohkude tõttu võivad öökülmad kesta mai lõpuni ja naasta juba septembri keskpaigas.',
     descriptionEn: 'Highland cold sinks bring late May frosts and early mid-September freezes.'
   },
   southeast: {
@@ -44,8 +45,10 @@ export const ESTONIAN_REGIONS: Record<EstonianRegionId, EstonianRegionProfile> =
     springLastFrost: '05-22',
     autumnFirstFrost: '09-22',
     averageFrostFreeDays: 123,
-    descriptionEt: 'Kontinentaalsem mikrokliima kiire ja sooja kevadise mullasoojenemisega, kuid järskude sügiskülmadega.',
-    descriptionEn: 'More continental climate with rapid spring soil warmup, followed by crisp early autumn night chills.'
+    descriptionEt:
+      'Kontinentaalsem mikrokliima kiire ja sooja kevadise mullasoojenemisega, kuid järskude sügiskülmadega.',
+    descriptionEn:
+      'More continental climate with rapid spring soil warmup, followed by crisp early autumn night chills.'
   },
   islands: {
     id: 'islands',
@@ -60,7 +63,10 @@ export const ESTONIAN_REGIONS: Record<EstonianRegionId, EstonianRegionProfile> =
   }
 };
 
-export const PROTECTION_OFFSETS: Record<CropProtectionType, { springDays: number; autumnDays: number; labelEt: string; labelEn: string }> = {
+export const PROTECTION_OFFSETS: Record<
+  CropProtectionType,
+  { springDays: number; autumnDays: number; labelEt: string; labelEn: string }
+> = {
   none: {
     springDays: 0,
     autumnDays: 0,
@@ -122,7 +128,10 @@ export const EstonianFrostEngine = {
   /**
    * Calculates effective spring last frost and autumn first frost dates with protection adjustments.
    */
-  getAdjustedFrostDates(regionId: EstonianRegionId, protection: CropProtectionType = 'none'): {
+  getAdjustedFrostDates(
+    regionId: EstonianRegionId,
+    protection: CropProtectionType = 'none'
+  ): {
     springFrostMMDD: string;
     autumnFrostMMDD: string;
     springFrostDoy: number;
@@ -150,11 +159,7 @@ export const EstonianFrostEngine = {
   /**
    * Checks whether a succession slot has frost risk and returns detailed actionable warnings.
    */
-  evaluateSlotFrostRisk(
-    slot: BedSuccessionSlot,
-    regionId: EstonianRegionId,
-    plant?: Plant
-  ): FrostAlert | null {
+  evaluateSlotFrostRisk(slot: BedSuccessionSlot, regionId: EstonianRegionId, plant?: Plant): FrostAlert | null {
     // If grown in a greenhouse and crop is frost-sensitive, greenhouse gives strong protection
     const dates = this.getAdjustedFrostDates(regionId, slot.protectionType);
     const sowDoy = getDayOfYear(slot.sowDate);
@@ -175,12 +180,14 @@ export const EstonianFrostEngine = {
         titleEn: `Spring Frost Hazard: ${slot.plantNameEn || slot.plantName}`,
         messageEt: `Külv või istutuskuupäev (${slot.sowDate}) on ${daysEarly} päeva enne piirkonna (${ESTONIAN_REGIONS[regionId].hardinessZone}) viimast arvestuslikku öökülma (${dates.springFrostMMDD}).`,
         messageEn: `Planting date (${slot.sowDate}) is ${daysEarly} days ahead of the estimated final frost (${dates.springFrostMMDD}) in ${ESTONIAN_REGIONS[regionId].hardinessZone}.`,
-        recommendedActionEt: slot.protectionType === 'none'
-          ? 'Lisa peenrale katteloor (+12 päeva) või lükka istutust edasi.'
-          : 'Jälgi öiseid temperatuure ja kasuta vajadusel kahekordset katteloori.',
-        recommendedActionEn: slot.protectionType === 'none'
-          ? 'Add agrotextile fleece (+12 days safety) or delay transplanting.'
-          : 'Monitor overnight forecast dips and use double fleece if freezing.',
+        recommendedActionEt:
+          slot.protectionType === 'none'
+            ? 'Lisa peenrale katteloor (+12 päeva) või lükka istutust edasi.'
+            : 'Jälgi öiseid temperatuure ja kasuta vajadusel kahekordset katteloori.',
+        recommendedActionEn:
+          slot.protectionType === 'none'
+            ? 'Add agrotextile fleece (+12 days safety) or delay transplanting.'
+            : 'Monitor overnight forecast dips and use double fleece if freezing.',
         daysAtRisk: daysEarly,
         frostPhase: 'spring_frost'
       };
@@ -199,12 +206,14 @@ export const EstonianFrostEngine = {
         titleEn: `Autumn Freeze Risk Before Harvest: ${slot.plantNameEn || slot.plantName}`,
         messageEt: `Saagikoristuse tähtaeg (${slot.harvestDate}) langeb ${daysLate} päeva peale esimest sügisest öökülma (${dates.autumnFrostMMDD}). Vili ei pruugi avamaal valmida.`,
         messageEn: `Expected harvest date (${slot.harvestDate}) is ${daysLate} days past the first autumn freeze (${dates.autumnFrostMMDD}). Crop may not mature outdoors.`,
-        recommendedActionEt: slot.protectionType === 'none'
-          ? 'Kasuta sügisel katteloori või vali lühema valmimisajaga (DTM) sort.'
-          : 'Valmista ette sügisene lisasoojustus või korista saak toorelt järelvalmimiseks.',
-        recommendedActionEn: slot.protectionType === 'none'
-          ? 'Apply row cover in September or choose a variety with shorter DTM.'
-          : 'Prepare tunnel insulation or harvest green for indoor ripening.',
+        recommendedActionEt:
+          slot.protectionType === 'none'
+            ? 'Kasuta sügisel katteloori või vali lühema valmimisajaga (DTM) sort.'
+            : 'Valmista ette sügisene lisasoojustus või korista saak toorelt järelvalmimiseks.',
+        recommendedActionEn:
+          slot.protectionType === 'none'
+            ? 'Apply row cover in September or choose a variety with shorter DTM.'
+            : 'Prepare tunnel insulation or harvest green for indoor ripening.',
         daysAtRisk: daysLate,
         frostPhase: 'autumn_frost'
       };

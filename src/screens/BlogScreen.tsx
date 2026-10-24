@@ -37,11 +37,9 @@ export const BlogScreen: React.FC = () => {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         const matchesTitle =
-          article.titleEt.toLowerCase().includes(query) ||
-          article.titleEn.toLowerCase().includes(query);
+          article.titleEt.toLowerCase().includes(query) || article.titleEn.toLowerCase().includes(query);
         const matchesSummary =
-          article.summaryEt.toLowerCase().includes(query) ||
-          article.summaryEn.toLowerCase().includes(query);
+          article.summaryEt.toLowerCase().includes(query) || article.summaryEn.toLowerCase().includes(query);
         const matchesTags = article.tags.some((t) => t.toLowerCase().includes(query));
         return matchesTitle || matchesSummary || matchesTags;
       }
@@ -93,7 +91,17 @@ export const BlogScreen: React.FC = () => {
             <span>{language === 'en' ? 'Back to all articles' : 'Tagasi artiklite juurde'}</span>
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '12px',
+              fontSize: '12px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              flexWrap: 'wrap'
+            }}
+          >
             <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>
               {language === 'en' ? activeArticle.categoryLabelEn : activeArticle.categoryLabelEt}
             </span>
@@ -161,7 +169,17 @@ export const BlogScreen: React.FC = () => {
             ))}
           </div>
 
-          <div style={{ marginTop: '28px', paddingTop: '16px', borderTop: '1px solid var(--kulv-border, #C9BFA9)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              marginTop: '28px',
+              paddingTop: '16px',
+              borderTop: '1px solid var(--kulv-border, #C9BFA9)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              flexWrap: 'wrap'
+            }}
+          >
             <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>
               {language === 'en' ? 'Topics:' : 'Märksõnad:'}
             </span>
@@ -245,9 +263,7 @@ export const BlogScreen: React.FC = () => {
                       border: isSelected
                         ? '1px solid var(--kulv-primary, #4F6B45)'
                         : '1px solid var(--kulv-border, #C9BFA9)',
-                      backgroundColor: isSelected
-                        ? 'var(--kulv-primary, #4F6B45)'
-                        : 'var(--kulv-surface, #FFFDF8)',
+                      backgroundColor: isSelected ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
                       color: isSelected ? '#FFFFFF' : 'var(--kulv-text, #2A2E24)',
                       fontSize: '12px',
                       fontWeight: isSelected ? 700 : 500,
@@ -318,7 +334,16 @@ export const BlogScreen: React.FC = () => {
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '8px',
+                      fontSize: '11px',
+                      color: 'var(--kulv-text-muted, #5F675A)'
+                    }}
+                  >
                     <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>
                       {language === 'en' ? article.categoryLabelEn : article.categoryLabelEt}
                     </span>
@@ -353,7 +378,15 @@ export const BlogScreen: React.FC = () => {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', borderTop: '1px solid var(--kulv-border, #EAE4D5)', paddingTop: '10px', marginBottom: '10px' }}>
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: 'var(--kulv-text-muted, #5F675A)',
+                      borderTop: '1px solid var(--kulv-border, #EAE4D5)',
+                      paddingTop: '10px',
+                      marginBottom: '10px'
+                    }}
+                  >
                     <strong>{article.author}</strong> • {article.institutionalAffiliation}
                   </div>
 

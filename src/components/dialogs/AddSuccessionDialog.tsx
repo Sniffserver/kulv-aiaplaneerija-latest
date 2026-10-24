@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Plant, GardenBed } from '../../types';
-import {
-  BedSuccessionSlot,
-  SeasonSlot,
-  CropProtectionType,
-  EstonianRegionId
-} from '../../types/rotation';
+import { BedSuccessionSlot, SeasonSlot, CropProtectionType, EstonianRegionId } from '../../types/rotation';
 import { CropRotationEngine, BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
 import { EstonianFrostEngine, PROTECTION_OFFSETS, ESTONIAN_REGIONS } from '../../logic/estonianFrostEngine';
 import { CompanionEngine } from '../../logic/companionEngine';
 import { SuccessionPlannerEngine, SuccessionRecommendation } from '../../logic/successionPlannerEngine';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
-import { X, Calendar, AlertTriangle, ShieldCheck, Sprout, Info, Sparkles, CheckCircle2, Award, Clock } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  AlertTriangle,
+  ShieldCheck,
+  Sprout,
+  Info,
+  Sparkles,
+  CheckCircle2,
+  Award,
+  Clock
+} from 'lucide-react';
 
 interface AddSuccessionDialogProps {
   isOpen: boolean;
@@ -43,9 +49,7 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
   const [sowDate, setSowDate] = useState<string>(() => initialSlot?.sowDate || '05-20');
   const [harvestDate, setHarvestDate] = useState<string>(() => initialSlot?.harvestDate || '08-25');
   const [daysToMaturity, setDaysToMaturity] = useState<number>(() => initialSlot?.daysToMaturity || 80);
-  const [protectionType, setProtectionType] = useState<CropProtectionType>(
-    () => initialSlot?.protectionType || 'none'
-  );
+  const [protectionType, setProtectionType] = useState<CropProtectionType>(() => initialSlot?.protectionType || 'none');
   const [notes, setNotes] = useState<string>(() => initialSlot?.notes || '');
 
   // Reset or populate when initialSlot or initialBedId changes
@@ -129,9 +133,10 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
   const bedHistoryPrev = historyRecords
     .filter((h) => h.bedId === bedId && h.year < targetYear)
     .sort((a, b) => b.year - a.year);
-  const priorFamily = sameBedPriorSlots.length > 0
-    ? sameBedPriorSlots[sameBedPriorSlots.length - 1].botanicalFamily
-    : bedHistoryPrev[0]?.plantings[0]?.family || 'Fabaceae';
+  const priorFamily =
+    sameBedPriorSlots.length > 0
+      ? sameBedPriorSlots[sameBedPriorSlots.length - 1].botanicalFamily
+      : bedHistoryPrev[0]?.plantings[0]?.family || 'Fabaceae';
 
   const successorRecs = CropRotationEngine.getSuccessorRecommendations(priorFamily, plants, 4);
   const successionEngineRecs = SuccessionPlannerEngine.evaluateFollowUpCrops(
@@ -258,8 +263,12 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                 }}
               >
                 {initialSlot
-                  ? (language === 'en' ? 'Edit Succession Slot' : 'Muuda järjestikülvi vahetust')
-                  : (language === 'en' ? 'Add Succession Sowing Slot' : 'Lisa järjestikülvi vahetus')}
+                  ? language === 'en'
+                    ? 'Edit Succession Slot'
+                    : 'Muuda järjestikülvi vahetust'
+                  : language === 'en'
+                    ? 'Add Succession Sowing Slot'
+                    : 'Lisa järjestikülvi vahetus'}
               </h2>
               <p style={{ margin: 0, fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)' }}>
                 {language === 'en'
@@ -284,7 +293,10 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
         </div>
 
         {/* Content Form */}
-        <form onSubmit={handleSubmit} style={{ overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}
+        >
           {/* Bed & Season selection */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
@@ -393,9 +405,22 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: 'var(--kulv-primary, #4F6B45)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
                   <Sparkles size={13} />
-                  <span>{language === 'en' ? 'Agronomic Next-Crop Suggestions:' : 'Agronoomilised soovitused eelvilja põhjal:'}</span>
+                  <span>
+                    {language === 'en'
+                      ? 'Agronomic Next-Crop Suggestions:'
+                      : 'Agronoomilised soovitused eelvilja põhjal:'}
+                  </span>
                 </span>
                 <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
                   {language === 'en' ? 'Click to select' : 'Klõpsa valimiseks'}
@@ -460,18 +485,34 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #252A22)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: 'var(--kulv-text, #252A22)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
                   <Award size={14} style={{ color: 'var(--kulv-primary, #4F6B45)' }} />
-                  <span>{language === 'en' ? 'Smart Succession Planner Recommendations:' : 'Nutikas järjestikülvi planeerija (soovitatud kultuurid):'}</span>
+                  <span>
+                    {language === 'en'
+                      ? 'Smart Succession Planner Recommendations:'
+                      : 'Nutikas järjestikülvi planeerija (soovitatud kultuurid):'}
+                  </span>
                 </span>
                 <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                  {language === 'en' ? 'Ranked by Suitability & Rotation' : 'Reastatud sobivuse ja viljavahelduse järgi'}
+                  {language === 'en'
+                    ? 'Ranked by Suitability & Rotation'
+                    : 'Reastatud sobivuse ja viljavahelduse järgi'}
                 </span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {successionEngineRecs.map((rec) => {
                   const isCurrent = rec.plant.id === plantId;
-                  const scoreColor = rec.suitabilityScore >= 80 ? '#22C55E' : rec.suitabilityScore >= 60 ? '#3B82F6' : '#F59E0B';
+                  const scoreColor =
+                    rec.suitabilityScore >= 80 ? '#22C55E' : rec.suitabilityScore >= 60 ? '#3B82F6' : '#F59E0B';
                   return (
                     <div
                       key={rec.plant.id}
@@ -479,7 +520,9 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                         padding: '8px 10px',
                         borderRadius: '8px',
                         backgroundColor: isCurrent ? 'rgba(79, 107, 69, 0.12)' : 'var(--kulv-surface, #FFFDF8)',
-                        border: isCurrent ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                        border: isCurrent
+                          ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                          : '1px solid var(--kulv-border, #C9BFA9)',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '4px'
@@ -523,16 +566,36 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                             fontWeight: 600
                           }}
                         >
-                          {isCurrent ? (language === 'en' ? 'Selected' : 'Valitud') : (language === 'en' ? 'Use Crop' : 'Vali see')}
+                          {isCurrent
+                            ? language === 'en'
+                              ? 'Selected'
+                              : 'Valitud'
+                            : language === 'en'
+                              ? 'Use Crop'
+                              : 'Vali see'}
                         </button>
                       </div>
 
-                      <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span>📅 {language === 'en' ? 'Sow:' : 'Külv:'} <b>{rec.earliestSowDate}</b></span>
-                        <span>⏱️ {language === 'en' ? 'Harvest:' : 'Koristus:'} <b>{rec.estimatedHarvestDate}</b></span>
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          color: 'var(--kulv-text-muted, #5F675A)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px'
+                        }}
+                      >
+                        <span>
+                          📅 {language === 'en' ? 'Sow:' : 'Külv:'} <b>{rec.earliestSowDate}</b>
+                        </span>
+                        <span>
+                          ⏱️ {language === 'en' ? 'Harvest:' : 'Koristus:'} <b>{rec.estimatedHarvestDate}</b>
+                        </span>
                         <span>⏳ {rec.daysOccupyingBed}d</span>
                         {rec.rotationCompatibility === 'warning' && (
-                          <span style={{ color: '#D97706' }}>⚠️ {language === 'en' ? 'Rotation Note' : 'Külvikorra hoiatus'}</span>
+                          <span style={{ color: '#D97706' }}>
+                            ⚠️ {language === 'en' ? 'Rotation Note' : 'Külvikorra hoiatus'}
+                          </span>
                         )}
                       </div>
 
@@ -625,7 +688,9 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
               }}
             >
               <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #252A22)' }}>
-                {language === 'en' ? `🌿 Companion Interactions for ${selectedPlant.name}:` : `🌿 Seltsilistaimede seosed taimele ${selectedPlant.name}:`}
+                {language === 'en'
+                  ? `🌿 Companion Interactions for ${selectedPlant.name}:`
+                  : `🌿 Seltsilistaimede seosed taimele ${selectedPlant.name}:`}
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '11px' }}>
@@ -652,7 +717,11 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                           alignItems: 'center',
                           gap: '4px'
                         }}
-                        title={language === 'en' ? `Click to switch to companion ${gp.name}` : `Klõpsa seltsilise ${gp.name} valimiseks`}
+                        title={
+                          language === 'en'
+                            ? `Click to switch to companion ${gp.name}`
+                            : `Klõpsa seltsilise ${gp.name} valimiseks`
+                        }
                       >
                         <span>{gp.icon || '🌱'}</span>
                         <span>{gp.name}</span>
@@ -791,7 +860,8 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
                     padding: '10px 12px',
                     borderRadius: '8px',
                     fontSize: '12px',
-                    backgroundColor: alt.severity === 'danger' ? '#FEE2E2' : alt.severity === 'good' ? '#DCFCE7' : '#FEF3C7',
+                    backgroundColor:
+                      alt.severity === 'danger' ? '#FEE2E2' : alt.severity === 'good' ? '#DCFCE7' : '#FEF3C7',
                     border: `1px solid ${alt.severity === 'danger' ? '#EF4444' : alt.severity === 'good' ? '#22C55E' : '#F59E0B'}`,
                     color: alt.severity === 'danger' ? '#991B1B' : alt.severity === 'good' ? '#166534' : '#92400E'
                   }}
@@ -838,7 +908,11 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
             </label>
             <input
               type="text"
-              placeholder={language === 'en' ? 'e.g. Sown under fleece for early harvest' : 'nt. Külvatud katteloori alla, hea mulla niiskus'}
+              placeholder={
+                language === 'en'
+                  ? 'e.g. Sown under fleece for early harvest'
+                  : 'nt. Külvatud katteloori alla, hea mulla niiskus'
+              }
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               style={{
@@ -881,8 +955,12 @@ export const AddSuccessionDialog: React.FC<AddSuccessionDialogProps> = ({
               }}
             >
               {initialSlot
-                ? (language === 'en' ? 'Save Changes' : 'Salvesta muudatused')
-                : (language === 'en' ? 'Add Slot' : 'Kinnita külv')}
+                ? language === 'en'
+                  ? 'Save Changes'
+                  : 'Salvesta muudatused'
+                : language === 'en'
+                  ? 'Add Slot'
+                  : 'Kinnita külv'}
             </button>
           </div>
         </form>

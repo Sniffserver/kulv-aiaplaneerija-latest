@@ -93,88 +93,90 @@ export const SuccessionPlannerEngine = {
       const family = CropRotationEngine.resolveFamilyId(plant);
       const rotationAlerts = CropRotationEngine.evaluateRotation(
         plant,
-      bedSlots.map((s) => ({
-        year: s.year,
-        plantId: s.plantId,
-        plantName: s.plantName,
-        family: s.botanicalFamily
-      })),
-      targetYear
-    );
+        bedSlots.map((s) => ({
+          year: s.year,
+          plantId: s.plantId,
+          plantName: s.plantName,
+          family: s.botanicalFamily
+        })),
+        targetYear
+      );
 
-    let rotationCompatibility: 'optimal' | 'acceptable' | 'warning' | 'blocked' = 'optimal';
-    for (const alert of rotationAlerts) {
-      if (alert.severity === 'danger') {
-        rotationCompatibility = 'blocked';
-        blockingConstraints.push(alert.message);
-        warnings.push(alert.recommendation);
-      } else if (alert.severity === 'warning') {
-        rotationCompatibility = 'warning';
-        warnings.push(alert.recommendation);
-      } else if (alert.severity === 'good') {
-        rotationCompatibility = 'optimal';
+      let rotationCompatibility: 'optimal' | 'acceptable' | 'warning' | 'blocked' = 'optimal';
+      for (const alert of rotationAlerts) {
+        if (alert.severity === 'danger') {
+          rotationCompatibility = 'blocked';
+          blockingConstraints.push(alert.message);
+          warnings.push(alert.recommendation);
+        } else if (alert.severity === 'warning') {
+          rotationCompatibility = 'warning';
+          warnings.push(alert.recommendation);
+        } else if (alert.severity === 'good') {
+          rotationCompatibility = 'optimal';
+        }
       }
+
+      // Prior family direct check
+      if (family === priorFamily && family !== 'Fabaceae') {
+        if (rotationCompatibility !== 'blocked') rotationCompatibility = 'warning';
+        warnings.push(`Sama sugukond (${family}) eelneva kultuuriga – suurenenud haiguserisk.`);
+      }
+
+      // Calculate feasible cycles count
+      const availableSeasonDays = seasonEndDoy - getDayOfYear('04-15');
+      const feasibleCyclesCount = Math.max(1, Math.floor(availableSeasonDays / (daysOccupying + 10)));
+
+      // Suitability Score Calculation (0 - 100)
+      let score = 80;
+      if (blockingConstraints.length > 0 || rotationCompatibility === 'blocked') {
+        score = 0;
+      } else {
+        if (rotationCompatibility === 'optimal') score += 15;
+        if (rotationCompatibility === 'warning') score -= 20;
+        if (isUncertain) score -= 10;
+        if (estimatedHarvestDoy + 10 > seasonEndDoy) score -= 25; // Tight fit
+        if (family === 'Fabaceae') score += 10; // Nitrogen fixer bonus
+      }
+      score = Math.max(0, Math.min(100, score));
+
+      let suitabilityCategory: 'excellent' | 'good' | 'marginal' | 'blocked' = 'excellent';
+      if (score >= 85) suitabilityCategory = 'excellent';
+      else if (score >= 65) suitabilityCategory = 'good';
+      else if (score >= 40) suitabilityCategory = 'marginal';
+      else suitabilityCategory = 'blocked';
+
+      const earliestSowDateStr = dayOfYearToMMDD(earliestSowDoy);
+      const estimatedHarvestDateStr = dayOfYearToMMDD(Math.min(estimatedHarvestDoy, seasonEndDoy));
+
+      const explanationEt =
+        blockingConstraints.length > 0
+          ? `Takistatud: ${blockingConstraints[0]}`
+          : `Sobib suurepäraselt järeltulijaks: saab külvata alates ${earliestSowDateStr}, valmib eeldatavalt ${estimatedHarvestDateStr} (${daysOccupying} päeva).`;
+
+      const explanationEn =
+        blockingConstraints.length > 0
+          ? `Blocked: ${blockingConstraints[0]}`
+          : `Excellent succession candidate: sow from ${earliestSowDateStr}, expected harvest ${estimatedHarvestDateStr} (${daysOccupying} days).`;
+
+      recommendations.push({
+        plant,
+        earliestSowDate: earliestSowDateStr,
+        estimatedHarvestDate: estimatedHarvestDateStr,
+        daysOccupyingBed: daysOccupying,
+        suitabilityScore: score,
+        suitabilityCategory,
+        rotationCompatibility,
+        feasibleCyclesCount,
+        blockingConstraints,
+        warnings,
+        explanationEt,
+        explanationEn,
+        isUncertain,
+        missingDataNotes: missingNotes.length > 0 ? missingNotes : undefined
+      });
     }
 
-    // Prior family direct check
-    if (family === priorFamily && family !== 'Fabaceae') {
-      if (rotationCompatibility !== 'blocked') rotationCompatibility = 'warning';
-      warnings.push(`Sama sugukond (${family}) eelneva kultuuriga – suurenenud haiguserisk.`);
-    }
-
-    // Calculate feasible cycles count
-    const availableSeasonDays = seasonEndDoy - getDayOfYear('04-15');
-    const feasibleCyclesCount = Math.max(1, Math.floor(availableSeasonDays / (daysOccupying + 10)));
-
-    // Suitability Score Calculation (0 - 100)
-    let score = 80;
-    if (blockingConstraints.length > 0 || rotationCompatibility === 'blocked') {
-      score = 0;
-    } else {
-      if (rotationCompatibility === 'optimal') score += 15;
-      if (rotationCompatibility === 'warning') score -= 20;
-      if (isUncertain) score -= 10;
-      if (estimatedHarvestDoy + 10 > seasonEndDoy) score -= 25; // Tight fit
-      if (family === 'Fabaceae') score += 10; // Nitrogen fixer bonus
-    }
-    score = Math.max(0, Math.min(100, score));
-
-    let suitabilityCategory: 'excellent' | 'good' | 'marginal' | 'blocked' = 'excellent';
-    if (score >= 85) suitabilityCategory = 'excellent';
-    else if (score >= 65) suitabilityCategory = 'good';
-    else if (score >= 40) suitabilityCategory = 'marginal';
-    else suitabilityCategory = 'blocked';
-
-    const earliestSowDateStr = dayOfYearToMMDD(earliestSowDoy);
-    const estimatedHarvestDateStr = dayOfYearToMMDD(Math.min(estimatedHarvestDoy, seasonEndDoy));
-
-    const explanationEt = blockingConstraints.length > 0
-      ? `Takistatud: ${blockingConstraints[0]}`
-      : `Sobib suurepäraselt järeltulijaks: saab külvata alates ${earliestSowDateStr}, valmib eeldatavalt ${estimatedHarvestDateStr} (${daysOccupying} päeva).`;
-
-    const explanationEn = blockingConstraints.length > 0
-      ? `Blocked: ${blockingConstraints[0]}`
-      : `Excellent succession candidate: sow from ${earliestSowDateStr}, expected harvest ${estimatedHarvestDateStr} (${daysOccupying} days).`;
-
-    recommendations.push({
-      plant,
-      earliestSowDate: earliestSowDateStr,
-      estimatedHarvestDate: estimatedHarvestDateStr,
-      daysOccupyingBed: daysOccupying,
-      suitabilityScore: score,
-      suitabilityCategory,
-      rotationCompatibility,
-      feasibleCyclesCount,
-      blockingConstraints,
-      warnings,
-      explanationEt,
-      explanationEn,
-      isUncertain,
-      missingDataNotes: missingNotes.length > 0 ? missingNotes : undefined
-    });
+    // Sort by suitability score descending
+    return recommendations.sort((a, b) => b.suitabilityScore - a.suitabilityScore);
   }
-
-  // Sort by suitability score descending
-  return recommendations.sort((a, b) => b.suitabilityScore - a.suitabilityScore);
-}
 };

@@ -1,6 +1,12 @@
 import { GardenStateSnapshot, replaceGardenState } from '../gardenState';
 import { getStoredItem, setStoredItem } from '../../logic/storageDb';
-import { INITIAL_BEDS, INITIAL_TASKS, INITIAL_JOURNAL, INITIAL_SETTINGS, INITIAL_YARD_PLAN } from '../../data/defaultData';
+import {
+  INITIAL_BEDS,
+  INITIAL_TASKS,
+  INITIAL_JOURNAL,
+  INITIAL_SETTINGS,
+  INITIAL_YARD_PLAN
+} from '../../data/defaultData';
 
 export class SyncRepository {
   /**

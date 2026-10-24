@@ -10,27 +10,27 @@ export type BotanicalFamilyId =
   | 'Other';
 
 export type AgronomicGuild =
-  | 'heavy_feeder'    // High N/K demand (Cabbage, Squash, Tomato, Corn)
-  | 'light_feeder'    // Moderate demand (Carrot, Beet, Onion, Radish)
-  | 'nitrogen_fixer'  // Soil enricher (Peas, Beans, Clover)
-  | 'cover_crop';     // Soil cleanser / deep rooter (Rye, Phacelia, Buckwheat)
+  | 'heavy_feeder' // High N/K demand (Cabbage, Squash, Tomato, Corn)
+  | 'light_feeder' // Moderate demand (Carrot, Beet, Onion, Radish)
+  | 'nitrogen_fixer' // Soil enricher (Peas, Beans, Clover)
+  | 'cover_crop'; // Soil cleanser / deep rooter (Rye, Phacelia, Buckwheat)
 
 export type SeasonSlot =
-  | 'early_spring'    // March - May (cold hardy greens, radishes, onion sets)
-  | 'main_crop'       // May - August (warm season crops, fruiting vegetables)
-  | 'autumn_late';    // August - November (fall greens, winter roots, garlic, cover crops)
+  | 'early_spring' // March - May (cold hardy greens, radishes, onion sets)
+  | 'main_crop' // May - August (warm season crops, fruiting vegetables)
+  | 'autumn_late'; // August - November (fall greens, winter roots, garlic, cover crops)
 
 export type CropProtectionType =
-  | 'none'            // Avamaa (Open ground)
-  | 'fleece'          // Katteloor 17-30g (+10 to +14 days)
-  | 'cold_frame'      // Külmlava (+14 to +18 days)
-  | 'greenhouse';     // Kasvuhoone (+21 to +28 days)
+  | 'none' // Avamaa (Open ground)
+  | 'fleece' // Katteloor 17-30g (+10 to +14 days)
+  | 'cold_frame' // Külmlava (+14 to +18 days)
+  | 'greenhouse'; // Kasvuhoone (+21 to +28 days)
 
 export type EstonianRegionId =
-  | 'north_coast'     // Zone 5b/6a: Tallinn, Viimsi, Lahemaa
-  | 'central'         // Zone 5a: Paide, Rapla, Jõgeva, Pandivere
-  | 'southeast'       // Zone 4b/5a: Tartu, Võru, Valga, Setomaa
-  | 'islands';        // Zone 6a/6b: Saaremaa, Hiiumaa, Muhu
+  | 'north_coast' // Zone 5b/6a: Tallinn, Viimsi, Lahemaa
+  | 'central' // Zone 5a: Paide, Rapla, Jõgeva, Pandivere
+  | 'southeast' // Zone 4b/5a: Tartu, Võru, Valga, Setomaa
+  | 'islands'; // Zone 6a/6b: Saaremaa, Hiiumaa, Muhu
 
 /**
  * Scientifically grounded evidence classification:
@@ -39,14 +39,10 @@ export type EstonianRegionId =
  * - empirical_hort: Documented commercial master grower trials
  * - traditional: Folk wisdom / companion lore (must include scientific scrutiny note)
  */
-export type EvidenceTier =
-  | 'peer_reviewed'
-  | 'institutional_ext'
-  | 'empirical_hort'
-  | 'traditional';
+export type EvidenceTier = 'peer_reviewed' | 'institutional_ext' | 'empirical_hort' | 'traditional';
 
 export interface EvidenceCitation {
-  source: string;          // e.g. "Eesti Maaülikool (EMÜ)", "Maaelu Teadmuskeskus (METK)", "RHS"
+  source: string; // e.g. "Eesti Maaülikool (EMÜ)", "Maaelu Teadmuskeskus (METK)", "RHS"
   publication?: string;
   tier: EvidenceTier;
   url?: string;
@@ -83,9 +79,9 @@ export interface BedSuccessionSlot {
   variety?: string;
   botanicalFamily: BotanicalFamilyId;
   guild: AgronomicGuild;
-  sowDate: string;        // MM-DD or YYYY-MM-DD
-  transplantDate?: string;// MM-DD or YYYY-MM-DD
-  harvestDate: string;    // MM-DD or YYYY-MM-DD
+  sowDate: string; // MM-DD or YYYY-MM-DD
+  transplantDate?: string; // MM-DD or YYYY-MM-DD
+  harvestDate: string; // MM-DD or YYYY-MM-DD
   daysToMaturity: number;
   protectionType: CropProtectionType;
   notes?: string;
@@ -145,7 +141,7 @@ export interface BedYearHistoryRecord {
 
 export interface RotationYearPlan {
   yearOffset: number; // 0, 1, 2, 3, 4 (0 = 2026, 1 = 2027 etc.)
-  cycleStep: number;  // 1 to N
+  cycleStep: number; // 1 to N
   nameEt: string;
   nameEn: string;
   targetFamilies: BotanicalFamilyId[];
@@ -159,7 +155,8 @@ export interface RotationYearPlan {
 export interface RotationCyclePlan {
   bedId: string;
   cycleLengthYears: 3 | 4 | 5;
-  templateId: 'standard_nordic_4y' | 'solanaceae_break_4y' | 'intensive_greenmanure_3y' | 'permaculture_guild_5y' | 'custom';
+  templateId:
+    'standard_nordic_4y' | 'solanaceae_break_4y' | 'intensive_greenmanure_3y' | 'permaculture_guild_5y' | 'custom';
   templateNameEt: string;
   templateNameEn: string;
   startYear: number;

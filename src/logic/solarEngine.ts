@@ -66,8 +66,7 @@ export const SolarEngine = {
    */
   calculateDaylightHours(lat: number, dayOfYear: number): number {
     const latRad = (lat * Math.PI) / 180.0;
-    const declinationRad =
-      (23.45 * Math.sin(((360.0 / 365.0) * (dayOfYear - 81) * Math.PI) / 180.0) * Math.PI) / 180.0;
+    const declinationRad = (23.45 * Math.sin(((360.0 / 365.0) * (dayOfYear - 81) * Math.PI) / 180.0) * Math.PI) / 180.0;
     const cosHourAngle = -Math.tan(latRad) * Math.tan(declinationRad);
     const clampedCos = Math.max(-1.0, Math.min(1.0, cosHourAngle));
     const hourAngle = (Math.acos(clampedCos) * 180.0) / Math.PI;
@@ -155,7 +154,11 @@ export const SolarEngine = {
    * Calculates and caches shadow displacement vector for an obstacle given height, sun altitude, and sun azimuth.
    * Uses memoization to prevent expensive trigonometry during 60 FPS canvas redraws.
    */
-  getCachedShadowVector(heightM: number, solarAltitudeDeg: number, solarAzimuthDeg = 180): { dx: number; dy: number; length: number } {
+  getCachedShadowVector(
+    heightM: number,
+    solarAltitudeDeg: number,
+    solarAzimuthDeg = 180
+  ): { dx: number; dy: number; length: number } {
     const roundedAlt = Math.round(solarAltitudeDeg * 2) / 2;
     const roundedAz = Math.round(solarAzimuthDeg * 2) / 2;
     const cacheKey = `${heightM.toFixed(1)}_${roundedAlt}_${roundedAz}`;

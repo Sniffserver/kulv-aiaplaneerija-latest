@@ -39,19 +39,110 @@ const SIDEREAL_MONTH = 27.321661;
 // Reference anchor when moon enters Aries (Fire/Fruit): 2026-01-01 00:00 UTC ~ Pisces/Aries border
 const KNOWN_ARIES_ANCHOR_UTC = 1767225600000;
 
-const ZODIAC_ELEMENTS: { name: string; element: BiodynamicElementType; elementName: string; icon: string; crops: string[]; advice: string }[] = [
-  { name: 'Jäär (Tuli)', element: 'fruit', elementName: 'Viljapäev', icon: '🍅', crops: ['Tomat', 'Kurk', 'Kõrvits', 'Hernes', 'Uba', 'Paprika'], advice: 'Soodne vilja kandvate köögiviljade külviks ja istutuseks.' },
-  { name: 'Sõnn (Maa)', element: 'root', elementName: 'Juurepäev', icon: '🥕', crops: ['Porgand', 'Peet', 'Redis', 'Sibul', 'Küüslauk', 'Kartul'], advice: 'Parim aeg juurviljade ja mugulate külviks ning muldamiseks.' },
-  { name: 'Kaksikud (Õhk)', element: 'flower', elementName: 'Õiepäev', icon: '🌸', crops: ['Lilled', 'Brokoli', 'Lillkapsas', 'Maitsetaimed'], advice: 'Soodne lilletaimede ja õisikkapsaste külviks ning hooldustöödeks.' },
-  { name: 'Vähk (Vesi)', element: 'leaf', elementName: 'Lehepäev', icon: '🥬', crops: ['Salat', 'Spinat', 'Lehtkapsas', 'Lehtpeet', 'Till'], advice: 'Ideaalne lehtköögiviljade ja ürtide külviks ning kastmiseks.' },
-  { name: 'Lõvi (Tuli)', element: 'fruit', elementName: 'Viljapäev', icon: '🍅', crops: ['Tomat', 'Mais', 'Kõrvitsalised', 'Marjad'], advice: 'Väga viljakas päev soojust armastavate viljaköögiviljade tarvis.' },
-  { name: 'Neitsi (Maa)', element: 'root', elementName: 'Juurepäev', icon: '🥕', crops: ['Porgand', 'Mustjuur', 'Kaalikas', 'Naeris'], advice: 'Soodustab tugevat juurestikku ja säilitusjuurviljade arengut.' },
-  { name: 'Kaalud (Õhk)', element: 'flower', elementName: 'Õiepäev', icon: '🌸', crops: ['Lilled', 'Saialill', 'Ravimtaimed'], advice: 'Õitsemise ja seemnekasvatuse toetamine.' },
-  { name: 'Skorpion (Vesi)', element: 'leaf', elementName: 'Lehepäev', icon: '🥬', crops: ['Kapsalised', 'Salatid', 'Basiilik', 'Münt'], advice: 'Lopsaka lehemassi areng ja kastmistööd.' },
-  { name: 'Ambur (Tuli)', element: 'fruit', elementName: 'Viljapäev', icon: '🍅', crops: ['Uba', 'Hernes', 'Paprika', 'Tomat'], advice: 'Kaunviljade ja viljataimede külv ning toetamine.' },
-  { name: 'Kaljukits (Maa)', element: 'root', elementName: 'Juurepäev', icon: '🥕', crops: ['Kartul', 'Porgand', 'Sibul', 'Peet'], advice: 'Vastupidavad ja kauasäilivad juurviljad.' },
-  { name: 'Veevalaja (Õhk)', element: 'flower', elementName: 'Õiepäev', icon: '🌸', crops: ['Õitsvad ürdid', 'Dekoratiivtaimed'], advice: 'Kobestamine ja mulla õhustamine.' },
-  { name: 'Kalad (Vesi)', element: 'leaf', elementName: 'Lehepäev', icon: '🥬', crops: ['Spinat', 'Hapukapsasordid', 'Murulauk'], advice: 'Vee-elemendi taimede külv ja kastmine.' }
+const ZODIAC_ELEMENTS: {
+  name: string;
+  element: BiodynamicElementType;
+  elementName: string;
+  icon: string;
+  crops: string[];
+  advice: string;
+}[] = [
+  {
+    name: 'Jäär (Tuli)',
+    element: 'fruit',
+    elementName: 'Viljapäev',
+    icon: '🍅',
+    crops: ['Tomat', 'Kurk', 'Kõrvits', 'Hernes', 'Uba', 'Paprika'],
+    advice: 'Soodne vilja kandvate köögiviljade külviks ja istutuseks.'
+  },
+  {
+    name: 'Sõnn (Maa)',
+    element: 'root',
+    elementName: 'Juurepäev',
+    icon: '🥕',
+    crops: ['Porgand', 'Peet', 'Redis', 'Sibul', 'Küüslauk', 'Kartul'],
+    advice: 'Parim aeg juurviljade ja mugulate külviks ning muldamiseks.'
+  },
+  {
+    name: 'Kaksikud (Õhk)',
+    element: 'flower',
+    elementName: 'Õiepäev',
+    icon: '🌸',
+    crops: ['Lilled', 'Brokoli', 'Lillkapsas', 'Maitsetaimed'],
+    advice: 'Soodne lilletaimede ja õisikkapsaste külviks ning hooldustöödeks.'
+  },
+  {
+    name: 'Vähk (Vesi)',
+    element: 'leaf',
+    elementName: 'Lehepäev',
+    icon: '🥬',
+    crops: ['Salat', 'Spinat', 'Lehtkapsas', 'Lehtpeet', 'Till'],
+    advice: 'Ideaalne lehtköögiviljade ja ürtide külviks ning kastmiseks.'
+  },
+  {
+    name: 'Lõvi (Tuli)',
+    element: 'fruit',
+    elementName: 'Viljapäev',
+    icon: '🍅',
+    crops: ['Tomat', 'Mais', 'Kõrvitsalised', 'Marjad'],
+    advice: 'Väga viljakas päev soojust armastavate viljaköögiviljade tarvis.'
+  },
+  {
+    name: 'Neitsi (Maa)',
+    element: 'root',
+    elementName: 'Juurepäev',
+    icon: '🥕',
+    crops: ['Porgand', 'Mustjuur', 'Kaalikas', 'Naeris'],
+    advice: 'Soodustab tugevat juurestikku ja säilitusjuurviljade arengut.'
+  },
+  {
+    name: 'Kaalud (Õhk)',
+    element: 'flower',
+    elementName: 'Õiepäev',
+    icon: '🌸',
+    crops: ['Lilled', 'Saialill', 'Ravimtaimed'],
+    advice: 'Õitsemise ja seemnekasvatuse toetamine.'
+  },
+  {
+    name: 'Skorpion (Vesi)',
+    element: 'leaf',
+    elementName: 'Lehepäev',
+    icon: '🥬',
+    crops: ['Kapsalised', 'Salatid', 'Basiilik', 'Münt'],
+    advice: 'Lopsaka lehemassi areng ja kastmistööd.'
+  },
+  {
+    name: 'Ambur (Tuli)',
+    element: 'fruit',
+    elementName: 'Viljapäev',
+    icon: '🍅',
+    crops: ['Uba', 'Hernes', 'Paprika', 'Tomat'],
+    advice: 'Kaunviljade ja viljataimede külv ning toetamine.'
+  },
+  {
+    name: 'Kaljukits (Maa)',
+    element: 'root',
+    elementName: 'Juurepäev',
+    icon: '🥕',
+    crops: ['Kartul', 'Porgand', 'Sibul', 'Peet'],
+    advice: 'Vastupidavad ja kauasäilivad juurviljad.'
+  },
+  {
+    name: 'Veevalaja (Õhk)',
+    element: 'flower',
+    elementName: 'Õiepäev',
+    icon: '🌸',
+    crops: ['Õitsvad ürdid', 'Dekoratiivtaimed'],
+    advice: 'Kobestamine ja mulla õhustamine.'
+  },
+  {
+    name: 'Kalad (Vesi)',
+    element: 'leaf',
+    elementName: 'Lehepäev',
+    icon: '🥬',
+    crops: ['Spinat', 'Hapukapsasordid', 'Murulauk'],
+    advice: 'Vee-elemendi taimede külv ja kastmine.'
+  }
 ];
 
 export const LunarCalendar = {
@@ -128,7 +219,7 @@ export const LunarCalendar = {
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
     // Cycle across 12 signs (~2.28 days per sign)
     const signSpanDays = SIDEREAL_MONTH / 12.0;
-    const signIndex = (Math.floor(diffDays / signSpanDays) % 12 + 12) % 12;
+    const signIndex = ((Math.floor(diffDays / signSpanDays) % 12) + 12) % 12;
 
     const currentSign = ZODIAC_ELEMENTS[signIndex];
 

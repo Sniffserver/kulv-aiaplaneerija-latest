@@ -116,10 +116,7 @@ export const BOTANICAL_FAMILY_DETAILS: Record<BotanicalFamilyId, BotanicalFamily
       'Valgemädanik (Sclerotinia sclerotiorum)',
       'Herneseemnekärbes ja juuremädanikud'
     ],
-    primaryDiseaseRisksEn: [
-      'Pea moth & Ascochyta blight (Ascochyta pisi)',
-      'White mold (Sclerotinia sclerotiorum)'
-    ],
+    primaryDiseaseRisksEn: ['Pea moth & Ascochyta blight (Ascochyta pisi)', 'White mold (Sclerotinia sclerotiorum)'],
     descriptionEt: 'Seovad õhust lämmastikku mügarbakterite abil. Parim eelvili kapsale ja kõrvitsale.',
     descriptionEn: 'Fix atmospheric nitrogen via Rhizobium root nodules. Superior predecessor for brassicas.',
     pathogenVectors: ['Ascochyta pisi', 'Sclerotinia sclerotiorum'],
@@ -174,11 +171,7 @@ export const BOTANICAL_FAMILY_DETAILS: Record<BotanicalFamilyId, BotanicalFamily
       'Kurkide närbumistõbi (Fusarium oxysporum)',
       'Kurgi-mosaiikviirus (CMV)'
     ],
-    primaryDiseaseRisksEn: [
-      'Powdery mildew (Podosphaera fusca)',
-      'Fusarium wilt',
-      'Cucumber mosaic virus'
-    ],
+    primaryDiseaseRisksEn: ['Powdery mildew (Podosphaera fusca)', 'Fusarium wilt', 'Cucumber mosaic virus'],
     descriptionEt: 'Kiirekasvulised soojalembesed hiiglased, vajavad rikkalikult komposti ja orgaanilist ainet.',
     descriptionEn: 'Vigorous warm-season growers requiring rich compost and living organic matter.',
     pathogenVectors: ['Podosphaera fusca', 'Fusarium oxysporum'],
@@ -203,11 +196,7 @@ export const BOTANICAL_FAMILY_DETAILS: Record<BotanicalFamilyId, BotanicalFamily
       'Juuremädanik ja südamemädanik (boori puudus)',
       'Spinati-ebajahukaste (Peronospora effusa)'
     ],
-    primaryDiseaseRisksEn: [
-      'Cercospora leaf spot',
-      'Root rot & Boron deficiency heart rot',
-      'Downy mildew'
-    ],
+    primaryDiseaseRisksEn: ['Cercospora leaf spot', 'Root rot & Boron deficiency heart rot', 'Downy mildew'],
     descriptionEt: 'Vajavad boori ja kaaliumi. Hea vahekultuur sarikaliste või kurkide järel.',
     descriptionEn: 'Sensitive to boron deficiency. Excellent follower after umbellifers or alliums.',
     pathogenVectors: ['Cercospora beticola', 'Peronospora effusa'],
@@ -232,11 +221,7 @@ export const BOTANICAL_FAMILY_DETAILS: Record<BotanicalFamilyId, BotanicalFamily
       'Sibulakoi ja sibulakärbes (Delia antiqua)',
       'Ebajahukaste (Peronospora destructor)'
     ],
-    primaryDiseaseRisksEn: [
-      'White rot (Stromatinia cepivora)',
-      'Onion fly (Delia antiqua)',
-      'Downy mildew'
-    ],
+    primaryDiseaseRisksEn: ['White rot (Stromatinia cepivora)', 'Onion fly (Delia antiqua)', 'Downy mildew'],
     descriptionEt: 'Looduslikud mullapuhastajad fütontsiididega. Desinfitseerivad mulda patogeenidest.',
     descriptionEn: 'Natural soil cleansers emitting antimicrobial phytoncides into the root zone.',
     pathogenVectors: ['Stromatinia cepivora', 'Delia antiqua', 'Peronospora destructor'],
@@ -256,14 +241,8 @@ export const BOTANICAL_FAMILY_DETAILS: Record<BotanicalFamilyId, BotanicalFamily
     borderColor: '#4D6620',
     bgTint: 'rgba(111, 140, 56, 0.12)',
     minimumRotationYears: 2,
-    primaryDiseaseRisks: [
-      'Salati-ebajahukaste (Bremia lactucae)',
-      'Hallitus ja lehemädanik (Botrytis cinerea)'
-    ],
-    primaryDiseaseRisksEn: [
-      'Lettuce downy mildew (Bremia lactucae)',
-      'Grey mold (Botrytis cinerea)'
-    ],
+    primaryDiseaseRisks: ['Salati-ebajahukaste (Bremia lactucae)', 'Hallitus ja lehemädanik (Botrytis cinerea)'],
+    primaryDiseaseRisksEn: ['Lettuce downy mildew (Bremia lactucae)', 'Grey mold (Botrytis cinerea)'],
     descriptionEt: 'Madala toitainevajadusega kiired kultuurid. Ideaalsed kevade ja sügise vahekultuurid.',
     descriptionEn: 'Low feeder fast turnover crops. Ideal filler for early spring and autumn succession.',
     pathogenVectors: ['Bremia lactucae', 'Botrytis cinerea'],
@@ -521,7 +500,11 @@ export const ROTATION_TEMPLATES: Record<string, Omit<RotationCyclePlan, 'bedId'>
 
 export function createDefaultRotationPlan(
   bedId: string,
-  templateId: 'standard_nordic_4y' | 'solanaceae_break_4y' | 'intensive_greenmanure_3y' | 'permaculture_guild_5y' = 'standard_nordic_4y',
+  templateId:
+    | 'standard_nordic_4y'
+    | 'solanaceae_break_4y'
+    | 'intensive_greenmanure_3y'
+    | 'permaculture_guild_5y' = 'standard_nordic_4y',
   startYear: number = new Date().getFullYear()
 ): RotationCyclePlan {
   const template = ROTATION_TEMPLATES[templateId] || ROTATION_TEMPLATES.standard_nordic_4y;
@@ -551,13 +534,25 @@ export const CropRotationEngine = {
   normalizeFamily(familyStr: string): string {
     const lower = (familyStr || '').toLowerCase();
     if (lower.includes('solan') || lower.includes('maavitsa')) return BotanicalFamilies.SOLANACEAE;
-    if (lower.includes('brassic') || lower.includes('ristõi') || lower.includes('kapsa')) return BotanicalFamilies.BRASSICACEAE;
-    if (lower.includes('faba') || lower.includes('liblik') || lower.includes('kauna')) return BotanicalFamilies.FABACEAE;
+    if (lower.includes('brassic') || lower.includes('ristõi') || lower.includes('kapsa'))
+      return BotanicalFamilies.BRASSICACEAE;
+    if (lower.includes('faba') || lower.includes('liblik') || lower.includes('kauna'))
+      return BotanicalFamilies.FABACEAE;
     if (lower.includes('apia') || lower.includes('sarika')) return BotanicalFamilies.APIACEAE;
-    if (lower.includes('allia') || lower.includes('allio') || lower.includes('amaryll') || lower.includes('laugu') || lower.includes('sibul') || lower.includes('küüslauk')) return BotanicalFamilies.ALLIACEAE;
+    if (
+      lower.includes('allia') ||
+      lower.includes('allio') ||
+      lower.includes('amaryll') ||
+      lower.includes('laugu') ||
+      lower.includes('sibul') ||
+      lower.includes('küüslauk')
+    )
+      return BotanicalFamilies.ALLIACEAE;
     if (lower.includes('cucurbit') || lower.includes('kõrvitsa')) return BotanicalFamilies.CUCURBITACEAE;
-    if (lower.includes('amaranth') || lower.includes('chenopod') || lower.includes('maltsa')) return BotanicalFamilies.AMARANTHACEAE;
-    if (lower.includes('aster') || lower.includes('korv') || lower.includes('salat')) return BotanicalFamilies.ASTERACEAE;
+    if (lower.includes('amaranth') || lower.includes('chenopod') || lower.includes('maltsa'))
+      return BotanicalFamilies.AMARANTHACEAE;
+    if (lower.includes('aster') || lower.includes('korv') || lower.includes('salat'))
+      return BotanicalFamilies.ASTERACEAE;
     return familyStr || BotanicalFamilies.OTHER;
   },
 
@@ -565,7 +560,8 @@ export const CropRotationEngine = {
    * Resolves a Plant entity or family string to BotanicalFamilyId.
    */
   resolveFamilyId(plantOrFamily: Plant | string): BotanicalFamilyId {
-    const raw = typeof plantOrFamily === 'string' ? plantOrFamily : (plantOrFamily.family || plantOrFamily.scientificName || '');
+    const raw =
+      typeof plantOrFamily === 'string' ? plantOrFamily : plantOrFamily.family || plantOrFamily.scientificName || '';
     const norm = this.normalizeFamily(raw);
     if (norm === BotanicalFamilies.SOLANACEAE) return 'Solanaceae';
     if (norm === BotanicalFamilies.BRASSICACEAE) return 'Brassicaceae';
@@ -601,18 +597,14 @@ export const CropRotationEngine = {
     const warnings: RotationWarning[] = [];
     const candidateFam = this.normalizeFamily(candidatePlant.family);
 
-    const sortedPast = [...pastPlantings]
-      .filter((p) => p.year < currentYear)
-      .sort((a, b) => b.year - a.year);
+    const sortedPast = [...pastPlantings].filter((p) => p.year < currentYear).sort((a, b) => b.year - a.year);
 
     if (sortedPast.length === 0) {
       return warnings;
     }
 
     const previousSeason = sortedPast.find((p) => p.year === currentYear - 1);
-    const sameFamilyPast = sortedPast.filter(
-      (p) => this.normalizeFamily(p.family) === candidateFam
-    );
+    const sameFamilyPast = sortedPast.filter((p) => this.normalizeFamily(p.family) === candidateFam);
 
     // Rule 1: Same botanical family consecutively (previous season)
     if (previousSeason && this.normalizeFamily(previousSeason.family) === candidateFam) {
@@ -621,9 +613,11 @@ export const CropRotationEngine = {
           severity: 'danger',
           title: 'Viljavahelduse tõsine rikkumine: Maavitsalised (Solanaceae)',
           message: `${candidatePlant.name} istutamine samasse kohta kus mullu kasvas ${previousSeason.plantName}.`,
-          recommendation: 'Maavitsalistel (tomat, kartul) on suur lehemädaniku ja mullaväsimuse risk. Pea vähemalt 3-4 aastat vahet!',
+          recommendation:
+            'Maavitsalistel (tomat, kartul) on suur lehemädaniku ja mullaväsimuse risk. Pea vähemalt 3-4 aastat vahet!',
           family: candidateFam,
-          biologicalMechanism: 'Phytophthora infestans oospoorid ja Globodera nematoodid talvituvad mullas ning nakatavad uue põlvkonna juured.',
+          biologicalMechanism:
+            'Phytophthora infestans oospoorid ja Globodera nematoodid talvituvad mullas ning nakatavad uue põlvkonna juured.',
           evidence: BOTANICAL_FAMILY_DETAILS.Solanaceae.evidenceCitation
         });
       } else if (candidateFam === BotanicalFamilies.BRASSICACEAE) {
@@ -631,9 +625,11 @@ export const CropRotationEngine = {
           severity: 'danger',
           title: 'Kapsanuutri oht: Ristõielised (Brassicaceae)',
           message: `${candidatePlant.name} pärast eelmisel aastal samas kasvanud taime (${previousSeason.plantName}).`,
-          recommendation: 'Ristõielisi ei tohi järjest kasvatada. Mullas säilivad ohtlikud kapsanuutri spoorid. Soovituslik vahe 4 aastat.',
+          recommendation:
+            'Ristõielisi ei tohi järjest kasvatada. Mullas säilivad ohtlikud kapsanuutri spoorid. Soovituslik vahe 4 aastat.',
           family: candidateFam,
-          biologicalMechanism: 'Plasmodiophora brassicae puhkespoorid püsivad mullas eluvõimelistena kuni 8-10 aastat ja tekitavad juurtele pahkasid.',
+          biologicalMechanism:
+            'Plasmodiophora brassicae puhkespoorid püsivad mullas eluvõimelistena kuni 8-10 aastat ja tekitavad juurtele pahkasid.',
           evidence: BOTANICAL_FAMILY_DETAILS.Brassicaceae.evidenceCitation
         });
       } else if (candidateFam === BotanicalFamilies.ALLIACEAE) {
@@ -643,7 +639,8 @@ export const CropRotationEngine = {
           message: `Sibulalised (${candidatePlant.name}) järgnevad vahetult teisele laugulisele (${previousSeason.plantName}).`,
           recommendation: 'Sibulakoi ja juuremädaniku vältimiseks vaheta peenart vähemalt 3 aastaks.',
           family: candidateFam,
-          biologicalMechanism: 'Stromatinia cepivora sklerootsiumid säilivad mullas ja kutsuvad esile juurekaela massilise pehmenemise.',
+          biologicalMechanism:
+            'Stromatinia cepivora sklerootsiumid säilivad mullas ja kutsuvad esile juurekaela massilise pehmenemise.',
           evidence: BOTANICAL_FAMILY_DETAILS.Allioideae.evidenceCitation
         });
       } else if (candidateFam !== BotanicalFamilies.FABACEAE) {
@@ -653,17 +650,24 @@ export const CropRotationEngine = {
           message: `Sama sugukonna taimed (${candidatePlant.name} ja ${previousSeason.plantName}) kaks aastat järjest samas mullas.`,
           recommendation: 'Viljavaheldus hoiab ära mulla toitainete ühekülgse kurnamise ja kahjurite kogunemise.',
           family: candidateFam,
-          biologicalMechanism: 'Ühekülgne juureeritiste akumuleerumine soodustab spetsiifiliste patogeenide ja kahjurite kogunemist.',
+          biologicalMechanism:
+            'Ühekülgne juureeritiste akumuleerumine soodustab spetsiifiliste patogeenide ja kahjurite kogunemist.',
           evidence: BOTANICAL_FAMILY_DETAILS.Other.evidenceCitation
         });
       }
     }
 
     // Rule 2: Multi-year rotation gap (e.g. was planted 2 years ago)
-    if (sameFamilyPast.length > 0 && (!previousSeason || this.normalizeFamily(previousSeason.family) !== candidateFam)) {
+    if (
+      sameFamilyPast.length > 0 &&
+      (!previousSeason || this.normalizeFamily(previousSeason.family) !== candidateFam)
+    ) {
       const mostRecentSame = sameFamilyPast[0];
       const yearsDiff = currentYear - mostRecentSame.year;
-      if (yearsDiff < 3 && (candidateFam === BotanicalFamilies.SOLANACEAE || candidateFam === BotanicalFamilies.BRASSICACEAE)) {
+      if (
+        yearsDiff < 3 &&
+        (candidateFam === BotanicalFamilies.SOLANACEAE || candidateFam === BotanicalFamilies.BRASSICACEAE)
+      ) {
         warnings.push({
           severity: 'warning',
           title: `Lühike viljavahelduse vahe (${yearsDiff} a)`,
@@ -671,20 +675,27 @@ export const CropRotationEngine = {
           recommendation: `Soovitatav puhkeperiood on vähemalt 3-4 aastat enne ${candidatePlant.name} tagasitoomist.`,
           family: candidateFam,
           biologicalMechanism: `Patogeenide ja haiguste inokulaadi tase pinnases väheneb oluliselt alles 3.-4. vaheaastal.`,
-          evidence: BOTANICAL_FAMILY_DETAILS[candidateFam === BotanicalFamilies.SOLANACEAE ? 'Solanaceae' : 'Brassicaceae'].evidenceCitation
+          evidence:
+            BOTANICAL_FAMILY_DETAILS[candidateFam === BotanicalFamilies.SOLANACEAE ? 'Solanaceae' : 'Brassicaceae']
+              .evidenceCitation
         });
       }
     }
 
     // Rule 3: Beneficial succession (Preceding crop was nitrogen fixer Fabaceae)
-    if (previousSeason && this.normalizeFamily(previousSeason.family) === BotanicalFamilies.FABACEAE && candidateFam !== BotanicalFamilies.FABACEAE) {
+    if (
+      previousSeason &&
+      this.normalizeFamily(previousSeason.family) === BotanicalFamilies.FABACEAE &&
+      candidateFam !== BotanicalFamilies.FABACEAE
+    ) {
       warnings.push({
         severity: 'good',
         title: 'Suurepärane eelvili! (Lämmastiku rikastus)',
         message: `Mullu kasvas siin liblikõieline (${previousSeason.plantName}), mis rikastas mulda orgaanilise lämmastikuga.`,
         recommendation: `${candidatePlant.name} saab tugeva kasvueelise komposti ja mügarbakterite talletatud lämmastikust.`,
         family: candidateFam,
-        biologicalMechanism: 'Rhizobium mügarbakterite poolt seotud orgaaniline lämmastik vabaneb aeglaselt ja toidab järgmist kultuuri ilma soolastressita.',
+        biologicalMechanism:
+          'Rhizobium mügarbakterite poolt seotud orgaaniline lämmastik vabaneb aeglaselt ja toidab järgmist kultuuri ilma soolastressita.',
         evidence: BOTANICAL_FAMILY_DETAILS.Fabaceae.evidenceCitation
       });
     }
@@ -713,9 +724,7 @@ export const CropRotationEngine = {
     const candidateBedId = bedHistory[0]?.bedId || 'bed';
 
     // Filter past years strictly prior to current gardening year
-    const pastRecords = [...bedHistory]
-      .filter((r) => r.year < currentYear)
-      .sort((a, b) => b.year - a.year);
+    const pastRecords = [...bedHistory].filter((r) => r.year < currentYear).sort((a, b) => b.year - a.year);
 
     if (pastRecords.length === 0) {
       return alerts;
@@ -725,9 +734,7 @@ export const CropRotationEngine = {
 
     // 1. Direct consecutive previous season family check
     if (previousSeason) {
-      const prevMatchingPlant = previousSeason.plantings.find(
-        (p) => this.resolveFamilyId(p.family) === candidateFam
-      );
+      const prevMatchingPlant = previousSeason.plantings.find((p) => this.resolveFamilyId(p.family) === candidateFam);
 
       if (prevMatchingPlant) {
         if (candidateFam === 'Brassicaceae') {
@@ -740,12 +747,14 @@ export const CropRotationEngine = {
             titleEn: 'Severe Clubroot Risk: Cruciferous Crops (Brassicaceae)',
             messageEt: `${candidatePlant.name} istutatakse otse eelmise aasta ristõielise (${prevMatchingPlant.plantName}) asemele.`,
             messageEn: `${candidatePlant.name} follows cruciferous crop (${prevMatchingPlant.plantName}) directly in consecutive season.`,
-            recommendationEt: 'Ristõielisi ei tohi järjestikku samasse peenrasse istutada. Pea vähemalt 4 aastat vahet ja lupja muld pH tasemele >6.8.',
+            recommendationEt:
+              'Ristõielisi ei tohi järjestikku samasse peenrasse istutada. Pea vähemalt 4 aastat vahet ja lupja muld pH tasemele >6.8.',
             recommendationEn: 'Enforce a strict 4-year break between brassicas and lime soil to maintain pH >6.8.',
             yearsApart: 1,
             conflictingPlantNames: [prevMatchingPlant.plantName],
             pathogenVector: 'Plasmodiophora brassicae (kapsanuuter)',
-            biologicalMechanism: 'Puhkespoorid (zoospoorid) püsivad mullas 8-10 a eluvõimelisena, tungivad juurekarvadesse ja põhjustavad vee- ja toitainete transporti blokeerivaid pahkasid.',
+            biologicalMechanism:
+              'Puhkespoorid (zoospoorid) püsivad mullas 8-10 a eluvõimelisena, tungivad juurekarvadesse ja põhjustavad vee- ja toitainete transporti blokeerivaid pahkasid.',
             evidence: {
               source: 'Eesti Maaülikool (EMÜ) Taimekaitselabor',
               publication: 'Ristõieliste haigused ja kapsanuutri seire Eesti muldades',
@@ -765,12 +774,14 @@ export const CropRotationEngine = {
             titleEn: 'Late Blight & Nematode Hazard: Solanaceae Direct Repeat',
             messageEt: `${candidatePlant.name} järgneb maavitsalisele (${prevMatchingPlant.plantName}), mis kasvas siin eelmisel aastal.`,
             messageEn: `${candidatePlant.name} follows another nightshade (${prevMatchingPlant.plantName}) in consecutive season.`,
-            recommendationEt: 'Maavitsaliste monokultuur hävitab saagi. Pea vähemalt 4-aastane vahe või desinfitseeri pinnas sügavuti.',
+            recommendationEt:
+              'Maavitsaliste monokultuur hävitab saagi. Pea vähemalt 4-aastane vahe või desinfitseeri pinnas sügavuti.',
             recommendationEn: 'Avoid consecutive solanaceous crops. Rotate away for at least 3-4 years.',
             yearsApart: 1,
             conflictingPlantNames: [prevMatchingPlant.plantName],
             pathogenVector: 'Phytophthora infestans ja Globodera rostochiensis',
-            biologicalMechanism: 'Mullas talvituvad oospoorid ja tsüstnematoodid nakatavad varakevadel noorte maavitsaliste juurestikku, tekitades lehemädanikku ja kängumist.',
+            biologicalMechanism:
+              'Mullas talvituvad oospoorid ja tsüstnematoodid nakatavad varakevadel noorte maavitsaliste juurestikku, tekitades lehemädanikku ja kängumist.',
             evidence: {
               source: 'Maaelu Teadmuskeskus (METK)',
               publication: 'Köögiviljade külvikorrad ja haiguste ennetamise teadusuuringud',
@@ -790,12 +801,15 @@ export const CropRotationEngine = {
             titleEn: 'Carrot Rust Fly Inoculum: Consecutive Apiaceae',
             messageEt: `${candidatePlant.name} istutatakse eelmise aasta sarikalise (${prevMatchingPlant.plantName}) järele.`,
             messageEn: `${candidatePlant.name} follows another umbellifer (${prevMatchingPlant.plantName}) directly.`,
-            recommendationEt: 'Porgandikärbse nukkude vältimiseks pea sarikalistega vähemalt 3-aastane vahe või kasuta spetsiaalset putukavõrku.',
-            recommendationEn: 'Rotate bed for at least 3 years or protect crop with insect fleece from spring fly emergence.',
+            recommendationEt:
+              'Porgandikärbse nukkude vältimiseks pea sarikalistega vähemalt 3-aastane vahe või kasuta spetsiaalset putukavõrku.',
+            recommendationEn:
+              'Rotate bed for at least 3 years or protect crop with insect fleece from spring fly emergence.',
             yearsApart: 1,
             conflictingPlantNames: [prevMatchingPlant.plantName],
             pathogenVector: 'Psila rosae (porgandikärbes) ja Alternaria dauci',
-            biologicalMechanism: 'Porgandikärbse vastsed talvituvad mullas nukkudena ja kooruvad kevadel otse uue sarikalise juurekaela vahetus läheduses.',
+            biologicalMechanism:
+              'Porgandikärbse vastsed talvituvad mullas nukkudena ja kooruvad kevadel otse uue sarikalise juurekaela vahetus läheduses.',
             evidence: {
               source: 'Royal Horticultural Society (RHS)',
               publication: 'Carrot rust fly management & crop rotation',
@@ -814,12 +828,14 @@ export const CropRotationEngine = {
             titleEn: 'White Rot Hazard: Consecutive Alliums',
             messageEt: `${candidatePlant.name} järgneb otse teisele laugulisele (${prevMatchingPlant.plantName}).`,
             messageEn: `${candidatePlant.name} directly follows another allium crop (${prevMatchingPlant.plantName}).`,
-            recommendationEt: 'Lauguliste valgemädaniku sklerootidest vabanemiseks vii sibulalised vähemalt 3 aastaks teise peenrasse.',
+            recommendationEt:
+              'Lauguliste valgemädaniku sklerootidest vabanemiseks vii sibulalised vähemalt 3 aastaks teise peenrasse.',
             recommendationEn: 'Move alliums to fresh soil for at least 3 years to starve fungal sclerotia.',
             yearsApart: 1,
             conflictingPlantNames: [prevMatchingPlant.plantName],
             pathogenVector: 'Stromatinia cepivora (sibulaliste valgemädanik)',
-            biologicalMechanism: 'Pinnases pesitsevad sklerootiumid reageerivad lauguliste juureeritistele ja nakatavad massiliselt noori sibulajuuri.',
+            biologicalMechanism:
+              'Pinnases pesitsevad sklerootiumid reageerivad lauguliste juureeritistele ja nakatavad massiliselt noori sibulajuuri.',
             evidence: {
               source: 'FiBL Research Institute of Organic Agriculture',
               publication: 'Alliaceae Soil Pathogen Lifecycle Guide',
@@ -842,7 +858,8 @@ export const CropRotationEngine = {
             recommendationEn: 'Rotate to a different botanical family to maintain balanced soil microbiology.',
             yearsApart: 1,
             conflictingPlantNames: [prevMatchingPlant.plantName],
-            biologicalMechanism: 'Sama liigi või perekonna juureeritiste (eksudaatide) kogunemine selekteerib kahjulikke mullaorganisme ja viib mullaväsimuseni.',
+            biologicalMechanism:
+              'Sama liigi või perekonna juureeritiste (eksudaatide) kogunemine selekteerib kahjulikke mullaorganisme ja viib mullaväsimuseni.',
             evidence: candidateFamInfo.evidenceCitation || {
               source: 'Eesti Maaülikool (EMÜ)',
               publication: 'Viljavahelduse alused aiapidamises',
@@ -896,12 +913,8 @@ export const CropRotationEngine = {
 
     // 3. Heavy feeder consecutive depletion check
     if (previousSeason && candidateGuild === 'heavy_feeder') {
-      const prevHeavy = previousSeason.plantings.filter(
-        (p) => this.resolveGuild(p.family) === 'heavy_feeder'
-      );
-      const hadLegume = previousSeason.plantings.some(
-        (p) => this.resolveGuild(p.family) === 'nitrogen_fixer'
-      );
+      const prevHeavy = previousSeason.plantings.filter((p) => this.resolveGuild(p.family) === 'heavy_feeder');
+      const hadLegume = previousSeason.plantings.some((p) => this.resolveGuild(p.family) === 'nitrogen_fixer');
 
       if (prevHeavy.length > 0 && !hadLegume) {
         alerts.push({
@@ -913,17 +926,21 @@ export const CropRotationEngine = {
           titleEn: 'Soil Nutrient Depletion (Heavy Feeder following Heavy Feeder)',
           messageEt: `${candidatePlant.name} vajab suuri lämmastiku ja kaaliumi koguseid. Mullu kasvasid samas rasketoitelised taimed (${prevHeavy.map((p) => p.plantName).join(', ')}) ilma mullarikastajata.`,
           messageEn: `${candidatePlant.name} has high N & K demands, directly following heavy feeders without organic restorative crop.`,
-          recommendationEt: 'Enne istutamist lisa vähemalt 4-6 kg/m² küpset komposti ja orgaanilist multši või vali vahekultuuriks hernes/uba.',
-          recommendationEn: 'Incorporate generous mature compost (4-6 kg/m²) and organic mulch, or insert a legume break.',
+          recommendationEt:
+            'Enne istutamist lisa vähemalt 4-6 kg/m² küpset komposti ja orgaanilist multši või vali vahekultuuriks hernes/uba.',
+          recommendationEn:
+            'Incorporate generous mature compost (4-6 kg/m²) and organic mulch, or insert a legume break.',
           yearsApart: 1,
           conflictingPlantNames: prevHeavy.map((p) => p.plantName),
-          biologicalMechanism: 'Kahe järjestikuse rasketoitelise kultuuri kasvatamine kurnab mulla huumusekihi ja ammutab vahetult kättesaadava NO3- ning K+ ioone.',
+          biologicalMechanism:
+            'Kahe järjestikuse rasketoitelise kultuuri kasvatamine kurnab mulla huumusekihi ja ammutab vahetult kättesaadava NO3- ning K+ ioone.',
           evidence: {
             source: 'Eesti Maaülikool (EMÜ) Mullateaduse õppetool',
             publication: 'Mullaviljakuse säilitamine ja orgaanilise aine bilanss köögiviljakasvatuses',
             tier: 'peer_reviewed',
             verifiedYear: 2024,
-            notes: 'Orgaanilise aine mineraliseerumine ilma taastava liblikõielise kultuurita põhjustab mulla mikrobioomi degradeerumist.'
+            notes:
+              'Orgaanilise aine mineraliseerumine ilma taastava liblikõielise kultuurita põhjustab mulla mikrobioomi degradeerumist.'
           },
           breakYearsRequired: 1
         });
@@ -932,9 +949,7 @@ export const CropRotationEngine = {
 
     // 4. Beneficial predecessor synergy (Fabaceae nitrogen fixation)
     if (previousSeason && candidateFam !== 'Fabaceae') {
-      const prevLegumes = previousSeason.plantings.filter(
-        (p) => this.resolveFamilyId(p.family) === 'Fabaceae'
-      );
+      const prevLegumes = previousSeason.plantings.filter((p) => this.resolveFamilyId(p.family) === 'Fabaceae');
 
       if (prevLegumes.length > 0) {
         alerts.push({
@@ -950,7 +965,8 @@ export const CropRotationEngine = {
           recommendationEn: `${candidatePlant.name} will thrive utilizing slow-release organic nitrogen stored in root nodules.`,
           yearsApart: 1,
           conflictingPlantNames: prevLegumes.map((p) => p.plantName),
-          biologicalMechanism: 'Rhizobium leguminosarum bakterid muudavad õhulämmastiku taimele omastatavaks ammooniumlämmastikuks (NH4+), jättes pärast juurte lagunemist mulda kuni 60-100 kg N/ha.',
+          biologicalMechanism:
+            'Rhizobium leguminosarum bakterid muudavad õhulämmastiku taimele omastatavaks ammooniumlämmastikuks (NH4+), jättes pärast juurte lagunemist mulda kuni 60-100 kg N/ha.',
           evidence: {
             source: 'Maaelu Teadmuskeskus (METK)',
             publication: 'Liblikõieliste kultuuride mõju mullaviljakusele ja järgnevate kultuuride saagikusele',
@@ -1001,9 +1017,14 @@ export const CropRotationEngine = {
             .map((p) => p.plantName);
 
           const isDirectRepeat = yearsDiff === 1;
-          const severity = (family === 'Solanaceae' || family === 'Brassicaceae')
-            ? (isDirectRepeat ? 'danger' : 'warning')
-            : (isDirectRepeat ? 'warning' : 'info');
+          const severity =
+            family === 'Solanaceae' || family === 'Brassicaceae'
+              ? isDirectRepeat
+                ? 'danger'
+                : 'warning'
+              : isDirectRepeat
+                ? 'warning'
+                : 'info';
 
           alerts.push({
             id: `conflict-${bedId}-${family}-${lastYear}`,
@@ -1124,17 +1145,21 @@ export const CropRotationEngine = {
 
     if (resolvedPrior === 'Fabaceae') {
       targetFamilies = ['Brassicaceae', 'Cucurbitaceae', 'Solanaceae'];
-      reasonEt = 'Liblikõieliste mügarbakterite seotud orgaaniline lämmastik toidab suurepäraselt toitainenõudlikke kapsalisi ja kõrvitsaid.';
+      reasonEt =
+        'Liblikõieliste mügarbakterite seotud orgaaniline lämmastik toidab suurepäraselt toitainenõudlikke kapsalisi ja kõrvitsaid.';
       reasonEn = 'Rhizobium-fixed nitrogen provides organic fertility for nitrogen-hungry brassicas and cucurbits.';
       badge = 'Lämmastiku kasu';
     } else if (resolvedPrior === 'Brassicaceae' || resolvedPrior === 'Solanaceae') {
       targetFamilies = ['Allioideae', 'Apiaceae', 'Amaranthaceae', 'Fabaceae'];
-      reasonEt = 'Pärast rasket toitainevajadust vajab muld kergemat kultuuri (sibulad, porgandid), mis ei kurna sama mullakihti.';
-      reasonEn = 'Following heavy feeders, light root crops or legumes break pathogen spore buildup and allow soil rest.';
+      reasonEt =
+        'Pärast rasket toitainevajadust vajab muld kergemat kultuuri (sibulad, porgandid), mis ei kurna sama mullakihti.';
+      reasonEn =
+        'Following heavy feeders, light root crops or legumes break pathogen spore buildup and allow soil rest.';
       badge = 'Mulla puhkus';
     } else if (resolvedPrior === 'Apiaceae' || resolvedPrior === 'Amaranthaceae') {
       targetFamilies = ['Fabaceae', 'Brassicaceae', 'Asteraceae'];
-      reasonEt = 'Juurikate kobestatud pinnasesse sobib ideaalselt lämmastikku siduv liblikõieline või pealmine lehekultuur.';
+      reasonEt =
+        'Juurikate kobestatud pinnasesse sobib ideaalselt lämmastikku siduv liblikõieline või pealmine lehekultuur.';
       reasonEn = 'Loosened root soil is ideal for nitrogen-fixing legumes or shallow-rooted salad greens.';
       badge = 'Struktuuri taastus';
     } else if (resolvedPrior === 'Allioideae') {
@@ -1194,4 +1219,3 @@ export const CropRotationEngine = {
     return matchedPlants;
   }
 };
-

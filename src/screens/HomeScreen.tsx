@@ -22,9 +22,7 @@ import { SeasonalSowingPrintDialog } from '../components/dialogs/SeasonalSowingP
 import { GardenBinderPrintDialog } from '../components/dialogs/GardenBinderPrintDialog';
 
 // Code-split heavy Recharts visualization bundle
-const WeatherChart = lazy(() =>
-  import('../components/WeatherChart').then((m) => ({ default: m.WeatherChart }))
-);
+const WeatherChart = lazy(() => import('../components/WeatherChart').then((m) => ({ default: m.WeatherChart })));
 
 interface HomeScreenProps {
   onNavigateToGarden: () => void;
@@ -47,7 +45,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenSoilRecipes,
   onOpenGrowTent
 }) => {
-  const { weather, tasks, beds, plants, language, toggleTask, deleteTask, isWeatherLoading, refreshWeather, quickWaterAllPlants } = useGarden();
+  const {
+    weather,
+    tasks,
+    beds,
+    plants,
+    language,
+    toggleTask,
+    deleteTask,
+    isWeatherLoading,
+    refreshWeather,
+    quickWaterAllPlants
+  } = useGarden();
 
   const [feedbackToast, setFeedbackToast] = useState<{ title: string; subtitle: string } | null>(null);
   const [showPrintDialog, setShowPrintDialog] = useState<boolean>(false);
@@ -112,11 +121,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       )}
 
       {/* Welcome & Tagline */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '8px'
+        }}
+      >
         <div>
           <h1
             className="font-serif-display"
-            style={{ fontSize: '28px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0, letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              color: 'var(--kulv-text, #2A2E24)',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}
           >
             Tere tulemast aeda!
           </h1>
@@ -157,13 +180,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '12px',
+              fontWeight: 800,
+              color: 'var(--kulv-text, #2A2E24)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}
+          >
             <Zap size={15} color="var(--kulv-accent, #D97A3D)" />
             <span>Kiirtegevused</span>
           </div>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-            Hooldus & planeerimine
-          </span>
+          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Hooldus & planeerimine</span>
         </div>
 
         <div
@@ -523,9 +555,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <FileText size={16} />
             </div>
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>
-                {language === 'en' ? 'Garden Binder' : 'Aiamapp'}
-              </div>
+              <div style={{ fontSize: '12px', fontWeight: 700 }}>{language === 'en' ? 'Garden Binder' : 'Aiamapp'}</div>
               <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
                 {language === 'en' ? 'Full Dossier & Map' : 'Krundipass & seltsilised'}
               </div>
@@ -545,13 +575,27 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             padding: '20px',
             boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
             cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s',
+            transition: 'transform 0.2s, box-shadow 0.2s'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))'; }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))';
+          }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span
+              style={{
+                fontSize: '12px',
+                color: 'var(--kulv-text-muted, #5F675A)',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}
+            >
               Peenrad & kastid
             </span>
             <Grid size={18} color="var(--kulv-primary, #4F6B45)" />
@@ -570,13 +614,27 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             padding: '20px',
             boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
             cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s',
+            transition: 'transform 0.2s, box-shadow 0.2s'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))'; }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))';
+          }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span
+              style={{
+                fontSize: '12px',
+                color: 'var(--kulv-text-muted, #5F675A)',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}
+            >
               Istutatud taimi
             </span>
             <Sprout size={18} color="var(--kulv-primary, #4F6B45)" />
@@ -631,12 +689,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onToggle={toggleTask}
-                onDelete={deleteTask}
-              />
+              <TaskCard key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
             ))}
           </div>
         )}

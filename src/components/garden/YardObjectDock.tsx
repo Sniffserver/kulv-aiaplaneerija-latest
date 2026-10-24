@@ -9,10 +9,7 @@ interface YardObjectDockProps {
 
 type TabKey = 'structures' | 'plants' | 'infrastructure' | 'beds';
 
-export const YardObjectDock: React.FC<YardObjectDockProps> = ({
-  onAddPreset,
-  onDragStartPreset
-}) => {
+export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onDragStartPreset }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('structures');
 
   const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [

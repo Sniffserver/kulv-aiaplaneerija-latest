@@ -32,6 +32,9 @@ export interface ConflictResolution {
 }
 
 export interface SyncTransport {
-  push: (payload: any, expectedRevision: number) => Promise<{ status: 200 | 409 | 500; newRevision?: number; serverState?: any; error?: string }>;
+  push: (
+    payload: any,
+    expectedRevision: number
+  ) => Promise<{ status: 200 | 409 | 500; newRevision?: number; serverState?: any; error?: string }>;
   pull: () => Promise<{ status: 200 | 500; revision: number; serverState: any; error?: string }>;
 }

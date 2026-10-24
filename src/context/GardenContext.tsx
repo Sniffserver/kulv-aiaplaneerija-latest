@@ -1,7 +1,29 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { Plant, GardenBed, Task, JournalEntry, AppSettings, WeatherInfo, BedPlantingCell, GardenBackup, YardPlan, GardenEntity, YardLayer, convertEntityToBed, convertBedToGardenEntity, RotationCyclePlan } from '../types';
+import {
+  Plant,
+  GardenBed,
+  Task,
+  JournalEntry,
+  AppSettings,
+  WeatherInfo,
+  BedPlantingCell,
+  GardenBackup,
+  YardPlan,
+  GardenEntity,
+  YardLayer,
+  convertEntityToBed,
+  convertBedToGardenEntity,
+  RotationCyclePlan
+} from '../types';
 import { DEFAULT_PLANTS } from '../data/defaultPlants';
-import { INITIAL_BEDS, INITIAL_TASKS, INITIAL_JOURNAL, INITIAL_SETTINGS, INITIAL_YARD_PLAN, buildInitialYardPlan } from '../data/defaultData';
+import {
+  INITIAL_BEDS,
+  INITIAL_TASKS,
+  INITIAL_JOURNAL,
+  INITIAL_SETTINGS,
+  INITIAL_YARD_PLAN,
+  buildInitialYardPlan
+} from '../data/defaultData';
 import { fetchLiveWeather, getFallbackWeather } from '../logic/weatherService';
 import { getStoredItem, setStoredItem } from '../logic/storageDb';
 import { MicroclimateEngine, MicroclimateProfile } from '../logic/microclimateEngine';
@@ -152,23 +174,27 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {}
   }, []);
 
-  const t = useCallback((key: string): string => {
-    return getTranslation(key, language);
-  }, [language]);
+  const t = useCallback(
+    (key: string): string => {
+      return getTranslation(key, language);
+    },
+    [language]
+  );
 
   // Asynchronously load from IndexedDB with localStorage fallback
   useEffect(() => {
     let isMounted = true;
     async function initFromDatabase() {
       try {
-        const [loadedPlants, loadedBeds, loadedTasks, loadedJournal, loadedSettings, loadedYardPlan] = await Promise.all([
-          getStoredItem('plants', DEFAULT_PLANTS),
-          getStoredItem('beds', INITIAL_BEDS),
-          getStoredItem('tasks', INITIAL_TASKS),
-          getStoredItem('journal', INITIAL_JOURNAL),
-          getStoredItem('settings', INITIAL_SETTINGS),
-          getStoredItem('yard_plan', INITIAL_YARD_PLAN)
-        ]);
+        const [loadedPlants, loadedBeds, loadedTasks, loadedJournal, loadedSettings, loadedYardPlan] =
+          await Promise.all([
+            getStoredItem('plants', DEFAULT_PLANTS),
+            getStoredItem('beds', INITIAL_BEDS),
+            getStoredItem('tasks', INITIAL_TASKS),
+            getStoredItem('journal', INITIAL_JOURNAL),
+            getStoredItem('settings', INITIAL_SETTINGS),
+            getStoredItem('yard_plan', INITIAL_YARD_PLAN)
+          ]);
 
         if (isMounted) {
           if (loadedPlants && loadedPlants.length > 0) setPlants(loadedPlants);
@@ -232,17 +258,20 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [yardPlan, saveToStorage]);
 
   // Load live weather when settings latitude or longitude change (supports forceRefresh)
-  const refreshWeather = useCallback(async (forceRefresh = false) => {
-    setIsWeatherLoading(true);
-    try {
-      const data = await fetchLiveWeather(settings.lat, settings.lng, settings.locationName, forceRefresh);
-      setWeather(data);
-    } catch {
-      setWeather(getFallbackWeather(settings.lat, settings.lng, settings.locationName));
-    } finally {
-      setIsWeatherLoading(false);
-    }
-  }, [settings.lat, settings.lng, settings.locationName]);
+  const refreshWeather = useCallback(
+    async (forceRefresh = false) => {
+      setIsWeatherLoading(true);
+      try {
+        const data = await fetchLiveWeather(settings.lat, settings.lng, settings.locationName, forceRefresh);
+        setWeather(data);
+      } catch {
+        setWeather(getFallbackWeather(settings.lat, settings.lng, settings.locationName));
+      } finally {
+        setIsWeatherLoading(false);
+      }
+    },
+    [settings.lat, settings.lng, settings.locationName]
+  );
 
   useEffect(() => {
     refreshWeather();
@@ -250,7 +279,9 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const [soilType, setSoilTypeState] = useState<'sandy' | 'loam' | 'clay'>(() => settings.soilType || 'loam');
   const [showWarnings, setShowWarnings] = useState<boolean>(false);
-  const [microclimateProfile, setMicroclimateProfile] = useState<MicroclimateProfile>(() => MicroclimateEngine.loadProfile());
+  const [microclimateProfile, setMicroclimateProfile] = useState<MicroclimateProfile>(() =>
+    MicroclimateEngine.loadProfile()
+  );
 
   const toggleShowWarnings = useCallback(() => {
     setShowWarnings((prev) => !prev);
@@ -283,14 +314,17 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!weather.dailyForecast || weather.dailyForecast.length === 0) return;
 
     const upcomingNights = weather.dailyForecast.slice(0, 3);
-    const coldNight = upcomingNights.find((d) => d.tempMin <= 3 || d.frostRisk === 'light' || d.frostRisk === 'moderate' || d.frostRisk === 'severe');
+    const coldNight = upcomingNights.find(
+      (d) => d.tempMin <= 3 || d.frostRisk === 'light' || d.frostRisk === 'moderate' || d.frostRisk === 'severe'
+    );
 
     if (coldNight) {
       const taskTitle = `Kata tundlikud taimed kattelooriga / Sule kasvuhoone! (${coldNight.dayName} öösel ${coldNight.tempMin > 0 ? '+' : ''}${coldNight.tempMin}°C)`;
 
       setTasks((prevTasks) => {
         const existing = prevTasks.find(
-          (t) => t.dueDate === coldNight.date && t.title.includes('Kata tundlikud taimed kattelooriga / Sule kasvuhoone')
+          (t) =>
+            t.dueDate === coldNight.date && t.title.includes('Kata tundlikud taimed kattelooriga / Sule kasvuhoone')
         );
         if (existing) return prevTasks;
 
@@ -307,26 +341,31 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [weather]);
 
-  const scheduleFrostProtectionTask = useCallback((dueDate?: string, tempMin?: number) => {
-    const targetDate = dueDate || (weather.dailyForecast?.[0]?.date) || new Date().toISOString().split('T')[0];
-    const tempStr = tempMin !== undefined ? `${tempMin > 0 ? '+' : ''}${tempMin}°C` : 'öökülm';
-    const taskTitle = `Kata tundlikud taimed kattelooriga / Sule kasvuhoone! (${tempStr})`;
+  const scheduleFrostProtectionTask = useCallback(
+    (dueDate?: string, tempMin?: number) => {
+      const targetDate = dueDate || weather.dailyForecast?.[0]?.date || new Date().toISOString().split('T')[0];
+      const tempStr = tempMin !== undefined ? `${tempMin > 0 ? '+' : ''}${tempMin}°C` : 'öökülm';
+      const taskTitle = `Kata tundlikud taimed kattelooriga / Sule kasvuhoone! (${tempStr})`;
 
-    setTasks((prev) => {
-      const exists = prev.find((t) => t.dueDate === targetDate && t.title.includes('Kata tundlikud taimed kattelooriga / Sule kasvuhoone'));
-      if (exists) return prev;
+      setTasks((prev) => {
+        const exists = prev.find(
+          (t) => t.dueDate === targetDate && t.title.includes('Kata tundlikud taimed kattelooriga / Sule kasvuhoone')
+        );
+        if (exists) return prev;
 
-      const newTask: Task = {
-        id: generateSafeId('task_frost'),
-        title: taskTitle,
-        completed: false,
-        dueDate: targetDate,
-        category: 'general',
-        createdAt: new Date().toISOString().split('T')[0]
-      };
-      return [newTask, ...prev];
-    });
-  }, [weather]);
+        const newTask: Task = {
+          id: generateSafeId('task_frost'),
+          title: taskTitle,
+          completed: false,
+          dueDate: targetDate,
+          category: 'general',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        return [newTask, ...prev];
+      });
+    },
+    [weather]
+  );
 
   // JSON Export for garden configuration, yard plan and journal entries
   const exportBackup = useCallback(() => {
@@ -388,7 +427,6 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-
   const addBed = (
     name: string,
     type: 'raisedBed' | 'inGroundBed' | 'greenhouse' | 'pot',
@@ -430,9 +468,7 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateBedRotationPlan = useCallback((bedId: string, plan: RotationCyclePlan) => {
-    setBeds((prev) =>
-      prev.map((b) => (b.id === bedId ? { ...b, rotationPlan: plan } : b))
-    );
+    setBeds((prev) => prev.map((b) => (b.id === bedId ? { ...b, rotationPlan: plan } : b)));
     setYardPlan((prev) => ({
       ...prev,
       entities: prev.entities.map((e) => {
@@ -488,20 +524,24 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       foliageOpacity: preset.foliageOpacity,
       materialType: preset.materialType || 'wood',
       color: preset.color || '#4F6B45',
-      zIndex: preset.category === 'structure' ? 20 : preset.category === 'tree' ? 15 : preset.category === 'bed' ? 10 : 5,
+      zIndex:
+        preset.category === 'structure' ? 20 : preset.category === 'tree' ? 15 : preset.category === 'bed' ? 10 : 5,
       layerId: layerMapping[preset.category] || 'structures',
       locked: false,
       visible: true,
       tags: [preset.category, preset.subType],
       createdAt: now,
       updatedAt: now,
-      bedData: preset.category === 'bed' ? {
-        type: preset.subType === 'greenhouse' ? 'greenhouse' : preset.subType === 'pot' ? 'pot' : 'raisedBed',
-        coverType: preset.subType === 'greenhouse' ? 'greenhouse' : 'none',
-        plantings: [],
-        calculatedSunHours: 8.0,
-        notes: preset.description
-      } : undefined,
+      bedData:
+        preset.category === 'bed'
+          ? {
+              type: preset.subType === 'greenhouse' ? 'greenhouse' : preset.subType === 'pot' ? 'pot' : 'raisedBed',
+              coverType: preset.subType === 'greenhouse' ? 'greenhouse' : 'none',
+              plantings: [],
+              calculatedSunHours: 8.0,
+              notes: preset.description
+            }
+          : undefined,
       botanicalData: preset.botanicalData
     };
 
@@ -689,9 +729,7 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const toggleTask = (taskId: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)));
   };
 
   const deleteTask = (taskId: string) => {
@@ -733,9 +771,7 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const timeNow = new Date().toLocaleTimeString('et-EE', { hour: '2-digit', minute: '2-digit' });
 
     // Mark pending water tasks as completed
-    setTasks((prev) =>
-      prev.map((t) => (t.category === 'water' && !t.completed ? { ...t, completed: true } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.category === 'water' && !t.completed ? { ...t, completed: true } : t)));
 
     const totalPlantings = beds.reduce((sum, b) => sum + b.plantings.length, 0);
 
@@ -820,7 +856,6 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
     replaceGardenState(defaultBackup, { source: 'restore' }).catch(() => {});
   };
-
 
   return (
     <GardenContext.Provider

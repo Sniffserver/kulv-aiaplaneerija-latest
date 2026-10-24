@@ -14,11 +14,7 @@ export interface SoilRecipesDialogProps {
   };
 }
 
-export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
-  isOpen,
-  onDismiss,
-  initialBedDimensions
-}) => {
+export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({ isOpen, onDismiss, initialBedDimensions }) => {
   const { language, t } = useGarden();
 
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'muld' | 'vaetistee'>('all');
@@ -59,9 +55,7 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
 
   if (!isOpen) return null;
 
-  const recipes = soilData.recipes.filter(
-    (r) => selectedCategory === 'all' || r.category === selectedCategory
-  );
+  const recipes = soilData.recipes.filter((r) => selectedCategory === 'all' || r.category === selectedCategory);
 
   const activeRecipe = soilData.recipes.find((r) => r.id === selectedRecipeId) || soilData.recipes[0];
 
@@ -198,8 +192,12 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
             style={{
               padding: '6px 14px',
               borderRadius: '8px',
-              border: selectedCategory === 'all' ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: selectedCategory === 'all' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+              border:
+                selectedCategory === 'all'
+                  ? '1px solid var(--kulv-primary, #4F6B45)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
+              backgroundColor:
+                selectedCategory === 'all' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
               color: selectedCategory === 'all' ? 'white' : 'var(--kulv-text, #2A2E24)',
               fontSize: '12px',
               fontWeight: 600,
@@ -213,8 +211,12 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
             style={{
               padding: '6px 14px',
               borderRadius: '8px',
-              border: selectedCategory === 'muld' ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: selectedCategory === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+              border:
+                selectedCategory === 'muld'
+                  ? '1px solid var(--kulv-primary, #4F6B45)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
+              backgroundColor:
+                selectedCategory === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
               color: selectedCategory === 'muld' ? 'white' : 'var(--kulv-text, #2A2E24)',
               fontSize: '12px',
               fontWeight: 600,
@@ -228,8 +230,14 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
             style={{
               padding: '6px 14px',
               borderRadius: '8px',
-              border: selectedCategory === 'vaetistee' ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: selectedCategory === 'vaetistee' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+              border:
+                selectedCategory === 'vaetistee'
+                  ? '1px solid var(--kulv-primary, #4F6B45)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
+              backgroundColor:
+                selectedCategory === 'vaetistee'
+                  ? 'var(--kulv-primary, #4F6B45)'
+                  : 'var(--kulv-surface-muted, #EFE6D4)',
               color: selectedCategory === 'vaetistee' ? 'white' : 'var(--kulv-text, #2A2E24)',
               fontSize: '12px',
               fontWeight: 600,
@@ -277,7 +285,13 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                     {recipe.name}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                    {recipe.category === 'muld' ? (language === 'en' ? 'Living Soil Base' : 'Mullapõhi') : (language === 'en' ? 'Liquid Tea' : 'Vedelväetis')}
+                    {recipe.category === 'muld'
+                      ? language === 'en'
+                        ? 'Living Soil Base'
+                        : 'Mullapõhi'
+                      : language === 'en'
+                        ? 'Liquid Tea'
+                        : 'Vedelväetis'}
                   </div>
                 </button>
               );
@@ -285,7 +299,16 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
           </div>
 
           {/* Right: Recipe Detail & Dynamic Batch Calculator */}
-          <div style={{ flex: 1, padding: '16px 20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div
+            style={{
+              flex: 1,
+              padding: '16px 20px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px'
+            }}
+          >
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                 <span
@@ -296,19 +319,32 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                     fontWeight: 700,
                     padding: '2px 8px',
                     borderRadius: '6px',
-                    backgroundColor: activeRecipe.category === 'muld' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(217, 122, 61, 0.15)',
-                    color: activeRecipe.category === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)'
+                    backgroundColor:
+                      activeRecipe.category === 'muld' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(217, 122, 61, 0.15)',
+                    color:
+                      activeRecipe.category === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)'
                   }}
                 >
                   {activeRecipe.category === 'muld'
-                    ? (language === 'en' ? 'Raised Bed & Pot Substrate' : 'Kõrgpeenra & potimuld')
-                    : (language === 'en' ? 'Organic Liquid Fertilizer' : 'Looduslik väetistee')}
+                    ? language === 'en'
+                      ? 'Raised Bed & Pot Substrate'
+                      : 'Kõrgpeenra & potimuld'
+                    : language === 'en'
+                      ? 'Organic Liquid Fertilizer'
+                      : 'Looduslik väetistee'}
                 </span>
               </div>
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)' }}>
                 {activeRecipe.name}
               </h3>
-              <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: 1.4 }}>
+              <p
+                style={{
+                  margin: '6px 0 0 0',
+                  fontSize: '13px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  lineHeight: 1.4
+                }}
+              >
                 {activeRecipe.description}
               </p>
             </div>
@@ -348,13 +384,23 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                   }}
                 >
                   <Calculator size={14} />
-                  <span>{showBedCalculator ? (language === 'en' ? 'Hide Bed Calc' : 'Peida peenra kalkulaator') : (language === 'en' ? 'Calc from Bed Dims' : 'Arvuta peenra mõõtudest')}</span>
+                  <span>
+                    {showBedCalculator
+                      ? language === 'en'
+                        ? 'Hide Bed Calc'
+                        : 'Peida peenra kalkulaator'
+                      : language === 'en'
+                        ? 'Calc from Bed Dims'
+                        : 'Arvuta peenra mõõtudest'}
+                  </span>
                 </button>
               </div>
 
               {/* Volume Slider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>10 L</span>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  10 L
+                </span>
                 <input
                   type="range"
                   min={10}
@@ -365,7 +411,9 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                   style={{ flex: 1, accentColor: 'var(--kulv-primary, #4F6B45)', cursor: 'pointer' }}
                   aria-label={t('soil_calc_liters')}
                 />
-                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>2500 L</span>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  2500 L
+                </span>
               </div>
 
               {/* Bed Dimension Calculator Panel */}
@@ -382,7 +430,10 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                   }}
                 >
                   <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-                    {language === 'en' ? 'Bed Dimensions (metres) → Calculated Volume' : 'Peenra mõõtmed (meetrites) → Mulla kogus'}:
+                    {language === 'en'
+                      ? 'Bed Dimensions (metres) → Calculated Volume'
+                      : 'Peenra mõõtmed (meetrites) → Mulla kogus'}
+                    :
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                     <div>
@@ -449,10 +500,14 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                       />
                     </div>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}
+                  >
                     <span style={{ fontSize: '12px', fontWeight: 600 }}>
                       {language === 'en' ? 'Calculated:' : 'Vajalik kogus:'}{' '}
-                      <strong className="font-mono" style={{ color: 'var(--kulv-primary, #4F6B45)' }}>{calculatedBedVolume} L</strong>
+                      <strong className="font-mono" style={{ color: 'var(--kulv-primary, #4F6B45)' }}>
+                        {calculatedBedVolume} L
+                      </strong>
                     </span>
                     <button
                       type="button"
@@ -494,8 +549,12 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                       fontSize: '11px',
                       fontWeight: 700,
                       cursor: 'pointer',
-                      border: batchVolumeL === item.vol ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-                      backgroundColor: batchVolumeL === item.vol ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
+                      border:
+                        batchVolumeL === item.vol
+                          ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                          : '1px solid var(--kulv-border, #C9BFA9)',
+                      backgroundColor:
+                        batchVolumeL === item.vol ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
                       color: batchVolumeL === item.vol ? 'white' : 'var(--kulv-text, #2A2E24)'
                     }}
                   >
@@ -525,7 +584,8 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                     </span>
                   </div>
                   <div style={{ fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)' }}>
-                    ~{Math.ceil(batchVolumeL / 50)} {language === 'en' ? 'bags (50L)' : 'kotti (50L)'} / ~{Math.ceil(batchVolumeL / 60)} {language === 'en' ? 'bags (60L)' : 'kotti (60L)'}
+                    ~{Math.ceil(batchVolumeL / 50)} {language === 'en' ? 'bags (50L)' : 'kotti (50L)'} / ~
+                    {Math.ceil(batchVolumeL / 60)} {language === 'en' ? 'bags (60L)' : 'kotti (60L)'}
                   </div>
                 </div>
               )}
@@ -545,7 +605,9 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                   }}
                 >
                   <div style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '4px' }}>
-                    {language === 'en' ? '🍰 Hügelkultur & Lasagna Bed Cross-Section:' : '🍰 Hügelkultur & Lasanje peenra kihtide jaotus:'}
+                    {language === 'en'
+                      ? '🍰 Hügelkultur & Lasagna Bed Cross-Section:'
+                      : '🍰 Hügelkultur & Lasanje peenra kihtide jaotus:'}
                   </div>
                   <div
                     style={{
@@ -557,8 +619,15 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                       justifyContent: 'space-between'
                     }}
                   >
-                    <span>1. {language === 'en' ? 'Top layer (30%): Mature compost + topsoil' : 'Pealiskiht (30%): Valmis kompostimuld + aiamuld'}</span>
-                    <span className="font-mono">{Math.round(batchVolumeL * 0.3)} L (~{Math.ceil((batchVolumeL * 0.3) / 50)} kotti)</span>
+                    <span>
+                      1.{' '}
+                      {language === 'en'
+                        ? 'Top layer (30%): Mature compost + topsoil'
+                        : 'Pealiskiht (30%): Valmis kompostimuld + aiamuld'}
+                    </span>
+                    <span className="font-mono">
+                      {Math.round(batchVolumeL * 0.3)} L (~{Math.ceil((batchVolumeL * 0.3) / 50)} kotti)
+                    </span>
                   </div>
                   <div
                     style={{
@@ -570,7 +639,12 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                       justifyContent: 'space-between'
                     }}
                   >
-                    <span>2. {language === 'en' ? 'Middle layer (30%): Leaves, lawn mulch, green manure' : 'Vahekiht (30%): Muruhake, lehed, aiajäätmed'}</span>
+                    <span>
+                      2.{' '}
+                      {language === 'en'
+                        ? 'Middle layer (30%): Leaves, lawn mulch, green manure'
+                        : 'Vahekiht (30%): Muruhake, lehed, aiajäätmed'}
+                    </span>
                     <span className="font-mono">{Math.round(batchVolumeL * 0.3)} L</span>
                   </div>
                   <div
@@ -583,7 +657,12 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                       justifyContent: 'space-between'
                     }}
                   >
-                    <span>3. {language === 'en' ? 'Base layer (40%): Rotting logs, hardwood branches' : 'Põhjakiht (40%): Jämedad lehtpuupalgid, oksad'}</span>
+                    <span>
+                      3.{' '}
+                      {language === 'en'
+                        ? 'Base layer (40%): Rotting logs, hardwood branches'
+                        : 'Põhjakiht (40%): Jämedad lehtpuupalgid, oksad'}
+                    </span>
                     <span className="font-mono">{Math.round(batchVolumeL * 0.4)} L</span>
                   </div>
                 </div>
@@ -592,7 +671,9 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
 
             {/* Base Ratios */}
             <div>
-              <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+              <h4
+                style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
+              >
                 {t('soil_base_ingredients')}:
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -628,7 +709,8 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                         whiteSpace: 'nowrap'
                       }}
                     >
-                      {item.parts} {item.parts === 1 ? (language === 'en' ? 'part' : 'osa') : (language === 'en' ? 'parts' : 'osa')}
+                      {item.parts}{' '}
+                      {item.parts === 1 ? (language === 'en' ? 'part' : 'osa') : language === 'en' ? 'parts' : 'osa'}
                     </span>
                   </div>
                 ))}
@@ -638,7 +720,9 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
             {/* Amendments (if any) */}
             {activeRecipe.amendmentsPer100L && activeRecipe.amendmentsPer100L.length > 0 && (
               <div>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+                <h4
+                  style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
+                >
                   {t('soil_amendments')} ({batchVolumeL} L):
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -696,21 +780,51 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                   gap: '6px'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: 'var(--kulv-accent, #D97A3D)' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontWeight: 700,
+                    color: 'var(--kulv-accent, #D97A3D)'
+                  }}
+                >
                   <Clock size={15} />
                   <span>{t('soil_tea_ferment_title')}</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '4px' }}>
-                  <div style={{ backgroundColor: 'var(--kulv-surface, #FFFDF8)', padding: '8px', borderRadius: '6px', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-                    <div style={{ fontWeight: 700, fontSize: '11px' }}>{language === 'en' ? 'Juurele kastmine' : 'Juurele kastmine'}:</div>
+                  <div
+                    style={{
+                      backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid var(--kulv-border, #C9BFA9)'
+                    }}
+                  >
+                    <div style={{ fontWeight: 700, fontSize: '11px' }}>
+                      {language === 'en' ? 'Juurele kastmine' : 'Juurele kastmine'}:
+                    </div>
                     <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
-                      {language === 'en' ? 'Dilute 1:10 with rainwater (1L tea to 10L water).' : 'Lahjenda 1:10 vihmaveega (1L leotist 10L veele).'}
+                      {language === 'en'
+                        ? 'Dilute 1:10 with rainwater (1L tea to 10L water).'
+                        : 'Lahjenda 1:10 vihmaveega (1L leotist 10L veele).'}
                     </div>
                   </div>
-                  <div style={{ backgroundColor: 'var(--kulv-surface, #FFFDF8)', padding: '8px', borderRadius: '6px', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-                    <div style={{ fontWeight: 700, fontSize: '11px' }}>{language === 'en' ? 'Lehekaudne pritsimine' : 'Lehekaudne pritsimine'}:</div>
+                  <div
+                    style={{
+                      backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: '1px solid var(--kulv-border, #C9BFA9)'
+                    }}
+                  >
+                    <div style={{ fontWeight: 700, fontSize: '11px' }}>
+                      {language === 'en' ? 'Lehekaudne pritsimine' : 'Lehekaudne pritsimine'}:
+                    </div>
                     <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
-                      {language === 'en' ? 'Dilute 1:20 and filter through cloth. Spray in evening.' : 'Lahjenda 1:20 ja kurna läbi riide. Pritsi õhtul.'}
+                      {language === 'en'
+                        ? 'Dilute 1:20 and filter through cloth. Spray in evening.'
+                        : 'Lahjenda 1:20 ja kurna läbi riide. Pritsi õhtul.'}
                     </div>
                   </div>
                 </div>
@@ -729,7 +843,16 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({
                 color: 'var(--kulv-text, #2A2E24)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px', color: 'var(--kulv-primary, #4F6B45)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontWeight: 700,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-primary, #4F6B45)'
+                }}
+              >
                 <Info size={15} />
                 <span>{t('soil_instructions')}:</span>
               </div>

@@ -33,7 +33,7 @@ export interface NordicRegionProfile {
   nameEn: string;
   springFrostDate: string; // MM-DD
   autumnFrostDate: string; // MM-DD
-  gddAverage: number;      // Growing degree days baseline (>10°C)
+  gddAverage: number; // Growing degree days baseline (>10°C)
   descriptionEt: string;
   descriptionEn: string;
 }
@@ -93,13 +93,13 @@ export const PlantingCalendar = {
     const frostDay = parts[1] || 20;
     const frostDate = new Date(year, frostMonth - 1, frostDay);
 
-    const indoorSowStart = plant.weeksBeforeFrostSowIndoors != null
-      ? formatDate(addWeeks(frostDate, -plant.weeksBeforeFrostSowIndoors))
-      : null;
+    const indoorSowStart =
+      plant.weeksBeforeFrostSowIndoors != null
+        ? formatDate(addWeeks(frostDate, -plant.weeksBeforeFrostSowIndoors))
+        : null;
 
-    const greenhousePlantStart = plant.greenhouseShiftWeeks != null
-      ? formatDate(addWeeks(frostDate, -plant.greenhouseShiftWeeks))
-      : null;
+    const greenhousePlantStart =
+      plant.greenhouseShiftWeeks != null ? formatDate(addWeeks(frostDate, -plant.greenhouseShiftWeeks)) : null;
 
     let outdoorPlantStart: string;
     let coverShiftDays = 0;
@@ -169,4 +169,3 @@ export const PlantingCalendar = {
     return this.getMonthNameEstonian(monthIndex);
   }
 };
-

@@ -83,7 +83,15 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 text-xs text-[#C9BFA9]">
-            <span>{isExpanded ? (language === 'en' ? 'Collapse' : 'Ahenda') : (language === 'en' ? 'Expand controls' : 'Ava juhtnupud')}</span>
+            <span>
+              {isExpanded
+                ? language === 'en'
+                  ? 'Collapse'
+                  : 'Ahenda'
+                : language === 'en'
+                  ? 'Expand controls'
+                  : 'Ava juhtnupud'}
+            </span>
             {isExpanded ? <PanelTopClose size={16} /> : <PanelTopOpen size={16} />}
           </div>
         </button>
@@ -116,8 +124,8 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                         ? 'Exit full screen (Esc)'
                         : 'Välju täisekraanilt (Esc)'
                       : language === 'en'
-                      ? 'Expand 3D viewport to full screen'
-                      : 'Laienda 3D vaade täisekraanile'
+                        ? 'Expand 3D viewport to full screen'
+                        : 'Laienda 3D vaade täisekraanile'
                   }
                 >
                   {isFullScreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
@@ -127,8 +135,8 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                         ? 'Exit Full'
                         : 'Välju'
                       : language === 'en'
-                      ? 'Full Screen'
-                      : 'Täisekraan'}
+                        ? 'Full Screen'
+                        : 'Täisekraan'}
                   </span>
                 </button>
               )}
@@ -168,8 +176,8 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                       ? 'Shadows: ON'
                       : 'Varjud: SEES'
                     : language === 'en'
-                    ? 'Shadows: OFF'
-                    : 'Varjud: VÄLJAS'}
+                      ? 'Shadows: OFF'
+                      : 'Varjud: VÄLJAS'}
                 </span>
               </button>
             </div>
@@ -221,7 +229,23 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="truncate text-[11px]">{season.id === 'midsummer' ? (language === 'en' ? 'Midsummer' : 'Jaanipäev') : season.id === 'late_summer' ? (language === 'en' ? 'Late Summer' : 'Südasuvi') : season.id === 'spring_equinox' ? (language === 'en' ? 'Spring Equinox' : 'Kevad') : (language === 'en' ? 'Autumn' : 'Sügis')}</span>
+                      <span className="truncate text-[11px]">
+                        {season.id === 'midsummer'
+                          ? language === 'en'
+                            ? 'Midsummer'
+                            : 'Jaanipäev'
+                          : season.id === 'late_summer'
+                            ? language === 'en'
+                              ? 'Late Summer'
+                              : 'Südasuvi'
+                            : season.id === 'spring_equinox'
+                              ? language === 'en'
+                                ? 'Spring Equinox'
+                                : 'Kevad'
+                              : language === 'en'
+                                ? 'Autumn'
+                                : 'Sügis'}
+                      </span>
                       {isSelected && <Check size={12} className="text-emerald-300 flex-shrink-0" />}
                     </div>
                     <span className="text-[10px] text-[#A3B899] font-mono">{season.dateStr}</span>
@@ -241,10 +265,16 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                 </span>
                 <span className="text-[11px] text-[#A3B899] hidden sm:inline">
                   {solarHour < 11
-                    ? (language === 'en' ? 'Morning light' : 'Hommikuvalgus')
+                    ? language === 'en'
+                      ? 'Morning light'
+                      : 'Hommikuvalgus'
                     : solarHour < 16
-                    ? (language === 'en' ? 'Midday zenith' : 'Keskpäeva seniit')
-                    : (language === 'en' ? 'Golden evening' : 'Õhtune kuldne tund')}
+                      ? language === 'en'
+                        ? 'Midday zenith'
+                        : 'Keskpäeva seniit'
+                      : language === 'en'
+                        ? 'Golden evening'
+                        : 'Õhtune kuldne tund'}
                 </span>
               </div>
 
@@ -278,7 +308,9 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
               value={solarHour}
               onChange={(e) => setSolarHour(parseFloat(e.target.value))}
               className="w-full h-2.5 bg-[#212C22] rounded-lg appearance-none cursor-pointer accent-[#D97A3D]"
-              title={language === 'en' ? `Change solar time (${hourDisplay})` : `Muuda päikese kellaaega (${hourDisplay})`}
+              title={
+                language === 'en' ? `Change solar time (${hourDisplay})` : `Muuda päikese kellaaega (${hourDisplay})`
+              }
               aria-label={language === 'en' ? 'Solar time in 3D view' : 'Päikese kellaaeg 3D vaates'}
             />
           </div>

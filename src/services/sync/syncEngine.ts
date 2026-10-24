@@ -9,11 +9,7 @@ export class SyncEngine {
   private transport?: SyncTransport;
   private isSyncing = false;
 
-  constructor(dependencies?: {
-    queue?: SyncQueue;
-    repository?: SyncRepository;
-    transport?: SyncTransport;
-  }) {
+  constructor(dependencies?: { queue?: SyncQueue; repository?: SyncRepository; transport?: SyncTransport }) {
     this.queue = dependencies?.queue || new SyncQueue();
     this.repository = dependencies?.repository || new SyncRepository();
     this.transport = dependencies?.transport;
@@ -26,10 +22,7 @@ export class SyncEngine {
   /**
    * Main synchronization entry point.
    */
-  async sync(options?: {
-    forcePull?: boolean;
-    strategy?: ConflictStrategy;
-  }): Promise<SyncResult> {
+  async sync(options?: { forcePull?: boolean; strategy?: ConflictStrategy }): Promise<SyncResult> {
     if (this.isSyncing) {
       return {
         success: false,

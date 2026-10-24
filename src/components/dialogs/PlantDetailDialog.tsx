@@ -138,19 +138,31 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                 )}
               </div>
               {/* Quiet Botanical Metadata Line */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '4px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  flexWrap: 'wrap',
+                  fontSize: '12px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  marginTop: '4px'
+                }}
+              >
                 <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>
                   {familyInfo.nameEt} ({familyInfo.scientificName})
                 </span>
                 <span aria-hidden="true">·</span>
-                <span style={{ fontStyle: 'italic' }}>
-                  {plant.scientificName || entry.scientificName}
-                </span>
+                <span style={{ fontStyle: 'italic' }}>{plant.scientificName || entry.scientificName}</span>
                 <span aria-hidden="true">·</span>
                 <span style={{ color: 'var(--kulv-primary-dark, #2D4026)', fontWeight: 600 }}>
                   {entry.reliability.evidenceTier === 'peer_reviewed'
-                    ? (language === 'en' ? 'Peer-Reviewed Research' : 'Teaduspõhine (Peer-reviewed)')
-                    : (language === 'en' ? 'Institutional Review' : 'Institutsionaalne kontroll')}
+                    ? language === 'en'
+                      ? 'Peer-Reviewed Research'
+                      : 'Teaduspõhine (Peer-reviewed)'
+                    : language === 'en'
+                      ? 'Institutional Review'
+                      : 'Institutsionaalne kontroll'}
                 </span>
               </div>
             </div>
@@ -240,17 +252,40 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 1: Kasvatamine (Cultivation) */}
           {activeTab === 'cultivation' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px' }}>
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+              <div
+                style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px' }}
+              >
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
                     Külvisügavus
                   </div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, marginTop: '2px', color: 'var(--kulv-primary, #3E5A35)' }}>
+                  <div
+                    style={{
+                      fontSize: '15px',
+                      fontWeight: 700,
+                      marginTop: '2px',
+                      color: 'var(--kulv-primary, #3E5A35)'
+                    }}
+                  >
                     {entry.cultivation.sowingDepthCm} cm
                   </div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
                     Idanemisaeg
                   </div>
@@ -259,7 +294,14 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                   </div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
                     Idanemistemperatuur
                   </div>
@@ -268,32 +310,82 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                   </div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
                     Taimede vahekaugus
                   </div>
                   <div style={{ fontSize: '14px', fontWeight: 700, marginTop: '2px' }}>
-                    {entry.cultivation.spacingInRowCm} cm real × {entry.cultivation.spacingBetweenRowsCm} cm ridade vahel
+                    {entry.cultivation.spacingInRowCm} cm real × {entry.cultivation.spacingBetweenRowsCm} cm ridade
+                    vahel
                   </div>
                 </div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(79, 107, 69, 0.08)', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(79, 107, 69, 0.08)',
+                  border: '1px solid var(--kulv-border, #C9BFA9)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   ✂️ Harvendamine ja pikeerimine:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.cultivation.thinningAdvice}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)',
+                  border: '1px solid var(--kulv-border, #C9BFA9)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   💧 Kastmisrežiim ja hüdroloogia:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.cultivation.wateringFrequency}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)',
+                  border: '1px solid var(--kulv-border, #C9BFA9)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🌾 Väetamine ja toitainete bilanss:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.cultivation.fertilizationAdvice}</div>
@@ -304,9 +396,27 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 2: Kasvukoht (Habitat) */}
           {activeTab === 'habitat' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
-                <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+              <div
+                style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}
+              >
+                <div
+                  style={{
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '11px',
+                      color: 'var(--kulv-text-muted, #5F675A)',
+                      fontWeight: 600
+                    }}
+                  >
                     <Sun size={15} /> Päikesevajadus
                   </div>
                   <div style={{ fontSize: '14px', fontWeight: 700, marginTop: '3px' }}>
@@ -314,32 +424,97 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                   </div>
                 </div>
 
-                <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                <div
+                  style={{
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '11px',
+                      color: 'var(--kulv-text-muted, #5F675A)',
+                      fontWeight: 600
+                    }}
+                  >
                     <ShieldCheck size={15} /> Mulla pH ja happesus
                   </div>
-                  <div style={{ fontSize: '14px', fontWeight: 700, marginTop: '3px', color: 'var(--kulv-primary, #3E5A35)' }}>
+                  <div
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      marginTop: '3px',
+                      color: 'var(--kulv-primary, #3E5A35)'
+                    }}
+                  >
                     pH {entry.habitat.optimalPh}
                   </div>
                 </div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🪴 Mulla tüüp ja struktuur:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.habitat.soilType}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🌊 Drenaaž ja niiskustaluvus:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.habitat.drainage}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'rgba(79, 107, 69, 0.08)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'rgba(79, 107, 69, 0.08)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🪴 Sobivus potis või terrassikastis kasvatamiseks:
                 </div>
                 <div style={{ fontSize: '13px' }}>
@@ -354,38 +529,70 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 3: Kasvutsükkel (Growth Cycle) */}
           {activeTab === 'growthCycle' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', borderRadius: '8px', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)',
+                  border: '1px solid var(--kulv-border, #C9BFA9)'
+                }}
+              >
                 <Thermometer size={20} color="var(--kulv-primary, #4F6B45)" />
                 <div>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Soojussumma nõue (GDD)</div>
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                    Soojussumma nõue (GDD)
+                  </div>
                   <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
                     ~{cropGdd.targetGdd} °d (baastemperatuur {cropGdd.baseTemp} °C)
                   </div>
                 </div>
               </div>
 
-              <div style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>1. Idanemisfaas:</div>
+              <div
+                style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
+                  1. Idanemisfaas:
+                </div>
                 <div style={{ fontSize: '13px' }}>{entry.growthCycle.germinationPhase}</div>
               </div>
 
-              <div style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>2. Vegetatiivne lehe- ja juurekasv:</div>
+              <div
+                style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
+                  2. Vegetatiivne lehe- ja juurekasv:
+                </div>
                 <div style={{ fontSize: '13px' }}>{entry.growthCycle.vegetativeGrowth}</div>
               </div>
 
-              <div style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>3. Õitsemisfaas:</div>
+              <div
+                style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
+                  3. Õitsemisfaas:
+                </div>
                 <div style={{ fontSize: '13px' }}>{entry.growthCycle.floweringPhase}</div>
               </div>
 
-              <div style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>4. Saagi valmimine ja noppimine:</div>
-                <div style={{ fontSize: '13px' }}>{entry.growthCycle.harvestPhase} (~{entry.growthCycle.daysToMaturity} päeva tärkamisest)</div>
+              <div
+                style={{ borderLeft: '3px solid var(--kulv-primary, #4F6B45)', paddingLeft: '14px', margin: '4px 0' }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
+                  4. Saagi valmimine ja noppimine:
+                </div>
+                <div style={{ fontSize: '13px' }}>
+                  {entry.growthCycle.harvestPhase} (~{entry.growthCycle.daysToMaturity} päeva tärkamisest)
+                </div>
               </div>
 
               <div style={{ borderLeft: '3px solid #8A5E12', paddingLeft: '14px', margin: '4px 0' }}>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: '#8A5E12' }}>5. Seemnete kogumise optimaalne aeg:</div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: '#8A5E12' }}>
+                  5. Seemnete kogumise optimaalne aeg:
+                </div>
                 <div style={{ fontSize: '13px' }}>{entry.growthCycle.seedSavingTime}</div>
               </div>
             </div>
@@ -394,33 +601,91 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 4: Köögikasutus (Culinary) */}
           {activeTab === 'culinary' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🥗 Söödavad taimeosad:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.culinary.edibleParts.join(' · ')}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   👅 Maitseprofiil:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.culinary.flavorProfile}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🍳 Retseptiideed ja kokakunst:
                 </div>
                 <ul style={{ margin: '4px 0 0 18px', padding: 0, fontSize: '13px' }}>
                   {entry.culinary.culinaryUses.map((use, idx) => (
-                    <li key={idx} style={{ marginBottom: '2px' }}>{use}</li>
+                    <li key={idx} style={{ marginBottom: '2px' }}>
+                      {use}
+                    </li>
                   ))}
                 </ul>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'rgba(79, 107, 69, 0.08)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'rgba(79, 107, 69, 0.08)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   ❄️ Säilitamine ja hoidistamine:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.culinary.storageAndPreservation}</div>
@@ -431,29 +696,85 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 5: Ökoloogia (Ecology) */}
           {activeTab === 'ecology' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🐝 Tolmeldajad ja meetaimed:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.ecology.pollinators.join(', ')}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🐞 Kasulikud putukad ja looduslikud vaenlased:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.ecology.beneficialInsects.join(', ')}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🌿 Mõju aia elurikkusele ja mullaelustikule:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.ecology.biodiversityImpact}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-text-muted, #5F675A)',
+                    marginBottom: '4px'
+                  }}
+                >
                   ⚠️ Invasiivsusrisk ja kontroll:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.ecology.potentialInvasiveRisk}</div>
@@ -465,7 +786,17 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {activeTab === 'companions' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '8px'
+                  }}
+                >
                   <Sprout size={16} /> Head naabrid ja teaduslikult tõestatud sünergia
                 </div>
                 {entry.companions.beneficial.length > 0 ? (
@@ -480,18 +811,34 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                           border: '1px solid rgba(79, 107, 69, 0.2)'
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '4px'
+                          }}
+                        >
                           <span style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)' }}>
                             🌱 + {c.plantName}
                           </span>
-                          <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', textTransform: 'uppercase' }}>
+                          <span
+                            style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              color: 'var(--kulv-text-muted, #5F675A)',
+                              textTransform: 'uppercase'
+                            }}
+                          >
                             {c.evidence.tier} ({c.evidence.source})
                           </span>
                         </div>
                         <div style={{ fontSize: '12px', marginBottom: '4px' }}>
                           <strong>Bioloogiline mehhanism:</strong> {c.biologicalMechanism}
                         </div>
-                        <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
+                        <div
+                          style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}
+                        >
                           Allikas: {c.evidence.publication || c.evidence.source} ({c.evidence.verifiedYear})
                         </div>
                       </div>
@@ -505,7 +852,17 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
               </div>
 
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 700, color: '#B85C33', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: '#B85C33',
+                    marginBottom: '8px'
+                  }}
+                >
                   <AlertTriangle size={16} /> Halvad naabrid ja patogeensed riskid
                 </div>
                 {entry.companions.antagonistic.length > 0 ? (
@@ -520,18 +877,34 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                           border: '1px solid rgba(184, 92, 51, 0.25)'
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '4px'
+                          }}
+                        >
                           <span style={{ fontWeight: 700, fontSize: '13px', color: '#B85C33' }}>
                             ⚠️ VÄLDI: {c.plantName}
                           </span>
-                          <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', textTransform: 'uppercase' }}>
+                          <span
+                            style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              color: 'var(--kulv-text-muted, #5F675A)',
+                              textTransform: 'uppercase'
+                            }}
+                          >
                             {c.evidence.tier} ({c.evidence.source})
                           </span>
                         </div>
                         <div style={{ fontSize: '12px', marginBottom: '4px' }}>
                           <strong>Bioloogiline mehhanism:</strong> {c.biologicalMechanism}
                         </div>
-                        <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
+                        <div
+                          style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}
+                        >
                           Allikas: {c.evidence.publication || c.evidence.source} ({c.evidence.verifiedYear})
                         </div>
                       </div>
@@ -562,18 +935,48 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                     backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <div style={{ fontWeight: 700, fontSize: '14px', color: hp.type === 'disease' ? '#B85C33' : '#8A5E12' }}>
-                      {hp.type === 'disease' ? '🔬 Haigus:' : hp.type === 'pest' ? '🐛 Kahjur:' : '⚠️ Toitepuudus:'} {hp.name}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '6px'
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        fontSize: '14px',
+                        color: hp.type === 'disease' ? '#B85C33' : '#8A5E12'
+                      }}
+                    >
+                      {hp.type === 'disease' ? '🔬 Haigus:' : hp.type === 'pest' ? '🐛 Kahjur:' : '⚠️ Toitepuudus:'}{' '}
+                      {hp.name}
                     </div>
-                    <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', textTransform: 'uppercase' }}>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        color: 'var(--kulv-text-muted, #5F675A)',
+                        textTransform: 'uppercase'
+                      }}
+                    >
                       {hp.evidence.source}
                     </span>
                   </div>
                   <div style={{ fontSize: '12px', marginBottom: '6px' }}>
                     <strong>Sümptomid:</strong> {hp.symptoms}
                   </div>
-                  <div style={{ fontSize: '12px', color: 'var(--kulv-primary, #3E5A35)', backgroundColor: 'rgba(79, 107, 69, 0.08)', padding: '6px 8px', borderRadius: '6px', marginBottom: '4px' }}>
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: 'var(--kulv-primary, #3E5A35)',
+                      backgroundColor: 'rgba(79, 107, 69, 0.08)',
+                      padding: '6px 8px',
+                      borderRadius: '6px',
+                      marginBottom: '4px'
+                    }}
+                  >
                     <strong>🌿 Bioloogiline / agrotehniline abi:</strong> {hp.biologicalRemedy}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
@@ -587,29 +990,78 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 8: Ohutus (Safety) */}
           {activeTab === 'safety' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🧑 Ohutus inimesele & mürgisus:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.safety.toxicityHuman}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
                 <div style={{ fontWeight: 700, fontSize: '13px', color: '#B85C33', marginBottom: '4px' }}>
                   🐾 Lemmikloomade ohutus (koerad, kassid):
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.safety.toxicityPets}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🤧 Allergeenid ja ülitundlikkus:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.safety.allergies}</div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-text-muted, #5F675A)',
+                    marginBottom: '4px'
+                  }}
+                >
                   ⚠️ Vastunäidustused ja koostoimed:
                 </div>
                 <div style={{ fontSize: '13px' }}>{entry.safety.contraindications}</div>
@@ -620,32 +1072,84 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 9: Botaanika (Botany) */}
           {activeTab === 'botany' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Sugukond (Familia)</div>
+              <div
+                style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}
+              >
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                    Sugukond (Familia)
+                  </div>
                   <div style={{ fontSize: '14px', fontWeight: 700 }}>
                     {entry.botany.familyEstonian} ({entry.botany.familyScientific})
                   </div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Elutsükkel</div>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                    Elutsükkel
+                  </div>
                   <div style={{ fontSize: '14px', fontWeight: 700 }}>{entry.botany.lifeCycle}</div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Täiskasvanud taime kõrgus</div>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                    Täiskasvanud taime kõrgus
+                  </div>
                   <div style={{ fontSize: '14px', fontWeight: 700 }}>{entry.botany.matureHeightCm}</div>
                 </div>
 
-                <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Õitsemisaeg</div>
+                <div
+                  style={{
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                  }}
+                >
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                    Õitsemisaeg
+                  </div>
                   <div style={{ fontSize: '14px', fontWeight: 700 }}>{entry.botany.floweringPeriod}</div>
                 </div>
               </div>
 
-              <div style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'rgba(79, 107, 69, 0.08)' }}>
-                <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)', marginBottom: '4px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'rgba(79, 107, 69, 0.08)'
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    color: 'var(--kulv-primary, #3E5A35)',
+                    marginBottom: '4px'
+                  }}
+                >
                   🇪🇪 Soovitatud Põhjamaade ja Eesti sordid:
                 </div>
                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--kulv-primary, #3E5A35)' }}>
@@ -658,7 +1162,14 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
           {/* TAB 10: Usaldusväärsus & Allikad (Reliability & Evidence) */}
           {activeTab === 'reliability' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--kulv-border, #C9BFA9)', backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)' }}>
+              <div
+                style={{
+                  padding: '14px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor: 'var(--kulv-surface-muted, #F8F5EC)'
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <ShieldCheck size={20} color="var(--kulv-primary, #4F6B45)" />
                   <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-primary, #3E5A35)' }}>
@@ -666,12 +1177,15 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                   </span>
                 </div>
                 <p style={{ margin: 0, fontSize: '13px', color: 'var(--kulv-text, #2A2E24)' }}>
-                  KÜLV välistab kontrollimata aiandusmüüdid. Iga esitatud viljavahelduse reegel, naabrustaime bioloogiline mehhanism ja haigustõrje tugineb akadeemilistele ja riiklikele taimekaitseasutustele.
+                  KÜLV välistab kontrollimata aiandusmüüdid. Iga esitatud viljavahelduse reegel, naabrustaime
+                  bioloogiline mehhanism ja haigustõrje tugineb akadeemilistele ja riiklikele taimekaitseasutustele.
                 </p>
               </div>
 
               <div>
-                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '8px' }}>
+                <div
+                  style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '8px' }}
+                >
                   Peamised teadus- ja katseasutused selle taime kohta:
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -685,17 +1199,29 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                         backgroundColor: 'var(--kulv-surface, #FFFDF8)'
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '3px'
+                        }}
+                      >
                         <span style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-primary, #3E5A35)' }}>
                           🏛️ {s.source}
                         </span>
-                        <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--kulv-primary, #3E5A35)', textTransform: 'uppercase' }}>
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            fontWeight: 800,
+                            color: 'var(--kulv-primary, #3E5A35)',
+                            textTransform: 'uppercase'
+                          }}
+                        >
                           {s.tier}
                         </span>
                       </div>
-                      <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)' }}>
-                        {s.publication}
-                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)' }}>{s.publication}</div>
                       <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
                         Kinnitatud aasta: {s.verifiedYear} {s.notes ? `• ${s.notes}` : ''}
                       </div>
@@ -704,7 +1230,15 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
                 </div>
               </div>
 
-              <div style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic', borderTop: '1px solid var(--kulv-border, #C9BFA9)', paddingTop: '10px' }}>
+              <div
+                style={{
+                  fontSize: '12px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  fontStyle: 'italic',
+                  borderTop: '1px solid var(--kulv-border, #C9BFA9)',
+                  paddingTop: '10px'
+                }}
+              >
                 Viimati valideeritud andmed: {entry.reliability.lastUpdated} • {entry.reliability.peerReviewNotes}
               </div>
             </div>

@@ -58,9 +58,7 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
   const nearbyInteractions: CrossBedInteraction[] = useMemo(() => {
     if (!selectedEntity) return [];
     const allCross = CompanionEngine.evaluateCrossBedInteractions(allEntities, allPlants, 1.5, language);
-    return allCross.filter(
-      (int) => int.bedAId === selectedEntity.id || int.bedBId === selectedEntity.id
-    );
+    return allCross.filter((int) => int.bedAId === selectedEntity.id || int.bedBId === selectedEntity.id);
   }, [selectedEntity, allEntities, allPlants, language]);
 
   // Combine and filter recommendations
@@ -165,15 +163,27 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
           <div className="flex flex-col gap-1.5 text-[10.5px] text-[var(--kulv-text-muted,#5F675A)]">
             <div className="flex items-start gap-1.5">
               <span className="font-bold text-[var(--kulv-primary,#4F6B45)]">🌿 Soodne (+):</span>
-              <span>{language === 'en' ? 'Parasite masking, pollinator attraction, or complementary root zones.' : 'Kahjuripeletus, tolmeldajate ligimeelitamine või toitainete jagamine.'}</span>
+              <span>
+                {language === 'en'
+                  ? 'Parasite masking, pollinator attraction, or complementary root zones.'
+                  : 'Kahjuripeletus, tolmeldajate ligimeelitamine või toitainete jagamine.'}
+              </span>
             </div>
             <div className="flex items-start gap-1.5">
               <span className="font-bold text-[var(--kulv-accent,#D97A3D)]">⚠️ Ebasoodne (!):</span>
-              <span>{language === 'en' ? 'Shared blights/viruses (Phytophthora) or allelopathic root exudates.' : 'Ühised haigustekitajad (lehemädanik) või allelopaatiline juurepärssimine.'}</span>
+              <span>
+                {language === 'en'
+                  ? 'Shared blights/viruses (Phytophthora) or allelopathic root exudates.'
+                  : 'Ühised haigustekitajad (lehemädanik) või allelopaatiline juurepärssimine.'}
+              </span>
             </div>
             <div className="flex items-start gap-1.5">
               <span className="font-bold text-gray-500">⚪ Neutraalne / Määramata:</span>
-              <span>{language === 'en' ? 'No established negative or positive effect; safe with normal spacing.' : 'Eraldi mõju puudub; tavapärase vahekaugusega ohutu kõrvuti kasvatada.'}</span>
+              <span>
+                {language === 'en'
+                  ? 'No established negative or positive effect; safe with normal spacing.'
+                  : 'Eraldi mõju puudub; tavapärase vahekaugusega ohutu kõrvuti kasvatada.'}
+              </span>
             </div>
             <div className="pt-1 border-t border-[var(--kulv-border,#C9BFA9)] text-[10px] italic">
               {language === 'en'
@@ -236,9 +246,7 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
         <div className="flex flex-col gap-2.5">
           <div className="p-3 rounded-lg bg-[var(--kulv-surface-muted,#EFE6D4)]/60 border border-[var(--kulv-border,#C9BFA9)]">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="font-bold text-xs truncate max-w-[200px]">
-                {selectedEntity.name}
-              </span>
+              <span className="font-bold text-xs truncate max-w-[200px]">{selectedEntity.name}</span>
               {bedHarmony && (
                 <span
                   className="font-extrabold text-xs px-2 py-0.5 rounded-full font-mono flex items-center gap-1"
@@ -247,17 +255,18 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
                       bedHarmony.harmonyPercentage >= 80
                         ? 'rgba(79, 107, 69, 0.2)'
                         : bedHarmony.harmonyPercentage >= 50
-                        ? 'rgba(217, 160, 61, 0.2)'
-                        : 'rgba(217, 122, 61, 0.2)',
+                          ? 'rgba(217, 160, 61, 0.2)'
+                          : 'rgba(217, 122, 61, 0.2)',
                     color:
                       bedHarmony.harmonyPercentage >= 80
                         ? 'var(--kulv-primary, #4F6B45)'
                         : bedHarmony.harmonyPercentage >= 50
-                        ? '#8F5800'
-                        : 'var(--kulv-danger, #B85C33)'
+                          ? '#8F5800'
+                          : 'var(--kulv-danger, #B85C33)'
                   }}
                 >
-                  {bedHarmony.harmonyPercentage >= 80 ? '🌿' : bedHarmony.harmonyPercentage >= 50 ? '⚖️' : '⚠️'} {bedHarmony.harmonyPercentage}%
+                  {bedHarmony.harmonyPercentage >= 80 ? '🌿' : bedHarmony.harmonyPercentage >= 50 ? '⚖️' : '⚠️'}{' '}
+                  {bedHarmony.harmonyPercentage}%
                 </span>
               )}
             </div>
@@ -273,8 +282,8 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
                       bedHarmony.harmonyPercentage >= 80
                         ? 'var(--kulv-primary, #4F6B45)'
                         : bedHarmony.harmonyPercentage >= 50
-                        ? '#D9A03D'
-                        : 'var(--kulv-accent, #D97A3D)'
+                          ? '#D9A03D'
+                          : 'var(--kulv-accent, #D97A3D)'
                   }}
                 />
               </div>
@@ -283,7 +292,9 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
             <div className="text-[11px] text-[var(--kulv-text-muted,#5F675A)]">
               {bedHarmony ? (
                 <div className="flex items-center justify-between">
-                  <span>{activePlantings.length} {language === 'en' ? 'plants in bed' : 'taime peenras'}</span>
+                  <span>
+                    {activePlantings.length} {language === 'en' ? 'plants in bed' : 'taime peenras'}
+                  </span>
                   <div className="flex items-center gap-2 font-bold font-mono">
                     <span className="text-[var(--kulv-primary,#4F6B45)]">+{bedHarmony.positivePairs}</span>
                     <span className="text-[var(--kulv-accent,#D97A3D)]">-{bedHarmony.negativePairs}</span>
@@ -299,9 +310,7 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
             </div>
 
             {bedHarmony?.summary && (
-              <p className="mt-1.5 text-[11px] font-medium text-[var(--kulv-text,#2A2E24)]">
-                {bedHarmony.summary}
-              </p>
+              <p className="mt-1.5 text-[11px] font-medium text-[var(--kulv-text,#2A2E24)]">{bedHarmony.summary}</p>
             )}
           </div>
 
@@ -331,13 +340,13 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
                       backgroundColor: isBad
                         ? 'rgba(217, 122, 61, 0.08)'
                         : isGood
-                        ? 'rgba(79, 107, 69, 0.08)'
-                        : 'var(--kulv-surface-muted, #EFE6D4)',
+                          ? 'rgba(79, 107, 69, 0.08)'
+                          : 'var(--kulv-surface-muted, #EFE6D4)',
                       borderColor: isBad
                         ? 'rgba(217, 122, 61, 0.35)'
                         : isGood
-                        ? 'rgba(79, 107, 69, 0.35)'
-                        : 'var(--kulv-border, #C9BFA9)'
+                          ? 'rgba(79, 107, 69, 0.35)'
+                          : 'var(--kulv-border, #C9BFA9)'
                     }}
                   >
                     {/* Header: Plant A & Plant B + Relationship pill */}
@@ -382,9 +391,7 @@ export const CompanionInspectorPanel: React.FC<CompanionInspectorPanelProps> = (
                     )}
 
                     {/* Scientific Mechanism Explanation */}
-                    <p className="text-[11px] leading-relaxed text-[var(--kulv-text,#2A2E24)]">
-                      {rec.explanation}
-                    </p>
+                    <p className="text-[11px] leading-relaxed text-[var(--kulv-text,#2A2E24)]">{rec.explanation}</p>
 
                     {/* Growing Conditions if available */}
                     {rec.conditions && (

@@ -104,7 +104,13 @@ export const GddEngine = {
     }
 
     // Default heuristics based on tender vs hardy
-    if (normalized.includes('tomat') || normalized.includes('kurk') || normalized.includes('kõrvits') || normalized.includes('basiilik') || normalized.includes('paprika')) {
+    if (
+      normalized.includes('tomat') ||
+      normalized.includes('kurk') ||
+      normalized.includes('kõrvits') ||
+      normalized.includes('basiilik') ||
+      normalized.includes('paprika')
+    ) {
       return {
         cropName: cropId,
         baseTemp: 10,

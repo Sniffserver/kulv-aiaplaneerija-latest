@@ -20,16 +20,7 @@ interface GardenCanvasScreenProps {
 }
 
 export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAddBed }) => {
-  const {
-    beds,
-    plants,
-    deleteBed,
-    plantInBed,
-    removePlantFromBed,
-    addYardEntity,
-    yardPlan,
-    language
-  } = useGarden();
+  const { beds, plants, deleteBed, plantInBed, removePlantFromBed, addYardEntity, yardPlan, language } = useGarden();
 
   // Mode: 'yard' (overall property layout) vs 'timeline' (multi-year crop rotation) vs 'bed' (individual bed cell grid)
   const [plannerMode, setPlannerMode] = useState<'yard' | 'timeline' | 'bed'>('yard');
@@ -106,14 +97,22 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 cursor: 'pointer',
                 fontSize: '12px',
                 fontWeight: plannerMode === 'yard' && viewMode === '2d' ? 700 : 500,
-                backgroundColor: plannerMode === 'yard' && viewMode === '2d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: plannerMode === 'yard' && viewMode === '2d' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
+                backgroundColor:
+                  plannerMode === 'yard' && viewMode === '2d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
+                color:
+                  plannerMode === 'yard' && viewMode === '2d'
+                    ? 'var(--kulv-primary, #4F6B45)'
+                    : 'var(--kulv-text, #2A2E24)',
                 boxShadow: plannerMode === 'yard' && viewMode === '2d' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease'
               }}
             >
               <Map size={15} />
-              <span>{language === 'en' ? `2D Layout (${yardPlan.widthM}m × ${yardPlan.lengthM}m)` : `2D Plaan (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`}</span>
+              <span>
+                {language === 'en'
+                  ? `2D Layout (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`
+                  : `2D Plaan (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`}
+              </span>
             </button>
 
             {/* 3D View Button */}
@@ -136,8 +135,12 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 cursor: 'pointer',
                 fontSize: '12px',
                 fontWeight: plannerMode === 'yard' && viewMode === '3d' ? 700 : 500,
-                backgroundColor: plannerMode === 'yard' && viewMode === '3d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: plannerMode === 'yard' && viewMode === '3d' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
+                backgroundColor:
+                  plannerMode === 'yard' && viewMode === '3d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
+                color:
+                  plannerMode === 'yard' && viewMode === '3d'
+                    ? 'var(--kulv-primary, #4F6B45)'
+                    : 'var(--kulv-text, #2A2E24)',
                 boxShadow: plannerMode === 'yard' && viewMode === '3d' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease'
               }}
@@ -269,19 +272,14 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
               />
 
               {/* Master 2D Metric Canvas */}
-              <YardMasterPlanCanvas
-                onSelectBedDetail={handleOpenBedDetail}
-                onDropPreset={handleDropPreset}
-              />
+              <YardMasterPlanCanvas onSelectBedDetail={handleOpenBedDetail} onDropPreset={handleDropPreset} />
             </>
           )}
         </div>
       )}
 
       {/* MODE 2: MULTI-YEAR CROP ROTATION & SUCCESSION TIMELINE */}
-      {plannerMode === 'timeline' && (
-        <CropRotationTimeline beds={beds} plants={plants} language={language} />
-      )}
+      {plannerMode === 'timeline' && <CropRotationTimeline beds={beds} plants={plants} language={language} />}
 
       {/* MODE 3: INDIVIDUAL BED PLANTING CELLS */}
       {plannerMode === 'bed' && (
@@ -408,10 +406,19 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 margin: 'auto 0'
               }}
             >
-              <h3 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--kulv-text, #2A2E24)' }}>
+              <h3
+                style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--kulv-text, #2A2E24)' }}
+              >
                 Aias pole veel ühtegi peenart
               </h3>
-              <p style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', maxWidth: '340px', margin: '0 0 16px 0' }}>
+              <p
+                style={{
+                  fontSize: '13px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  maxWidth: '340px',
+                  margin: '0 0 16px 0'
+                }}
+              >
                 Lisa esimene peenar või kasvuhoone, et alustada taimede paigutamist ruudustikule.
               </p>
               <button

@@ -60,15 +60,14 @@ interface YardMasterPlanCanvasProps {
   onDropPreset?: (preset: EntityPreset, x: number, y: number) => void;
 }
 
-export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
-  onSelectBedDetail,
-  onDropPreset
-}) => {
+export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSelectBedDetail, onDropPreset }) => {
   const { settings, updateYardEntity: syncGardenBed, language, t, beds, plants } = useGarden();
 
   // Soil recipe modal state
   const [showSoilDialog, setShowSoilDialog] = useState<boolean>(false);
-  const [soilDialogDims, setSoilDialogDims] = useState<{ widthM: number; lengthM: number; heightM: number; label?: string } | undefined>(undefined);
+  const [soilDialogDims, setSoilDialogDims] = useState<
+    { widthM: number; lengthM: number; heightM: number; label?: string } | undefined
+  >(undefined);
   const [presetToConfirm, setPresetToConfirm] = useState<YardPlanPreset | null>(null);
   const [showCadastralDialog, setShowCadastralDialog] = useState<boolean>(false);
   const [showBinderDialog, setShowBinderDialog] = useState<boolean>(false);
@@ -134,10 +133,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
   }, [plan.entities]);
 
   const deletedEntities = useMemo(() => {
-    return [
-      ...(plan.trash || []),
-      ...plan.entities.filter((e) => Boolean(e.deletedAt))
-    ];
+    return [...(plan.trash || []), ...plan.entities.filter((e) => Boolean(e.deletedAt))];
   }, [plan.entities, plan.trash]);
 
   // Yard dimensions
@@ -276,7 +272,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
       }
 
       // Duplicate: Ctrl+D / Cmd+D or Ctrl+Shift+D (preventDefault blocks browser bookmark modal)
-      if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd')) {
+      if (
+        ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd')
+      ) {
         e.preventDefault();
         if (selectedEntity) {
           const now = new Date().toISOString();
@@ -362,7 +361,19 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo, canUndo, canRedo, selectedEntity, yardWidth, yardLength, addEntity, deleteEntity, rotateEntity, moveEntity]);
+  }, [
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    selectedEntity,
+    yardWidth,
+    yardLength,
+    addEntity,
+    deleteEntity,
+    rotateEntity,
+    moveEntity
+  ]);
 
   // Sun azimuth & altitude for midsummer (day 172) at local latitude
   const { solarAltitude, solarAzimuth } = useMemo(() => {
@@ -415,83 +426,98 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
   };
 
   // Unified drag coordinate calculation with grid snap, RBush magnetic snap, and cadastral edge alignment
-  const processDragMove = useCallback((clientX: number, clientY: number) => {
-    if (!draggedEntityId) return;
+  const processDragMove = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!draggedEntityId) return;
 
-    const currentEntity = activeEntities.find((item) => item.id === draggedEntityId);
-    if (!currentEntity) return;
+      const currentEntity = activeEntities.find((item) => item.id === draggedEntityId);
+      if (!currentEntity) return;
 
-    const dxMetres = (clientX - dragStartPos.x) / zoom;
-    const dyMetres = (clientY - dragStartPos.y) / zoom;
+      const dxMetres = (clientX - dragStartPos.x) / zoom;
+      const dyMetres = (clientY - dragStartPos.y) / zoom;
 
-    let targetX = entityOrigPos.x + dxMetres;
-    let targetY = entityOrigPos.y + dyMetres;
+      let targetX = entityOrigPos.x + dxMetres;
+      let targetY = entityOrigPos.y + dyMetres;
 
-    // Grid snap baseline
-    if (snapToGrid) {
-      targetX = Math.round(targetX * 2) / 2;
-      targetY = Math.round(targetY * 2) / 2;
-    } else {
-      targetX = Math.round(targetX * 10) / 10;
-      targetY = Math.round(targetY * 10) / 10;
-    }
-
-    // Spatial Index candidate snapping (magnetic edge & center alignment)
-    const snapCandidates = spatialIndex.findSnapCandidates(
-      targetX,
-      targetY,
-      currentEntity.width,
-      currentEntity.length,
-      0.35,
-      currentEntity.id
-    );
-
-    let guideX: number | null = null;
-    let guideY: number | null = null;
-
-    if (snapCandidates.snapX !== null) {
-      targetX = snapCandidates.snapX;
-      guideX = targetX;
-    }
-    if (snapCandidates.snapY !== null) {
-      targetY = snapCandidates.snapY;
-      guideY = targetY;
-    }
-    setSnapGuide({ x: guideX, y: guideY });
-
-    // Cadastral Boundary Edge Snapping (when property polygon exists)
-    if (snapToGrid && plan.boundaryPolygon && plan.boundaryPolygon.length >= 3) {
-      const testPoints: Point2D[] = [
-        { x: targetX, y: targetY },
-        { x: targetX + currentEntity.width, y: targetY },
-        { x: targetX + currentEntity.width, y: targetY + currentEntity.length },
-        { x: targetX, y: targetY + currentEntity.length },
-        { x: targetX + currentEntity.width / 2, y: targetY + currentEntity.length / 2 }
-      ];
-
-      let bestSnap: BoundarySegmentSnapResult | null = null;
-      let minDistance = Infinity;
-
-      for (const pt of testPoints) {
-        const snap = findNearestBoundarySegment(pt, plan.boundaryPolygon, 0.75);
-        if (snap && snap.distanceM < minDistance) {
-          minDistance = snap.distanceM;
-          bestSnap = snap;
-        }
+      // Grid snap baseline
+      if (snapToGrid) {
+        targetX = Math.round(targetX * 2) / 2;
+        targetY = Math.round(targetY * 2) / 2;
+      } else {
+        targetX = Math.round(targetX * 10) / 10;
+        targetY = Math.round(targetY * 10) / 10;
       }
 
-      setActiveBoundarySnap(bestSnap);
-    } else if (activeBoundarySnap) {
-      setActiveBoundarySnap(null);
-    }
+      // Spatial Index candidate snapping (magnetic edge & center alignment)
+      const snapCandidates = spatialIndex.findSnapCandidates(
+        targetX,
+        targetY,
+        currentEntity.width,
+        currentEntity.length,
+        0.35,
+        currentEntity.id
+      );
 
-    // Clamp inside yard boundaries
-    targetX = Math.max(0, Math.min(yardWidth - currentEntity.width, targetX));
-    targetY = Math.max(0, Math.min(yardLength - currentEntity.length, targetY));
+      let guideX: number | null = null;
+      let guideY: number | null = null;
 
-    // High-performance visual preview: DO NOT rebuild spatial index on every pointermove
-    setDragPreviewPos({ id: draggedEntityId, x: targetX, y: targetY });
-  }, [draggedEntityId, activeEntities, dragStartPos, zoom, entityOrigPos, snapToGrid, spatialIndex, plan.boundaryPolygon, activeBoundarySnap, yardWidth, yardLength]);
+      if (snapCandidates.snapX !== null) {
+        targetX = snapCandidates.snapX;
+        guideX = targetX;
+      }
+      if (snapCandidates.snapY !== null) {
+        targetY = snapCandidates.snapY;
+        guideY = targetY;
+      }
+      setSnapGuide({ x: guideX, y: guideY });
+
+      // Cadastral Boundary Edge Snapping (when property polygon exists)
+      if (snapToGrid && plan.boundaryPolygon && plan.boundaryPolygon.length >= 3) {
+        const testPoints: Point2D[] = [
+          { x: targetX, y: targetY },
+          { x: targetX + currentEntity.width, y: targetY },
+          { x: targetX + currentEntity.width, y: targetY + currentEntity.length },
+          { x: targetX, y: targetY + currentEntity.length },
+          { x: targetX + currentEntity.width / 2, y: targetY + currentEntity.length / 2 }
+        ];
+
+        let bestSnap: BoundarySegmentSnapResult | null = null;
+        let minDistance = Infinity;
+
+        for (const pt of testPoints) {
+          const snap = findNearestBoundarySegment(pt, plan.boundaryPolygon, 0.75);
+          if (snap && snap.distanceM < minDistance) {
+            minDistance = snap.distanceM;
+            bestSnap = snap;
+          }
+        }
+
+        setActiveBoundarySnap(bestSnap);
+      } else if (activeBoundarySnap) {
+        setActiveBoundarySnap(null);
+      }
+
+      // Clamp inside yard boundaries
+      targetX = Math.max(0, Math.min(yardWidth - currentEntity.width, targetX));
+      targetY = Math.max(0, Math.min(yardLength - currentEntity.length, targetY));
+
+      // High-performance visual preview: DO NOT rebuild spatial index on every pointermove
+      setDragPreviewPos({ id: draggedEntityId, x: targetX, y: targetY });
+    },
+    [
+      draggedEntityId,
+      activeEntities,
+      dragStartPos,
+      zoom,
+      entityOrigPos,
+      snapToGrid,
+      spatialIndex,
+      plan.boundaryPolygon,
+      activeBoundarySnap,
+      yardWidth,
+      yardLength
+    ]
+  );
 
   const commitDragEnd = useCallback(() => {
     setActiveBoundarySnap(null);
@@ -678,14 +704,17 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
   };
 
   // Check layer visibility
-  const isLayerVisible = useCallback((layerId?: string) => {
-    if (!layerId) return true;
-    const layer = plan.layers.find((l) => l.id === layerId);
-    return layer ? layer.visible : true;
-  }, [plan.layers]);
+  const isLayerVisible = useCallback(
+    (layerId?: string) => {
+      if (!layerId) return true;
+      const layer = plan.layers.find((l) => l.id === layerId);
+      return layer ? layer.visible : true;
+    },
+    [plan.layers]
+  );
 
   // Effective solar azimuth on the plan taking compass north orientation (northAngleDeg) into account
-  const effSolarAzimuth = ((solarAzimuth - (plan.northAngleDeg || 0)) % 360 + 360) % 360;
+  const effSolarAzimuth = (((solarAzimuth - (plan.northAngleDeg || 0)) % 360) + 360) % 360;
 
   // Memoized solar shadow projections: depends on [isSimulatingSun, solarAltitude, solarAzimuth, plan.northAngleDeg, activeEntities, dragPreviewPos, zoom, isLayerVisible]
   const renderedShadows = useMemo(() => {
@@ -873,7 +902,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               gap: '5px',
               padding: '6px 11px',
               borderRadius: '6px',
-              border: plan.cadastralCode ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+              border: plan.cadastralCode
+                ? '1px solid var(--kulv-primary, #4F6B45)'
+                : '1px solid var(--kulv-border, #C9BFA9)',
               backgroundColor: plan.cadastralCode ? 'rgba(79, 107, 69, 0.12)' : 'var(--kulv-surface-muted, #EFE6D4)',
               color: plan.cadastralCode ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
               cursor: 'pointer',
@@ -883,7 +914,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             }}
           >
             <MapPin size={14} />
-            <span>{plan.cadastralCode ? `Krunt: ${plan.cadastralCode}` : (language === 'en' ? 'Find Parcel' : 'Leia krunt')}</span>
+            <span>
+              {plan.cadastralCode ? `Krunt: ${plan.cadastralCode}` : language === 'en' ? 'Find Parcel' : 'Leia krunt'}
+            </span>
           </button>
 
           {/* High-Resolution Printable Garden Binder Button */}
@@ -911,7 +944,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             <span>{language === 'en' ? 'Binder' : 'Aiamapp'}</span>
           </button>
 
-          <div style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }} />
+          <div
+            style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }}
+          />
 
           <button
             onClick={() => setZoom((z) => Math.min(48, z + 4))}
@@ -994,7 +1029,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             <span>Nakkumine (0.5m)</span>
           </button>
 
-          <div style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }} />
+          <div
+            style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }}
+          />
 
           {/* Drawing Tool Buttons */}
           <button
@@ -1011,7 +1048,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               gap: '4px',
               padding: '6px 10px',
               borderRadius: '6px',
-              border: toolMode === 'select' ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+              border:
+                toolMode === 'select'
+                  ? '1px solid var(--kulv-primary, #4F6B45)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
               backgroundColor: toolMode === 'select' ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
               color: toolMode === 'select' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
               cursor: 'pointer',
@@ -1038,7 +1078,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               gap: '4px',
               padding: '6px 10px',
               borderRadius: '6px',
-              border: toolMode === 'polygon' ? '1px solid var(--kulv-accent, #D97A3D)' : '1px solid var(--kulv-border, #C9BFA9)',
+              border:
+                toolMode === 'polygon'
+                  ? '1px solid var(--kulv-accent, #D97A3D)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
               backgroundColor: toolMode === 'polygon' ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
               color: toolMode === 'polygon' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
               cursor: 'pointer',
@@ -1065,7 +1108,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               gap: '4px',
               padding: '6px 10px',
               borderRadius: '6px',
-              border: toolMode === 'polyline' ? '1px solid var(--kulv-accent, #D97A3D)' : '1px solid var(--kulv-border, #C9BFA9)',
+              border:
+                toolMode === 'polyline'
+                  ? '1px solid var(--kulv-accent, #D97A3D)'
+                  : '1px solid var(--kulv-border, #C9BFA9)',
               backgroundColor: toolMode === 'polyline' ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
               color: toolMode === 'polyline' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
               cursor: 'pointer',
@@ -1132,8 +1178,12 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             data-testid="companion_overlay_toggle_btn"
             title={
               showCompanionOverlay
-                ? (language === 'en' ? 'Hide Companion Intelligence Overlay' : 'Peida kaaslastaimede kiht')
-                : (language === 'en' ? 'Show Companion Intelligence' : 'Kaaslastaimede sünergia ja seosed')
+                ? language === 'en'
+                  ? 'Hide Companion Intelligence Overlay'
+                  : 'Peida kaaslastaimede kiht'
+                : language === 'en'
+                  ? 'Show Companion Intelligence'
+                  : 'Kaaslastaimede sünergia ja seosed'
             }
             style={{
               display: 'flex',
@@ -1141,7 +1191,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               gap: '5px',
               padding: '6px 10px',
               borderRadius: '6px',
-              border: showCompanionOverlay ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+              border: showCompanionOverlay
+                ? '1px solid var(--kulv-primary, #4F6B45)'
+                : '1px solid var(--kulv-border, #C9BFA9)',
               backgroundColor: showCompanionOverlay ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
               color: showCompanionOverlay ? '#FFFDF8' : 'var(--kulv-text, #2A2E24)',
               cursor: 'pointer',
@@ -1169,9 +1221,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
           }}
         >
           <Sun size={15} color="var(--kulv-accent, #D97A3D)" />
-          <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-            Päike ja varjud:
-          </span>
+          <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>Päike ja varjud:</span>
           <input
             type="range"
             min="7"
@@ -1208,7 +1258,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Pentagon size={15} />
             <span>
-              <strong>{toolMode === 'polygon' ? 'Polügooni joonistamine:' : 'Raja joonistamine:'}</strong> Klõpsa krundil punktide märkimiseks ({drawPoints.length} punkti). Topeltklõps lõpetab kujundi.
+              <strong>{toolMode === 'polygon' ? 'Polügooni joonistamine:' : 'Raja joonistamine:'}</strong> Klõpsa
+              krundil punktide märkimiseks ({drawPoints.length} punkti). Topeltklõps lõpetab kujundi.
             </span>
           </div>
           <div style={{ display: 'flex', gap: '6px' }}>
@@ -1327,11 +1378,21 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             <defs>
               {/* Pattern for 1m and 5m grid */}
               <pattern id="yardGrid1m" width={zoom} height={zoom} patternUnits="userSpaceOnUse">
-                <path d={`M ${zoom} 0 L 0 0 0 ${zoom}`} fill="none" stroke="rgba(149, 139, 121, 0.25)" strokeWidth="0.5" />
+                <path
+                  d={`M ${zoom} 0 L 0 0 0 ${zoom}`}
+                  fill="none"
+                  stroke="rgba(149, 139, 121, 0.25)"
+                  strokeWidth="0.5"
+                />
               </pattern>
               <pattern id="yardGrid5m" width={zoom * 5} height={zoom * 5} patternUnits="userSpaceOnUse">
                 <rect width={zoom * 5} height={zoom * 5} fill="url(#yardGrid1m)" />
-                <path d={`M ${zoom * 5} 0 L 0 0 0 ${zoom * 5}`} fill="none" stroke="rgba(149, 139, 121, 0.5)" strokeWidth="1.2" />
+                <path
+                  d={`M ${zoom * 5} 0 L 0 0 0 ${zoom * 5}`}
+                  fill="none"
+                  stroke="rgba(149, 139, 121, 0.5)"
+                  strokeWidth="1.2"
+                />
               </pattern>
 
               {/* Water texture pattern */}
@@ -1459,7 +1520,12 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
 
               {/* North Indicator Needle & Sun Direction (turns with northAngleDeg) */}
               <g transform={`translate(${yardWidth * zoom - 34}, 34)`} data-testid="compass_rose">
-                <circle r={24} fill="var(--kulv-surface, #FFFDF8)" stroke="var(--kulv-border, #C9BFA9)" strokeWidth={1.5} />
+                <circle
+                  r={24}
+                  fill="var(--kulv-surface, #FFFDF8)"
+                  stroke="var(--kulv-border, #C9BFA9)"
+                  strokeWidth={1.5}
+                />
                 {/* Sun position indicator rotating according to effective solar azimuth (northAngleDeg aware) */}
                 {isSimulatingSun && (
                   <g transform={`rotate(${effSolarAzimuth})`}>
@@ -1526,9 +1592,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                 const posX = effX * zoom;
                 const posY = effY * zoom;
 
-                const boundaryStatus = plan.boundaryPolygon && plan.boundaryPolygon.length >= 3
-                  ? checkEntityBoundaryContainment(effX, effY, entity.width, entity.length, plan.boundaryPolygon)
-                  : { isFullyInside: true, isPartiallyOutside: false };
+                const boundaryStatus =
+                  plan.boundaryPolygon && plan.boundaryPolygon.length >= 3
+                    ? checkEntityBoundaryContainment(effX, effY, entity.width, entity.length, plan.boundaryPolygon)
+                    : { isFullyInside: true, isPartiallyOutside: false };
 
                 return (
                   <g
@@ -1560,7 +1627,13 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                         <polygon
                           points={entity.customPolygon.map((p) => `${p.x * zoom},${p.y * zoom}`).join(' ')}
                           fill={entity.color || '#556B2F'}
-                          stroke={isSelected ? 'var(--kulv-accent, #D97A3D)' : isHovered ? 'var(--kulv-primary, #4F6B45)' : '#33442C'}
+                          stroke={
+                            isSelected
+                              ? 'var(--kulv-accent, #D97A3D)'
+                              : isHovered
+                                ? 'var(--kulv-primary, #4F6B45)'
+                                : '#33442C'
+                          }
                           strokeWidth={isSelected ? 3 : isHovered ? 2 : 1.5}
                         />
                       </g>
@@ -1585,17 +1658,18 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                           cy={lengthPx / 2}
                           r={Math.min(widthPx, lengthPx) / 2}
                           fill={entity.category === 'water' ? 'url(#pondGradient)' : entity.color}
-                          stroke={isSelected ? 'var(--kulv-accent, #D97A3D)' : isHovered ? 'var(--kulv-primary, #4F6B45)' : '#33442C'}
+                          stroke={
+                            isSelected
+                              ? 'var(--kulv-accent, #D97A3D)'
+                              : isHovered
+                                ? 'var(--kulv-primary, #4F6B45)'
+                                : '#33442C'
+                          }
                           strokeWidth={isSelected ? 3 : isHovered ? 2 : 1.5}
                         />
 
                         {entity.category === 'tree' && (
-                          <circle
-                            cx={widthPx / 2}
-                            cy={lengthPx / 2}
-                            r={Math.max(3, zoom * 0.2)}
-                            fill="#5A3D28"
-                          />
+                          <circle cx={widthPx / 2} cy={lengthPx / 2} r={Math.max(3, zoom * 0.2)} fill="#5A3D28" />
                         )}
                       </g>
                     ) : (
@@ -1606,7 +1680,13 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                           height={lengthPx}
                           rx={entity.category === 'bed' ? 4 : 2}
                           fill={entity.color}
-                          stroke={isSelected ? 'var(--kulv-accent, #D97A3D)' : isHovered ? 'var(--kulv-primary, #4F6B45)' : '#33442C'}
+                          stroke={
+                            isSelected
+                              ? 'var(--kulv-accent, #D97A3D)'
+                              : isHovered
+                                ? 'var(--kulv-primary, #4F6B45)'
+                                : '#33442C'
+                          }
                           strokeWidth={isSelected ? 3 : isHovered ? 2 : 1.5}
                         />
 
@@ -1806,8 +1886,26 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                 position: 'relative'
               }}
             >
-              <div style={{ position: 'absolute', left: 0, top: '-3px', width: '2px', height: '10px', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
-              <div style={{ position: 'absolute', right: 0, top: '-3px', width: '2px', height: '10px', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '-3px',
+                  width: '2px',
+                  height: '10px',
+                  backgroundColor: 'var(--kulv-primary, #4F6B45)'
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '-3px',
+                  width: '2px',
+                  height: '10px',
+                  backgroundColor: 'var(--kulv-primary, #4F6B45)'
+                }}
+              />
             </div>
             <span className="tabular-nums" style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
               5 m
@@ -1870,7 +1968,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               }}
             >
               <div style={{ fontSize: '28px', marginBottom: '8px' }}>🌱</div>
-              <div className="font-serif-display" style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '4px' }}>
+              <div
+                className="font-serif-display"
+                style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '4px' }}
+              >
                 Alusta siit — lohista peenar krundile
               </div>
               <div style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: 1.5 }}>
@@ -1971,7 +2072,14 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
             {/* Quick action controls when an entity is selected */}
             {selectedEntity && (
               <>
-                <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }} />
+                <div
+                  style={{
+                    width: '1px',
+                    height: '24px',
+                    backgroundColor: 'var(--kulv-border, #C9BFA9)',
+                    margin: '0 2px'
+                  }}
+                />
                 {!selectedEntity.locked && (
                   <button
                     onClick={handleRotateSelected}
@@ -2085,7 +2193,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '420px', overflowY: 'auto' }}>
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '420px', overflowY: 'auto' }}
+              >
                 {deletedEntities.map((item) => (
                   <div
                     key={item.id}
@@ -2252,184 +2362,190 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               </div>
 
               {/* If it's a bed, provide agronomy calculations, companion harmony, and drill-down into planting cells */}
-              {selectedEntity.category === 'bed' && (() => {
-                const matchingBed = beds?.find((b) => b.id === selectedEntity.id);
-                const bedVolumeL = Math.round(
-                  selectedEntity.width * selectedEntity.length * (selectedEntity.heightM || 0.4) * 1000
-                );
-                const bags50L = Math.ceil(bedVolumeL / 50);
-                const activePlantings =
-                  matchingBed?.plantings || selectedEntity.bedData?.plantings || [];
-                const plantedCount = activePlantings.length;
-                const harmony =
-                  plantedCount > 0 && plants
-                    ? CompanionEngine.calculateBedHarmony(activePlantings, plants, language)
-                    : null;
+              {selectedEntity.category === 'bed' &&
+                (() => {
+                  const matchingBed = beds?.find((b) => b.id === selectedEntity.id);
+                  const bedVolumeL = Math.round(
+                    selectedEntity.width * selectedEntity.length * (selectedEntity.heightM || 0.4) * 1000
+                  );
+                  const bags50L = Math.ceil(bedVolumeL / 50);
+                  const activePlantings = matchingBed?.plantings || selectedEntity.bedData?.plantings || [];
+                  const plantedCount = activePlantings.length;
+                  const harmony =
+                    plantedCount > 0 && plants
+                      ? CompanionEngine.calculateBedHarmony(activePlantings, plants, language)
+                      : null;
 
-                return (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-                    {/* Soil & Volume Card */}
-                    <div
-                      style={{
-                        backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        border: '1px solid var(--kulv-border, #C9BFA9)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '6px'
-                      }}
-                    >
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
+                      {/* Soil & Volume Card */}
                       <div
                         style={{
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          color: 'var(--kulv-text, #2A2E24)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Package size={13} color="var(--kulv-primary, #4F6B45)" />
-                          <span>{language === 'en' ? 'Soil Volume & Bags:' : 'Pinnase maht ja kotid:'}</span>
-                        </span>
-                        <span className="font-mono" style={{ color: 'var(--kulv-primary, #4F6B45)' }}>
-                          {bedVolumeL} L
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                        {language === 'en'
-                          ? `Requires approx. ~${bags50L} standard 50L soil bags`
-                          : `Vajab u ~${bags50L} standardset 50L mullakotti`}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSoilDialogDims({
-                            widthM: selectedEntity.width,
-                            lengthM: selectedEntity.length,
-                            heightM: selectedEntity.heightM || 0.4,
-                            label: selectedEntity.name
-                          });
-                          setShowSoilDialog(true);
-                        }}
-                        data-testid="open_bed_soil_recipes_btn"
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          padding: '6px 10px',
-                          borderRadius: '6px',
-                          border: '1px solid var(--kulv-primary, #4F6B45)',
-                          backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-                          color: 'var(--kulv-primary, #4F6B45)',
-                          cursor: 'pointer',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          marginTop: '2px'
-                        }}
-                      >
-                        <Sparkles size={13} />
-                        <span>
-                          {language === 'en'
-                            ? 'Soil Recipe & Bag Calculator'
-                            : 'Mullaretsept ja kihiline ehitus'}
-                        </span>
-                      </button>
-                    </div>
-
-                    {/* Companion Plant Harmony Card (if bed has plantings) */}
-                    {harmony ? (
-                      <div
-                        style={{
-                          backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                          backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
                           padding: '10px',
                           borderRadius: '8px',
                           border: '1px solid var(--kulv-border, #C9BFA9)',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '4px'
+                          gap: '6px'
                         }}
                       >
                         <div
                           style={{
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            color: 'var(--kulv-text, #2A2E24)',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'space-between',
-                            fontSize: '11px'
+                            justifyContent: 'space-between'
                           }}
                         >
-                          <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-                            🌿 {language === 'en' ? 'Companion Harmony' : 'Naabrustaimede sünergia'}
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Package size={13} color="var(--kulv-primary, #4F6B45)" />
+                            <span>{language === 'en' ? 'Soil Volume & Bags:' : 'Pinnase maht ja kotid:'}</span>
                           </span>
-                          <span
+                          <span className="font-mono" style={{ color: 'var(--kulv-primary, #4F6B45)' }}>
+                            {bedVolumeL} L
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                          {language === 'en'
+                            ? `Requires approx. ~${bags50L} standard 50L soil bags`
+                            : `Vajab u ~${bags50L} standardset 50L mullakotti`}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSoilDialogDims({
+                              widthM: selectedEntity.width,
+                              lengthM: selectedEntity.length,
+                              heightM: selectedEntity.heightM || 0.4,
+                              label: selectedEntity.name
+                            });
+                            setShowSoilDialog(true);
+                          }}
+                          data-testid="open_bed_soil_recipes_btn"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            border: '1px solid var(--kulv-primary, #4F6B45)',
+                            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                            color: 'var(--kulv-primary, #4F6B45)',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            marginTop: '2px'
+                          }}
+                        >
+                          <Sparkles size={13} />
+                          <span>
+                            {language === 'en' ? 'Soil Recipe & Bag Calculator' : 'Mullaretsept ja kihiline ehitus'}
+                          </span>
+                        </button>
+                      </div>
+
+                      {/* Companion Plant Harmony Card (if bed has plantings) */}
+                      {harmony ? (
+                        <div
+                          style={{
+                            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                            padding: '10px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--kulv-border, #C9BFA9)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px'
+                          }}
+                        >
+                          <div
                             style={{
-                              fontWeight: 800,
-                              fontSize: '12px',
-                              color:
-                                harmony.harmonyPercentage >= 80
-                                  ? 'var(--kulv-primary, #4F6B45)'
-                                  : harmony.harmonyPercentage >= 50
-                                  ? 'var(--kulv-accent, #D97A3D)'
-                                  : 'var(--kulv-danger, #B85C33)'
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              fontSize: '11px'
                             }}
                           >
-                            {harmony.harmonyPercentage}%
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                          {plantedCount}{' '}
-                          {language === 'en' ? 'planted cells' : 'külviruutu'} (
-                          <span style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 700 }}>
-                            +{harmony.positivePairs} {language === 'en' ? 'synergies' : 'toetavat'}
-                          </span>
-                          {harmony.negativePairs > 0 && (
-                            <span style={{ color: 'var(--kulv-danger, #B85C33)', fontWeight: 700, marginLeft: '4px' }}>
-                              -{harmony.negativePairs} {language === 'en' ? 'conflicts' : 'hoiatust'}
+                            <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+                              🌿 {language === 'en' ? 'Companion Harmony' : 'Naabrustaimede sünergia'}
                             </span>
-                          )}
-                          )
+                            <span
+                              style={{
+                                fontWeight: 800,
+                                fontSize: '12px',
+                                color:
+                                  harmony.harmonyPercentage >= 80
+                                    ? 'var(--kulv-primary, #4F6B45)'
+                                    : harmony.harmonyPercentage >= 50
+                                      ? 'var(--kulv-accent, #D97A3D)'
+                                      : 'var(--kulv-danger, #B85C33)'
+                              }}
+                            >
+                              {harmony.harmonyPercentage}%
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                            {plantedCount} {language === 'en' ? 'planted cells' : 'külviruutu'} (
+                            <span style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 700 }}>
+                              +{harmony.positivePairs} {language === 'en' ? 'synergies' : 'toetavat'}
+                            </span>
+                            {harmony.negativePairs > 0 && (
+                              <span
+                                style={{ color: 'var(--kulv-danger, #B85C33)', fontWeight: 700, marginLeft: '4px' }}
+                              >
+                                -{harmony.negativePairs} {language === 'en' ? 'conflicts' : 'hoiatust'}
+                              </span>
+                            )}
+                            )
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      matchingBed && (
-                        <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic', padding: '0 4px' }}>
-                          {language === 'en'
-                            ? 'Peenar on tühi. Ava külviplaan taimede paigutamiseks.'
-                            : 'Peenar on tühi. Ava külviplaan taimede paigutamiseks.'}
-                        </div>
-                      )
-                    )}
+                      ) : (
+                        matchingBed && (
+                          <div
+                            style={{
+                              fontSize: '10px',
+                              color: 'var(--kulv-text-muted, #5F675A)',
+                              fontStyle: 'italic',
+                              padding: '0 4px'
+                            }}
+                          >
+                            {language === 'en'
+                              ? 'Peenar on tühi. Ava külviplaan taimede paigutamiseks.'
+                              : 'Peenar on tühi. Ava külviplaan taimede paigutamiseks.'}
+                          </div>
+                        )
+                      )}
 
-                    {onSelectBedDetail && (
-                      <button
-                        onClick={() => onSelectBedDetail(selectedEntity.id)}
-                        data-testid="open_bed_planting_cells_btn"
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          padding: '10px 12px',
-                          borderRadius: '8px',
-                          border: 'none',
-                          backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                          color: 'white',
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: 700
-                        }}
-                      >
-                        <ExternalLink size={14} />
-                        <span>{language === 'en' ? 'Open Bed Planting Grid' : 'Ava peenra külviplaan'}</span>
-                      </button>
-                    )}
-                  </div>
-                );
-              })()}
+                      {onSelectBedDetail && (
+                        <button
+                          onClick={() => onSelectBedDetail(selectedEntity.id)}
+                          data-testid="open_bed_planting_cells_btn"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: 'none',
+                            backgroundColor: 'var(--kulv-primary, #4F6B45)',
+                            color: 'white',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 700
+                          }}
+                        >
+                          <ExternalLink size={14} />
+                          <span>{language === 'en' ? 'Open Bed Planting Grid' : 'Ava peenra külviplaan'}</span>
+                        </button>
+                      )}
+                    </div>
+                  );
+                })()}
             </>
           ) : (
             <div
@@ -2453,7 +2569,16 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
 
           {/* Layers Quick Toggle */}
           <div style={{ marginTop: 'auto', borderTop: '1px solid var(--kulv-border, #C9BFA9)', paddingTop: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: 700, marginBottom: '6px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '11px',
+                fontWeight: 700,
+                marginBottom: '6px'
+              }}
+            >
               <Layers size={13} color="var(--kulv-primary, #4F6B45)" />
               <span>Krundi kihid:</span>
             </div>
@@ -2471,7 +2596,12 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                   <span>{layer.name}</span>
                   <button
                     onClick={() => toggleLayerVisibility(layer.id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)' }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--kulv-text-muted, #5F675A)'
+                    }}
                   >
                     {layer.visible ? <Eye size={13} /> : <EyeOff size={13} />}
                   </button>
@@ -2509,7 +2639,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               boxShadow: 'var(--kulv-shadow-card, 0 8px 32px rgba(0,0,0,0.18))'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}
+            >
               <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                 Klaviatuuri kiirklahvid
               </div>
@@ -2527,18 +2659,162 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
               </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '12px' }}>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>V</kbd> Vali tööriist</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>P</kbd> Polügoon-peenar</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>R</kbd> Pööra 45°</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Del / Backspace</kbd> Kustuta</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Ctrl+Shift+D</kbd> Duplikeeri</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Cmd+D</kbd> Duplikeeri (Mac)</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Ctrl+Z</kbd> Tagasi (Undo)</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Ctrl+Y</kbd> Uuesti (Redo)</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Noolenupud</kbd> Nihuta 0.1m</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Shift+Nool</kbd> Nihuta 1.0m</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Esc</kbd> Tühista valik</div>
-              <div><kbd style={{ backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>?</kbd> Otseteede spikker</div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  V
+                </kbd>{' '}
+                Vali tööriist
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  P
+                </kbd>{' '}
+                Polügoon-peenar
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  R
+                </kbd>{' '}
+                Pööra 45°
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Del / Backspace
+                </kbd>{' '}
+                Kustuta
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Ctrl+Shift+D
+                </kbd>{' '}
+                Duplikeeri
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Cmd+D
+                </kbd>{' '}
+                Duplikeeri (Mac)
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Ctrl+Z
+                </kbd>{' '}
+                Tagasi (Undo)
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Ctrl+Y
+                </kbd>{' '}
+                Uuesti (Redo)
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Noolenupud
+                </kbd>{' '}
+                Nihuta 0.1m
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Shift+Nool
+                </kbd>{' '}
+                Nihuta 1.0m
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  Esc
+                </kbd>{' '}
+                Tühista valik
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  ?
+                </kbd>{' '}
+                Otseteede spikker
+              </div>
             </div>
           </div>
         </div>
@@ -2633,27 +2909,69 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                         <span style={{ fontSize: '24px' }}>{preset.icon}</span>
                         <div>
-                          <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+                          <h4
+                            style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
+                          >
                             {title}
                           </h4>
-                          <span className="font-mono" style={{ fontSize: '11px', color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>
+                          <span
+                            className="font-mono"
+                            style={{ fontSize: '11px', color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}
+                          >
                             {preset.widthM}m × {preset.lengthM}m ({preset.widthM * preset.lengthM} m²)
                           </span>
                         </div>
                       </div>
 
-                      <p style={{ margin: '6px 0', fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: 1.4 }}>
+                      <p
+                        style={{
+                          margin: '6px 0',
+                          fontSize: '12px',
+                          color: 'var(--kulv-text-muted, #5F675A)',
+                          lineHeight: 1.4
+                        }}
+                      >
                         {desc}
                       </p>
 
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontSize: '11px', marginTop: '8px', color: 'var(--kulv-text, #2A2E24)' }}>
-                        <span style={{ backgroundColor: 'var(--kulv-surface, #FFFDF8)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '8px',
+                          flexWrap: 'wrap',
+                          fontSize: '11px',
+                          marginTop: '8px',
+                          color: 'var(--kulv-text, #2A2E24)'
+                        }}
+                      >
+                        <span
+                          style={{
+                            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid var(--kulv-border, #C9BFA9)'
+                          }}
+                        >
                           🪵 {bedCount} {language === 'en' ? 'beds' : 'peenart'}
                         </span>
-                        <span style={{ backgroundColor: 'var(--kulv-surface, #FFFDF8)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
+                        <span
+                          style={{
+                            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid var(--kulv-border, #C9BFA9)'
+                          }}
+                        >
                           🌳 {treeCount} {language === 'en' ? 'trees' : 'puud/põõsast'}
                         </span>
-                        <span style={{ backgroundColor: 'var(--kulv-surface, #FFFDF8)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--kulv-border, #C9BFA9)' }}>
+                        <span
+                          style={{
+                            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid var(--kulv-border, #C9BFA9)'
+                          }}
+                        >
                           🏠 {structCount} {language === 'en' ? 'structures' : 'hoonet'}
                         </span>
                       </div>

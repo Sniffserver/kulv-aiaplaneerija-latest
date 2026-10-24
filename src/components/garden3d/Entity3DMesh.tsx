@@ -50,11 +50,7 @@ export const Entity3DMesh: React.FC<Entity3DMeshProps> = ({
           onPointerOut={onPointerOut}
         >
           {/* Walls */}
-          <mesh
-            position={[0, -heightM / 2 + wallHeight / 2, 0]}
-            castShadow={shadowCasting}
-            receiveShadow
-          >
+          <mesh position={[0, -heightM / 2 + wallHeight / 2, 0]} castShadow={shadowCasting} receiveShadow>
             <boxGeometry args={[width, wallHeight, length]} />
             <meshStandardMaterial
               color={entity.color || '#F3F4F6'}
@@ -150,11 +146,7 @@ export const Entity3DMesh: React.FC<Entity3DMeshProps> = ({
           </mesh>
 
           {/* Foliage Canopy */}
-          <mesh
-            position={[0, trunkHeight + canopyHeight / 2, 0]}
-            castShadow={shadowCasting}
-            receiveShadow
-          >
+          <mesh position={[0, trunkHeight + canopyHeight / 2, 0]} castShadow={shadowCasting} receiveShadow>
             <icosahedronGeometry args={[canopyRadius, 1]} />
             <meshStandardMaterial
               color={entity.color || '#2E7D32'}

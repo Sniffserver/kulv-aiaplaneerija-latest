@@ -20,7 +20,7 @@ describe('SolarEngine', () => {
     const summerAltitude = SolarEngine.calculateSolarNoonAltitude(tallinnLat, 172);
     const winterAltitude = SolarEngine.calculateSolarNoonAltitude(tallinnLat, 355);
     expect(summerAltitude).toBeGreaterThan(50); // ~54°
-    expect(winterAltitude).toBeLessThan(12);    // ~7°
+    expect(winterAltitude).toBeLessThan(12); // ~7°
   });
 
   it('calculates longer shadows at lower solar altitudes', () => {
@@ -69,4 +69,3 @@ describe('SolarEngine', () => {
     expect(evening.azimuthDeg).toBeGreaterThan(180);
   });
 });
-

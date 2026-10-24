@@ -46,7 +46,6 @@ function openDatabase(): Promise<IDBDatabase> {
   return dbPromise;
 }
 
-
 /**
  * Retrieves a key from IndexedDB, automatically migrating from localStorage if missing in IndexedDB.
  */
@@ -192,4 +191,3 @@ export async function removeStoredItem(key: string): Promise<void> {
 export function resetDatabaseConnection(): void {
   dbPromise = null;
 }
-

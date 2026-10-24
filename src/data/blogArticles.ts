@@ -24,8 +24,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     id: 'crop-rotation-science-clubroot',
     titleEt: 'Viljavahelduse teaduslik alus: miks 4-aastane paus päästab kapsasaagi',
     titleEn: 'The Science of Crop Rotation: Why a 4-Year Break Saves Your Brassicas',
-    summaryEt: 'Uurime Plasmodiophora brassicae (kapsanuutri) puhkespooride elutsüklit mullas ja seda, miks lühem külvikorravahe viib paratamatult saagikuse kollapsini.',
-    summaryEn: 'Exploring the soil lifecycle of Plasmodiophora brassicae (clubroot) resting spores and why inadequate rotation breaks lead to crop collapse.',
+    summaryEt:
+      'Uurime Plasmodiophora brassicae (kapsanuutri) puhkespooride elutsüklit mullas ja seda, miks lühem külvikorravahe viib paratamatult saagikuse kollapsini.',
+    summaryEn:
+      'Exploring the soil lifecycle of Plasmodiophora brassicae (clubroot) resting spores and why inadequate rotation breaks lead to crop collapse.',
     category: 'crop_rotation',
     categoryLabelEt: 'Viljavaheldus',
     categoryLabelEn: 'Crop Rotation',
@@ -52,8 +54,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     id: 'nordic-soil-health-rhizobium',
     titleEt: 'Põhjamaa mullatervis: orgaaniline aine, pH ja mügarbakterid',
     titleEn: 'Nordic Soil Biology: Organic Matter, pH, and Rhizobial Symbiosis',
-    summaryEt: 'Kuidas liblikõielised (hernes, põlduba) seovad atmosfäärilämmastikku ja loovad järgmiseks hooajaks elava bioväetise varu ilma kunstväetisteta.',
-    summaryEn: 'How legumes fix atmospheric nitrogen via Rhizobium root nodules, leaving slow-release biological nutrients for next season.',
+    summaryEt:
+      'Kuidas liblikõielised (hernes, põlduba) seovad atmosfäärilämmastikku ja loovad järgmiseks hooajaks elava bioväetise varu ilma kunstväetisteta.',
+    summaryEn:
+      'How legumes fix atmospheric nitrogen via Rhizobium root nodules, leaving slow-release biological nutrients for next season.',
     category: 'soil_health',
     categoryLabelEt: 'Mullatervis',
     categoryLabelEn: 'Soil Health',
@@ -80,8 +84,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     id: 'spring-frost-gdd-science',
     titleEt: 'Varakevadised külvid ja öökülmade teadus: GDD ja katteloorid',
     titleEn: 'Early Spring Sowings and Frost Dynamics: GDD & Thermal Covers',
-    summaryEt: 'Kasvupäevade soojussumma (GDD) ja mikrokliima füüsika: kuidas 17g/m² ja 30g/m² katteloor nihutab saagi algust 2–3 nädalat varasemaks.',
-    summaryEn: 'Growing Degree Days (GDD) and microclimate physics: how agricultural fleece shifts the Nordic season forward by 2-3 weeks.',
+    summaryEt:
+      'Kasvupäevade soojussumma (GDD) ja mikrokliima füüsika: kuidas 17g/m² ja 30g/m² katteloor nihutab saagi algust 2–3 nädalat varasemaks.',
+    summaryEn:
+      'Growing Degree Days (GDD) and microclimate physics: how agricultural fleece shifts the Nordic season forward by 2-3 weeks.',
     category: 'climate',
     categoryLabelEt: 'Kliima & Öökülm',
     categoryLabelEn: 'Climate & Frost',
@@ -108,8 +114,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     id: 'integrated-pest-management-nordic',
     titleEt: 'Integreeritud taimekaitse (IPM) koduaias: looduslikud vaenlased ja repellendid',
     titleEn: 'Integrated Pest Management (IPM): Natural Predators & Repellents',
-    summaryEt: 'Kuidas porgandi- ja sibulapeenarde kombineerimine ning sarikõielised meelitavad parasiitherilasi ja vähendavad kahjurikahjustusi üle 70%.',
-    summaryEn: 'How intercropping carrots with alliums and planting umbellifers attracts parasitoid wasps, reducing pest damage by over 70%.',
+    summaryEt:
+      'Kuidas porgandi- ja sibulapeenarde kombineerimine ning sarikõielised meelitavad parasiitherilasi ja vähendavad kahjurikahjustusi üle 70%.',
+    summaryEn:
+      'How intercropping carrots with alliums and planting umbellifers attracts parasitoid wasps, reducing pest damage by over 70%.',
     category: 'ipm',
     categoryLabelEt: 'Taimekaitse & IPM',
     categoryLabelEn: 'Plant Health & IPM',

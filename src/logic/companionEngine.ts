@@ -3,13 +3,7 @@ import { BedPlantingCell, Plant, GardenEntity, Point2D } from '../types';
 export type CompanionClassification = 'beneficial' | 'incompatible' | 'neutral' | 'unknown';
 export type EvidenceConfidence = 'established' | 'traditional' | 'insufficient';
 export type SynergyCategory =
-  | 'pest_control'
-  | 'nutrient_sharing'
-  | 'pollination'
-  | 'disease_vector'
-  | 'allelopathy'
-  | 'root_layering'
-  | 'general';
+  'pest_control' | 'nutrient_sharing' | 'pollination' | 'disease_vector' | 'allelopathy' | 'root_layering' | 'general';
 
 export interface CompanionConflict {
   plantA: string;
@@ -106,8 +100,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Avamaa peenrad, hea õhuringlusega päikeseline kasvukoht',
     conditionsEn: 'Open field beds, full sun with good air circulation',
-    reasonEt: 'Sibula teravad väävliaurud eksitavad porgandikärbest (Psila rosae), porgand peletab sibulakärbest. Erinev juurestiku sügavus väldib konkurentsi.',
-    reasonEn: 'Onion sulfur volatiles mask carrot rust fly (Psila rosae), while carrot foliage repels onion fly. Complementary root depths avoid competition.'
+    reasonEt:
+      'Sibula teravad väävliaurud eksitavad porgandikärbest (Psila rosae), porgand peletab sibulakärbest. Erinev juurestiku sügavus väldib konkurentsi.',
+    reasonEn:
+      'Onion sulfur volatiles mask carrot rust fly (Psila rosae), while carrot foliage repels onion fly. Complementary root depths avoid competition.'
   },
   {
     pair: ['porgand', 'kuuslauk'],
@@ -130,8 +126,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Kasvuhoone või soe päikeseline terrassikast',
     conditionsEn: 'Greenhouse or warm sunny container garden',
-    reasonEt: 'Basiiliku eeterlikud õlid peletavad kedriklesta ja ripslasi ning parandavad tomati aroomi ja maitseomadusi kasvuhoones.',
-    reasonEn: 'Basil essential oils repel spider mites and thrips while enhancing tomato vigor and sweetness in greenhouse conditions.'
+    reasonEt:
+      'Basiiliku eeterlikud õlid peletavad kedriklesta ja ripslasi ning parandavad tomati aroomi ja maitseomadusi kasvuhoones.',
+    reasonEn:
+      'Basil essential oils repel spider mites and thrips while enhancing tomato vigor and sweetness in greenhouse conditions.'
   },
   {
     pair: ['tomat', 'kartul'],
@@ -142,8 +140,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'disease_vector',
     conditionsEt: 'Kõik kasvukohad (kasvuhoone ja avamaa)',
     conditionsEn: 'All growing locations (greenhouse and open beds)',
-    reasonEt: 'Ohtlik naabrus! Mõlemad maavitsalised nakatuvad kergesti samasse laastavasse lehemädanikku (Phytophthora infestans) ja levitavad kartulimardikat.',
-    reasonEn: 'High hazard! Both Solanaceae crops share catastrophic late blight (Phytophthora infestans) and harbor Colorado potato beetle.'
+    reasonEt:
+      'Ohtlik naabrus! Mõlemad maavitsalised nakatuvad kergesti samasse laastavasse lehemädanikku (Phytophthora infestans) ja levitavad kartulimardikat.',
+    reasonEn:
+      'High hazard! Both Solanaceae crops share catastrophic late blight (Phytophthora infestans) and harbor Colorado potato beetle.'
   },
   {
     pair: ['hernes', 'sibul'],
@@ -154,7 +154,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'allelopathy',
     conditionsEt: 'Avamaa ja kõrgpeenrad',
     conditionsEn: 'Open garden beds and raised beds',
-    reasonEt: 'Laukuliste antibakteriaalsed juureeritised pärsivad liblikõieliste juurtel elavate Rhizobium-mügarbakterite lämmastiku sidumist.',
+    reasonEt:
+      'Laukuliste antibakteriaalsed juureeritised pärsivad liblikõieliste juurtel elavate Rhizobium-mügarbakterite lämmastiku sidumist.',
     reasonEn: 'Allium root exudates inhibit nitrogen-fixing Rhizobium bacteria inhabiting legume root nodules.'
   },
   {
@@ -166,7 +167,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'allelopathy',
     conditionsEt: 'Kõik peenrad',
     conditionsEn: 'All planting beds',
-    reasonEt: 'Küüslaugu fungitsiidsed väävliühendid takistavad herne mügarbakterite loomulikku sümbioosi ja pidurdavad herne kasvu.',
+    reasonEt:
+      'Küüslaugu fungitsiidsed väävliühendid takistavad herne mügarbakterite loomulikku sümbioosi ja pidurdavad herne kasvu.',
     reasonEn: 'Garlic antifungal sulfur compounds impede legume nitrogen fixation and stunt pea development.'
   },
   {
@@ -178,7 +180,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'allelopathy',
     conditionsEt: 'Avamaa ja lavad',
     conditionsEn: 'Open beds and cold frames',
-    reasonEt: 'Sibula ja küüslaugu juureeritised pidurdavad põldoa ja aedoa arengut ning seiskavad mügarbakterite tegevuse.',
+    reasonEt:
+      'Sibula ja küüslaugu juureeritised pidurdavad põldoa ja aedoa arengut ning seiskavad mügarbakterite tegevuse.',
     reasonEn: 'Allium root secretions inhibit growth and root nodulation of bush beans.'
   },
   {
@@ -226,7 +229,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Avamaa ja jahedam kevadine muld',
     conditionsEn: 'Open garden beds, cool moist soil',
-    reasonEt: 'Tilli vihmavarjulised õied meelitavad röövherilasi ja lepatriinusid, kes hävitavad kapsakoi röövikuid ja lehetäisid.',
+    reasonEt:
+      'Tilli vihmavarjulised õied meelitavad röövherilasi ja lepatriinusid, kes hävitavad kapsakoi röövikuid ja lehetäisid.',
     reasonEn: 'Dill umbel flowers attract parasitic wasps and ladybugs that prey on cabbage loopers and aphids.'
   },
   {
@@ -238,8 +242,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Püsiv maasikapeenar multšiga',
     conditionsEn: 'Perennial strawberry patch with mulch',
-    reasonEt: 'Küüslaugu lenduvad allitsiini aurud vähendavad maasika-hahkhallitust (Botrytis cinerea) ja peletavad maasikalesta.',
-    reasonEn: 'Garlic allicin vapors act as a natural bio-fungicide suppressing strawberry gray mold (Botrytis cinerea).'
+    reasonEt:
+      'Küüslaugu lenduvad allitsiini aurud vähendavad maasika-hahkhallitust (Botrytis cinerea) ja peletavad maasikalesta.',
+    reasonEn:
+      'Garlic allicin vapors act as a natural bio-fungicide suppressing strawberry gray mold (Botrytis cinerea).'
   },
   {
     pair: ['kurk', 'till'],
@@ -275,7 +281,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     conditionsEt: 'Avamaa peenar',
     conditionsEn: 'Open vegetable bed',
     reasonEt: 'Peedi sammasjuur toitub sügavamalt, kapsa pinnapealne juurestik ei konkureeri toitainete pärast.',
-    reasonEn: 'Beet taproots feed in deeper soil strata while cabbage shallow roots feed near the surface without competition.'
+    reasonEn:
+      'Beet taproots feed in deeper soil strata while cabbage shallow roots feed near the surface without competition.'
   },
   {
     pair: ['salat', 'redis'],
@@ -286,7 +293,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'root_layering',
     conditionsEt: 'Kevadine külv, niiske muld',
     conditionsEn: 'Early spring sowing, cool moist soil',
-    reasonEt: 'Kiirekasvuline salat hoiab maapinna jahedana ja niiskena, vähendades redise puitumist ja maakirpude rünnakuid.',
+    reasonEt:
+      'Kiirekasvuline salat hoiab maapinna jahedana ja niiskena, vähendades redise puitumist ja maakirpude rünnakuid.',
     reasonEn: 'Fast-growing lettuce acts as living mulch, retaining moisture and shielding radishes from flea beetles.'
   },
   {
@@ -298,7 +306,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'allelopathy',
     conditionsEt: 'Kõik kasvukohad',
     conditionsEn: 'All growing locations',
-    reasonEt: 'Tugevalt allelopaatiline taim! Fenkol eritab aineid, mis pidurdavad tomati ja teiste aiaviljade arengut.',
+    reasonEt:
+      'Tugevalt allelopaatiline taim! Fenkol eritab aineid, mis pidurdavad tomati ja teiste aiaviljade arengut.',
     reasonEn: 'Strongly allelopathic plant! Fennel root exudates severely inhibit tomato and vegetable growth.'
   },
   {
@@ -322,8 +331,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Kasvuhoone ja soe avamaa',
     conditionsEn: 'Greenhouse and warm sunny beds',
-    reasonEt: 'Sametill (Tagetes) eritab tiofeene, mis pärsivad mullas elavaid kahjulikke nematoodiusse ja peletavad kasvuhoone-karilast.',
-    reasonEn: 'Marigolds secrete thiophenes that suppress parasitic root-knot nematodes and repel greenhouse whiteflies.'
+    reasonEt:
+      'Sametill (Tagetes) eritab tiofeene, mis pärsivad mullas elavaid kahjulikke nematoodiusse ja peletavad kasvuhoone-karilast.',
+    reasonEn:
+      'Marigolds secrete thiophenes that suppress parasitic root-knot nematodes and repel greenhouse whiteflies.'
   },
   {
     pair: ['tomat', 'saialill'],
@@ -334,7 +345,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Kasvuhoone ja avamaa',
     conditionsEn: 'Greenhouse and garden beds',
-    reasonEt: 'Saialill toimib püünistaimena kahjuritele ja meelitab lehetäidest toituvaid lepatriinusid ning sirelasi.',
+    reasonEt:
+      'Saialill toimib püünistaimena kahjuritele ja meelitab lehetäidest toituvaid lepatriinusid ning sirelasi.',
     reasonEn: 'Calendula acts as a trap crop for pests and attracts predatory hoverflies and ladybugs.'
   },
   {
@@ -346,8 +358,10 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Avamaa köögiviljapeenar',
     conditionsEn: 'Open vegetable bed',
-    reasonEt: 'Saialill meelitab kapsakahjureid eemale ja toob aeda parasiitherilased, kes hävitavad kapsaliblika röövikuid.',
-    reasonEn: 'Calendula acts as trap plant drawing aphids away while attracting parasitic wasps that decimate cabbage worms.'
+    reasonEt:
+      'Saialill meelitab kapsakahjureid eemale ja toob aeda parasiitherilased, kes hävitavad kapsaliblika röövikuid.',
+    reasonEn:
+      'Calendula acts as trap plant drawing aphids away while attracting parasitic wasps that decimate cabbage worms.'
   },
   {
     pair: ['spinat', 'maasikas'],
@@ -358,7 +372,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'root_layering',
     conditionsEt: 'Päikeseline või poolvarjuline peenar',
     conditionsEn: 'Full sun to partial shade',
-    reasonEt: 'Spinati saponiinid toetavad mulla mikrobioloogilist tasakaalu ning madal lehestik varjutab maasikajuuri.',
+    reasonEt:
+      'Spinati saponiinid toetavad mulla mikrobioloogilist tasakaalu ning madal lehestik varjutab maasikajuuri.',
     reasonEn: 'Spinach saponins enhance soil microbiology while shallow foliage protects strawberry roots from drying.'
   },
   {
@@ -406,7 +421,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Kasvuhoone või soe peenar',
     conditionsEn: 'Greenhouse or warm bed',
-    reasonEt: 'Basiiliku eeterlikud õlid peletavad kurgikahjureid (ripslased, jahukaste) ja soodustavad tervislikku mikrokliimat.',
+    reasonEt:
+      'Basiiliku eeterlikud õlid peletavad kurgikahjureid (ripslased, jahukaste) ja soodustavad tervislikku mikrokliimat.',
     reasonEn: 'Basil essential oils deter thrips and downy mildew spores, promoting healthy microclimate.'
   },
   // Traditional / Folklore pairings clearly distinguished with traditional confidence
@@ -419,7 +435,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Avamaa või terrassipeenar',
     conditionsEn: 'Open bed or patio garden',
-    reasonEt: 'Rosmariini tugev aroom arvatakse peletavat porgandikärbest, kuigi rosmariin vajab kuivemat mulda kui porgand.',
+    reasonEt:
+      'Rosmariini tugev aroom arvatakse peletavat porgandikärbest, kuigi rosmariin vajab kuivemat mulda kui porgand.',
     reasonEn: 'Rosemary scent is traditionally held to deter carrot fly, though moisture needs differ slightly.'
   },
   {
@@ -431,7 +448,8 @@ const BOTANICAL_PAIRS: BotanicalPairKnowledge[] = [
     category: 'pest_control',
     conditionsEt: 'Münt potis kapsaste vahel (vältimaks levikut)',
     conditionsEn: 'Mint grown in container near cabbage (to prevent spreading)',
-    reasonEt: 'Mündi intensiivne lõhn eksitab kapsaliblikaid, kuid mündi juurestik on agressiivne ja vajab potis piiramist.',
+    reasonEt:
+      'Mündi intensiivne lõhn eksitab kapsaliblikaid, kuid mündi juurestik on agressiivne ja vajab potis piiramist.',
     reasonEn: 'Strong mint aroma masks cabbages from white butterflies, but mint must be contained in pots.'
   },
   {
@@ -768,8 +786,10 @@ export function evaluatePairRelationship(
 
   // Established: Fennel is strongly allelopathic to almost all garden plants
   if (canonicalA === 'apteegitill' || canonicalB === 'apteegitill') {
-    const reasonEt = 'Apteegitill (fenkol) eritab juurtest ja võrsetest allelopaatilisi aineid, mis pärsivad enamiku aiaviljade kasvu.';
-    const reasonEn = 'Fennel root and foliage exudates possess strong allelopathic properties inhibiting growth in neighboring crops.';
+    const reasonEt =
+      'Apteegitill (fenkol) eritab juurtest ja võrsetest allelopaatilisi aineid, mis pärsivad enamiku aiaviljade kasvu.';
+    const reasonEn =
+      'Fennel root and foliage exudates possess strong allelopathic properties inhibiting growth in neighboring crops.';
     return {
       plantA: displayNameA,
       plantB: displayNameB,
@@ -790,11 +810,9 @@ export function evaluatePairRelationship(
   }
 
   // Established: Alliaceae + Fabaceae allelopathy (Garlic/Onion/Leek + Peas/Beans)
-  if (
-    (familyA === 'alliaceae' && familyB === 'fabaceae') ||
-    (familyA === 'fabaceae' && familyB === 'alliaceae')
-  ) {
-    const reasonEt = 'Laugu perekonna (Alliaceae) väävliühendid ja juureeritised pärsivad liblikõieliste (Fabaceae) juurtel elavate lämmastikku siduvate mügarbakterite tegevust.';
+  if ((familyA === 'alliaceae' && familyB === 'fabaceae') || (familyA === 'fabaceae' && familyB === 'alliaceae')) {
+    const reasonEt =
+      'Laugu perekonna (Alliaceae) väävliühendid ja juureeritised pärsivad liblikõieliste (Fabaceae) juurtel elavate lämmastikku siduvate mügarbakterite tegevust.';
     const reasonEn = 'Allium sulfur secretions inhibit nitrogen-fixing Rhizobium bacteria on legume roots.';
     return {
       plantA: displayNameA,
@@ -817,8 +835,10 @@ export function evaluatePairRelationship(
 
   // Established: Solanaceae + Solanaceae disease vector risk (Potato + Tomato + Pepper)
   if (familyA === 'solanaceae' && familyB === 'solanaceae' && canonicalA !== canonicalB) {
-    const reasonEt = 'Samast maavitsaliste (Solanaceae) sugukonnast taimed nakatuvad samadesse mulla- ja lehehaigustesse (kartuli-lehemädanik, närbumistõved).';
-    const reasonEn = 'Solanaceae family crops share acute susceptibility to common pathogens (Phytophthora late blight, verticillium wilt).';
+    const reasonEt =
+      'Samast maavitsaliste (Solanaceae) sugukonnast taimed nakatuvad samadesse mulla- ja lehehaigustesse (kartuli-lehemädanik, närbumistõved).';
+    const reasonEn =
+      'Solanaceae family crops share acute susceptibility to common pathogens (Phytophthora late blight, verticillium wilt).';
     return {
       plantA: displayNameA,
       plantB: displayNameB,
@@ -840,8 +860,10 @@ export function evaluatePairRelationship(
 
   // Established: Brassicaceae + Brassicaceae shared pest accumulation
   if (familyA === 'brassicaceae' && familyB === 'brassicaceae' && canonicalA !== canonicalB) {
-    const reasonEt = 'Ristõielised (kapsad, kaalikas, redis) koguvad samu kahjureid (maakirbud, kapsakoi) ja kapsanuutrit (Plasmodiophora).';
-    const reasonEn = 'Brassicaceae crops attract shared specialist pests (flea beetles, cabbage moth) and accumulate clubroot spores.';
+    const reasonEt =
+      'Ristõielised (kapsad, kaalikas, redis) koguvad samu kahjureid (maakirbud, kapsakoi) ja kapsanuutrit (Plasmodiophora).';
+    const reasonEn =
+      'Brassicaceae crops attract shared specialist pests (flea beetles, cabbage moth) and accumulate clubroot spores.';
     return {
       plantA: displayNameA,
       plantB: displayNameB,
@@ -955,12 +977,7 @@ export const CompanionEngine = {
   /**
    * Evaluates pairwise companion relationship between two plant species.
    */
-  evaluatePair(
-    idA: string,
-    idB: string,
-    allPlants: Plant[] = [],
-    lang: 'et' | 'en' = 'et'
-  ): CompanionRecommendation {
+  evaluatePair(idA: string, idB: string, allPlants: Plant[] = [], lang: 'et' | 'en' = 'et'): CompanionRecommendation {
     return evaluatePairRelationship(idA, idB, allPlants, lang);
   },
 
@@ -1104,11 +1121,7 @@ export const CompanionEngine = {
    * Evaluates overall harmony score and synergy statistics for the entire bed.
    * For beds without precise plant coordinates, accepts bed-level plantings or species list.
    */
-  calculateBedHarmony(
-    plantings: BedPlantingCell[],
-    allPlants: Plant[],
-    lang: 'et' | 'en' = 'et'
-  ): BedHarmonyScore {
+  calculateBedHarmony(plantings: BedPlantingCell[], allPlants: Plant[], lang: 'et' | 'en' = 'et'): BedHarmonyScore {
     const recommendations: CompanionRecommendation[] = [];
 
     // Evaluate all distinct pairs in bed
@@ -1121,9 +1134,8 @@ export const CompanionEngine = {
         // If bed is purely aggregated without grid coordinates, check all distinct pairs
         const dx = Math.abs(cellA.gridX - cellB.gridX);
         const dy = Math.abs(cellA.gridY - cellB.gridY);
-        const isAdjacent = (cellA.gridX === 0 && cellA.gridY === 0 && cellB.gridX === 0 && cellB.gridY === 0)
-          ? true
-          : (dx <= 1 && dy <= 1);
+        const isAdjacent =
+          cellA.gridX === 0 && cellA.gridY === 0 && cellB.gridX === 0 && cellB.gridY === 0 ? true : dx <= 1 && dy <= 1;
 
         if (isAdjacent) {
           const rec = evaluatePairRelationship(cellA.plantId, cellB.plantId, allPlants, lang);
@@ -1134,7 +1146,9 @@ export const CompanionEngine = {
 
     const positivePairs = recommendations.filter((r) => r.classification === 'beneficial').length;
     const negativePairs = recommendations.filter((r) => r.classification === 'incompatible').length;
-    const neutralPairs = recommendations.filter((r) => r.classification === 'neutral' || r.classification === 'unknown').length;
+    const neutralPairs = recommendations.filter(
+      (r) => r.classification === 'neutral' || r.classification === 'unknown'
+    ).length;
     const totalPairings = positivePairs + negativePairs;
 
     let harmonyPercentage = 100;
@@ -1145,22 +1159,24 @@ export const CompanionEngine = {
       }
     }
 
-    let summary = lang === 'en'
-      ? 'No plant companion relationships in bed.'
-      : 'Peenras puuduvad naabrustaimede suhted.';
+    let summary =
+      lang === 'en' ? 'No plant companion relationships in bed.' : 'Peenras puuduvad naabrustaimede suhted.';
 
     if (negativePairs > 0 && positivePairs > 0) {
-      summary = lang === 'en'
-        ? `${positivePairs} beneficial pairing(s) and ${negativePairs} warning(s).`
-        : `${positivePairs} soodsat suhet ja ${negativePairs} hoiatust.`;
+      summary =
+        lang === 'en'
+          ? `${positivePairs} beneficial pairing(s) and ${negativePairs} warning(s).`
+          : `${positivePairs} soodsat suhet ja ${negativePairs} hoiatust.`;
     } else if (positivePairs > 0) {
-      summary = lang === 'en'
-        ? `${positivePairs} excellent companion relationship(s)! All plants support each other.`
-        : `${positivePairs} suurepärast naabrussuhet! Kõik taimed toetavad teineteist.`;
+      summary =
+        lang === 'en'
+          ? `${positivePairs} excellent companion relationship(s)! All plants support each other.`
+          : `${positivePairs} suurepärast naabrussuhet! Kõik taimed toetavad teineteist.`;
     } else if (negativePairs > 0) {
-      summary = lang === 'en'
-        ? `Attention: ${negativePairs} incompatible plant pairing(s) in bed!`
-        : `Tähelepanu: ${negativePairs} ebasoodsat naabrit peenras!`;
+      summary =
+        lang === 'en'
+          ? `Attention: ${negativePairs} incompatible plant pairing(s) in bed!`
+          : `Tähelepanu: ${negativePairs} ebasoodsat naabrit peenras!`;
     }
 
     return {
@@ -1184,11 +1200,16 @@ export const CompanionEngine = {
     plantings: BedPlantingCell[],
     allPlants: Plant[],
     lang: 'et' | 'en' = 'et'
-  ): { status: 'good' | 'bad' | 'neutral'; reason?: string; botanicalReason?: string; confidence?: EvidenceConfidence; source?: string } {
+  ): {
+    status: 'good' | 'bad' | 'neutral';
+    reason?: string;
+    botanicalReason?: string;
+    confidence?: EvidenceConfidence;
+    source?: string;
+  } {
     const neighborCells = plantings.filter(
-      (c) => !(c.gridX === gridX && c.gridY === gridY) &&
-        Math.abs(c.gridX - gridX) <= 1 &&
-        Math.abs(c.gridY - gridY) <= 1
+      (c) =>
+        !(c.gridX === gridX && c.gridY === gridY) && Math.abs(c.gridX - gridX) <= 1 && Math.abs(c.gridY - gridY) <= 1
     );
 
     if (neighborCells.length === 0) {
@@ -1229,14 +1250,9 @@ export const CompanionEngine = {
   /**
    * Returns top beneficial and antagonistic companion recommendations for a plant from the catalog.
    */
-  getSuggestedCompanions(
-    targetPlantId: string,
-    allPlants: Plant[]
-  ): { good: Plant[]; bad: Plant[] } {
+  getSuggestedCompanions(targetPlantId: string, allPlants: Plant[]): { good: Plant[]; bad: Plant[] } {
     const canonicalTarget = normalizePlantIdentifier(targetPlantId, allPlants);
-    const target = allPlants.find(
-      (p) => normalizePlantIdentifier(p.id, allPlants) === canonicalTarget
-    );
+    const target = allPlants.find((p) => normalizePlantIdentifier(p.id, allPlants) === canonicalTarget);
     if (!target) return { good: [], bad: [] };
 
     const good: Plant[] = [];

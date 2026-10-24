@@ -1,12 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { GardenBed, Plant } from '../../types';
 import { useGarden } from '../../context/GardenContext';
-import {
-  BedSuccessionSlot,
-  EstonianRegionId,
-  CropProtectionType,
-  BotanicalFamilyId
-} from '../../types/rotation';
+import { BedSuccessionSlot, EstonianRegionId, CropProtectionType, BotanicalFamilyId } from '../../types/rotation';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
 import { CropRotationEngine, BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
 import {
@@ -44,7 +39,7 @@ interface CropRotationTimelineProps {
 }
 
 const TIMELINE_START_DOY = 60; // March 1st approx
-const TIMELINE_END_DOY = 334;   // November 30th approx
+const TIMELINE_END_DOY = 334; // November 30th approx
 const TOTAL_TIMELINE_DAYS = TIMELINE_END_DOY - TIMELINE_START_DOY;
 
 const MONTHS_CONFIG = [
@@ -59,11 +54,7 @@ const MONTHS_CONFIG = [
   { nameEt: 'November', nameEn: 'November', startDoy: 305, days: 30 }
 ];
 
-export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
-  beds,
-  plants,
-  language = 'et'
-}) => {
+export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({ beds, plants, language = 'et' }) => {
   const {
     selectedYear,
     setSelectedYear,
@@ -88,10 +79,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
 
   // Region and frost dates
   const regionProfile = ESTONIAN_REGIONS[selectedRegion] || ESTONIAN_REGIONS.central;
-  const frostData = useMemo(
-    () => EstonianFrostEngine.getAdjustedFrostDates(selectedRegion, 'none'),
-    [selectedRegion]
-  );
+  const frostData = useMemo(() => EstonianFrostEngine.getAdjustedFrostDates(selectedRegion, 'none'), [selectedRegion]);
 
   // Display beds
   const visibleBeds = useMemo(() => {
@@ -355,7 +343,13 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
               transition: 'all 0.15s ease'
             }}
           >
-            {showWarnings ? (language === 'en' ? 'Hide Alerts' : 'Peida hoiatused') : (language === 'en' ? 'Show Alerts' : 'Näita hoiatusi')}
+            {showWarnings
+              ? language === 'en'
+                ? 'Hide Alerts'
+                : 'Peida hoiatused'
+              : language === 'en'
+                ? 'Show Alerts'
+                : 'Näita hoiatusi'}
           </button>
         </div>
       </div>
@@ -403,21 +397,27 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
         {/* Frost Threshold Metrics */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: '#2563EB', fontWeight: 600 }}>❄️ {language === 'en' ? 'Spring Frost:' : 'Kevadine öökülm:'}</span>
+            <span style={{ color: '#2563EB', fontWeight: 600 }}>
+              ❄️ {language === 'en' ? 'Spring Frost:' : 'Kevadine öökülm:'}
+            </span>
             <span className="font-mono tabular-nums" style={{ fontWeight: 700 }}>
               {frostData.springFrostMMDD}
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: '#D97706', fontWeight: 600 }}>☀️ {language === 'en' ? 'Frost-Free Days:' : 'Öökülmavaba periood:'}</span>
+            <span style={{ color: '#D97706', fontWeight: 600 }}>
+              ☀️ {language === 'en' ? 'Frost-Free Days:' : 'Öökülmavaba periood:'}
+            </span>
             <span className="font-mono tabular-nums" style={{ fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)' }}>
               {frostData.frostFreeDays} {language === 'en' ? 'days' : 'päeva'}
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: '#DC2626', fontWeight: 600 }}>🍂 {language === 'en' ? 'Autumn Frost:' : 'Sügisene öökülm:'}</span>
+            <span style={{ color: '#DC2626', fontWeight: 600 }}>
+              🍂 {language === 'en' ? 'Autumn Frost:' : 'Sügisene öökülm:'}
+            </span>
             <span className="font-mono tabular-nums" style={{ fontWeight: 700 }}>
               {frostData.autumnFrostMMDD}
             </span>
@@ -610,7 +610,11 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                   pointerEvents: 'none',
                   zIndex: 1
                 }}
-                title={language === 'en' ? `Spring frost zone (until ${frostData.springFrostMMDD})` : `Kevadine öökülmavöönd (kuni ${frostData.springFrostMMDD})`}
+                title={
+                  language === 'en'
+                    ? `Spring frost zone (until ${frostData.springFrostMMDD})`
+                    : `Kevadine öökülmavöönd (kuni ${frostData.springFrostMMDD})`
+                }
               />
 
               {/* Autumn Frost Risk Band */}
@@ -626,7 +630,11 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                   pointerEvents: 'none',
                   zIndex: 1
                 }}
-                title={language === 'en' ? `Autumn frost zone (after ${frostData.autumnFrostMMDD})` : `Sügisene öökülmavöönd (alates ${frostData.autumnFrostMMDD})`}
+                title={
+                  language === 'en'
+                    ? `Autumn frost zone (after ${frostData.autumnFrostMMDD})`
+                    : `Sügisene öökülmavöönd (alates ${frostData.autumnFrostMMDD})`
+                }
               />
 
               {/* Safe Outdoor Window Label */}
@@ -676,17 +684,10 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
           {/* Bed Rows */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {visibleBeds.map((bed) => {
-              const bedSlots = successionSlots.filter(
-                (s) => s.bedId === bed.id && s.year === selectedYear
-              );
+              const bedSlots = successionSlots.filter((s) => s.bedId === bed.id && s.year === selectedYear);
 
               // Audit bed history for rotation alerts
-              const alerts = CropRotationEngine.auditBedHistory(
-                bed.id,
-                bedSlots,
-                historyRecords,
-                selectedYear
-              );
+              const alerts = CropRotationEngine.auditBedHistory(bed.id, bedSlots, historyRecords, selectedYear);
 
               const isHistoryOpen = expandedHistoryBedId === bed.id;
               const bedPast = historyRecords.filter((r) => r.bedId === bed.id && r.year < selectedYear);
@@ -738,17 +739,23 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                           }}
                         >
                           {isHistoryOpen
-                            ? (language === 'en' ? 'Hide History' : 'Peida ajalugu')
-                            : (language === 'en' ? '4-Yr History' : '4-a ajalugu')}
+                            ? language === 'en'
+                              ? 'Hide History'
+                              : 'Peida ajalugu'
+                            : language === 'en'
+                              ? '4-Yr History'
+                              : '4-a ajalugu'}
                         </button>
 
                         <button
                           onClick={() =>
-                            setExpandedRotationCycleBedId(
-                              expandedRotationCycleBedId === bed.id ? null : bed.id
-                            )
+                            setExpandedRotationCycleBedId(expandedRotationCycleBedId === bed.id ? null : bed.id)
                           }
-                          title={language === 'en' ? 'Configure 3-5 year rotation cycle' : 'Seadista 3-5 aastane viljavahelduskava'}
+                          title={
+                            language === 'en'
+                              ? 'Configure 3-5 year rotation cycle'
+                              : 'Seadista 3-5 aastane viljavahelduskava'
+                          }
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -769,8 +776,12 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                           <RotateCw size={12} />
                           <span>
                             {expandedRotationCycleBedId === bed.id
-                              ? (language === 'en' ? 'Close Plan' : 'Sulge kava')
-                              : (language === 'en' ? '3–5 Yr Cycle' : '3–5 a ring')}
+                              ? language === 'en'
+                                ? 'Close Plan'
+                                : 'Sulge kava'
+                              : language === 'en'
+                                ? '3–5 Yr Cycle'
+                                : '3–5 a ring'}
                           </span>
                         </button>
 
@@ -862,7 +873,8 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                           const rightPct = getTimelinePct(harvestDoy);
                           const widthPct = Math.max(8, rightPct - leftPct);
 
-                          const famInfo = BOTANICAL_FAMILY_DETAILS[slot.botanicalFamily] || BOTANICAL_FAMILY_DETAILS.Other;
+                          const famInfo =
+                            BOTANICAL_FAMILY_DETAILS[slot.botanicalFamily] || BOTANICAL_FAMILY_DETAILS.Other;
                           const frostHazard = EstonianFrostEngine.evaluateSlotFrostRisk(slot, selectedRegion);
 
                           return (
@@ -884,9 +896,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                                 justifyContent: 'space-between',
                                 cursor: 'pointer',
                                 zIndex: hoveredSlotId === slot.id ? 10 : 3,
-                                border: frostHazard
-                                  ? '2px solid #EF4444'
-                                  : `1px solid ${famInfo.borderColor}`,
+                                border: frostHazard ? '2px solid #EF4444' : `1px solid ${famInfo.borderColor}`,
                                 transition: 'transform 0.15s ease'
                               }}
                               onMouseEnter={() => setHoveredSlotId(slot.id)}
@@ -906,7 +916,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                                       textOverflow: 'ellipsis'
                                     }}
                                   >
-                                    {language === 'en' ? (slot.plantNameEn || slot.plantName) : slot.plantName}
+                                    {language === 'en' ? slot.plantNameEn || slot.plantName : slot.plantName}
                                   </span>
                                 </div>
 
@@ -965,21 +975,21 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                               alert.severity === 'danger'
                                 ? '#FEF2F2'
                                 : alert.severity === 'good'
-                                ? '#F0FDF4'
-                                : '#FFFBEB',
+                                  ? '#F0FDF4'
+                                  : '#FFFBEB',
                             border: `1px solid ${
                               alert.severity === 'danger'
                                 ? '#F87171'
                                 : alert.severity === 'good'
-                                ? '#86EFAC'
-                                : '#FCD34D'
+                                  ? '#86EFAC'
+                                  : '#FCD34D'
                             }`,
                             color:
                               alert.severity === 'danger'
                                 ? '#991B1B'
                                 : alert.severity === 'good'
-                                ? '#166534'
-                                : '#92400E',
+                                  ? '#166534'
+                                  : '#92400E',
                             display: 'flex',
                             alignItems: 'flex-start',
                             gap: '8px'
@@ -987,9 +997,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                         >
                           <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
                           <div>
-                            <div style={{ fontWeight: 700 }}>
-                              {language === 'en' ? alert.titleEn : alert.titleEt}
-                            </div>
+                            <div style={{ fontWeight: 700 }}>{language === 'en' ? alert.titleEn : alert.titleEt}</div>
                             <div style={{ marginTop: '2px' }}>
                               {language === 'en' ? alert.messageEn : alert.messageEt}
                             </div>
@@ -998,12 +1006,17 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                             </div>
                             {alert.biologicalMechanism && (
                               <div style={{ marginTop: '4px', fontSize: '11px', opacity: 0.95 }}>
-                                🔬 <strong>{language === 'en' ? 'Biological Mechanism:' : 'Bioloogiline mehhanism:'}</strong> {alert.biologicalMechanism}
+                                🔬{' '}
+                                <strong>
+                                  {language === 'en' ? 'Biological Mechanism:' : 'Bioloogiline mehhanism:'}
+                                </strong>{' '}
+                                {alert.biologicalMechanism}
                               </div>
                             )}
                             {alert.evidence && (
                               <div style={{ marginTop: '4px', fontSize: '10px', fontStyle: 'italic', opacity: 0.85 }}>
-                                📚 {language === 'en' ? 'Evidence:' : 'Teaduslik alus:'} {alert.evidence.source} ({alert.evidence.verifiedYear}) • {alert.evidence.tier}
+                                📚 {language === 'en' ? 'Evidence:' : 'Teaduslik alus:'} {alert.evidence.source} (
+                                {alert.evidence.verifiedYear}) • {alert.evidence.tier}
                               </div>
                             )}
                           </div>
@@ -1039,9 +1052,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                         {[selectedYear - 3, selectedYear - 2, selectedYear - 1, selectedYear].map((yr) => {
-                          const yearRecord = historyRecords.find(
-                            (r) => r.bedId === bed.id && r.year === yr
-                          );
+                          const yearRecord = historyRecords.find((r) => r.bedId === bed.id && r.year === yr);
                           const isTargetYear = yr === selectedYear;
 
                           return (
@@ -1060,7 +1071,9 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                                 style={{
                                   fontSize: '11px',
                                   fontWeight: 700,
-                                  color: isTargetYear ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text-muted, #5F675A)'
+                                  color: isTargetYear
+                                    ? 'var(--kulv-primary, #4F6B45)'
+                                    : 'var(--kulv-text-muted, #5F675A)'
                                 }}
                               >
                                 {yr} {isTargetYear && '★'}
@@ -1081,9 +1094,7 @@ export const CropRotationTimeline: React.FC<CropRotationTimelineProps> = ({
                                   yearRecord.plantings.map((p, idx) => (
                                     <div key={idx} style={{ fontWeight: 600 }}>
                                       {p.plantIcon || '🌱'} {p.plantName}
-                                      <div style={{ fontSize: '10px', color: '#6B7280' }}>
-                                        {p.family}
-                                      </div>
+                                      <div style={{ fontSize: '10px', color: '#6B7280' }}>{p.family}</div>
                                     </div>
                                   ))
                                 ) : (

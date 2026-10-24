@@ -83,7 +83,13 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
             onClick={onDismiss}
             aria-label="Sulge aken"
             className="touch-target"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)', borderRadius: '8px' }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              borderRadius: '8px'
+            }}
           >
             <X size={20} />
           </button>
@@ -91,7 +97,15 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Peenra nimetus
             </label>
             <input
@@ -113,7 +127,15 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Laius (m)
               </label>
               <input
@@ -135,7 +157,15 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
               />
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Pikkus (m)
               </label>
               <input
@@ -159,7 +189,15 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Tüüp / kate
             </label>
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -207,7 +245,15 @@ export const AddBedDialog: React.FC<AddBedDialogProps> = ({ isOpen, onDismiss, o
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Märkmed mullast vms.
             </label>
             <input

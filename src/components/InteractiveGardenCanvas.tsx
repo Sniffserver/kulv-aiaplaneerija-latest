@@ -46,7 +46,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
 
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(allPlants[0] || null);
   const [hoveredCell, setHoveredCell] = useState<{ x: number; y: number } | null>(null);
-  const [inspectingCell, setInspectingCell] = useState<{ x: number; y: number; planting: BedPlantingCell } | null>(null);
+  const [inspectingCell, setInspectingCell] = useState<{ x: number; y: number; planting: BedPlantingCell } | null>(
+    null
+  );
   const [activeCellCoords, setActiveCellCoords] = useState<{ x: number; y: number } | null>(null);
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [heatmapActive, setHeatmapActive] = useState(false);
@@ -61,10 +63,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
     return CompanionEngine.getSuggestedCompanions(selectedPlant.id, allPlants);
   }, [selectedPlant, allPlants]);
 
-  const companionConflicts: CompanionConflict[] = CompanionEngine.evaluateBedCompanions(
-    bed.plantings,
-    allPlants
-  );
+  const companionConflicts: CompanionConflict[] = CompanionEngine.evaluateBedCompanions(bed.plantings, allPlants);
 
   const handleDragStart = (e: React.DragEvent, plant: Plant) => {
     e.dataTransfer.setData('text/plain', plant.id);
@@ -186,9 +185,10 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
   };
 
   // Live companion synergy preview if cell is empty and plant is selected
-  const activeSynergy = hoveredCell && selectedPlant
-    ? CompanionEngine.getCellSynergy(hoveredCell.x, hoveredCell.y, selectedPlant, bed.plantings, allPlants)
-    : null;
+  const activeSynergy =
+    hoveredCell && selectedPlant
+      ? CompanionEngine.getCellSynergy(hoveredCell.x, hoveredCell.y, selectedPlant, bed.plantings, allPlants)
+      : null;
 
   return (
     <div
@@ -210,7 +210,15 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
           boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.06))'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}
+        >
           <div>
             <div
               className="font-serif-display"
@@ -242,9 +250,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 border: heatmapActive
                   ? '1px solid var(--kulv-primary, #4F6B45)'
                   : '1px solid var(--kulv-border, #C9BFA9)',
-                backgroundColor: heatmapActive
-                  ? 'var(--kulv-primary, #4F6B45)'
-                  : 'var(--kulv-surface-muted, #EFE6D4)',
+                backgroundColor: heatmapActive ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                 color: heatmapActive ? 'white' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
@@ -275,7 +281,17 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
         </div>
 
         {/* Selected Plant Stamp Hint & Synergy preview */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px', fontSize: '11px', flexWrap: 'wrap', gap: '6px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: '8px',
+            fontSize: '11px',
+            flexWrap: 'wrap',
+            gap: '6px'
+          }}
+        >
           <div style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
             Vali dokist taim ja puuduta ruudustiku lahtrit. Taimel klõpsates avaneb kiirtoimingute kaart.
           </div>
@@ -320,11 +336,25 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '10px', fontWeight: 700 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--kulv-primary, #4F6B45)' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--kulv-primary, #4F6B45)'
+                  }}
+                />
                 <span>Toetav sünergia ({bedHarmony.positivePairs})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--kulv-accent, #D97A3D)' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--kulv-accent, #D97A3D)' }} />
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--kulv-accent, #D97A3D)'
+                  }}
+                />
                 <span>Ebasoodne konflikt ({bedHarmony.negativePairs})</span>
               </div>
             </div>
@@ -349,7 +379,14 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
               position: 'relative'
             }}
           >
-            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '8px' }}>
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: 'var(--kulv-text-muted, #5F675A)',
+                marginBottom: '8px'
+              }}
+            >
               ↔ Pikkus: {bed.length} m
             </div>
 
@@ -396,26 +433,20 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     let cellBg = isInspected
                       ? 'var(--kulv-accent-soft, #F3D8C2)'
                       : isHovered
-                      ? 'rgba(79, 107, 69, 0.35)'
-                      : planted
-                      ? 'rgba(79, 107, 69, 0.18)'
-                      : 'var(--kulv-surface, #FFFDF8)';
+                        ? 'rgba(79, 107, 69, 0.35)'
+                        : planted
+                          ? 'rgba(79, 107, 69, 0.18)'
+                          : 'var(--kulv-surface, #FFFDF8)';
 
-                    let cellBorderWidth = isInspected
-                      ? '2px'
-                      : isHovered
-                      ? '2px'
-                      : planted
-                      ? '1.5px'
-                      : '1px';
+                    let cellBorderWidth = isInspected ? '2px' : isHovered ? '2px' : planted ? '1.5px' : '1px';
 
                     let cellBorderColor = isInspected
                       ? 'var(--kulv-accent, #D97A3D)'
                       : isHovered
-                      ? 'var(--kulv-primary, #4F6B45)'
-                      : planted
-                      ? 'var(--kulv-primary, #4F6B45)'
-                      : 'var(--kulv-border, #C9BFA9)';
+                        ? 'var(--kulv-primary, #4F6B45)'
+                        : planted
+                          ? 'var(--kulv-primary, #4F6B45)'
+                          : 'var(--kulv-border, #C9BFA9)';
 
                     let cellBoxShadow: string | undefined = undefined;
 
@@ -482,7 +513,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           cursor: 'pointer',
                           userSelect: 'none',
                           transition: 'all 0.15s ease',
-                          outline: 'none',
+                          outline: 'none'
                         }}
                       >
                         {planted ? (
@@ -513,7 +544,10 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                                   fontSize: '9px',
                                   fontWeight: 800,
                                   color: cellSynergy.status === 'positive' ? 'white' : 'white',
-                                  backgroundColor: cellSynergy.status === 'positive' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)',
+                                  backgroundColor:
+                                    cellSynergy.status === 'positive'
+                                      ? 'var(--kulv-primary, #4F6B45)'
+                                      : 'var(--kulv-accent, #D97A3D)',
                                   borderRadius: '6px',
                                   padding: '1px 4px',
                                   lineHeight: 1.2
@@ -557,7 +591,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           </>
                         ) : (
                           <>
-                            <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontSize: '14px', fontWeight: 600 }}>
+                            <span
+                              style={{ color: 'var(--kulv-text-muted, #5F675A)', fontSize: '14px', fontWeight: 600 }}
+                            >
                               {isHovered ? 'Istuta!' : '+'}
                             </span>
                             <span style={{ fontSize: '8px', color: 'var(--kulv-text-muted, #5F675A)' }}>
@@ -596,7 +632,14 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
 
                   return (
                     <>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%'
+                        }}
+                      >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span style={{ fontSize: '26px' }}>{inspectingCell.planting.plantIcon}</span>
                           <div>
@@ -604,7 +647,8 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               {inspectingCell.planting.plantName}
                             </div>
                             <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                              Sugukond: <strong>{familyName}</strong> · Lahtris ({inspectingCell.x + 1}, {inspectingCell.y + 1})
+                              Sugukond: <strong>{familyName}</strong> · Lahtris ({inspectingCell.x + 1},{' '}
+                              {inspectingCell.y + 1})
                             </div>
                           </div>
                         </div>
@@ -620,7 +664,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               gap: '4px',
                               padding: '6px 10px',
                               borderRadius: '6px',
-                              backgroundColor: showDesktopGrowthChart ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                              backgroundColor: showDesktopGrowthChart
+                                ? 'var(--kulv-primary, #4F6B45)'
+                                : 'var(--kulv-surface-muted, #EFE6D4)',
                               color: showDesktopGrowthChart ? 'white' : 'var(--kulv-text, #2A2E24)',
                               border: '1px solid var(--kulv-border, #C9BFA9)',
                               fontSize: '11px',
@@ -686,14 +732,23 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       >
                         <RotateCcw size={14} color="var(--kulv-primary, #4F6B45)" />
                         <span>
-                          Viljavaheldus ({canonicalFam}): ära istuta samasse kohta järgmisel aastal sama sugukonna liike.
+                          Viljavaheldus ({canonicalFam}): ära istuta samasse kohta järgmisel aastal sama sugukonna
+                          liike.
                         </span>
                       </div>
 
                       {/* Desktop Growth Chart inline preview */}
                       {showDesktopGrowthChart && plantInfo && (
                         <div style={{ marginTop: '4px' }}>
-                          <React.Suspense fallback={<div style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Laadin kasvuprognoosi graafikut...</div>}>
+                          <React.Suspense
+                            fallback={
+                              <div
+                                style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}
+                              >
+                                Laadin kasvuprognoosi graafikut...
+                              </div>
+                            }
+                          >
                             <PlantGrowthProgressChart planting={inspectingCell.planting} plant={plantInfo} />
                           </React.Suspense>
                         </div>
@@ -718,7 +773,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
               padding: '12px'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}
+            >
               <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                 Taimede dokk (Puuduta valimiseks või lohista)
               </div>
@@ -811,7 +868,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 }}
               >
                 <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-                  {language === 'en' ? `Companions for ${selectedPlant.name}:` : `Kaaslased taimele ${selectedPlant.name}:`}
+                  {language === 'en'
+                    ? `Companions for ${selectedPlant.name}:`
+                    : `Kaaslased taimele ${selectedPlant.name}:`}
                 </div>
                 {suggestedCompanions.good.length > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
@@ -903,10 +962,8 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     : '🌿 Naabrustaimede sünergia ja botaaniline agronoomia:'}
                 </span>
                 <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--kulv-text-muted, #5F675A)' }}>
-                  {companionConflicts.filter((c) => !c.isHarmful).length}{' '}
-                  {language === 'en' ? 'synergies' : 'toetavat'} ·{' '}
-                  {companionConflicts.filter((c) => c.isHarmful).length}{' '}
-                  {language === 'en' ? 'warnings' : 'hoiatust'}
+                  {companionConflicts.filter((c) => !c.isHarmful).length} {language === 'en' ? 'synergies' : 'toetavat'}{' '}
+                  · {companionConflicts.filter((c) => c.isHarmful).length} {language === 'en' ? 'warnings' : 'hoiatust'}
                 </span>
               </div>
               {companionConflicts.map((conflict, idx) => (
@@ -918,12 +975,8 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     gap: '3px',
                     padding: '6px 8px',
                     borderRadius: '6px',
-                    backgroundColor: conflict.isHarmful
-                      ? 'rgba(184, 92, 51, 0.08)'
-                      : 'rgba(79, 107, 69, 0.08)',
-                    border: `1px solid ${
-                      conflict.isHarmful ? 'rgba(184, 92, 51, 0.25)' : 'rgba(79, 107, 69, 0.25)'
-                    }`
+                    backgroundColor: conflict.isHarmful ? 'rgba(184, 92, 51, 0.08)' : 'rgba(79, 107, 69, 0.08)',
+                    border: `1px solid ${conflict.isHarmful ? 'rgba(184, 92, 51, 0.25)' : 'rgba(79, 107, 69, 0.25)'}`
                   }}
                 >
                   <div
@@ -933,9 +986,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       gap: '6px',
                       fontSize: '11px',
                       fontWeight: 700,
-                      color: conflict.isHarmful
-                        ? 'var(--kulv-danger, #B85C33)'
-                        : 'var(--kulv-primary, #4F6B45)'
+                      color: conflict.isHarmful ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-primary, #4F6B45)'
                     }}
                   >
                     {conflict.isHarmful ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
@@ -948,9 +999,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           fontWeight: 700,
                           padding: '1px 5px',
                           borderRadius: '4px',
-                          backgroundColor: conflict.isHarmful
-                            ? 'rgba(184, 92, 51, 0.15)'
-                            : 'rgba(79, 107, 69, 0.15)',
+                          backgroundColor: conflict.isHarmful ? 'rgba(184, 92, 51, 0.15)' : 'rgba(79, 107, 69, 0.15)',
                           letterSpacing: '0.4px',
                           whiteSpace: 'nowrap'
                         }}

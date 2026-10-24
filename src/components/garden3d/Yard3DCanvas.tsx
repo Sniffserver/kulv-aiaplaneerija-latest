@@ -90,7 +90,7 @@ const Yard3DScene: React.FC<{
   }, [solarAltitude, solarAzimuth, northAngleDeg, widthM, lengthM]);
 
   const maxDimension = Math.max(widthM, lengthM);
-  const shadowResolution = performanceMode ? 512 : (isSoftwareGl ? 1024 : 2048);
+  const shadowResolution = performanceMode ? 512 : isSoftwareGl ? 1024 : 2048;
 
   return (
     <>
@@ -116,9 +116,7 @@ const Yard3DScene: React.FC<{
       />
 
       {/* Hemisphere Light for realistic natural Nordic sky-ground color balance */}
-      <hemisphereLight
-        args={['#A8D5BA', '#4B3621', 0.35]}
-      />
+      <hemisphereLight args={['#A8D5BA', '#4B3621', 0.35]} />
 
       {/* OrbitControls with responsive damping and smooth iPad/iPhone/Android touch gestures */}
       <OrbitControls
@@ -240,9 +238,7 @@ export const Yard3DCanvas: React.FC<Yard3DCanvasProps> = ({ onBackTo2D }) => {
   }, [settings.lat, activeSeason.dayOfYear, solarHour]);
 
   // Format solar hour display (e.g. 14:00 or 14:30)
-  const hourDisplay = `${Math.floor(solarHour).toString().padStart(2, '0')}:${
-    solarHour % 1 !== 0 ? '30' : '00'
-  }`;
+  const hourDisplay = `${Math.floor(solarHour).toString().padStart(2, '0')}:${solarHour % 1 !== 0 ? '30' : '00'}`;
 
   // Sky color according to season and solar altitude
   const skyBackground = useMemo(() => {
@@ -290,10 +286,10 @@ export const Yard3DCanvas: React.FC<Yard3DCanvasProps> = ({ onBackTo2D }) => {
           performanceMode
             ? 1
             : typeof window !== 'undefined'
-            ? isSoftwareGl
-              ? 1
-              : Math.min(window.devicePixelRatio, 1.75)
-            : 1
+              ? isSoftwareGl
+                ? 1
+                : Math.min(window.devicePixelRatio, 1.75)
+              : 1
         }
         style={{ background: skyBackground }}
       >

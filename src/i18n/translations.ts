@@ -52,7 +52,10 @@ export const TRANSLATIONS: TranslationDict = {
   companion_conflicts_title: { et: 'Naabrustaimede hoiatused', en: 'Companion Plant Conflicts' },
   companion_synergy_summary: { et: 'Soodsad suhted ja kahjuripeletus', en: 'Synergies & Pest Deterrence' },
   crop_rotation_title: { et: 'Külvikorra kontroll', en: 'Crop Rotation Check' },
-  crop_rotation_ok: { et: 'Külvikord on korras: antud taimeperekond ei ole siin 3 aastat kasvanud.', en: 'Crop rotation verified: this plant family has not grown here in 3 years.' },
+  crop_rotation_ok: {
+    et: 'Külvikord on korras: antud taimeperekond ei ole siin 3 aastat kasvanud.',
+    en: 'Crop rotation verified: this plant family has not grown here in 3 years.'
+  },
 
   // Frost & Climate
   frost_risk_title: { et: 'Põhjamaine öökülmaoht', en: 'Nordic Frost Risk' },
@@ -68,20 +71,41 @@ export const TRANSLATIONS: TranslationDict = {
 
   // Starter Garden Templates
   template_modal_title: { et: 'Vali aia terviklik näidismall', en: 'Select Starter Yard Preset' },
-  template_modal_desc: { et: 'Laadi professionaalselt planeeritud põhjamaine krundipaigutus ühe klõpsuga.', en: 'Load a professionally planned Nordic yard layout with one click.' },
+  template_modal_desc: {
+    et: 'Laadi professionaalselt planeeritud põhjamaine krundipaigutus ühe klõpsuga.',
+    en: 'Load a professionally planned Nordic yard layout with one click.'
+  },
   template_orchard_title: { et: 'Klassikaline Eramaja Viljaaed', en: 'Nordic Family Orchard & Garden' },
-  template_orchard_desc: { et: 'Elumaja põhjaküljel, 3 kõrgpeenart päikeses, kasvuhoone, viljapuud, marjapõõsad ja kompost.', en: 'House on northern boundary, 3 sunny raised beds, greenhouse, fruit trees, berry bushes and compost.' },
+  template_orchard_desc: {
+    et: 'Elumaja põhjaküljel, 3 kõrgpeenart päikeses, kasvuhoone, viljapuud, marjapõõsad ja kompost.',
+    en: 'House on northern boundary, 3 sunny raised beds, greenhouse, fruit trees, berry bushes and compost.'
+  },
   template_urban_title: { et: 'Kompaktne Linna-Kõrgpeenarde Oaas', en: 'Compact Urban Raised-Bed Oasis' },
-  template_urban_desc: { et: '4 ergonoomilist puitkõrgpeenart, terrassipotid ürtidele, sammasviljapuud ja vihmaveetünn.', en: '4 ergonomic wooden raised beds, herb patio planters, columnar fruit trees, and rain barrel.' },
-  template_permaculture_title: { et: 'Maakodu Permakultuur & Suur Kasvuhoone', en: 'Rural Permaculture & Large Greenhouse' },
-  template_permaculture_desc: { et: '6m kasvuhoone, soojapeenrad, looduslik veesilm mikrokliimale, hekk ja viljapuuaed.', en: '6m polycarbonate greenhouse, hugelkultur beds, natural microclimate pond, shelter hedge, and orchard.' },
+  template_urban_desc: {
+    et: '4 ergonoomilist puitkõrgpeenart, terrassipotid ürtidele, sammasviljapuud ja vihmaveetünn.',
+    en: '4 ergonomic wooden raised beds, herb patio planters, columnar fruit trees, and rain barrel.'
+  },
+  template_permaculture_title: {
+    et: 'Maakodu Permakultuur & Suur Kasvuhoone',
+    en: 'Rural Permaculture & Large Greenhouse'
+  },
+  template_permaculture_desc: {
+    et: '6m kasvuhoone, soojapeenrad, looduslik veesilm mikrokliimale, hekk ja viljapuuaed.',
+    en: '6m polycarbonate greenhouse, hugelkultur beds, natural microclimate pond, shelter hedge, and orchard.'
+  },
   template_apply_btn: { et: 'Laadi see krundiplaan', en: 'Apply This Preset' },
-  template_confirm: { et: 'Kas oled kindel, et soovid asendada praeguse plaani valitud näidismalliga?', en: 'Are you sure you want to replace current layout with this starter preset?' },
+  template_confirm: {
+    et: 'Kas oled kindel, et soovid asendada praeguse plaani valitud näidismalliga?',
+    en: 'Are you sure you want to replace current layout with this starter preset?'
+  },
   template_success: { et: 'Näidismall edukalt laaditud!', en: 'Starter template loaded successfully!' },
 
   // Soil Recipes & Calculator
   soil_modal_title: { et: 'Mullaretseptid & Orgaanilised Leotised', en: 'Soil Recipes & Organic Teas' },
-  soil_modal_subtitle: { et: 'Elav muld, külvisegud ja mikroobirikkad väetisteed', en: 'Living soil, seed mixes, and microbial liquid teas' },
+  soil_modal_subtitle: {
+    et: 'Elav muld, külvisegud ja mikroobirikkad väetisteed',
+    en: 'Living soil, seed mixes, and microbial liquid teas'
+  },
   soil_cat_all: { et: 'Kõik retseptid', en: 'All Recipes' },
   soil_cat_soil: { et: 'Mullad & Substraadid', en: 'Soils & Substrates' },
   soil_cat_tea: { et: 'Väetisteed & Leotised', en: 'Fertilizer Teas' },
@@ -98,8 +122,14 @@ export const TRANSLATIONS: TranslationDict = {
   soil_tea_ferment_title: { et: 'Käärimise & Valmimise Taimer', en: 'Brewing & Fermentation Guide' },
 
   // Crop Rotation & Succession Planner
-  crop_rotation_planner_title: { et: 'Mitmeaastane viljavaheldus ja järjestikülv', en: 'Multi-Year Crop Rotation & Succession' },
-  crop_rotation_planner_desc: { et: 'Interaktiivne ajajoon, sugukondade haigushoiatused ja öökülmapiirangud', en: 'Interactive timeline, botanical family disease alerts, and frost boundaries' },
+  crop_rotation_planner_title: {
+    et: 'Mitmeaastane viljavaheldus ja järjestikülv',
+    en: 'Multi-Year Crop Rotation & Succession'
+  },
+  crop_rotation_planner_desc: {
+    et: 'Interaktiivne ajajoon, sugukondade haigushoiatused ja öökülmapiirangud',
+    en: 'Interactive timeline, botanical family disease alerts, and frost boundaries'
+  },
   succession_add_slot: { et: 'Lisa järjestikülv', en: 'Add Succession Slot' },
   succession_season_early: { et: 'Varajane kevad', en: 'Early Spring' },
   succession_season_main: { et: 'Põhikultuur', en: 'Main Season' },

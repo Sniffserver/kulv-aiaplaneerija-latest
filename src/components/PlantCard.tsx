@@ -50,9 +50,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick }) => {
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-            {primaryName}
-          </span>
+          <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>{primaryName}</span>
           {secondaryName && (
             <span style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
               ({secondaryName})

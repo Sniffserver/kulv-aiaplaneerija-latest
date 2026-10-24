@@ -78,9 +78,10 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
     ? CompanionEngine.getPlantedCellSynergy(cell, bed.plantings, allPlants)
     : null;
 
-  const prospectiveSynergy = !cell && selectedDockPlant
-    ? CompanionEngine.getCellSynergy(coords.x, coords.y, selectedDockPlant, bed.plantings, allPlants)
-    : null;
+  const prospectiveSynergy =
+    !cell && selectedDockPlant
+      ? CompanionEngine.getCellSynergy(coords.x, coords.y, selectedDockPlant, bed.plantings, allPlants)
+      : null;
 
   const canonicalFamily = plantInfo ? CropRotationEngine.normalizeFamily(plantInfo.family) : '';
 
@@ -88,7 +89,9 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
   const handleHarvestClick = (keep: boolean) => {
     if (!cell) return;
     onHarvest(cell, keep);
-    setActionFeedback(keep ? 'Saak märgitud koristatuks! Taim jätkab kasvamist.' : 'Saak märgitud ja peenra lahter vabastatud!');
+    setActionFeedback(
+      keep ? 'Saak märgitud koristatuks! Taim jätkab kasvamist.' : 'Saak märgitud ja peenra lahter vabastatud!'
+    );
     setTimeout(() => {
       if (!keep) onClose();
     }, 1200);
@@ -269,14 +272,14 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                     synergyDetails.status === 'positive'
                       ? 'rgba(79, 107, 69, 0.1)'
                       : synergyDetails.status === 'negative'
-                      ? 'rgba(217, 122, 61, 0.12)'
-                      : 'var(--kulv-surface, #FFFDF8)',
+                        ? 'rgba(217, 122, 61, 0.12)'
+                        : 'var(--kulv-surface, #FFFDF8)',
                   border: `1px solid ${
                     synergyDetails.status === 'positive'
                       ? 'var(--kulv-primary, #4F6B45)'
                       : synergyDetails.status === 'negative'
-                      ? 'var(--kulv-accent, #D97A3D)'
-                      : 'var(--kulv-border, #C9BFA9)'
+                        ? 'var(--kulv-accent, #D97A3D)'
+                        : 'var(--kulv-border, #C9BFA9)'
                   }`,
                   borderRadius: '12px',
                   padding: '10px 12px',
@@ -316,7 +319,12 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           gap: '6px',
-                          color: rel.type === 'good' ? 'var(--kulv-primary, #4F6B45)' : rel.type === 'bad' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text-muted, #5F675A)'
+                          color:
+                            rel.type === 'good'
+                              ? 'var(--kulv-primary, #4F6B45)'
+                              : rel.type === 'bad'
+                                ? 'var(--kulv-accent, #D97A3D)'
+                                : 'var(--kulv-text-muted, #5F675A)'
                         }}
                       >
                         <span>{rel.neighborIcon}</span>
@@ -344,7 +352,8 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
             >
               <RotateCcw size={14} color="var(--kulv-primary, #4F6B45)" style={{ flexShrink: 0 }} />
               <span>
-                <strong>Viljavaheldus ({canonicalFamily}):</strong> järgmisel kevadel ära istuta sellesse lahtrisse teisi {canonicalFamily.toLowerCase()} esindajaid.
+                <strong>Viljavaheldus ({canonicalFamily}):</strong> järgmisel kevadel ära istuta sellesse lahtrisse
+                teisi {canonicalFamily.toLowerCase()} esindajaid.
               </span>
             </div>
 
@@ -410,7 +419,9 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                     gap: '8px',
                     padding: '12px 14px',
                     borderRadius: '10px',
-                    backgroundColor: showGrowthChart ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                    backgroundColor: showGrowthChart
+                      ? 'var(--kulv-primary, #4F6B45)'
+                      : 'var(--kulv-surface-muted, #EFE6D4)',
                     color: showGrowthChart ? 'white' : 'var(--kulv-text, #2A2E24)',
                     border: '1px solid var(--kulv-border, #C9BFA9)',
                     fontWeight: 700,
@@ -480,7 +491,13 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
             {/* Expandable Recharts Growth Chart */}
             {showGrowthChart && (
               <div style={{ marginTop: '8px' }}>
-                <React.Suspense fallback={<div style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Laadin kasvuprognoosi graafikut...</div>}>
+                <React.Suspense
+                  fallback={
+                    <div style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                      Laadin kasvuprognoosi graafikut...
+                    </div>
+                  }
+                >
                   <PlantGrowthProgressChart planting={cell} plant={plantInfo} />
                 </React.Suspense>
               </div>
@@ -519,7 +536,10 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                       <div
                         style={{
                           fontSize: '11px',
-                          color: prospectiveSynergy.status === 'good' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)',
+                          color:
+                            prospectiveSynergy.status === 'good'
+                              ? 'var(--kulv-primary, #4F6B45)'
+                              : 'var(--kulv-accent, #D97A3D)',
                           fontWeight: 700
                         }}
                       >

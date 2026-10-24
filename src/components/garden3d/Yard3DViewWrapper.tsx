@@ -33,7 +33,8 @@ export const Yard3DViewWrapper: React.FC<Yard3DViewWrapperProps> = ({ onBackTo2D
         </div>
         <h3 className="text-lg font-semibold text-white mb-2">Sinu brauser ei toeta 3D-vaadet</h3>
         <p className="text-sm text-slate-400 max-w-md mb-6 leading-relaxed">
-          WebGL2 riistvaraline kiirendus ei ole Sinu seadmes või brauseris saadaval. KÜLV 2D krundiplaan on täielikult funktsionaalne ja jätkab tööd.
+          WebGL2 riistvaraline kiirendus ei ole Sinu seadmes või brauseris saadaval. KÜLV 2D krundiplaan on täielikult
+          funktsionaalne ja jätkab tööd.
         </p>
         <button
           onClick={onBackTo2D}
@@ -62,4 +63,3 @@ export const Yard3DViewWrapper: React.FC<Yard3DViewWrapperProps> = ({ onBackTo2D
     </ThreeErrorBoundary>
   );
 };
-

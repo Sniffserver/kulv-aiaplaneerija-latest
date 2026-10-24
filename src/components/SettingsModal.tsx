@@ -1,5 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, Upload, CheckCircle, AlertCircle, RefreshCw, X, RotateCcw, Database, Globe, Compass, Thermometer } from 'lucide-react';
+import {
+  Download,
+  Upload,
+  CheckCircle,
+  AlertCircle,
+  RefreshCw,
+  X,
+  RotateCcw,
+  Database,
+  Globe,
+  Compass,
+  Thermometer
+} from 'lucide-react';
 import { useGarden } from '../context/GardenContext';
 import { NORDIC_REGIONAL_FROST_DATA } from '../logic/plantingCalendar';
 
@@ -69,7 +81,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   autumnFrostDate = '09-25',
   onSaveSettings
 }) => {
-  const { exportBackup, importBackup, beds, journal, tasks, resetToDefaults, saveStatus, language, setLanguage, t } = useGarden();
+  const { exportBackup, importBackup, beds, journal, tasks, resetToDefaults, saveStatus, language, setLanguage, t } =
+    useGarden();
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
@@ -93,7 +106,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [springFrost, setSpringFrost] = useState(springFrostDate);
   const [autumnFrost, setAutumnFrost] = useState(autumnFrostDate);
 
-  const [backupStatus, setBackupStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+  const [backupStatus, setBackupStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(
+    null
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -254,7 +269,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 flex: 1,
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: language === 'et' ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                border:
+                  language === 'et'
+                    ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: language === 'et' ? 'rgba(79, 107, 69, 0.15)' : 'var(--kulv-surface, #FFFDF8)',
                 color: language === 'et' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
                 fontWeight: 700,
@@ -271,7 +289,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 flex: 1,
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: language === 'en' ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                border:
+                  language === 'en'
+                    ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: language === 'en' ? 'rgba(79, 107, 69, 0.15)' : 'var(--kulv-surface, #FFFDF8)',
                 color: language === 'en' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
                 fontWeight: 700,
@@ -330,10 +351,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Nordic Agroclimatic Regional Presets */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, marginBottom: '6px', color: 'var(--kulv-text, #2A2E24)' }}>
-            {language === 'en' ? 'Nordic Agroclimatic Zone (Auto Frost Dates):' : 'Agrokliima tsoon (automaatsed öökülmad ja GDD):'}
+          <label
+            style={{
+              display: 'block',
+              fontSize: '13px',
+              fontWeight: 700,
+              marginBottom: '6px',
+              color: 'var(--kulv-text, #2A2E24)'
+            }}
+          >
+            {language === 'en'
+              ? 'Nordic Agroclimatic Zone (Auto Frost Dates):'
+              : 'Agrokliima tsoon (automaatsed öökülmad ja GDD):'}
           </label>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px', marginBottom: '8px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gap: '6px',
+              marginBottom: '8px'
+            }}
+          >
             {Object.values(NORDIC_REGIONAL_FROST_DATA).map((zone) => {
               const isSelected = springFrost === zone.springFrostDate && autumnFrost === zone.autumnFrostDate;
               return (
@@ -367,14 +405,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     textAlign: 'left',
                     fontSize: '11px',
                     cursor: 'pointer',
-                    border: isSelected ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                    border: isSelected
+                      ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                      : '1px solid var(--kulv-border, #C9BFA9)',
                     backgroundColor: isSelected ? 'rgba(79, 107, 69, 0.15)' : 'var(--kulv-surface-muted, #EFE6D4)',
                     color: isSelected ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)'
                   }}
                 >
-                  <div style={{ fontWeight: 700 }}>
-                    {language === 'en' ? zone.nameEn : zone.nameEt}
-                  </div>
+                  <div style={{ fontWeight: 700 }}>{language === 'en' ? zone.nameEn : zone.nameEt}</div>
                   <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
                     ❄️ {zone.springFrostDate} – {zone.autumnFrostDate}
                   </div>
@@ -386,8 +424,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Regional Presets & Coordinates */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, marginBottom: '6px', color: 'var(--kulv-text, #2A2E24)' }}>
-            {language === 'en' ? 'Garden Location & Weather Coordinates:' : 'Aia asukoht ja koordinaadid (ilmaprognoos):'}
+          <label
+            style={{
+              display: 'block',
+              fontSize: '13px',
+              fontWeight: 700,
+              marginBottom: '6px',
+              color: 'var(--kulv-text, #2A2E24)'
+            }}
+          >
+            {language === 'en'
+              ? 'Garden Location & Weather Coordinates:'
+              : 'Aia asukoht ja koordinaadid (ilmaprognoos):'}
           </label>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
             {PRESET_LOCATIONS.map((preset) => (
@@ -401,8 +449,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   fontSize: '12px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  border: location === preset.name ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-                  backgroundColor: location === preset.name ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                  border:
+                    location === preset.name
+                      ? '1px solid var(--kulv-primary, #4F6B45)'
+                      : '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor:
+                    location === preset.name ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                   color: location === preset.name ? 'white' : 'var(--kulv-text, #2A2E24)'
                 }}
               >
@@ -413,7 +465,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '8px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '2px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  marginBottom: '2px'
+                }}
+              >
                 Nimi:
               </label>
               <input
@@ -434,7 +493,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '2px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  marginBottom: '2px'
+                }}
+              >
                 Laiuskraad (°N):
               </label>
               <input
@@ -455,7 +521,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '2px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  color: 'var(--kulv-text-muted, #5F675A)',
+                  marginBottom: '2px'
+                }}
+              >
                 Pikkuskraad (°E):
               </label>
               <input
@@ -480,7 +553,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         {/* Frost Dates Inputs */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '18px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Kevadine öökülmavaba (KK-PP):
             </label>
             <input
@@ -500,7 +581,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Sügisese öökülma algus (KK-PP):
             </label>
             <input
@@ -539,8 +628,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </span>
           </div>
 
-          <p style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', margin: '0 0 10px 0', lineHeight: 1.4 }}>
-            Ekspordi kogu aia konfiguratsioon (peenrad, lahtrite istutused, seaded) ja aiapäeviku märkmed JSON failina varundamiseks või seadmete vahel liigutamiseks.
+          <p
+            style={{
+              fontSize: '11px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              margin: '0 0 10px 0',
+              lineHeight: 1.4
+            }}
+          >
+            Ekspordi kogu aia konfiguratsioon (peenrad, lahtrite istutused, seaded) ja aiapäeviku märkmed JSON failina
+            varundamiseks või seadmete vahel liigutamiseks.
           </p>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -603,7 +700,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 padding: '8px 10px',
                 borderRadius: '8px',
                 fontSize: '12px',
-                backgroundColor: backupStatus.type === 'success' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(180, 35, 58, 0.15)',
+                backgroundColor:
+                  backupStatus.type === 'success' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(180, 35, 58, 0.15)',
                 color: backupStatus.type === 'success' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-danger, #B4233A)',
                 fontWeight: 600
               }}
@@ -634,7 +732,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <span>
                 Lokaalne salvestusmälu:{' '}
                 <strong>
-                  {saveStatus === 'saved' ? 'Sünkroniseeritud ja kaitstud' : saveStatus === 'saving' ? 'Salvestan muudatusi...' : 'Salvestusviga'}
+                  {saveStatus === 'saved'
+                    ? 'Sünkroniseeritud ja kaitstud'
+                    : saveStatus === 'saving'
+                      ? 'Salvestan muudatusi...'
+                      : 'Salvestusviga'}
                 </strong>
               </span>
             </div>
@@ -644,8 +746,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 borderRadius: '12px',
                 fontSize: '10px',
                 fontWeight: 700,
-                backgroundColor: saveStatus === 'saved' ? 'rgba(79, 107, 69, 0.15)' : saveStatus === 'saving' ? 'rgba(217, 122, 61, 0.15)' : 'rgba(180, 35, 58, 0.15)',
-                color: saveStatus === 'saved' ? 'var(--kulv-primary, #4F6B45)' : saveStatus === 'saving' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-danger, #B4233A)'
+                backgroundColor:
+                  saveStatus === 'saved'
+                    ? 'rgba(79, 107, 69, 0.15)'
+                    : saveStatus === 'saving'
+                      ? 'rgba(217, 122, 61, 0.15)'
+                      : 'rgba(180, 35, 58, 0.15)',
+                color:
+                  saveStatus === 'saved'
+                    ? 'var(--kulv-primary, #4F6B45)'
+                    : saveStatus === 'saving'
+                      ? 'var(--kulv-accent, #D97A3D)'
+                      : 'var(--kulv-danger, #B4233A)'
               }}
             >
               {saveStatus === 'saved' ? '● Salvestatud' : saveStatus === 'saving' ? '○ Salvestan...' : '⚠ Viga'}

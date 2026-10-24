@@ -147,7 +147,6 @@ describe('Task 0.5 — replaceGardenState Atomic Transaction', () => {
     expect(currentBeds[0].name).toBe('Vana peenar');
   });
 
-
   it('Kirjutamise ebaõnnestumine: kui IndexedDB transaktsioon ebaõnnestub, taastatakse vana olek', async () => {
     // Set initial known state
     await storageDbModule.setStoredItem('beds', [{ id: 'orig-bed', name: 'Algne peenar' }]);

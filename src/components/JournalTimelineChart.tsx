@@ -60,8 +60,18 @@ interface ActivityTimelinePoint {
 }
 
 const MONTH_NAMES_ET = [
-  'Jaan', 'Veebr', 'Märts', 'Aprill', 'Mai', 'Juuni',
-  'Juuli', 'August', 'Sept', 'Okt', 'Nov', 'Dets'
+  'Jaan',
+  'Veebr',
+  'Märts',
+  'Aprill',
+  'Mai',
+  'Juuni',
+  'Juuli',
+  'August',
+  'Sept',
+  'Okt',
+  'Nov',
+  'Dets'
 ];
 
 export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entries, plants }) => {
@@ -114,7 +124,8 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
       let kg = 0;
       if (typeof e.yieldAmount === 'number' && e.yieldAmount > 0) {
         if (e.yieldUnit === 'g') kg = e.yieldAmount / 1000;
-        else if (e.yieldUnit === 'tk') kg = e.yieldAmount * 0.15; // approximate 150g per unit
+        else if (e.yieldUnit === 'tk')
+          kg = e.yieldAmount * 0.15; // approximate 150g per unit
         else kg = e.yieldAmount;
       } else {
         // Fallback estimate based on content text or default small harvest
@@ -129,7 +140,15 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
       runningSum += kg;
       const pName = e.plantName || 'Segasaak';
       const foundPlant = plants.find((p) => p.id === e.plantId);
-      const icon = foundPlant?.icon || (pName.toLowerCase().includes('tomat') ? '🍅' : pName.toLowerCase().includes('kurk') ? '🥒' : pName.toLowerCase().includes('porgand') ? '🥕' : '🧺');
+      const icon =
+        foundPlant?.icon ||
+        (pName.toLowerCase().includes('tomat')
+          ? '🍅'
+          : pName.toLowerCase().includes('kurk')
+            ? '🥒'
+            : pName.toLowerCase().includes('porgand')
+              ? '🥕'
+              : '🧺');
 
       // Update plant totals
       const cur = plantTotals.get(pName) || { name: pName, icon, kg: 0 };
@@ -172,9 +191,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
   // 2. Data Processing for GROWTH Timeline
   const { growthData, trackedCropCount } = useMemo(() => {
     // Sort all chronological entries
-    const chronological = [...filteredEntries].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    const chronological = [...filteredEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     // Build timeline dates
     const dateMap = new Map<string, GrowthTimelinePoint>();
@@ -287,7 +304,9 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px' }}>
             <span>{data.plantIcon}</span>
-            <span>{data.displayDate} · {data.plantName}</span>
+            <span>
+              {data.displayDate} · {data.plantName}
+            </span>
           </div>
           <div style={{ color: 'var(--kulv-accent, #D97A3D)', fontWeight: 700, fontSize: '13px' }}>
             Saak: +{data.cropYieldKg} kg
@@ -295,7 +314,14 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
           <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600, fontSize: '11px', marginTop: '2px' }}>
             Kogusaak hooajal: {data.cumulativeKg} kg
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '4px', fontStyle: 'italic' }}>
+          <div
+            style={{
+              fontSize: '11px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              marginTop: '4px',
+              fontStyle: 'italic'
+            }}
+          >
             {data.title}
           </div>
         </div>
@@ -320,7 +346,14 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
             minWidth: '190px'
           }}
         >
-          <div style={{ fontWeight: 700, marginBottom: '6px', borderBottom: '1px solid var(--kulv-border, #C9BFA9)', paddingBottom: '4px' }}>
+          <div
+            style={{
+              fontWeight: 700,
+              marginBottom: '6px',
+              borderBottom: '1px solid var(--kulv-border, #C9BFA9)',
+              paddingBottom: '4px'
+            }}
+          >
             {data.displayDate} – Taimekasv
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px' }}>
@@ -362,7 +395,15 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
             )}
           </div>
           {data.milestoneTitle && (
-            <div style={{ marginTop: '6px', paddingTop: '4px', borderTop: '1px dashed var(--kulv-border, #C9BFA9)', fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+            <div
+              style={{
+                marginTop: '6px',
+                paddingTop: '4px',
+                borderTop: '1px dashed var(--kulv-border, #C9BFA9)',
+                fontSize: '10px',
+                color: 'var(--kulv-text-muted, #5F675A)'
+              }}
+            >
               Sissekanne: {data.milestoneTitle}
             </div>
           )}
@@ -392,7 +433,15 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
           <div style={{ fontSize: '11px', color: 'var(--kulv-accent, #D97A3D)' }}>Saagikorjeid: {data.saak}</div>
           <div style={{ fontSize: '11px', color: 'var(--kulv-danger, #B85C33)' }}>Probleeme: {data.probleem}</div>
           <div style={{ fontSize: '11px', color: 'var(--kulv-info, #4F6B45)' }}>Ilmamärkmeid: {data.ilm}</div>
-          <div style={{ fontSize: '11px', fontWeight: 700, marginTop: '4px', borderTop: '1px solid var(--kulv-border, #C9BFA9)', paddingTop: '2px' }}>
+          <div
+            style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              marginTop: '4px',
+              borderTop: '1px solid var(--kulv-border, #C9BFA9)',
+              paddingTop: '2px'
+            }}
+          >
             Kokku sissekandeid: {data.total}
           </div>
         </div>
@@ -416,7 +465,15 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
       }}
     >
       {/* Visual Header & Controls */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <TrendingUp size={20} color="var(--kulv-primary, #4F6B45)" />
@@ -569,7 +626,9 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                   gap: '5px',
                   padding: '6px 12px',
                   borderRadius: '8px',
-                  border: comparePreviousYear ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                  border: comparePreviousYear
+                    ? '1px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
                   backgroundColor: comparePreviousYear ? 'rgba(79, 107, 69, 0.15)' : 'var(--kulv-surface, #FFFDF8)',
                   color: comparePreviousYear ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
                   fontSize: '12px',
@@ -583,7 +642,10 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
 
               {comparePreviousYear && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <label htmlFor="compare-year-select" style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  <label
+                    htmlFor="compare-year-select"
+                    style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}
+                  >
                     Võrdlusbaas:
                   </label>
                   <select
@@ -627,9 +689,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-            Hooaja kogusaak
-          </span>
+          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Hooaja kogusaak</span>
           <span
             className="tabular-nums"
             style={{ fontSize: '18px', fontWeight: 800, color: 'var(--kulv-accent, #D97A3D)' }}
@@ -639,9 +699,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-            Registreeritud korjeid
-          </span>
+          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Registreeritud korjeid</span>
           <span
             className="tabular-nums"
             style={{ fontSize: '18px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)' }}
@@ -651,9 +709,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-            Jälgitavaid kultuure
-          </span>
+          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Jälgitavaid kultuure</span>
           <span
             className="tabular-nums"
             style={{ fontSize: '18px', fontWeight: 800, color: 'var(--kulv-primary, #4F6B45)' }}
@@ -663,9 +719,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-            Suurima saagiga kultuur
-          </span>
+          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Suurima saagiga kultuur</span>
           <span
             style={{
               fontSize: '13px',
@@ -680,7 +734,9 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
             {topYieldingPlant ? (
               <>
                 <span>{topYieldingPlant.icon}</span>
-                <span>{topYieldingPlant.name} ({topYieldingPlant.kg} kg)</span>
+                <span>
+                  {topYieldingPlant.name} ({topYieldingPlant.kg} kg)
+                </span>
               </>
             ) : (
               'Saagid ootel'
@@ -705,17 +761,43 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
             color: 'var(--kulv-text, #2A2E24)'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+              flexWrap: 'wrap'
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 700,
+                color: 'var(--kulv-primary, #4F6B45)'
+              }}
+            >
               <Sparkles size={16} />
-              <span>Hooaja saagikuse võrdlus ({currentYear} vs {compareBaseYear})</span>
+              <span>
+                Hooaja saagikuse võrdlus ({currentYear} vs {compareBaseYear})
+              </span>
             </div>
             <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-              Kokku: <strong>{comparisonSummary.totalCurrentKg} kg</strong> (baasaastal: <strong>{comparisonSummary.totalCompareKg} kg</strong>)
+              Kokku: <strong>{comparisonSummary.totalCurrentKg} kg</strong> (baasaastal:{' '}
+              <strong>{comparisonSummary.totalCompareKg} kg</strong>)
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '6px', marginTop: '2px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: '6px',
+              marginTop: '2px'
+            }}
+          >
             {comparisonSummary.rows.map((row) => (
               <div
                 key={row.cropName}
@@ -743,8 +825,8 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                         row.diffPercentage && row.diffPercentage > 0
                           ? 'var(--kulv-primary, #4F6B45)'
                           : row.diffPercentage && row.diffPercentage < 0
-                          ? 'var(--kulv-accent, #D97A3D)'
-                          : 'var(--kulv-text-muted, #5F675A)'
+                            ? 'var(--kulv-accent, #D97A3D)'
+                            : 'var(--kulv-text-muted, #5F675A)'
                     }}
                   >
                     {row.diffText}
@@ -759,8 +841,8 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
       {/* Main Recharts Container */}
       <div style={{ width: '100%', minHeight: '260px', height: '280px', position: 'relative' }}>
         {/* MODE 1: YIELD TIMELINE */}
-        {viewMode === 'yield' && (
-          yieldData.length > 0 ? (
+        {viewMode === 'yield' &&
+          (yieldData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={yieldData} margin={{ top: 12, right: 16, left: -10, bottom: 0 }}>
                 <defs>
@@ -846,15 +928,18 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
               }}
             >
               <AlertCircle size={24} />
-              <div style={{ fontSize: '13px', fontWeight: 600 }}>Saagikoristuse sissekanded puuduvad valitud filtri puhul.</div>
-              <div style={{ fontSize: '12px' }}>Lisa päevikusse uus sissekanne kategooriaga "Saak" koos kogusega kilogrammides.</div>
+              <div style={{ fontSize: '13px', fontWeight: 600 }}>
+                Saagikoristuse sissekanded puuduvad valitud filtri puhul.
+              </div>
+              <div style={{ fontSize: '12px' }}>
+                Lisa päevikusse uus sissekanne kategooriaga "Saak" koos kogusega kilogrammides.
+              </div>
             </div>
-          )
-        )}
+          ))}
 
         {/* MODE 2: GROWTH PROGRESS TIMELINE */}
-        {viewMode === 'growth' && (
-          growthData.length > 0 ? (
+        {viewMode === 'growth' &&
+          (growthData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={growthData} margin={{ top: 12, right: 16, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(149, 139, 121, 0.25)" />
@@ -894,7 +979,14 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                 <ReferenceLine y={100} stroke="rgba(217, 122, 61, 0.4)" strokeDasharray="3 3" />
                 <Line type="monotone" dataKey="tomat" stroke="#B4233A" strokeWidth={2.2} dot={{ r: 3 }} connectNulls />
                 <Line type="monotone" dataKey="kurk" stroke="#276749" strokeWidth={2.2} dot={{ r: 3 }} connectNulls />
-                <Line type="monotone" dataKey="porgand" stroke="#C76D3A" strokeWidth={2.2} dot={{ r: 3 }} connectNulls />
+                <Line
+                  type="monotone"
+                  dataKey="porgand"
+                  stroke="#C76D3A"
+                  strokeWidth={2.2}
+                  dot={{ r: 3 }}
+                  connectNulls
+                />
                 <Line type="monotone" dataKey="sibul" stroke="#854D0E" strokeWidth={2} dot={{ r: 3 }} connectNulls />
                 <Line type="monotone" dataKey="hernes" stroke="#176B87" strokeWidth={2} dot={{ r: 3 }} connectNulls />
               </ComposedChart>
@@ -912,15 +1004,16 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
               }}
             >
               <Sprout size={24} />
-              <div style={{ fontSize: '13px', fontWeight: 600 }}>Kasvuprogresse ei ole veel piisavalt registreeritud.</div>
+              <div style={{ fontSize: '13px', fontWeight: 600 }}>
+                Kasvuprogresse ei ole veel piisavalt registreeritud.
+              </div>
               <div style={{ fontSize: '12px' }}>Lisa vaatlusi ja vali taime arengustaadium (% väärtus).</div>
             </div>
-          )
-        )}
+          ))}
 
         {/* MODE 3: ACTIVITY / MONTHLY FREQUENCY */}
-        {viewMode === 'activity' && (
-          activityData.length > 0 ? (
+        {viewMode === 'activity' &&
+          (activityData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={activityData} margin={{ top: 12, right: 16, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(149, 139, 121, 0.25)" />
@@ -975,8 +1068,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
               <Calendar size={24} />
               <div style={{ fontSize: '13px', fontWeight: 600 }}>Päeviku tegevuste andmed puuduvad.</div>
             </div>
-          )
-        )}
+          ))}
       </div>
 
       {/* Nordic Botanical Footnote */}
@@ -994,7 +1086,8 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         }}
       >
         <span>
-          💡 <strong>Põhjamaine aiandusvihje:</strong> Korrapärane saagikuse fikseerimine võimaldab järgmisel kevadel külviplaani kohandada vastavalt tegelikule tarbimisele.
+          💡 <strong>Põhjamaine aiandusvihje:</strong> Korrapärane saagikuse fikseerimine võimaldab järgmisel kevadel
+          külviplaani kohandada vastavalt tegelikule tarbimisele.
         </span>
         <span style={{ fontWeight: 600 }}>Recharts v3.10 Powered</span>
       </div>

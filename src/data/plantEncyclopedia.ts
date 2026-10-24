@@ -18,9 +18,12 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       germinationTempC: '20–24 °C (idaneb pimedas või valguses)',
       spacingInRowCm: 45,
       spacingBetweenRowsCm: 60,
-      thinningAdvice: 'Pikeri esimese pärislehe faasis eraldi pottidesse, istuta kuni idulehtedeni sügavamale lisajuurte kasvatamiseks.',
-      wateringFrequency: 'Sügavalt 2–3 korda nädalas leige veega otse juurele. Väldi lehtede märgamist seenhaiguste tõkestamiseks.',
-      fertilizationAdvice: 'Õitsemise alguseni lämmastikurikas orgaaniline väetis (nt nõgeseleotis), viljumise faasis kõrge kaaliumisisaldusega puutuhk või orgaaniline kaaliumsulfaat.'
+      thinningAdvice:
+        'Pikeri esimese pärislehe faasis eraldi pottidesse, istuta kuni idulehtedeni sügavamale lisajuurte kasvatamiseks.',
+      wateringFrequency:
+        'Sügavalt 2–3 korda nädalas leige veega otse juurele. Väldi lehtede märgamist seenhaiguste tõkestamiseks.',
+      fertilizationAdvice:
+        'Õitsemise alguseni lämmastikurikas orgaaniline väetis (nt nõgeseleotis), viljumise faasis kõrge kaaliumisisaldusega puutuhk või orgaaniline kaaliumsulfaat.'
     },
     habitat: {
       sunRequirement: 'Täispäike (6+ h)',
@@ -42,7 +45,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       edibleParts: ['Botaaniliselt mari / vili'],
       flavorProfile: 'Magushapu, rikkalikult umami (looduslik glutamaat), mahlane',
       culinaryUses: ['Värsked salatid', 'Pastakastmed', 'Kääritamine ja soolamine', 'Päikesekuivatamine'],
-      storageAndPreservation: 'Hoia toatemperatuuril (14–18 °C). Külmkapis alla 10 °C laguneb vilja aromaatne lenduvate estrite kooslus.'
+      storageAndPreservation:
+        'Hoia toatemperatuuril (14–18 °C). Külmkapis alla 10 °C laguneb vilja aromaatne lenduvate estrite kooslus.'
     },
     ecology: {
       pollinators: ['Kimalased (Bombus spp. - teevad sonikatsiooni e. resonantstolmeldamist)'],
@@ -56,7 +60,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'basiilik',
           plantName: 'Basiilik',
           relationship: 'beneficial',
-          biologicalMechanism: 'Basiiliku lenduvad eeterlikud õlid (eugenool, linalool) maskeerivad tomati lõhna ripslaste ja lehetäide eest.',
+          biologicalMechanism:
+            'Basiiliku lenduvad eeterlikud õlid (eugenool, linalool) maskeerivad tomati lõhna ripslaste ja lehetäide eest.',
           evidence: {
             source: 'Eesti Maaülikool (EMÜ)',
             publication: 'Aroomtaimede repellentsed omadused kasvuhoonekahjurite tõrjes',
@@ -82,7 +87,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'kartul',
           plantName: 'Kartul',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Mõlemad kuuluvad sugukonda Solanaceae ja kannavad kartuli-lehemädaniku tekitajat Phytophthora infestans.',
+          biologicalMechanism:
+            'Mõlemad kuuluvad sugukonda Solanaceae ja kannavad kartuli-lehemädaniku tekitajat Phytophthora infestans.',
           evidence: {
             source: 'Maaelu Teadmuskeskus (METK)',
             publication: 'Kartuli-lehemädaniku levikudünaamika ja ristnakatumine',
@@ -94,7 +100,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'kapsas',
           plantName: 'Peakapsas',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Mõlemad on äärmuslikult suured mulla lämmastiku ja kaaliumi tarbijad, tekitades tugevat toitainekonkurentsi.',
+          biologicalMechanism:
+            'Mõlemad on äärmuslikult suured mulla lämmastiku ja kaaliumi tarbijad, tekitades tugevat toitainekonkurentsi.',
           evidence: {
             source: 'FiBL Research Institute',
             publication: 'Vegetable Crop Nutrition and Guild Incompatibilities',
@@ -108,8 +115,10 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       {
         name: 'Kartuli-lehemädanik (Phytophthora infestans)',
         type: 'disease',
-        symptoms: 'Vee- ja pruunikad laigud leheservadel, alumisel pinnal valkjas eoskirme, viljadel kõvad ebaühtlased pruunid laigud.',
-        biologicalRemedy: 'Õhustamine, lehtede kuivana hoidmine, haigete lehtede kohene eemaldamine ja profülaktiline pihustamine Bacillus subtilis biopreparaadiga.',
+        symptoms:
+          'Vee- ja pruunikad laigud leheservadel, alumisel pinnal valkjas eoskirme, viljadel kõvad ebaühtlased pruunid laigud.',
+        biologicalRemedy:
+          'Õhustamine, lehtede kuivana hoidmine, haigete lehtede kohene eemaldamine ja profülaktiline pihustamine Bacillus subtilis biopreparaadiga.',
         evidence: {
           source: 'Maaelu Teadmuskeskus (METK)',
           publication: 'Avamaa ja kasvuhoonetomatite integreeritud taimekaitse',
@@ -121,7 +130,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Viljatipu mädanik (kaltsiumipuudus)',
         type: 'deficiency',
         symptoms: 'Vilja õiepoolse otsa mustumine ja vajumine.',
-        biologicalRemedy: 'Ühtlane kastmine (kaltsiumi omastamine seiskub kuivuses), vajadusel orgaaniline leheväetamine kaltsiumiga.',
+        biologicalRemedy:
+          'Ühtlane kastmine (kaltsiumi omastamine seiskub kuivuses), vajadusel orgaaniline leheväetamine kaltsiumiga.',
         evidence: {
           source: 'EMÜ Mullateaduse osakond',
           publication: 'Toiteelementide tasakaal viljaköögiviljadel',
@@ -131,7 +141,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       }
     ],
     safety: {
-      toxicityHuman: 'Rohelised osad (lehed, varred, toored rohelised viljad) sisaldavad solaniini ja tomatiini. Valminud vili on täiesti ohutu.',
+      toxicityHuman:
+        'Rohelised osad (lehed, varred, toored rohelised viljad) sisaldavad solaniini ja tomatiini. Valminud vili on täiesti ohutu.',
       toxicityPets: 'Lehed ja varred on koertele ja kassidele mürgised solaniini tõttu.',
       allergies: 'Ristallergia võib harva esineda kase õietolmu allergikutel.',
       contraindications: 'Solaniinitundlikkus tooreste viljade tarbimisel.'
@@ -142,7 +153,13 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       lifeCycle: 'Üheaastane',
       matureHeightCm: '120–220 cm (indeterminantne)',
       floweringPeriod: 'Juuni–August',
-      recommendedNordicVarieties: ['Vilja (Eesti sort)', 'Erk (Eesti varajane sort)', 'Malle F1', 'Black Cherry', 'Sungold F1']
+      recommendedNordicVarieties: [
+        'Vilja (Eesti sort)',
+        'Erk (Eesti varajane sort)',
+        'Malle F1',
+        'Black Cherry',
+        'Sungold F1'
+      ]
     },
     reliability: {
       evidenceTier: 'peer_reviewed',
@@ -177,9 +194,12 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       germinationTempC: '15–20 °C (tärkab ka juba +5 °C juures)',
       spacingInRowCm: 50,
       spacingBetweenRowsCm: 60,
-      thinningAdvice: 'Istuta eelkasvatatud taimed tugeva juurekavaga sügavale mulda, tihendades mulla kindlalt varre ümber.',
-      wateringFrequency: 'Rikkalikult ja korrapäraselt; pea moodustamise faasis vajab kuni 10 l vett taime kohta nädalas.',
-      fertilizationAdvice: 'Väga kõrge lämmastiku ja kaaliumi vajadus. Lisa istutusauku laagerdunud sõnnikukomposti ja lupja (lubiväetis kapsanuutri tõkestamiseks).'
+      thinningAdvice:
+        'Istuta eelkasvatatud taimed tugeva juurekavaga sügavale mulda, tihendades mulla kindlalt varre ümber.',
+      wateringFrequency:
+        'Rikkalikult ja korrapäraselt; pea moodustamise faasis vajab kuni 10 l vett taime kohta nädalas.',
+      fertilizationAdvice:
+        'Väga kõrge lämmastiku ja kaaliumi vajadus. Lisa istutusauku laagerdunud sõnnikukomposti ja lupja (lubiväetis kapsanuutri tõkestamiseks).'
     },
     habitat: {
       sunRequirement: 'Täispäike (6+ h)',
@@ -200,7 +220,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       edibleParts: ['Tihe lehtedest moodustunud pea', 'Noored lehed'],
       flavorProfile: 'Karge, kergelt magus väävlise alatooniga (glükosinolaadid)',
       culinaryUses: ['Hapukapsas (piimhappeline fermentatsioon)', 'Hautised ja supid', 'Värsked toorsalatid'],
-      storageAndPreservation: 'Hapendamine keldris (parim C-vitamiini allikas talvel) või jahedas hoidlas 0...+2 °C juures kuni 5 kuud.'
+      storageAndPreservation:
+        'Hapendamine keldris (parim C-vitamiini allikas talvel) või jahedas hoidlas 0...+2 °C juures kuni 5 kuud.'
     },
     ecology: {
       pollinators: ['Mesilased ja kimalased teise aasta õitel'],
@@ -214,7 +235,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'till',
           plantName: 'Aedtill',
           relationship: 'beneficial',
-          biologicalMechanism: 'Tilli sarikõied meelitavad ligi herilasi ja kiilassilmi, kes parasiteerivad kapsaliblika röövikutel.',
+          biologicalMechanism:
+            'Tilli sarikõied meelitavad ligi herilasi ja kiilassilmi, kes parasiteerivad kapsaliblika röövikutel.',
           evidence: {
             source: 'Royal Horticultural Society (RHS)',
             publication: 'Insect parasitoid attraction in Umbelliferae companions',
@@ -226,7 +248,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'sibul',
           plantName: 'Harilik sibul',
           relationship: 'beneficial',
-          biologicalMechanism: 'Lauguliste allitsiini aroom eksitab kapsakärbse (Delia radicum) emasputukaid munemisel.',
+          biologicalMechanism:
+            'Lauguliste allitsiini aroom eksitab kapsakärbse (Delia radicum) emasputukaid munemisel.',
           evidence: {
             source: 'Eesti Maaülikool (EMÜ)',
             publication: 'Segukultuuride mõju kahjurite käitumisele avamaal',
@@ -240,7 +263,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'tomat',
           plantName: 'Harilik tomat',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Mõlemad taimed ammutavad ülisuures koguses mulda saadaolevat lämmastikku, tekitades teineteise kasvu pärssimise.',
+          biologicalMechanism:
+            'Mõlemad taimed ammutavad ülisuures koguses mulda saadaolevat lämmastikku, tekitades teineteise kasvu pärssimise.',
           evidence: {
             source: 'FiBL Research Institute',
             publication: 'Organic Brassica Systems and Nitrogen Competition',
@@ -255,7 +279,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Kapsanuuter (Plasmodiophora brassicae)',
         type: 'disease',
         symptoms: 'Lehtede närbumine päikesepaistel, juurtel massilised inetud moonutused ja pahad.',
-        biologicalRemedy: 'Ranged külvikorra reeglid (vähemalt 4–5 aastat vahet ilma ristõielisteta), mulla lubjamine pH tasemele >7.0.',
+        biologicalRemedy:
+          'Ranged külvikorra reeglid (vähemalt 4–5 aastat vahet ilma ristõielisteta), mulla lubjamine pH tasemele >7.0.',
         evidence: {
           source: 'Eesti Maaülikool (EMÜ) Taimekaitselabor',
           publication: 'Kapsanuutri esinemissagedus ja ennetusmeetmed',
@@ -267,7 +292,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Suur kapsaliblikas ja maakirbud',
         type: 'pest',
         symptoms: 'Auklikud noored lehed, lehtede rootsuni söömine röövikute poolt.',
-        biologicalRemedy: 'Katteloori või putukavõrgu kasutamine maikuust juulini, puutuhaga tolmeldamine hommikuse kastega.',
+        biologicalRemedy:
+          'Katteloori või putukavõrgu kasutamine maikuust juulini, puutuhaga tolmeldamine hommikuse kastega.',
         evidence: {
           source: 'Maaelu Teadmuskeskus (METK)',
           publication: 'Avamaaköögiviljade kahjuritõrje käsiraamat',
@@ -288,7 +314,11 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       lifeCycle: 'Kaheaastane',
       matureHeightCm: '40–60 cm',
       floweringPeriod: 'Juuni (2. kasvuaastal)',
-      recommendedNordicVarieties: ['Jõgeva Ditmarsi (Eesti varajane sort)', 'Amager (klassikaline talvekapsas)', 'Brunswick']
+      recommendedNordicVarieties: [
+        'Jõgeva Ditmarsi (Eesti varajane sort)',
+        'Amager (klassikaline talvekapsas)',
+        'Brunswick'
+      ]
     },
     reliability: {
       evidenceTier: 'peer_reviewed',
@@ -352,7 +382,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
     ecology: {
       pollinators: ['Eelistab isetolmlust, meelitab ka looduslikke kimalasi'],
       beneficialInsects: ['Toetab mulla kasulikku mikrobioloogiat'],
-      biodiversityImpact: 'Rhizobium leguminosarum bakterid muudavad atmosfääri lämmastiku orgaaniliseks mullaväetiseks.',
+      biodiversityImpact:
+        'Rhizobium leguminosarum bakterid muudavad atmosfääri lämmastiku orgaaniliseks mullaväetiseks.',
       potentialInvasiveRisk: 'Puudub.'
     },
     companions: {
@@ -361,7 +392,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'porgand',
           plantName: 'Porgand',
           relationship: 'beneficial',
-          biologicalMechanism: 'Herne madal juurestik ja porgandi sügav peajuur kasutavad mulla erinevaid horisonte ilma konkurentsita.',
+          biologicalMechanism:
+            'Herne madal juurestik ja porgandi sügav peajuur kasutavad mulla erinevaid horisonte ilma konkurentsita.',
           evidence: {
             source: 'Royal Horticultural Society (RHS)',
             publication: 'Root architecture partitioning in intercropping',
@@ -414,7 +446,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Hernemähkur (Cydia nigricana)',
         type: 'pest',
         symptoms: 'Auklikud ja ussitanud herneterad kaunas.',
-        biologicalRemedy: 'Varajane külv (aprilli lõpp), et õitsemine mööduks enne mähkuri lendu juunis, või katteloor õitsemisajal.',
+        biologicalRemedy:
+          'Varajane külv (aprilli lõpp), et õitsemine mööduks enne mähkuri lendu juunis, või katteloor õitsemisajal.',
         evidence: {
           source: 'Maaelu Teadmuskeskus (METK)',
           publication: 'Kaunviljade kahjurite seire ja integreeritud tõrje',
@@ -464,9 +497,12 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       germinationTempC: '12–18 °C (aeglane idaneja eeterlike õlide tõttu)',
       spacingInRowCm: 4,
       spacingBetweenRowsCm: 25,
-      thinningAdvice: 'Harvenda kahes etapis: 1. faasis 2 cm vahedele, 2. faasis 4–5 cm vahedele. Tee harvendamist õhtul või vihmaga, et mitte levitada porgandikärbsele lõhna.',
-      wateringFrequency: 'Ühtlane kastmine peajuure kasvu ajal. Ebaühtlane kastmine (põud + paduvihm) põhjustab juurikate lõhenemist.',
-      fertilizationAdvice: 'ÄRA KUNAGI anna värsket sõnnikut (põhjustab juure harunemist ja ussitust). Vajab fosforit ja kaaliumi.'
+      thinningAdvice:
+        'Harvenda kahes etapis: 1. faasis 2 cm vahedele, 2. faasis 4–5 cm vahedele. Tee harvendamist õhtul või vihmaga, et mitte levitada porgandikärbsele lõhna.',
+      wateringFrequency:
+        'Ühtlane kastmine peajuure kasvu ajal. Ebaühtlane kastmine (põud + paduvihm) põhjustab juurikate lõhenemist.',
+      fertilizationAdvice:
+        'ÄRA KUNAGI anna värsket sõnnikut (põhjustab juure harunemist ja ussitust). Vajab fosforit ja kaaliumi.'
     },
     habitat: {
       sunRequirement: 'Täispäike (6+ h)',
@@ -502,7 +538,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'sibul',
           plantName: 'Harilik sibul',
           relationship: 'beneficial',
-          biologicalMechanism: 'Klassikaline sümbioos: sibulalõhn peletab porgandikärbest ja porgandilõhn sibulakärbest.',
+          biologicalMechanism:
+            'Klassikaline sümbioos: sibulalõhn peletab porgandikärbest ja porgandilõhn sibulakärbest.',
           evidence: {
             source: 'Eesti Maaülikool (EMÜ)',
             publication: 'Segukultuuride mõju kahjuritele ja taimekaitse',
@@ -528,7 +565,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'till',
           plantName: 'Aedtill',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Mõlemad kuuluvad sarikaliste sugukonda (Apiaceae), risttolmlemise oht seemnekasvatuses ja samade patogeenide ülekanne.',
+          biologicalMechanism:
+            'Mõlemad kuuluvad sarikaliste sugukonda (Apiaceae), risttolmlemise oht seemnekasvatuses ja samade patogeenide ülekanne.',
           evidence: {
             source: 'FiBL Research Institute',
             publication: 'Apiaceae Crop Rotation Guidelines',
@@ -543,7 +581,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Porgandikärbes (Psila rosae)',
         type: 'pest',
         symptoms: 'Punetavad lehed, pruunid roostekarva ussikäigud juurikal.',
-        biologicalRemedy: 'Katteloor maist juulini, segukülv sibulaga, külv pärast kärbse esimese põlvkonna lendlust (juuni algus).',
+        biologicalRemedy:
+          'Katteloor maist juulini, segukülv sibulaga, külv pärast kärbse esimese põlvkonna lendlust (juuni algus).',
         evidence: {
           source: 'Eesti Maaülikool (EMÜ) Taimekaitselabor',
           publication: 'Porgandikärbse lendluse seire ja integreeritud tõrje',
@@ -600,8 +639,10 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       spacingInRowCm: 12,
       spacingBetweenRowsCm: 25,
       thinningAdvice: 'Istutatakse üksikute tervete ja jämedate küüntena terav ots ülespoole.',
-      wateringFrequency: 'Kevadel aktiivse lehekasvu ajal rikkalikult, 3 nädalat enne saagikoristust kastmine lõpetada.',
-      fertilizationAdvice: 'Kevadel vajab lämmastikku (nt kompostitee või virtsaleotis), suvel puutuhka kaaliumi ja mikroelementide tarbeks.'
+      wateringFrequency:
+        'Kevadel aktiivse lehekasvu ajal rikkalikult, 3 nädalat enne saagikoristust kastmine lõpetada.',
+      fertilizationAdvice:
+        'Kevadel vajab lämmastikku (nt kompostitee või virtsaleotis), suvel puutuhka kaaliumi ja mikroelementide tarbeks.'
     },
     habitat: {
       sunRequirement: 'Täispäike (6+ h)',
@@ -637,7 +678,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'tomat',
           plantName: 'Harilik tomat',
           relationship: 'beneficial',
-          biologicalMechanism: 'Küüslaugu lenduvad allitsiinühendid pärsivad tomati-lehemädaniku seene Phytophthora eoste idanemist.',
+          biologicalMechanism:
+            'Küüslaugu lenduvad allitsiinühendid pärsivad tomati-lehemädaniku seene Phytophthora eoste idanemist.',
           evidence: {
             source: 'FiBL Research Institute of Organic Agriculture',
             publication: 'Antimicrobial garlic vapor in biological pest prevention',
@@ -663,7 +705,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'hernes',
           plantName: 'Aedhernes',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Lauguliste antibakteriaalsed juureeritised hävitavad herne lämmastikku siduvad Rhizobium bakterid.',
+          biologicalMechanism:
+            'Lauguliste antibakteriaalsed juureeritised hävitavad herne lämmastikku siduvad Rhizobium bakterid.',
           evidence: {
             source: 'Maaelu Teadmuskeskus (METK)',
             publication: 'Kaunviljade ja lauguliste bioloogiline kokkusobimatus',
@@ -689,8 +732,10 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       {
         name: 'Sibulaliste valgemädanik (Stromatinia cepivora)',
         type: 'disease',
-        symptoms: 'Lehtede enneaegne kolletumine, sibulakannal valge vattjas seeneniidistik mustade täppidega (sklerootiumid).',
-        biologicalRemedy: 'Ranged külvikorra nõuded (vähemalt 4 aastat vahet ilma laugulisteta), terve sertifitseeritud istutusmaterjal.',
+        symptoms:
+          'Lehtede enneaegne kolletumine, sibulakannal valge vattjas seeneniidistik mustade täppidega (sklerootiumid).',
+        biologicalRemedy:
+          'Ranged külvikorra nõuded (vähemalt 4 aastat vahet ilma laugulisteta), terve sertifitseeritud istutusmaterjal.',
         evidence: {
           source: 'FiBL Research Institute',
           publication: 'White Rot (Stromatinia cepivora) Management',
@@ -784,7 +829,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'till',
           plantName: 'Aedtill',
           relationship: 'beneficial',
-          biologicalMechanism: 'Tilli aroom toetab kurgi kasvu ja tilliõied meelitavad kurgikahjureid hävitavaid röövlutikaid.',
+          biologicalMechanism:
+            'Tilli aroom toetab kurgi kasvu ja tilliõied meelitavad kurgikahjureid hävitavaid röövlutikaid.',
           evidence: {
             source: 'Royal Horticultural Society (RHS)',
             publication: 'Companion plants for Cucurbitaceae in protected cultivation',
@@ -810,7 +856,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
           plantId: 'kartul',
           plantName: 'Kartul',
           relationship: 'antagonistic',
-          biologicalMechanism: 'Kartul konkureerib kurgiga maapinna lähedaste toitainete pärast ja soodustab lehemädaniku levikut.',
+          biologicalMechanism:
+            'Kartul konkureerib kurgiga maapinna lähedaste toitainete pärast ja soodustab lehemädaniku levikut.',
           evidence: {
             source: 'Eesti Maaülikool (EMÜ)',
             publication: 'Köögiviljade allelopaatilised suhted',
@@ -825,7 +872,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
         name: 'Kurgi-jahukaste (Podosphaera fusca)',
         type: 'disease',
         symptoms: 'Valge jahujas kirme lehtede pealispinnal, lehed kuivavad enneaegselt.',
-        biologicalRemedy: 'Kastmine juurele (mitte lehtedele), õhustamine, pritsimine piima-vee lahusega (1:9) või söögisoodalahusega (0.5%).',
+        biologicalRemedy:
+          'Kastmine juurele (mitte lehtedele), õhustamine, pritsimine piima-vee lahusega (1:9) või söögisoodalahusega (0.5%).',
         evidence: {
           source: 'Maaelu Teadmuskeskus (METK)',
           publication: 'Kurgi jahukaste bioloogiline profülaktika',
@@ -838,7 +886,8 @@ export const PLANT_ENCYCLOPEDIA: Record<string, Plant10DomainEncyclopedia> = {
       toxicityHuman: 'Ohutu ja tervislik.',
       toxicityPets: 'Koertele suurepärane madala kalorsusega jahutav suupiste.',
       allergies: 'Väga harv kurgiallergia.',
-      contraindications: 'Mõrud viljad võivad sisaldada liigselt kukurbitatsiine (tingitud stressist või külmast veest).'
+      contraindications:
+        'Mõrud viljad võivad sisaldada liigselt kukurbitatsiine (tingitud stressist või külmast veest).'
     },
     botany: {
       familyEstonian: 'Kõrvitsalised',

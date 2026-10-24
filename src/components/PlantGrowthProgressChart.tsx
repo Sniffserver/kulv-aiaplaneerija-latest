@@ -1,14 +1,5 @@
 import React, { useMemo } from 'react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ReferenceLine,
-  CartesianGrid
-} from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, CartesianGrid } from 'recharts';
 import { BedPlantingCell, Plant } from '../types';
 import { Calendar, Sprout, CheckCircle2, Clock, Info, ShieldCheck } from 'lucide-react';
 
@@ -52,15 +43,7 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
   const totalDays = Math.max(20, plant.daysToMaturity || 70);
   const plantDateStr = planting.dateAdded || '2026-05-15';
 
-  const {
-    chartData,
-    daysElapsed,
-    progressPct,
-    daysRemaining,
-    currentStage,
-    stages,
-    todayLabel
-  } = useMemo(() => {
+  const { chartData, daysElapsed, progressPct, daysRemaining, currentStage, stages, todayLabel } = useMemo(() => {
     const today = referenceDate ? new Date(referenceDate) : new Date();
     const parts = plantDateStr.split('-');
     const pYear = parseInt(parts[0], 10) || today.getFullYear();
@@ -206,18 +189,42 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
       }}
     >
       {/* Header Info */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '8px'
+        }}
+      >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ fontSize: '20px' }}>{plant.icon}</span>
-            <span className="font-serif-display" style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+            <span
+              className="font-serif-display"
+              style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
+            >
               {plant.name} – Kasvu edenemine
             </span>
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>Istutatud: <strong>{plantDateStr}</strong></span>
+          <div
+            style={{
+              fontSize: '11px',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              marginTop: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>
+              Istutatud: <strong>{plantDateStr}</strong>
+            </span>
             <span>·</span>
-            <span>Täisküpsus: <strong>{totalDays} päeva</strong></span>
+            <span>
+              Täisküpsus: <strong>{totalDays} päeva</strong>
+            </span>
           </div>
         </div>
 
@@ -235,8 +242,16 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
         >
           <span style={{ fontSize: '14px' }}>{currentStage.icon}</span>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>Hetkestaadium</span>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: progressPct >= 100 ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-primary, #4F6B45)' }}>
+            <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+              Hetkestaadium
+            </span>
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 800,
+                color: progressPct >= 100 ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-primary, #4F6B45)'
+              }}
+            >
               {currentStage.name} ({progressPct}%)
             </span>
           </div>
@@ -262,15 +277,19 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Saagikoristuseni</span>
-          <span style={{ fontSize: '14px', fontWeight: 700, color: daysRemaining === 0 ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-primary, #4F6B45)' }}>
+          <span
+            style={{
+              fontSize: '14px',
+              fontWeight: 700,
+              color: daysRemaining === 0 ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-primary, #4F6B45)'
+            }}
+          >
             {daysRemaining === 0 ? 'Valmis korjamiseks!' : `~${daysRemaining} päeva`}
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Küpsusaste</span>
-          <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-            {progressPct}%
-          </span>
+          <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>{progressPct}%</span>
         </div>
       </div>
 
@@ -357,9 +376,7 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
 
       {/* Stage milestones pills */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-          Taime arenguetapid:
-        </div>
+        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>Taime arenguetapid:</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
           {stages.map((stg) => {
             const isCurrent = stg.key === currentStage.key;
@@ -372,13 +389,13 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
                   backgroundColor: isCurrent
                     ? 'var(--kulv-accent-soft, #F3D8C2)'
                     : isPast
-                    ? 'rgba(79, 107, 69, 0.1)'
-                    : 'var(--kulv-surface-muted, #EFE6D4)',
+                      ? 'rgba(79, 107, 69, 0.1)'
+                      : 'var(--kulv-surface-muted, #EFE6D4)',
                   border: isCurrent
                     ? '1.5px solid var(--kulv-accent, #D97A3D)'
                     : isPast
-                    ? '1px solid rgba(79, 107, 69, 0.3)'
-                    : '1px solid var(--kulv-border, #C9BFA9)',
+                      ? '1px solid rgba(79, 107, 69, 0.3)'
+                      : '1px solid var(--kulv-border, #C9BFA9)',
                   borderRadius: '8px',
                   padding: '6px 8px',
                   display: 'flex',
@@ -386,7 +403,9 @@ export const PlantGrowthProgressChart: React.FC<PlantGrowthProgressChartProps> =
                   gap: '2px'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}
+                >
                   <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                     {stg.icon} {stg.name}
                   </span>

@@ -48,8 +48,12 @@ export const WeatherOverview: React.FC = () => {
       <div className="flex items-center gap-4">
         <div className="text-4xl font-bold">{Math.round(weather.main.temp)}°C</div>
         <div className="flex flex-col">
-          <div className="flex items-center gap-1 text-gray-600"><Cloud size={16} /> {weather.weather[0].description}</div>
-          <div className="flex items-center gap-1 text-gray-600"><Droplets size={16} /> {weather.main.humidity}% Humidity</div>
+          <div className="flex items-center gap-1 text-gray-600">
+            <Cloud size={16} /> {weather.weather[0].description}
+          </div>
+          <div className="flex items-center gap-1 text-gray-600">
+            <Droplets size={16} /> {weather.main.humidity}% Humidity
+          </div>
         </div>
       </div>
     </div>

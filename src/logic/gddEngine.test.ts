@@ -19,9 +19,36 @@ describe('GddEngine (Growing Degree Days in Estonia)', () => {
 
   it('accumulates 7-day forecast GDD accurately', () => {
     const mockForecast: DailyForecastItem[] = [
-      { date: '2026-05-15', dayName: 'Täna', tempMax: 20, tempMin: 10, weatherCode: 1, weatherDescription: 'Selge', icon: '☀️', precipitationSum: 0 },
-      { date: '2026-05-16', dayName: 'Homme', tempMax: 18, tempMin: 8, weatherCode: 2, weatherDescription: 'Vahelduv', icon: '⛅', precipitationSum: 0 },
-      { date: '2026-05-17', dayName: 'Pühap', tempMax: 16, tempMin: 6, weatherCode: 2, weatherDescription: 'Vahelduv', icon: '⛅', precipitationSum: 0 }
+      {
+        date: '2026-05-15',
+        dayName: 'Täna',
+        tempMax: 20,
+        tempMin: 10,
+        weatherCode: 1,
+        weatherDescription: 'Selge',
+        icon: '☀️',
+        precipitationSum: 0
+      },
+      {
+        date: '2026-05-16',
+        dayName: 'Homme',
+        tempMax: 18,
+        tempMin: 8,
+        weatherCode: 2,
+        weatherDescription: 'Vahelduv',
+        icon: '⛅',
+        precipitationSum: 0
+      },
+      {
+        date: '2026-05-17',
+        dayName: 'Pühap',
+        tempMax: 16,
+        tempMin: 6,
+        weatherCode: 2,
+        weatherDescription: 'Vahelduv',
+        icon: '⛅',
+        precipitationSum: 0
+      }
     ];
 
     // Day 1: mean 15 -> GDD5 = 10, GDD10 = 5
@@ -44,7 +71,16 @@ describe('GddEngine (Growing Degree Days in Estonia)', () => {
 
   it('provides actionable agricultural thermal evaluation for 7-day outlook', () => {
     const mockForecast: DailyForecastItem[] = [
-      { date: '2026-05-15', dayName: 'Täna', tempMax: 14, tempMin: 2, weatherCode: 1, weatherDescription: 'Selge', icon: '☀️', precipitationSum: 0 }
+      {
+        date: '2026-05-15',
+        dayName: 'Täna',
+        tempMax: 14,
+        tempMin: 2,
+        weatherCode: 1,
+        weatherDescription: 'Selge',
+        icon: '☀️',
+        precipitationSum: 0
+      }
     ];
 
     const evaluation = GddEngine.evaluate7DayThermalGrowth(mockForecast);

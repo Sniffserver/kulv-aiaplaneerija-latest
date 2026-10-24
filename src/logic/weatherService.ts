@@ -122,12 +122,12 @@ export async function fetchLiveWeather(
         const codeInfo = mapWmoCode(code);
         const tempMax = Math.round(daily.temperature_2m_max?.[i] ?? 18);
         const tempMin = Math.round(daily.temperature_2m_min?.[i] ?? 8);
-        const apparentTempMin = daily.apparent_temperature_min?.[i] != null
-          ? Math.round(daily.apparent_temperature_min[i])
-          : undefined;
-        const precipitationProbability = daily.precipitation_probability_max?.[i] != null
-          ? Math.round(daily.precipitation_probability_max[i])
-          : undefined;
+        const apparentTempMin =
+          daily.apparent_temperature_min?.[i] != null ? Math.round(daily.apparent_temperature_min[i]) : undefined;
+        const precipitationProbability =
+          daily.precipitation_probability_max?.[i] != null
+            ? Math.round(daily.precipitation_probability_max[i])
+            : undefined;
 
         const effectiveMin = apparentTempMin != null ? Math.min(tempMin, apparentTempMin) : tempMin;
         let frostRisk: 'none' | 'light' | 'moderate' | 'severe' = 'none';
@@ -175,9 +175,8 @@ export async function fetchLiveWeather(
     const alerts: WeatherAlert[] = [];
     const severeFrostDays = dailyForecast.filter((d) => d.tempMin <= 0);
     const lightFrostDays = dailyForecast.filter((d) => d.tempMin > 0 && d.tempMin <= 3);
-    const lowestUpcomingNightTemp = dailyForecast.length > 0
-      ? Math.min(...dailyForecast.map((d) => d.tempMin))
-      : Math.round(current.temperature_2m);
+    const lowestUpcomingNightTemp =
+      dailyForecast.length > 0 ? Math.min(...dailyForecast.map((d) => d.tempMin)) : Math.round(current.temperature_2m);
     const frostRiskDaysCount = severeFrostDays.length + lightFrostDays.length;
 
     if (severeFrostDays.length > 0) {
@@ -208,9 +207,8 @@ export async function fetchLiveWeather(
       });
     }
 
-    const maxUpcomingTemp = dailyForecast.length > 0
-      ? Math.max(...dailyForecast.map((d) => d.tempMax))
-      : current.temperature_2m;
+    const maxUpcomingTemp =
+      dailyForecast.length > 0 ? Math.max(...dailyForecast.map((d) => d.tempMax)) : current.temperature_2m;
 
     if (maxUpcomingTemp >= 28) {
       alerts.push({
@@ -224,7 +222,9 @@ export async function fetchLiveWeather(
 
     const tips: string[] = [];
     if (severeFrostDays.length > 0) {
-      tips.push('Öökülmaohu korral: kasta mulda kergelt enne õhtut, sest niiske pinnas hoiab soojust paremini kui kuiv muld.');
+      tips.push(
+        'Öökülmaohu korral: kasta mulda kergelt enne õhtut, sest niiske pinnas hoiab soojust paremini kui kuiv muld.'
+      );
     } else if (current.relative_humidity_2m > 75) {
       tips.push('Kõrge õhuniiskus soodustab seenhaigusi – taga kasvuhoones hea õhuvahetus.');
     } else {
@@ -285,13 +285,97 @@ export async function fetchLiveWeather(
 export function getFallbackWeather(lat: number, lng: number, locationName: string): WeatherInfo {
   const simulatedTemp = 16.5;
   const fallbackDaily: DailyForecastItem[] = [
-    { date: '2026-05-15', dayName: 'Täna', tempMax: 19, tempMin: 8, apparentTempMin: 7, precipitationProbability: 10, frostRisk: 'none', weatherCode: 2, weatherDescription: 'Vahelduv pilvisus', icon: '⛅', precipitationSum: 0.0 },
-    { date: '2026-05-16', dayName: 'Homme', tempMax: 20, tempMin: 9, apparentTempMin: 8, precipitationProbability: 5, frostRisk: 'none', weatherCode: 1, weatherDescription: 'Peamiselt selge', icon: '🌤️', precipitationSum: 0.0 },
-    { date: '2026-05-17', dayName: 'Pühap', tempMax: 18, tempMin: 7, apparentTempMin: 6, precipitationProbability: 60, frostRisk: 'none', weatherCode: 61, weatherDescription: 'Nõrk vihmasadu', icon: '🌦️', precipitationSum: 3.2 },
-    { date: '2026-05-18', dayName: 'Esmasp', tempMax: 15, tempMin: 2, apparentTempMin: 1, precipitationProbability: 20, frostRisk: 'light', weatherCode: 2, weatherDescription: 'Vahelduv pilvisus, jahe öö', icon: '⛅', precipitationSum: 0.5 },
-    { date: '2026-05-19', dayName: 'Teisip', tempMax: 14, tempMin: -1, apparentTempMin: -2, precipitationProbability: 0, frostRisk: 'moderate', weatherCode: 0, weatherDescription: 'Selge ja öökülmaoht', icon: '☀️', precipitationSum: 0.0 },
-    { date: '2026-05-20', dayName: 'Kolmap', tempMax: 17, tempMin: 4, apparentTempMin: 3, precipitationProbability: 15, frostRisk: 'none', weatherCode: 2, weatherDescription: 'Vahelduv pilvisus', icon: '⛅', precipitationSum: 0.0 },
-    { date: '2026-05-21', dayName: 'Neljap', tempMax: 21, tempMin: 10, apparentTempMin: 9, precipitationProbability: 5, frostRisk: 'none', weatherCode: 0, weatherDescription: 'Päikeseline ja soe', icon: '☀️', precipitationSum: 0.0 }
+    {
+      date: '2026-05-15',
+      dayName: 'Täna',
+      tempMax: 19,
+      tempMin: 8,
+      apparentTempMin: 7,
+      precipitationProbability: 10,
+      frostRisk: 'none',
+      weatherCode: 2,
+      weatherDescription: 'Vahelduv pilvisus',
+      icon: '⛅',
+      precipitationSum: 0.0
+    },
+    {
+      date: '2026-05-16',
+      dayName: 'Homme',
+      tempMax: 20,
+      tempMin: 9,
+      apparentTempMin: 8,
+      precipitationProbability: 5,
+      frostRisk: 'none',
+      weatherCode: 1,
+      weatherDescription: 'Peamiselt selge',
+      icon: '🌤️',
+      precipitationSum: 0.0
+    },
+    {
+      date: '2026-05-17',
+      dayName: 'Pühap',
+      tempMax: 18,
+      tempMin: 7,
+      apparentTempMin: 6,
+      precipitationProbability: 60,
+      frostRisk: 'none',
+      weatherCode: 61,
+      weatherDescription: 'Nõrk vihmasadu',
+      icon: '🌦️',
+      precipitationSum: 3.2
+    },
+    {
+      date: '2026-05-18',
+      dayName: 'Esmasp',
+      tempMax: 15,
+      tempMin: 2,
+      apparentTempMin: 1,
+      precipitationProbability: 20,
+      frostRisk: 'light',
+      weatherCode: 2,
+      weatherDescription: 'Vahelduv pilvisus, jahe öö',
+      icon: '⛅',
+      precipitationSum: 0.5
+    },
+    {
+      date: '2026-05-19',
+      dayName: 'Teisip',
+      tempMax: 14,
+      tempMin: -1,
+      apparentTempMin: -2,
+      precipitationProbability: 0,
+      frostRisk: 'moderate',
+      weatherCode: 0,
+      weatherDescription: 'Selge ja öökülmaoht',
+      icon: '☀️',
+      precipitationSum: 0.0
+    },
+    {
+      date: '2026-05-20',
+      dayName: 'Kolmap',
+      tempMax: 17,
+      tempMin: 4,
+      apparentTempMin: 3,
+      precipitationProbability: 15,
+      frostRisk: 'none',
+      weatherCode: 2,
+      weatherDescription: 'Vahelduv pilvisus',
+      icon: '⛅',
+      precipitationSum: 0.0
+    },
+    {
+      date: '2026-05-21',
+      dayName: 'Neljap',
+      tempMax: 21,
+      tempMin: 10,
+      apparentTempMin: 9,
+      precipitationProbability: 5,
+      frostRisk: 'none',
+      weatherCode: 0,
+      weatherDescription: 'Päikeseline ja soe',
+      icon: '☀️',
+      precipitationSum: 0.0
+    }
   ];
 
   return {
@@ -313,7 +397,8 @@ export function getFallbackWeather(lat: number, lng: number, locationName: strin
         id: 'a1',
         title: '❄️ Öökülma oht teisipäeval (-1°C)',
         severity: 'danger',
-        advice: 'Prognoosis on teisipäeva öösel miinuskraadid. Hoida katteloorid kasvuhoones käepärast ja ära istuta avamaale soojust nõudvaid taimi!',
+        advice:
+          'Prognoosis on teisipäeva öösel miinuskraadid. Hoida katteloorid kasvuhoones käepärast ja ära istuta avamaale soojust nõudvaid taimi!',
         affectedCrops: 'Tomat, kurk, basiilik, kõrvitsalised'
       }
     ],

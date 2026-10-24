@@ -92,7 +92,13 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
             onClick={onDismiss}
             aria-label="Sulge aken"
             className="touch-target"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)', borderRadius: '8px' }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              borderRadius: '8px'
+            }}
           >
             <X size={20} />
           </button>
@@ -100,7 +106,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Taime nimetus
             </label>
             <input
@@ -123,7 +137,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Sugukond / kategooria
               </label>
               <input
@@ -141,7 +163,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
               />
             </div>
             <div style={{ width: '80px' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Ikoon
               </label>
               <input
@@ -163,7 +193,14 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginBottom: '4px' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '11px',
+                color: 'var(--kulv-text-muted, #5F675A)',
+                marginBottom: '4px'
+              }}
+            >
               Vali ikoon:
             </label>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -189,7 +226,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Saagini (päeva)
               </label>
               <input
@@ -207,7 +252,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
               />
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Vahekaugus (cm)
               </label>
               <input
@@ -227,7 +280,15 @@ export const AddPlantDialog: React.FC<AddPlantDialogProps> = ({ isOpen, onDismis
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Kirjeldus ja hooldusjuhis
             </label>
             <textarea

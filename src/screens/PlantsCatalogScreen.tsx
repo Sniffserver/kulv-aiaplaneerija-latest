@@ -9,10 +9,7 @@ interface PlantsCatalogScreenProps {
   onOpenAddCustomPlant: () => void;
 }
 
-export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({
-  onSelectPlant,
-  onOpenAddCustomPlant
-}) => {
+export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSelectPlant, onOpenAddCustomPlant }) => {
   const { plants, language, t } = useGarden();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,12 +71,36 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({
   }, [plants, searchQuery, selectedCategory]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px', maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        padding: '16px',
+        maxWidth: '1440px',
+        margin: '0 auto',
+        width: '100%'
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
         <div>
           <h1
             className="font-serif-display"
-            style={{ fontSize: '26px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0, letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: '26px',
+              fontWeight: 700,
+              color: 'var(--kulv-text, #2A2E24)',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}
           >
             {language === 'en' ? 'Plant Encyclopedia' : 'Taimede entsüklopeedia'}
           </h1>
@@ -188,12 +209,8 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
                 minHeight: '40px',
-                border: isSelected
-                  ? '1px solid var(--kulv-primary, #4F6B45)'
-                  : '1px solid var(--kulv-border, #C9BFA9)',
-                backgroundColor: isSelected
-                  ? 'var(--kulv-primary, #4F6B45)'
-                  : 'var(--kulv-surface, #FFFDF8)',
+                border: isSelected ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                backgroundColor: isSelected ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
                 color: isSelected ? 'white' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
@@ -244,11 +261,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({
           }}
         >
           {filteredPlants.map((plant) => (
-            <PlantCard
-              key={plant.id}
-              plant={plant}
-              onClick={() => onSelectPlant(plant)}
-            />
+            <PlantCard key={plant.id} plant={plant} onClick={() => onSelectPlant(plant)} />
           ))}
         </div>
       )}

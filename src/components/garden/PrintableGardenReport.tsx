@@ -14,7 +14,7 @@ export const PrintableGardenReport: React.FC = () => {
       <h1>Garden Summary Report</h1>
       <h2>Beds</h2>
       <ul>
-        {beds.map(bed => (
+        {beds.map((bed) => (
           <li key={bed.id}>
             {bed.name} - Plantings: {bed.plantings.length}
           </li>
@@ -22,7 +22,7 @@ export const PrintableGardenReport: React.FC = () => {
       </ul>
       <h2>Plant List</h2>
       <ul>
-        {plants.map(plant => (
+        {plants.map((plant) => (
           <li key={plant.id}>{plant.name}</li>
         ))}
       </ul>

@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  CompanionEngine,
-  normalizePlantIdentifier,
-  evaluatePairRelationship
-} from './companionEngine';
+import { CompanionEngine, normalizePlantIdentifier, evaluatePairRelationship } from './companionEngine';
 import { BedPlantingCell, GardenEntity } from '../types';
 import { DEFAULT_PLANTS } from '../data/defaultPlants';
 
@@ -86,8 +82,28 @@ describe('CompanionEngine - Pure Deterministic Domain Engine', () => {
   describe('Bed Harmony & Plantings Calculations', () => {
     it('detects antagonistic neighbors (e.g. Hernes and Sibul)', () => {
       const plantings: BedPlantingCell[] = [
-        { id: 'c1', bedId: 'b1', plantId: 'hernes', plantName: 'Hernes', plantIcon: '🫛', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-        { id: 'c2', bedId: 'b1', plantId: 'sibul', plantName: 'Sibul', plantIcon: '🧅', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+        {
+          id: 'c1',
+          bedId: 'b1',
+          plantId: 'hernes',
+          plantName: 'Hernes',
+          plantIcon: '🫛',
+          gridX: 0,
+          gridY: 0,
+          year: 2026,
+          dateAdded: '2026-05-01'
+        },
+        {
+          id: 'c2',
+          bedId: 'b1',
+          plantId: 'sibul',
+          plantName: 'Sibul',
+          plantIcon: '🧅',
+          gridX: 1,
+          gridY: 0,
+          year: 2026,
+          dateAdded: '2026-05-01'
+        }
       ];
 
       const conflicts = CompanionEngine.evaluateBedCompanions(plantings, DEFAULT_PLANTS);
@@ -97,8 +113,28 @@ describe('CompanionEngine - Pure Deterministic Domain Engine', () => {
 
     it('calculates bed harmony score with detailed recommendations list', () => {
       const plantings: BedPlantingCell[] = [
-        { id: 'c1', bedId: 'b1', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-        { id: 'c2', bedId: 'b1', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌿', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+        {
+          id: 'c1',
+          bedId: 'b1',
+          plantId: 'tomat',
+          plantName: 'Tomat',
+          plantIcon: '🍅',
+          gridX: 0,
+          gridY: 0,
+          year: 2026,
+          dateAdded: '2026-05-01'
+        },
+        {
+          id: 'c2',
+          bedId: 'b1',
+          plantId: 'basiilik',
+          plantName: 'Basiilik',
+          plantIcon: '🌿',
+          gridX: 1,
+          gridY: 0,
+          year: 2026,
+          dateAdded: '2026-05-01'
+        }
       ];
 
       const harmony = CompanionEngine.calculateBedHarmony(plantings, DEFAULT_PLANTS);
@@ -167,7 +203,17 @@ describe('CompanionEngine - Pure Deterministic Domain Engine', () => {
           coverType: 'none',
           calculatedSunHours: 8,
           plantings: [
-            { id: 'p1', bedId: 'bed-1', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'p1',
+              bedId: 'bed-1',
+              plantId: 'tomat',
+              plantName: 'Tomat',
+              plantIcon: '🍅',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       };
@@ -194,7 +240,17 @@ describe('CompanionEngine - Pure Deterministic Domain Engine', () => {
           coverType: 'none',
           calculatedSunHours: 8,
           plantings: [
-            { id: 'p2', bedId: 'bed-2', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌿', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'p2',
+              bedId: 'bed-2',
+              plantId: 'basiilik',
+              plantName: 'Basiilik',
+              plantIcon: '🌿',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       };
@@ -221,7 +277,17 @@ describe('CompanionEngine - Pure Deterministic Domain Engine', () => {
           coverType: 'none',
           calculatedSunHours: 8,
           plantings: [
-            { id: 'p3', bedId: 'bed-3', plantId: 'kartul', plantName: 'Kartul', plantIcon: '🥔', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'p3',
+              bedId: 'bed-3',
+              plantId: 'kartul',
+              plantName: 'Kartul',
+              plantIcon: '🥔',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       };

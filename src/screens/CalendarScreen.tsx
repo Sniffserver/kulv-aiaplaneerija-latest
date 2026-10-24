@@ -29,10 +29,7 @@ import {
 } from 'lucide-react';
 import { GddEngine } from '../logic/gddEngine';
 
-const MONTH_NAMES = [
-  'Jaan', 'Veebr', 'Märts', 'Apr', 'Mai', 'Juuni',
-  'Juuli', 'Aug', 'Sept', 'Okt', 'Nov', 'Dets'
-];
+const MONTH_NAMES = ['Jaan', 'Veebr', 'Märts', 'Apr', 'Mai', 'Juuni', 'Juuli', 'Aug', 'Sept', 'Okt', 'Nov', 'Dets'];
 
 const DAYS_IN_MONTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -63,7 +60,19 @@ function formatDateDisplay(dateStr: string): string {
 }
 
 const isPlantColdHardy = (plant: Plant): boolean => {
-  const hardyIds = ['porgand', 'hernes', 'redis', 'spinat', 'lehtpeet', 'lehtkapsas', 'sibul', 'till', 'küüslauk', 'pastinaak', 'naeris'];
+  const hardyIds = [
+    'porgand',
+    'hernes',
+    'redis',
+    'spinat',
+    'lehtpeet',
+    'lehtkapsas',
+    'sibul',
+    'till',
+    'küüslauk',
+    'pastinaak',
+    'naeris'
+  ];
   if (hardyIds.some((id) => plant.id.toLowerCase().includes(id))) return true;
   if (
     plant.family.includes('Sarikalised') ||
@@ -77,7 +86,18 @@ const isPlantColdHardy = (plant: Plant): boolean => {
 };
 
 const isPlantWarmDemanding = (plant: Plant): boolean => {
-  const tenderIds = ['tomat', 'kurk', 'basiilik', 'suvikõrvits', 'kõrvits', 'paprika', 'melon', 'arbuus', 'baklažaan', 'uba'];
+  const tenderIds = [
+    'tomat',
+    'kurk',
+    'basiilik',
+    'suvikõrvits',
+    'kõrvits',
+    'paprika',
+    'melon',
+    'arbuus',
+    'baklažaan',
+    'uba'
+  ];
   if (tenderIds.some((id) => plant.id.toLowerCase().includes(id))) return true;
   if (plant.family.includes('Maavitsalised') || plant.family.includes('Kõrvitsalised')) return true;
   return plant.weeksAfterFrostPlantOut != null && plant.weeksAfterFrostPlantOut > 0;
@@ -89,7 +109,9 @@ export const CalendarScreen: React.FC = () => {
   const [viewMode, setViewMode] = useState<'gantt' | 'cards'>('gantt');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedFrostFilter, setSelectedFrostFilter] = useState<'all' | 'safe_now' | 'fleece_needed' | 'warm_only'>('all');
+  const [selectedFrostFilter, setSelectedFrostFilter] = useState<'all' | 'safe_now' | 'fleece_needed' | 'warm_only'>(
+    'all'
+  );
   const [selectedForecastDayIndex, setSelectedForecastDayIndex] = useState<number | null>(null);
   const [showForecastDetails, setShowForecastDetails] = useState(true);
   const [inspectingPlant, setInspectingPlant] = useState<Plant | null>(null);
@@ -116,9 +138,9 @@ export const CalendarScreen: React.FC = () => {
 
   // Forecast metrics
   const dailyForecast = weather.dailyForecast || [];
-  const lowestNightTemp = weather.lowestUpcomingNightTemp ?? (
-    dailyForecast.length > 0 ? Math.min(...dailyForecast.map((d) => d.tempMin)) : weather.tempMin
-  );
+  const lowestNightTemp =
+    weather.lowestUpcomingNightTemp ??
+    (dailyForecast.length > 0 ? Math.min(...dailyForecast.map((d) => d.tempMin)) : weather.tempMin);
   const severeFrostDays = dailyForecast.filter((d) => d.tempMin <= 0);
   const lightFrostDays = dailyForecast.filter((d) => d.tempMin > 0 && d.tempMin <= 3);
   const hasSevereFrost = severeFrostDays.length > 0;
@@ -134,9 +156,7 @@ export const CalendarScreen: React.FC = () => {
 
   // Calculate timelines
   const allTimelines: PlantTimeline[] = useMemo(() => {
-    return plants.map((plant) =>
-      PlantingCalendar.calculateTimeline(plant, settings.springFrostDate, 2026)
-    );
+    return plants.map((plant) => PlantingCalendar.calculateTimeline(plant, settings.springFrostDate, 2026));
   }, [plants, settings.springFrostDate]);
 
   // Filtered timelines
@@ -150,8 +170,20 @@ export const CalendarScreen: React.FC = () => {
 
       // Category filter
       if (selectedCategory === 'greenhouse' && plant.greenhouseShiftWeeks == null) return false;
-      if (selectedCategory === 'root' && !(plant.family.includes('Sarikalised') || plant.family.includes('Rebasheinalised') || plant.family.includes('Lauklised'))) return false;
-      if (selectedCategory === 'herbs' && !(plant.family.includes('Huulõielised') || plant.id === 'basiilik' || plant.id === 'till')) return false;
+      if (
+        selectedCategory === 'root' &&
+        !(
+          plant.family.includes('Sarikalised') ||
+          plant.family.includes('Rebasheinalised') ||
+          plant.family.includes('Lauklised')
+        )
+      )
+        return false;
+      if (
+        selectedCategory === 'herbs' &&
+        !(plant.family.includes('Huulõielised') || plant.id === 'basiilik' || plant.id === 'till')
+      )
+        return false;
 
       // Frost readiness filter
       if (selectedFrostFilter === 'safe_now') {
@@ -171,16 +203,31 @@ export const CalendarScreen: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '16px 20px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
         <div>
           <h1
             className="font-serif-display"
-            style={{ fontSize: '26px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0, letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: '26px',
+              fontWeight: 700,
+              color: 'var(--kulv-text, #2A2E24)',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}
           >
             Põhjamaine külvikalender & 7p ilmaprognoos
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', margin: '4px 0 0 0' }}>
-            Külvikalender koos kevadise öökülmapiiri ({settings.springFrostDate}) ja reaalajas 7-päevase öökülmaradariga.
+            Külvikalender koos kevadise öökülmapiiri ({settings.springFrostDate}) ja reaalajas 7-päevase
+            öökülmaradariga.
           </p>
         </div>
 
@@ -218,51 +265,51 @@ export const CalendarScreen: React.FC = () => {
               border: '1px solid var(--kulv-border, #C9BFA9)'
             }}
           >
-          <button
-            onClick={() => setViewMode('gantt')}
-            className="touch-target"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              border: 'none',
-              backgroundColor: viewMode === 'gantt' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
-              color: viewMode === 'gantt' ? 'white' : 'var(--kulv-text, #2A2E24)',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <CalendarRange size={15} />
-            <span>Gantt ajatelg</span>
-          </button>
-          <button
-            onClick={() => setViewMode('cards')}
-            className="touch-target"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              border: 'none',
-              backgroundColor: viewMode === 'cards' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
-              color: viewMode === 'cards' ? 'white' : 'var(--kulv-text, #2A2E24)',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <LayoutGrid size={15} />
-            <span>Kaardid</span>
-          </button>
+            <button
+              onClick={() => setViewMode('gantt')}
+              className="touch-target"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: viewMode === 'gantt' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
+                color: viewMode === 'gantt' ? 'white' : 'var(--kulv-text, #2A2E24)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <CalendarRange size={15} />
+              <span>Gantt ajatelg</span>
+            </button>
+            <button
+              onClick={() => setViewMode('cards')}
+              className="touch-target"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: viewMode === 'cards' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
+                color: viewMode === 'cards' ? 'white' : 'var(--kulv-text, #2A2E24)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <LayoutGrid size={15} />
+              <span>Kaardid</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
       {/* 7-DAY WEATHER FORECAST & FROST RADAR CARD */}
       <section
@@ -279,7 +326,15 @@ export const CalendarScreen: React.FC = () => {
         }}
       >
         {/* Forecast Header & Meta */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <CloudSun size={20} color="var(--kulv-primary, #4F6B45)" />
             <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
@@ -358,10 +413,13 @@ export const CalendarScreen: React.FC = () => {
             <ShieldAlert size={20} color="var(--kulv-danger, #B85C33)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-danger, #B85C33)' }}>
-                ❄️ Tähelepanu: eelseisva 7 päeva jooksul on tuvastatud öökülmaoht! ({severeFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
+                ❄️ Tähelepanu: eelseisva 7 päeva jooksul on tuvastatud öökülmaoht! (
+                {severeFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
               </div>
               <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', marginTop: '4px', lineHeight: 1.4 }}>
-                <strong>Külvisoovitus:</strong> Ära istuta avamaale soojust armastavaid taimi (tomat, kurk, kõrvits, basiilik, paprika). Sulge kindlasti kasvuhoone uksed ja luugid õhtul ning kata tärkavad varajased peenrad kahekordse kattelooriga.
+                <strong>Külvisoovitus:</strong> Ära istuta avamaale soojust armastavaid taimi (tomat, kurk, kõrvits,
+                basiilik, paprika). Sulge kindlasti kasvuhoone uksed ja luugid õhtul ning kata tärkavad varajased
+                peenrad kahekordse kattelooriga.
               </div>
             </div>
           </div>
@@ -380,10 +438,12 @@ export const CalendarScreen: React.FC = () => {
             <AlertTriangle size={20} color="var(--kulv-accent, #D97A3D)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-accent, #D97A3D)' }}>
-                ⚠️ Hallaoht maapinnal: öised miinimumid langevad +1..+3°C juurde ({lightFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
+                ⚠️ Hallaoht maapinnal: öised miinimumid langevad +1..+3°C juurde (
+                {lightFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
               </div>
               <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', marginTop: '4px', lineHeight: 1.4 }}>
-                <strong>Külvisoovitus:</strong> Maapinna lähedal võib tekkida kerge halla. Külmakindlad kultuurid (hernes, porgand, redis, lehtpeet) saavad hakkama; õrnemad istikud vajavad katteloori kaitset.
+                <strong>Külvisoovitus:</strong> Maapinna lähedal võib tekkida kerge halla. Külmakindlad kultuurid
+                (hernes, porgand, redis, lehtpeet) saavad hakkama; õrnemad istikud vajavad katteloori kaitset.
               </div>
             </div>
           </div>
@@ -405,7 +465,8 @@ export const CalendarScreen: React.FC = () => {
                 🌱 Soodne öökülmavaba nädal (madalaim öö +{lowestNightTemp}°C, sademeid {totalRain7Days.toFixed(1)}mm)
               </div>
               <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', marginTop: '4px', lineHeight: 1.4 }}>
-                <strong>Külvisoovitus:</strong> Järgmised 7 ööd püsivad soodsalt soojad. Hea aeg taimede karastamiseks õues ja jahedamate kultuuride avamaale viimiseks.
+                <strong>Külvisoovitus:</strong> Järgmised 7 ööd püsivad soodsalt soojad. Hea aeg taimede karastamiseks
+                õues ja jahedamate kultuuride avamaale viimiseks.
               </div>
             </div>
           </div>
@@ -427,20 +488,28 @@ export const CalendarScreen: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <span
+              style={{
+                fontWeight: 700,
+                color: 'var(--kulv-primary, #4F6B45)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
               <Sparkles size={13} /> 7p soojussumma (GDD):
             </span>
             <span>
               Külmakindlad (baas 5°C): <strong>+{gddEvaluation.gdd5} °d</strong>
             </span>
-            <span aria-hidden="true" style={{ color: 'var(--kulv-border, #C9BFA9)' }}>·</span>
+            <span aria-hidden="true" style={{ color: 'var(--kulv-border, #C9BFA9)' }}>
+              ·
+            </span>
             <span>
               Soojanõudlikud (baas 10°C): <strong>+{gddEvaluation.gdd10} °d</strong>
             </span>
           </div>
-          <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
-            {gddEvaluation.summary}
-          </span>
+          <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>{gddEvaluation.summary}</span>
         </div>
 
         {/* 7-DAY HORIZONTAL FORECAST STRIP */}
@@ -467,17 +536,17 @@ export const CalendarScreen: React.FC = () => {
                       border: isSelected
                         ? '2px solid var(--kulv-primary, #4F6B45)'
                         : isFreezing
-                        ? '1px solid var(--kulv-danger, #B85C33)'
-                        : isChilly
-                        ? '1px solid var(--kulv-accent, #D97A3D)'
-                        : '1px solid var(--kulv-border, #C9BFA9)',
+                          ? '1px solid var(--kulv-danger, #B85C33)'
+                          : isChilly
+                            ? '1px solid var(--kulv-accent, #D97A3D)'
+                            : '1px solid var(--kulv-border, #C9BFA9)',
                       backgroundColor: isSelected
                         ? 'var(--kulv-surface-muted, #EFE6D4)'
                         : isFreezing
-                        ? 'rgba(184, 92, 51, 0.08)'
-                        : isChilly
-                        ? 'rgba(217, 122, 61, 0.06)'
-                        : 'var(--kulv-surface, #FFFDF8)',
+                          ? 'rgba(184, 92, 51, 0.08)'
+                          : isChilly
+                            ? 'rgba(217, 122, 61, 0.06)'
+                            : 'var(--kulv-surface, #FFFDF8)',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
                       textAlign: 'center'
@@ -501,8 +570,8 @@ export const CalendarScreen: React.FC = () => {
                           color: isFreezing
                             ? 'var(--kulv-danger, #B85C33)'
                             : isChilly
-                            ? 'var(--kulv-accent, #D97A3D)'
-                            : 'var(--kulv-text-muted, #5F675A)'
+                              ? 'var(--kulv-accent, #D97A3D)'
+                              : 'var(--kulv-text-muted, #5F675A)'
                         }}
                       >
                         {day.tempMin}°
@@ -519,8 +588,8 @@ export const CalendarScreen: React.FC = () => {
                         backgroundColor: isFreezing
                           ? 'var(--kulv-danger, #B85C33)'
                           : isChilly
-                          ? 'var(--kulv-accent, #D97A3D)'
-                          : 'rgba(79, 107, 69, 0.15)',
+                            ? 'var(--kulv-accent, #D97A3D)'
+                            : 'rgba(79, 107, 69, 0.15)',
                         color: isFreezing || isChilly ? 'white' : 'var(--kulv-primary, #4F6B45)'
                       }}
                     >
@@ -566,29 +635,44 @@ export const CalendarScreen: React.FC = () => {
                     {selectedDay.weatherDescription}
                   </span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px', fontSize: '12px' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}
+                >
                   <div>
-                    🌡️ <strong>Temperatuur:</strong> Päeval kuni {selectedDay.tempMax}°C · Öösel min {selectedDay.tempMin}°C
+                    🌡️ <strong>Temperatuur:</strong> Päeval kuni {selectedDay.tempMax}°C · Öösel min{' '}
+                    {selectedDay.tempMin}°C
                     {selectedDay.apparentTempMin != null && ` (tajutav öösel ${selectedDay.apparentTempMin}°C)`}
                   </div>
                   <div>
                     💧 <strong>Sademed:</strong> {selectedDay.precipitationSum} mm
-                    {selectedDay.precipitationProbability ? ` (${selectedDay.precipitationProbability}% tõenäosus)` : ''}
+                    {selectedDay.precipitationProbability
+                      ? ` (${selectedDay.precipitationProbability}% tõenäosus)`
+                      : ''}
                   </div>
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', marginTop: '2px', lineHeight: 1.4 }}>
+                <div
+                  style={{ fontSize: '12px', color: 'var(--kulv-text, #2A2E24)', marginTop: '2px', lineHeight: 1.4 }}
+                >
                   <strong>Aiatööde soovitus:</strong>{' '}
                   {selectedDay.tempMin <= 0 ? (
                     <span style={{ color: 'var(--kulv-danger, #B85C33)' }}>
-                      Öökülmaoht! Ära istuta välja soojanõudlikke taimi. Kata avamaa varajased saagid ja sulge kasvuhoone uksed.
+                      Öökülmaoht! Ära istuta välja soojanõudlikke taimi. Kata avamaa varajased saagid ja sulge
+                      kasvuhoone uksed.
                     </span>
                   ) : selectedDay.tempMin <= 3 ? (
                     <span style={{ color: 'var(--kulv-accent, #D97A3D)' }}>
-                      Jahe öö ja hallaoht maapinnal. Külmakindlad juurikad ja herned sobivad külvamiseks, õrnad istikud kata kattelooriga.
+                      Jahe öö ja hallaoht maapinnal. Külmakindlad juurikad ja herned sobivad külvamiseks, õrnad istikud
+                      kata kattelooriga.
                     </span>
                   ) : selectedDay.precipitationSum > 5 ? (
                     <span style={{ color: '#176B87' }}>
-                      Märgatav vihmasadu. Hea päev vihmavee kogumiseks ja toas ettekasvatuseks; peenramuld võib olla töötlemiseks liiga märg.
+                      Märgatav vihmasadu. Hea päev vihmavee kogumiseks ja toas ettekasvatuseks; peenramuld võib olla
+                      töötlemiseks liiga märg.
                     </span>
                   ) : (
                     <span style={{ color: 'var(--kulv-primary, #4F6B45)' }}>
@@ -620,7 +704,13 @@ export const CalendarScreen: React.FC = () => {
         <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: '340px' }}>
           <Search
             size={16}
-            style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--kulv-text-muted, #5F675A)' }}
+            style={{
+              position: 'absolute',
+              left: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'var(--kulv-text-muted, #5F675A)'
+            }}
           />
           <input
             type="text"
@@ -658,12 +748,12 @@ export const CalendarScreen: React.FC = () => {
                 fontSize: '11px',
                 fontWeight: 600,
                 cursor: 'pointer',
-                border: selectedFrostFilter === f.id
-                  ? '1px solid var(--kulv-primary, #4F6B45)'
-                  : '1px solid var(--kulv-border, #C9BFA9)',
-                backgroundColor: selectedFrostFilter === f.id
-                  ? 'var(--kulv-primary, #4F6B45)'
-                  : 'var(--kulv-surface-muted, #EFE6D4)',
+                border:
+                  selectedFrostFilter === f.id
+                    ? '1px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
+                backgroundColor:
+                  selectedFrostFilter === f.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                 color: selectedFrostFilter === f.id ? 'white' : 'var(--kulv-text, #2A2E24)',
                 whiteSpace: 'nowrap'
               }}
@@ -698,23 +788,49 @@ export const CalendarScreen: React.FC = () => {
             <span>Kasvuhoone</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 600 }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
+            <div
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '3px',
+                backgroundColor: 'var(--kulv-primary, #4F6B45)'
+              }}
+            />
             <span>Avamaale istutus</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 600 }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--kulv-accent, #D97A3D)' }} />
+            <div
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '3px',
+                backgroundColor: 'var(--kulv-accent, #D97A3D)'
+              }}
+            />
             <span>Saagikoristus</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '11px',
+            color: 'var(--kulv-text-muted, #5F675A)'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Snowflake size={13} color="#2A6F97" />
-            <span>Öökülmavaba: <strong>{settings.springFrostDate}</strong></span>
+            <span>
+              Öökülmavaba: <strong>{settings.springFrostDate}</strong>
+            </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Snowflake size={13} color="#D97A3D" />
-            <span>Sügiskülm: <strong>{settings.autumnFrostDate}</strong></span>
+            <span>
+              Sügiskülm: <strong>{settings.autumnFrostDate}</strong>
+            </span>
           </div>
         </div>
       </div>
@@ -899,14 +1015,14 @@ export const CalendarScreen: React.FC = () => {
                             backgroundColor: hasSevereFrost
                               ? 'rgba(184, 92, 51, 0.22)'
                               : hasLightFrost
-                              ? 'rgba(217, 122, 61, 0.2)'
-                              : 'rgba(79, 107, 69, 0.18)',
+                                ? 'rgba(217, 122, 61, 0.2)'
+                                : 'rgba(79, 107, 69, 0.18)',
                             borderLeft: `2px solid ${
                               hasSevereFrost
                                 ? 'var(--kulv-danger, #B85C33)'
                                 : hasLightFrost
-                                ? 'var(--kulv-accent, #D97A3D)'
-                                : 'var(--kulv-primary, #4F6B45)'
+                                  ? 'var(--kulv-accent, #D97A3D)'
+                                  : 'var(--kulv-primary, #4F6B45)'
                             }`,
                             zIndex: 8,
                             pointerEvents: 'none'
@@ -1002,7 +1118,9 @@ export const CalendarScreen: React.FC = () => {
                 cursor: 'pointer'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '24px' }}>{timeline.plant.icon}</span>
                   <div>
@@ -1016,15 +1134,42 @@ export const CalendarScreen: React.FC = () => {
                     </div>
                     <div style={{ marginTop: '2px' }}>
                       {isPlantColdHardy(timeline.plant) ? (
-                        <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: 'rgba(79, 107, 69, 0.15)', color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            backgroundColor: 'rgba(79, 107, 69, 0.15)',
+                            color: 'var(--kulv-primary, #4F6B45)',
+                            fontWeight: 600
+                          }}
+                        >
                           🟢 Külmakindel (ohutu jahedaga)
                         </span>
                       ) : isPlantWarmDemanding(timeline.plant) ? (
-                        <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: hasSevereFrost ? 'rgba(184, 92, 51, 0.15)' : 'rgba(217, 122, 61, 0.15)', color: hasSevereFrost ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-accent, #D97A3D)', fontWeight: 600 }}>
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            backgroundColor: hasSevereFrost ? 'rgba(184, 92, 51, 0.15)' : 'rgba(217, 122, 61, 0.15)',
+                            color: hasSevereFrost ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-accent, #D97A3D)',
+                            fontWeight: 600
+                          }}
+                        >
                           {hasSevereFrost ? '❄️ Öökülmaoht! Hoia toas/kasvuhoones' : '⚠️ Soojanõudlik kultuur'}
                         </span>
                       ) : (
-                        <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '4px', backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 600 }}>
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                            color: 'var(--kulv-text-muted, #5F675A)',
+                            fontWeight: 600
+                          }}
+                        >
                           Mõõdukas külmataluvus
                         </span>
                       )}
@@ -1051,7 +1196,9 @@ export const CalendarScreen: React.FC = () => {
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Avamaale istutus:</span>
-                  <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>{timeline.outdoorPlantStart}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>
+                    {timeline.outdoorPlantStart}
+                  </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Oodatav saak:</span>
@@ -1064,10 +1211,7 @@ export const CalendarScreen: React.FC = () => {
       )}
 
       {/* Plant Details Dialog */}
-      <PlantDetailDialog
-        plant={inspectingPlant}
-        onDismiss={() => setInspectingPlant(null)}
-      />
+      <PlantDetailDialog plant={inspectingPlant} onDismiss={() => setInspectingPlant(null)} />
 
       {/* Seasonal Sowing Print & Export Dialog */}
       <SeasonalSowingPrintDialog

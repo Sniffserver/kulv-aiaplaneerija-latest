@@ -22,7 +22,26 @@ export default defineConfig({
     }
   },
   test: {
-    include: ['src/**/*.{test,spec}.{ts,tsx}']
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    environment: 'jsdom',
+    globals: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      include: ['src/logic/**/*.ts', 'src/services/**/*.ts', 'src/stores/**/*.ts'],
+      exclude: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.d.ts',
+        'src/main.tsx'
+      ],
+      thresholds: {
+        statements: 70,
+        branches: 55,
+        functions: 65,
+        lines: 70
+      }
+    }
   }
 });
 

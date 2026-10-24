@@ -24,9 +24,7 @@ export type ReplaceError =
   | { type: 'STORAGE_FAILED'; message: string; details?: unknown }
   | { type: 'CONCURRENCY_CONFLICT'; message: string };
 
-export type ReplaceGardenStateResult =
-  | { ok: true; snapshot: GardenStateSnapshot }
-  | { ok: false; error: ReplaceError };
+export type ReplaceGardenStateResult = { ok: true; snapshot: GardenStateSnapshot } | { ok: false; error: ReplaceError };
 
 // In-memory mutex to prevent concurrent replacement race conditions
 let isReplacing = false;
@@ -131,8 +129,6 @@ export async function replaceGardenState(
       };
     }
 
-
-
     // 4. Construct complete validated snapshot
     const customPlants = Array.isArray(data.customPlants) ? data.customPlants : [];
     const snapshot: GardenStateSnapshot = {
@@ -204,7 +200,6 @@ export async function replaceGardenState(
       ok: true,
       snapshot
     };
-
   } finally {
     isReplacing = false;
   }
@@ -227,5 +222,3 @@ export function subscribeGardenReplaced(
     gardenEventTarget.removeEventListener('garden:replaced', handler);
   };
 }
-
-

@@ -19,7 +19,11 @@ export interface IrrigationAdvice {
 }
 
 export const SOIL_CHARACTERISTICS: Record<SoilType, { name: string; retention: string; dryingSpeed: string }> = {
-  sandy: { name: 'Liivmuld', retention: 'Madal veemahutavus', dryingSpeed: 'Kuivab 1-2 päevaga, vajab sagedast kastmist' },
+  sandy: {
+    name: 'Liivmuld',
+    retention: 'Madal veemahutavus',
+    dryingSpeed: 'Kuivab 1-2 päevaga, vajab sagedast kastmist'
+  },
   loam: { name: 'Aia- ja kompostmuld', retention: 'Optimaalne veemahutavus', dryingSpeed: 'Hoiab niiskust 3-4 päeva' },
   clay: { name: 'Savimuld', retention: 'Kõrge veemahutavus', dryingSpeed: 'Kuivab aeglaselt, oht liigniiskusele' }
 };
@@ -52,7 +56,10 @@ export const IrrigationAdvisor = {
 
     const highPriorityCrops: string[] = [];
     catalogPlants.forEach((p) => {
-      if (plantedIds.has(p.id) && (p.waterNeed === 'high' || p.id.includes('tomat') || p.id.includes('kurk') || p.id.includes('kõrvits'))) {
+      if (
+        plantedIds.has(p.id) &&
+        (p.waterNeed === 'high' || p.id.includes('tomat') || p.id.includes('kurk') || p.id.includes('kõrvits'))
+      ) {
         highPriorityCrops.push(p.name);
       }
     });

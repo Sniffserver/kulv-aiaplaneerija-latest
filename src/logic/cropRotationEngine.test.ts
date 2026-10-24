@@ -123,9 +123,7 @@ describe('CropRotationEngine Core & Helpers', () => {
   });
 
   it('detects severe consecutive planting violations (Solanaceae after Solanaceae)', () => {
-    const past = [
-      { year: 2025, plantId: 'kartul', plantName: 'Kartul', family: 'Maavitsalised (Solanaceae)' }
-    ];
+    const past = [{ year: 2025, plantId: 'kartul', plantName: 'Kartul', family: 'Maavitsalised (Solanaceae)' }];
     const warnings = CropRotationEngine.evaluateRotation(mockTomato, past, 2026);
     expect(warnings.length).toBeGreaterThan(0);
     expect(warnings[0].severity).toBe('danger');
@@ -134,9 +132,7 @@ describe('CropRotationEngine Core & Helpers', () => {
   });
 
   it('detects clubroot risk for consecutive Brassicaceae plantings', () => {
-    const past = [
-      { year: 2025, plantId: 'kaalikas', plantName: 'Kaalikas', family: 'Ristõielised (Brassicaceae)' }
-    ];
+    const past = [{ year: 2025, plantId: 'kaalikas', plantName: 'Kaalikas', family: 'Ristõielised (Brassicaceae)' }];
     const warnings = CropRotationEngine.evaluateRotation(mockCabbage, past, 2026);
     expect(warnings.length).toBeGreaterThan(0);
     expect(warnings[0].severity).toBe('danger');
@@ -144,9 +140,7 @@ describe('CropRotationEngine Core & Helpers', () => {
   });
 
   it('recognizes beneficial succession when predecessor is Fabaceae (nitrogen fixer)', () => {
-    const past = [
-      { year: 2025, plantId: 'hernes', plantName: 'Aedhernes', family: 'Liblikõielised (Fabaceae)' }
-    ];
+    const past = [{ year: 2025, plantId: 'hernes', plantName: 'Aedhernes', family: 'Liblikõielised (Fabaceae)' }];
     const warnings = CropRotationEngine.evaluateRotation(mockTomato, past, 2026);
     expect(warnings.some((w) => w.severity === 'good')).toBe(true);
   });
@@ -451,9 +445,7 @@ describe('10-Domain Plant Encyclopedia Data Integrity (Anti-Myth Protocol)', () 
       expect(entry.botany.recommendedNordicVarieties.length).toBeGreaterThan(0);
 
       // 10. Usaldusväärsus
-      expect(['peer_reviewed', 'institutional_ext', 'empirical_hort']).toContain(
-        entry.reliability.evidenceTier
-      );
+      expect(['peer_reviewed', 'institutional_ext', 'empirical_hort']).toContain(entry.reliability.evidenceTier);
       expect(entry.reliability.primarySources.length).toBeGreaterThan(0);
       entry.reliability.primarySources.forEach((s) => {
         expect(s.source).toBeTruthy();

@@ -3,18 +3,7 @@ import { useYardStore } from '../../stores/yardStore';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
 import { useGarden } from '../../context/GardenContext';
 import { BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
-import {
-  Printer,
-  X,
-  MapPin,
-  Calendar,
-  Compass,
-  FileText,
-  CheckCircle2,
-  Info,
-  ShieldCheck,
-  Leaf
-} from 'lucide-react';
+import { Printer, X, MapPin, Calendar, Compass, FileText, CheckCircle2, Info, ShieldCheck, Leaf } from 'lucide-react';
 
 interface GardenBinderPrintDialogProps {
   isOpen: boolean;
@@ -39,7 +28,7 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
   };
 
   // Calculate total cultivated bed area
-  const totalCultivatedAreaM2 = beds.reduce((acc, b) => acc + (b.width * b.length), 0);
+  const totalCultivatedAreaM2 = beds.reduce((acc, b) => acc + b.width * b.length, 0);
   const activeEntities = (plan.entities || []).filter((e) => !e.deletedAt);
 
   // Group succession slots by bed
@@ -252,7 +241,15 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
               </h1>
               <div style={{ fontSize: '13px', color: '#555C4F', marginTop: '6px' }}>
                 Dokument koostatud: <strong>{printDate}</strong> · Piirkond:{' '}
-                <strong>{selectedRegion === 'north_coast' ? 'Põhjarannik' : selectedRegion === 'islands' ? 'Saared' : selectedRegion === 'southeast' ? 'Kagu-Eesti' : 'Kesk-Eesti'}</strong>
+                <strong>
+                  {selectedRegion === 'north_coast'
+                    ? 'Põhjarannik'
+                    : selectedRegion === 'islands'
+                      ? 'Saared'
+                      : selectedRegion === 'southeast'
+                        ? 'Kagu-Eesti'
+                        : 'Kesk-Eesti'}
+                </strong>
               </div>
             </div>
 
@@ -282,7 +279,9 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                   Ametlik Pindala
                 </div>
                 <div style={{ fontSize: '14px', fontWeight: 800, color: '#2B3A26' }}>
-                  {plan.cadastralAreaM2 ? `${plan.cadastralAreaM2.toLocaleString('et-EE')} m²` : `${plan.widthM * plan.lengthM} m²`}
+                  {plan.cadastralAreaM2
+                    ? `${plan.cadastralAreaM2.toLocaleString('et-EE')} m²`
+                    : `${plan.widthM * plan.lengthM} m²`}
                 </div>
               </div>
               <div>
@@ -320,9 +319,7 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                 <span style={{ fontSize: '11px', fontWeight: 700, color: '#555C4F' }}>
                   KRUNDIPLAAN & OBJEKTIDE PAIGUTUS
                 </span>
-                <span style={{ fontSize: '11px', color: '#555C4F' }}>
-                  Põhi: {plan.northAngleDeg || 0}°
-                </span>
+                <span style={{ fontSize: '11px', color: '#555C4F' }}>Põhi: {plan.northAngleDeg || 0}°</span>
               </div>
 
               <svg
@@ -392,10 +389,21 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
           {/* ================= PAGE 2: BED INVENTORY & SUCCESSION ================= */}
           <section className="binder-page" style={{ marginBottom: '40px' }}>
             <div style={{ borderBottom: '2px solid #2B3A26', paddingBottom: '12px', marginBottom: '20px' }}>
-              <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#4F6B45' }}>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#4F6B45'
+                }}
+              >
                 LISA 1 · TÄIELIK INVENTUUR
               </div>
-              <h2 className="font-serif-display" style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}>
+              <h2
+                className="font-serif-display"
+                style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}
+              >
                 Peenarde detailpass ja järjestikülvid ({selectedYear || 2026})
               </h2>
             </div>
@@ -411,7 +419,15 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                     padding: '12px 16px'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid #EFEAE0', paddingBottom: '6px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      borderBottom: '1px solid #EFEAE0',
+                      paddingBottom: '6px'
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ fontSize: '15px' }}>
                         {bed.type === 'greenhouse' ? '🏡' : bed.type === 'pot' ? '🪴' : '🪵'}
@@ -443,7 +459,11 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                           return (
                             <tr key={s.id} style={{ borderBottom: '1px dotted #EAE5D9' }}>
                               <td style={{ padding: '4px 6px', fontWeight: 600 }}>
-                                {s.seasonSlot === 'early_spring' ? 'Kevad' : s.seasonSlot === 'autumn_late' ? 'Sügis' : 'Põhikultuur'}
+                                {s.seasonSlot === 'early_spring'
+                                  ? 'Kevad'
+                                  : s.seasonSlot === 'autumn_late'
+                                    ? 'Sügis'
+                                    : 'Põhikultuur'}
                               </td>
                               <td style={{ padding: '4px 6px' }}>
                                 <strong>{s.plantName}</strong> {s.variety && `(${s.variety})`}
@@ -471,17 +491,45 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
           {/* ================= PAGE 3: COMPANION PLANTING MATRIX ================= */}
           <section className="binder-page" style={{ marginBottom: '40px' }}>
             <div style={{ borderBottom: '2px solid #2B3A26', paddingBottom: '12px', marginBottom: '20px' }}>
-              <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#4F6B45' }}>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#4F6B45'
+                }}
+              >
                 LISA 2 · BIOLOOGILINE KOOSTÖÖ
               </div>
-              <h2 className="font-serif-display" style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}>
+              <h2
+                className="font-serif-display"
+                style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}
+              >
                 Seltsilistaimede maatriks ja viljavahelduse reeglid
               </h2>
             </div>
 
-            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse', backgroundColor: '#FFFFFF', border: '1px solid #D5CEBE', borderRadius: '8px', overflow: 'hidden' }}>
+            <table
+              style={{
+                width: '100%',
+                fontSize: '12px',
+                borderCollapse: 'collapse',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #D5CEBE',
+                borderRadius: '8px',
+                overflow: 'hidden'
+              }}
+            >
               <thead>
-                <tr style={{ backgroundColor: '#F3EFE6', color: '#2B3A26', textAlign: 'left', borderBottom: '1.5px solid #C9BFA9' }}>
+                <tr
+                  style={{
+                    backgroundColor: '#F3EFE6',
+                    color: '#2B3A26',
+                    textAlign: 'left',
+                    borderBottom: '1.5px solid #C9BFA9'
+                  }}
+                >
                   <th style={{ padding: '8px 10px' }}>Taim / Kultuur</th>
                   <th style={{ padding: '8px 10px' }}>Sugukond</th>
                   <th style={{ padding: '8px 10px', color: '#276749' }}>Head seltsilised (Soodustavad kasvu)</th>
@@ -495,11 +543,11 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                       <td style={{ padding: '8px 10px', fontWeight: 700 }}>
                         {p.icon || '🌱'} {p.name}
                       </td>
-                      <td style={{ padding: '8px 10px', color: '#555C4F' }}>
-                        {p.family}
-                      </td>
+                      <td style={{ padding: '8px 10px', color: '#555C4F' }}>{p.family}</td>
                       <td style={{ padding: '8px 10px', color: '#276749' }}>
-                        {p.companionsGood && p.companionsGood.length > 0 ? p.companionsGood.join(', ') : 'Sobib enamikuga'}
+                        {p.companionsGood && p.companionsGood.length > 0
+                          ? p.companionsGood.join(', ')
+                          : 'Sobib enamikuga'}
                       </td>
                       <td style={{ padding: '8px 10px', color: '#B4233A' }}>
                         {p.companionsBad && p.companionsBad.length > 0 ? p.companionsBad.join(', ') : '—'}
@@ -527,8 +575,10 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
               </strong>
               <span>
                 1. Ära istuta maavitsalisi (tomat, kartul, paprika) samale peenrale varem kui 3-4 aasta pärast. <br />
-                2. Ristõieliste (kapsad, redis, rukola) vaheaeg peab nuutrite vältimiseks olema vähemalt 4 aastat. <br />
-                3. Liblikõielised (hernes, aeduba) rikastavad mulda loodusliku lämmastikuga enne toitainerikkaid kultuure.
+                2. Ristõieliste (kapsad, redis, rukola) vaheaeg peab nuutrite vältimiseks olema vähemalt 4 aastat.{' '}
+                <br />
+                3. Liblikõielised (hernes, aeduba) rikastavad mulda loodusliku lämmastikuga enne toitainerikkaid
+                kultuure.
               </span>
             </div>
           </section>
@@ -536,22 +586,51 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
           {/* ================= PAGE 4: SOWING & HARVEST CALENDAR ================= */}
           <section className="binder-page">
             <div style={{ borderBottom: '2px solid #2B3A26', paddingBottom: '12px', marginBottom: '20px' }}>
-              <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#4F6B45' }}>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#4F6B45'
+                }}
+              >
                 LISA 3 · TEGEVUSKAVA
               </div>
-              <h2 className="font-serif-display" style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}>
+              <h2
+                className="font-serif-display"
+                style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}
+              >
                 Hooajaline külvi- ja koristuskalender
               </h2>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
               {[
-                { month: 'Märts', task: 'Külva toas ette: tomat, paprika, tšilli, porrulauk. Kontrolli seemnete idanevust.' },
-                { month: 'Aprill', task: 'Külva kasvuhoonesse: redis, spinat, till, salat. Pane kartulid valguse kätte idanema.' },
-                { month: 'Mai', task: 'Külva avamaale: porgand, peet, hernes, sibul. Mai lõpus istuta karastatud taimed kasvuhoonesse.' },
-                { month: 'Juuni', task: 'Pärast öökülmaohu möödumist (ca 10. juuni) istuta avamaale kõrvitsad, kurgid ja oad. Rohi ja multši.' },
-                { month: 'Juuli', task: 'Varajase saagi koristus (küüslauk, varajane kartul). Külva teine ring: redis, aasia salatid, sügisspinat.' },
-                { month: 'August - September', task: 'Põhisaagi koristus (tomat, sibul, porgand, peet). Külva tühjenevatele peenardele haljasväetis (keerispea, rukis).' }
+                {
+                  month: 'Märts',
+                  task: 'Külva toas ette: tomat, paprika, tšilli, porrulauk. Kontrolli seemnete idanevust.'
+                },
+                {
+                  month: 'Aprill',
+                  task: 'Külva kasvuhoonesse: redis, spinat, till, salat. Pane kartulid valguse kätte idanema.'
+                },
+                {
+                  month: 'Mai',
+                  task: 'Külva avamaale: porgand, peet, hernes, sibul. Mai lõpus istuta karastatud taimed kasvuhoonesse.'
+                },
+                {
+                  month: 'Juuni',
+                  task: 'Pärast öökülmaohu möödumist (ca 10. juuni) istuta avamaale kõrvitsad, kurgid ja oad. Rohi ja multši.'
+                },
+                {
+                  month: 'Juuli',
+                  task: 'Varajase saagi koristus (küüslauk, varajane kartul). Külva teine ring: redis, aasia salatid, sügisspinat.'
+                },
+                {
+                  month: 'August - September',
+                  task: 'Põhisaagi koristus (tomat, sibul, porgand, peet). Külva tühjenevatele peenardele haljasväetis (keerispea, rukis).'
+                }
               ].map((m) => (
                 <div
                   key={m.month}

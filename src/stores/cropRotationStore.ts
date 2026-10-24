@@ -1,11 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  BedSuccessionSlot,
-  BedYearHistoryRecord,
-  EstonianRegionId,
-  CropProtectionType
-} from '../types/rotation';
+import { BedSuccessionSlot, BedYearHistoryRecord, EstonianRegionId, CropProtectionType } from '../types/rotation';
 
 export interface CropRotationState {
   selectedYear: number;
@@ -248,9 +243,7 @@ export const useCropRotationStore = create<CropRotationState>()(
 
       setBedYearHistory: (bedId, year, plantings) => {
         set((state) => {
-          const filtered = state.historyRecords.filter(
-            (r) => !(r.bedId === bedId && r.year === year)
-          );
+          const filtered = state.historyRecords.filter((r) => !(r.bedId === bedId && r.year === year));
           return {
             historyRecords: [...filtered, { bedId, year, plantings }]
           };

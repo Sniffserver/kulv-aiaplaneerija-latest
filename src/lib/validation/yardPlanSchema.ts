@@ -202,8 +202,7 @@ function segmentsIntersect(a1: Point2D, a2: Point2D, b1: Point2D, b2: Point2D): 
   const d3 = ccw(a1, a2, b1);
   const d4 = ccw(a1, a2, b2);
 
-  if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
-      ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+  if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
     return true;
   }
   return false;

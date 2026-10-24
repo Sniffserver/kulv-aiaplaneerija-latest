@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ReferenceLine
-} from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
 import { WeatherInfo } from '../types';
 import { TrendingUp, AlertTriangle, ShieldCheck, Thermometer } from 'lucide-react';
 
@@ -58,14 +49,12 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px' }}>
             <span>{data.icon}</span>
-            <span>{data.name} ({data.date})</span>
+            <span>
+              {data.name} ({data.date})
+            </span>
           </div>
-          <div style={{ color: 'var(--kulv-accent, #D97A3D)', fontWeight: 600 }}>
-            Päevane maks: {data.maks}°C
-          </div>
-          <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>
-            Öine miinimum: {data.min}°C
-          </div>
+          <div style={{ color: 'var(--kulv-accent, #D97A3D)', fontWeight: 600 }}>Päevane maks: {data.maks}°C</div>
+          <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>Öine miinimum: {data.min}°C</div>
           {data.sademed > 0 && (
             <div style={{ color: 'var(--kulv-info, #4F6B45)', fontSize: '11px', marginTop: '2px' }}>
               Sademed: {data.sademed} mm
@@ -153,7 +142,15 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '4px', backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)', padding: '2px', borderRadius: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '4px',
+            backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+            padding: '2px',
+            borderRadius: '8px'
+          }}
+        >
           <button
             type="button"
             onClick={() => setChartMode('daily')}
@@ -219,7 +216,13 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
                 y={4}
                 stroke="#B4233A"
                 strokeDasharray="4 4"
-                label={{ value: '+4°C Öökülmapiir', position: 'insideTopRight', fill: '#B4233A', fontSize: 10, fontWeight: 700 }}
+                label={{
+                  value: '+4°C Öökülmapiir',
+                  position: 'insideTopRight',
+                  fill: '#B4233A',
+                  fontSize: 10,
+                  fontWeight: 700
+                }}
               />
               <Area
                 type="monotone"
@@ -260,7 +263,13 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
                 y={4}
                 stroke="#B4233A"
                 strokeDasharray="4 4"
-                label={{ value: '+4°C Külm', position: 'insideTopRight', fill: '#B4233A', fontSize: 10, fontWeight: 700 }}
+                label={{
+                  value: '+4°C Külm',
+                  position: 'insideTopRight',
+                  fill: '#B4233A',
+                  fontSize: 10,
+                  fontWeight: 700
+                }}
               />
               <Area
                 type="monotone"
@@ -290,11 +299,25 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
       >
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--kulv-accent, #D97A3D)' }} />
+            <div
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--kulv-accent, #D97A3D)'
+              }}
+            />
             <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Päevane tipp ({max5DayTemp}°C)</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
+            <div
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--kulv-primary, #4F6B45)'
+              }}
+            />
             <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Öine miinimum ({min5DayTemp}°C)</span>
           </div>
         </div>

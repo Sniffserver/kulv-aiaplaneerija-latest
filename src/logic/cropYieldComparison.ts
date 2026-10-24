@@ -114,12 +114,8 @@ export function calculateCropYieldComparison(
   // Sort by current year yield descending
   rows.sort((a, b) => b.currentYearKg - a.currentYearKg);
 
-  const totalCurrentKg = Math.round(
-    Array.from(currentCropMap.values()).reduce((sum, v) => sum + v, 0) * 100
-  ) / 100;
-  const totalCompareKg = Math.round(
-    Array.from(compareCropMap.values()).reduce((sum, v) => sum + v, 0) * 100
-  ) / 100;
+  const totalCurrentKg = Math.round(Array.from(currentCropMap.values()).reduce((sum, v) => sum + v, 0) * 100) / 100;
+  const totalCompareKg = Math.round(Array.from(compareCropMap.values()).reduce((sum, v) => sum + v, 0) * 100) / 100;
 
   return {
     currentYear,

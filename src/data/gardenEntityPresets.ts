@@ -440,8 +440,10 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
     id: 'preset_nordic_orchard',
     name: 'Klassikaline Eramaja Viljaaed',
     nameEn: 'Nordic Family Orchard & Garden',
-    description: 'Elumaja põhjaküljel, 3 päikeselist puitkõrgpeenart, 2.5x4.5m kasvuhoone, viljapuu- ja marja-aed ning kompostikast.',
-    descriptionEn: 'House on northern boundary, 3 sunny raised beds, 2.5x4.5m greenhouse, fruit orchard, berry bushes, and compost.',
+    description:
+      'Elumaja põhjaküljel, 3 päikeselist puitkõrgpeenart, 2.5x4.5m kasvuhoone, viljapuu- ja marja-aed ning kompostikast.',
+    descriptionEn:
+      'House on northern boundary, 3 sunny raised beds, 2.5x4.5m greenhouse, fruit orchard, berry bushes, and compost.',
     widthM: 24,
     lengthM: 32,
     northAngleDeg: 0,
@@ -523,9 +525,39 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'greenhouse',
           calculatedSunHours: 8.5,
           plantings: [
-            { id: 'no_p1', bedId: 'no_greenhouse', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'no_p2', bedId: 'no_greenhouse', plantId: 'kurk', plantName: 'Harilik kurk', plantIcon: '🥒', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'no_p3', bedId: 'no_greenhouse', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌱', gridX: 0, gridY: 1, year: 2026, dateAdded: '2026-05-15' }
+            {
+              id: 'no_p1',
+              bedId: 'no_greenhouse',
+              plantId: 'tomat',
+              plantName: 'Tomat',
+              plantIcon: '🍅',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'no_p2',
+              bedId: 'no_greenhouse',
+              plantId: 'kurk',
+              plantName: 'Harilik kurk',
+              plantIcon: '🥒',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'no_p3',
+              bedId: 'no_greenhouse',
+              plantId: 'basiilik',
+              plantName: 'Basiilik',
+              plantIcon: '🌱',
+              gridX: 0,
+              gridY: 1,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            }
           ]
         }
       },
@@ -557,9 +589,39 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.0,
           plantings: [
-            { id: 'no_b1_p1', bedId: 'no_bed_1', plantId: 'porgand', plantName: 'Aedporgand', plantIcon: '🥕', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'no_b1_p2', bedId: 'no_bed_1', plantId: 'sibul', plantName: 'Mugulsibul', plantIcon: '🧅', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'no_b1_p3', bedId: 'no_bed_1', plantId: 'peet', plantName: 'Aedpeet', plantIcon: '🟣', gridX: 2, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'no_b1_p1',
+              bedId: 'no_bed_1',
+              plantId: 'porgand',
+              plantName: 'Aedporgand',
+              plantIcon: '🥕',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'no_b1_p2',
+              bedId: 'no_bed_1',
+              plantId: 'sibul',
+              plantName: 'Mugulsibul',
+              plantIcon: '🧅',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'no_b1_p3',
+              bedId: 'no_bed_1',
+              plantId: 'peet',
+              plantName: 'Aedpeet',
+              plantIcon: '🟣',
+              gridX: 2,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -591,9 +653,39 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.0,
           plantings: [
-            { id: 'no_b2_p1', bedId: 'no_bed_2', plantId: 'salat', plantName: 'Lehtsalat', plantIcon: '🥬', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'no_b2_p2', bedId: 'no_bed_2', plantId: 'hernes', plantName: 'Aedhernes', plantIcon: '🫛', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'no_b2_p3', bedId: 'no_bed_2', plantId: 'reddis', plantName: 'Aedrõigas', plantIcon: '🔴', gridX: 2, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'no_b2_p1',
+              bedId: 'no_bed_2',
+              plantId: 'salat',
+              plantName: 'Lehtsalat',
+              plantIcon: '🥬',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'no_b2_p2',
+              bedId: 'no_bed_2',
+              plantId: 'hernes',
+              plantName: 'Aedhernes',
+              plantIcon: '🫛',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'no_b2_p3',
+              bedId: 'no_bed_2',
+              plantId: 'reddis',
+              plantName: 'Aedrõigas',
+              plantIcon: '🔴',
+              gridX: 2,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -625,8 +717,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.0,
           plantings: [
-            { id: 'no_b3_p1', bedId: 'no_bed_3', plantId: 'maasikas', plantName: 'Aedmaasikas', plantIcon: '🍓', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'no_b3_p2', bedId: 'no_bed_3', plantId: 'kuuslauk', plantName: 'Küüslauk', plantIcon: '🧄', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'no_b3_p1',
+              bedId: 'no_bed_3',
+              plantId: 'maasikas',
+              plantName: 'Aedmaasikas',
+              plantIcon: '🍓',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'no_b3_p2',
+              bedId: 'no_bed_3',
+              plantId: 'kuuslauk',
+              plantName: 'Küüslauk',
+              plantIcon: '🧄',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -784,7 +896,8 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
     name: 'Kompaktne Linna-Kõrgpeenarde Oaas',
     nameEn: 'Compact Urban Raised-Bed Oasis',
     description: 'Kompaktne 16x20m krunt 4 ergonoomilise kõrgpeenra, terrassiala, ürtide ja sammasviljapuudega.',
-    descriptionEn: 'Compact 16x20m yard featuring 4 ergonomic raised beds, patio deck, herbs, and columnar fruit trees.',
+    descriptionEn:
+      'Compact 16x20m yard featuring 4 ergonomic raised beds, patio deck, herbs, and columnar fruit trees.',
     widthM: 16,
     lengthM: 20,
     northAngleDeg: 0,
@@ -842,8 +955,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.0,
           plantings: [
-            { id: 'uo_p1', bedId: 'uo_bed_1', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'uo_p2', bedId: 'uo_bed_1', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌱', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-15' }
+            {
+              id: 'uo_p1',
+              bedId: 'uo_bed_1',
+              plantId: 'tomat',
+              plantName: 'Tomat',
+              plantIcon: '🍅',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'uo_p2',
+              bedId: 'uo_bed_1',
+              plantId: 'basiilik',
+              plantName: 'Basiilik',
+              plantIcon: '🌱',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            }
           ]
         }
       },
@@ -875,8 +1008,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.0,
           plantings: [
-            { id: 'uo_p3', bedId: 'uo_bed_2', plantId: 'kurk', plantName: 'Harilik kurk', plantIcon: '🥒', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'uo_p4', bedId: 'uo_bed_2', plantId: 'till', plantName: 'Aedtill', plantIcon: '🌿', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-15' }
+            {
+              id: 'uo_p3',
+              bedId: 'uo_bed_2',
+              plantId: 'kurk',
+              plantName: 'Harilik kurk',
+              plantIcon: '🥒',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'uo_p4',
+              bedId: 'uo_bed_2',
+              plantId: 'till',
+              plantName: 'Aedtill',
+              plantIcon: '🌿',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            }
           ]
         }
       },
@@ -908,8 +1061,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 7.5,
           plantings: [
-            { id: 'uo_p5', bedId: 'uo_bed_3', plantId: 'porgand', plantName: 'Aedporgand', plantIcon: '🥕', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'uo_p6', bedId: 'uo_bed_3', plantId: 'sibul', plantName: 'Mugulsibul', plantIcon: '🧅', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'uo_p5',
+              bedId: 'uo_bed_3',
+              plantId: 'porgand',
+              plantName: 'Aedporgand',
+              plantIcon: '🥕',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'uo_p6',
+              bedId: 'uo_bed_3',
+              plantId: 'sibul',
+              plantName: 'Mugulsibul',
+              plantIcon: '🧅',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -941,8 +1114,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 7.5,
           plantings: [
-            { id: 'uo_p7', bedId: 'uo_bed_4', plantId: 'salat', plantName: 'Lehtsalat', plantIcon: '🥬', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'uo_p8', bedId: 'uo_bed_4', plantId: 'spinat', plantName: 'Aedspinat', plantIcon: '🥗', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'uo_p7',
+              bedId: 'uo_bed_4',
+              plantId: 'salat',
+              plantName: 'Lehtsalat',
+              plantIcon: '🥬',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'uo_p8',
+              bedId: 'uo_bed_4',
+              plantId: 'spinat',
+              plantName: 'Aedspinat',
+              plantIcon: '🥗',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -974,8 +1167,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 7.0,
           plantings: [
-            { id: 'uo_p9', bedId: 'uo_pot', plantId: 'rosmariin', plantName: 'Rosmariin', plantIcon: '🌿', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'uo_p10', bedId: 'uo_pot', plantId: 'tuumian', plantName: 'Aed-liivatee (Tüümian)', plantIcon: '🌱', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'uo_p9',
+              bedId: 'uo_pot',
+              plantId: 'rosmariin',
+              plantName: 'Rosmariin',
+              plantIcon: '🌿',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'uo_p10',
+              bedId: 'uo_pot',
+              plantId: 'tuumian',
+              plantName: 'Aed-liivatee (Tüümian)',
+              plantIcon: '🌱',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -1035,7 +1248,8 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
     name: 'Maakodu Permakultuur & Suur Kasvuhoone',
     nameEn: 'Rural Permaculture & Large Greenhouse',
     description: 'Avar 30x40m krunt 6m kaarkasvuhoone, loodusliku tiigi, viljapuuaia ja tuulekaitsehekiga.',
-    descriptionEn: 'Spacious 30x40m permaculture layout with 6m greenhouse, microclimate pond, orchard, and windbreak hedge.',
+    descriptionEn:
+      'Spacious 30x40m permaculture layout with 6m greenhouse, microclimate pond, orchard, and windbreak hedge.',
     widthM: 30,
     lengthM: 40,
     northAngleDeg: 0,
@@ -1093,9 +1307,39 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'greenhouse',
           calculatedSunHours: 9.0,
           plantings: [
-            { id: 'rp_p1', bedId: 'rp_greenhouse', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'rp_p2', bedId: 'rp_greenhouse', plantId: 'kurk', plantName: 'Harilik kurk', plantIcon: '🥒', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-            { id: 'rp_p3', bedId: 'rp_greenhouse', plantId: 'paprika', plantName: 'Paprika', plantIcon: '🫑', gridX: 2, gridY: 0, year: 2026, dateAdded: '2026-05-15' }
+            {
+              id: 'rp_p1',
+              bedId: 'rp_greenhouse',
+              plantId: 'tomat',
+              plantName: 'Tomat',
+              plantIcon: '🍅',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'rp_p2',
+              bedId: 'rp_greenhouse',
+              plantId: 'kurk',
+              plantName: 'Harilik kurk',
+              plantIcon: '🥒',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            },
+            {
+              id: 'rp_p3',
+              bedId: 'rp_greenhouse',
+              plantId: 'paprika',
+              plantName: 'Paprika',
+              plantIcon: '🫑',
+              gridX: 2,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-15'
+            }
           ]
         }
       },
@@ -1151,8 +1395,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.5,
           plantings: [
-            { id: 'rp_b1_1', bedId: 'rp_bed_1', plantId: 'porgand', plantName: 'Aedporgand', plantIcon: '🥕', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-            { id: 'rp_b1_2', bedId: 'rp_bed_1', plantId: 'sibul', plantName: 'Mugulsibul', plantIcon: '🧅', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' }
+            {
+              id: 'rp_b1_1',
+              bedId: 'rp_bed_1',
+              plantId: 'porgand',
+              plantName: 'Aedporgand',
+              plantIcon: '🥕',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            },
+            {
+              id: 'rp_b1_2',
+              bedId: 'rp_bed_1',
+              plantId: 'sibul',
+              plantName: 'Mugulsibul',
+              plantIcon: '🧅',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-01'
+            }
           ]
         }
       },
@@ -1184,8 +1448,28 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
           coverType: 'none',
           calculatedSunHours: 8.5,
           plantings: [
-            { id: 'rp_b2_1', bedId: 'rp_bed_2', plantId: 'suvikorvits', plantName: 'Suvikõrvits', plantIcon: '🥒', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-20' },
-            { id: 'rp_b2_2', bedId: 'rp_bed_2', plantId: 'korvits', plantName: 'Harilik kõrvits', plantIcon: '🎃', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-20' }
+            {
+              id: 'rp_b2_1',
+              bedId: 'rp_bed_2',
+              plantId: 'suvikorvits',
+              plantName: 'Suvikõrvits',
+              plantIcon: '🥒',
+              gridX: 0,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-20'
+            },
+            {
+              id: 'rp_b2_2',
+              bedId: 'rp_bed_2',
+              plantId: 'korvits',
+              plantName: 'Harilik kõrvits',
+              plantIcon: '🎃',
+              gridX: 1,
+              gridY: 0,
+              year: 2026,
+              dateAdded: '2026-05-20'
+            }
           ]
         }
       },
@@ -1267,4 +1551,3 @@ export const YARD_PLAN_PRESETS: YardPlanPreset[] = [
     ]
   }
 ];
-

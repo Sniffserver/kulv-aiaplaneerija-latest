@@ -183,7 +183,9 @@ export function migratePlan(raw: unknown, targetVersion: number = CURRENT_SCHEMA
   while (currentVersion < targetVersion) {
     const fn = migrations[currentVersion];
     if (!fn) {
-      throw new Error(`KÜLV migratsioonitõrge: Puudub migratsioonifunktsioon versioonilt v${currentVersion} versioonile v${currentVersion + 1}`);
+      throw new Error(
+        `KÜLV migratsioonitõrge: Puudub migratsioonifunktsioon versioonilt v${currentVersion} versioonile v${currentVersion + 1}`
+      );
     }
     plan = fn(plan);
     currentVersion += 1;
@@ -193,4 +195,3 @@ export function migratePlan(raw: unknown, targetVersion: number = CURRENT_SCHEMA
 }
 
 export { importPlan } from '../import/importPlan';
-

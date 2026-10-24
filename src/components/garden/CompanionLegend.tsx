@@ -22,7 +22,10 @@ export const CompanionLegend: React.FC<CompanionLegendProps> = ({ language, visi
       onTouchStart={(e) => e.stopPropagation()}
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-[var(--kulv-border,#C9BFA9)]/60 cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
+      <div
+        className="flex items-center justify-between pb-2 border-b border-[var(--kulv-border,#C9BFA9)]/60 cursor-pointer"
+        onClick={() => setCollapsed(!collapsed)}
+      >
         <div className="flex items-center gap-2">
           <span className="p-1 rounded bg-[var(--kulv-primary,#4F6B45)]/15 text-[var(--kulv-primary,#4F6B45)]">
             <Leaf size={14} />
@@ -87,7 +90,9 @@ export const CompanionLegend: React.FC<CompanionLegendProps> = ({ language, visi
             <div className="flex items-center gap-2">
               <div className="w-6 h-0.5 border-t border-dashed border-[#D97A3D]" />
               <span className="text-[10.5px]">
-                {language === 'en' ? 'Dashed orange: Incompatible conflict (!)' : 'Katkendlik oranž: Ebasoodne seos (!)'}
+                {language === 'en'
+                  ? 'Dashed orange: Incompatible conflict (!)'
+                  : 'Katkendlik oranž: Ebasoodne seos (!)'}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -101,7 +106,9 @@ export const CompanionLegend: React.FC<CompanionLegendProps> = ({ language, visi
           {/* Source footer */}
           <div className="pt-1.5 border-t border-[var(--kulv-border,#C9BFA9)]/50 text-[10px] text-[var(--kulv-text-muted,#5F675A)] flex items-center gap-1">
             <ShieldCheck size={12} className="text-[var(--kulv-primary,#4F6B45)] shrink-0" />
-            <span>{language === 'en' ? 'Grounded in METK & RHS agronomy' : 'Põhineb METK ja RHS teadusuuringutel'}</span>
+            <span>
+              {language === 'en' ? 'Grounded in METK & RHS agronomy' : 'Põhineb METK ja RHS teadusuuringutel'}
+            </span>
           </div>
         </div>
       )}

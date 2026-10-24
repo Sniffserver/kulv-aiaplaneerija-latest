@@ -1,6 +1,18 @@
 import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { useGarden } from '../context/GardenContext';
-import { Plus, Download, Search, Trash2, Calendar, Scale, Sprout, Tag, Sparkles, FileSpreadsheet, Loader2 } from 'lucide-react';
+import {
+  Plus,
+  Download,
+  Search,
+  Trash2,
+  Calendar,
+  Scale,
+  Sprout,
+  Tag,
+  Sparkles,
+  FileSpreadsheet,
+  Loader2
+} from 'lucide-react';
 
 const LazyJournalTimelineChart = lazy(() =>
   import('../components/JournalTimelineChart').then((m) => ({ default: m.JournalTimelineChart }))
@@ -77,11 +89,25 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px 20px' }}>
       {/* Top Header & Primary Actions */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
         <div>
           <h1
             className="font-serif-display"
-            style={{ fontSize: '26px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0, letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: '26px',
+              fontWeight: 700,
+              color: 'var(--kulv-text, #2A2E24)',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}
           >
             Aiapäevik ja saagikuse ajatelg
           </h1>
@@ -336,14 +362,25 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                     </div>
 
                     {/* Metadata line (anti-slop clean typography) */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '4px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '11px',
+                        color: 'var(--kulv-text-muted, #5F675A)',
+                        marginTop: '4px'
+                      }}
+                    >
                       <span style={{ fontWeight: 700, color: cat.color }}>{cat.label}</span>
                       <span aria-hidden="true">·</span>
                       <span>{entry.date}</span>
                       {entry.growthStage && (
                         <>
                           <span aria-hidden="true">·</span>
-                          <span>Staadium: {entry.growthStage} ({entry.growthProgressPct || 0}%)</span>
+                          <span>
+                            Staadium: {entry.growthStage} ({entry.growthProgressPct || 0}%)
+                          </span>
                         </>
                       )}
                     </div>

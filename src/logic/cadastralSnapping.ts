@@ -107,9 +107,7 @@ export function isPointInsidePolygon(point: Point2D, polygon: Point2D[]): boolea
     const xj = polygon[j].x;
     const yj = polygon[j].y;
 
-    const intersect =
-      yi > point.y !== yj > point.y &&
-      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
+    const intersect = yi > point.y !== yj > point.y && point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
 
     if (intersect) {
       inside = !inside;

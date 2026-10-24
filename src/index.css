@@ -1,31 +1,37 @@
-@import "./fonts.css";
+@import './fonts.css';
 
 /* Palette and appearance mode are independent. .dark selects the mode;
    data-palette selects the colour family. */
 :root {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Plus Jakarta Sans',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   color-scheme: light;
   --kulv-font-display: 'Fraunces', Georgia, serif;
   --kulv-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --kulv-bg: #FAF6ED;
-  --kulv-surface: #FFFDF8;
-  --kulv-surface-muted: #F1EBDD;
-  --kulv-workspace: #F6F0E4;
-  --kulv-text: #252A22;
-  --kulv-text-muted: #52594D;
-  --kulv-text-subtle: #5F675A;
-  --kulv-border: #958B79;
-  --kulv-border-hover: #70856A;
-  --kulv-primary: #385A40;
+  --kulv-bg: #faf6ed;
+  --kulv-surface: #fffdf8;
+  --kulv-surface-muted: #f1ebdd;
+  --kulv-workspace: #f6f0e4;
+  --kulv-text: #252a22;
+  --kulv-text-muted: #52594d;
+  --kulv-text-subtle: #5f675a;
+  --kulv-border: #958b79;
+  --kulv-border-hover: #70856a;
+  --kulv-primary: #385a40;
   --kulv-primary-hover: #294733;
-  --kulv-button-text: #FFFFFF;
-  --kulv-focus: #385A40;
-  --kulv-accent: #C76D3A;
-  --kulv-accent-soft: #F4D5C2;
+  --kulv-button-text: #ffffff;
+  --kulv-focus: #385a40;
+  --kulv-accent: #c76d3a;
+  --kulv-accent-soft: #f4d5c2;
   --kulv-success: #276749;
-  --kulv-warning: #854D0E;
-  --kulv-danger: #B4233A;
-  --kulv-info: #176B87;
+  --kulv-warning: #854d0e;
+  --kulv-danger: #b4233a;
+  --kulv-info: #176b87;
   --kulv-space-1: 0.25rem;
   --kulv-space-2: 0.5rem;
   --kulv-space-3: 0.75rem;
@@ -39,164 +45,164 @@
 
 .dark {
   color-scheme: dark;
-  --kulv-bg: #171B17;
-  --kulv-surface: #20271F;
-  --kulv-surface-muted: #2A3329;
-  --kulv-workspace: #171B17;
-  --kulv-text: #F4F1E8;
-  --kulv-text-muted: #D4D9CC;
-  --kulv-text-subtle: #BEC7B5;
-  --kulv-border: #71806A;
-  --kulv-border-hover: #9DB38F;
-  --kulv-primary: #A7C080;
-  --kulv-primary-hover: #B9D49A;
-  --kulv-button-text: #20271F;
-  --kulv-focus: #C3D5A5;
-  --kulv-accent: #E39A6D;
-  --kulv-accent-soft: #4C3024;
-  --kulv-success: #A7C080;
-  --kulv-warning: #E5BD70;
-  --kulv-danger: #F2A6A6;
-  --kulv-info: #8EC9DB;
+  --kulv-bg: #171b17;
+  --kulv-surface: #20271f;
+  --kulv-surface-muted: #2a3329;
+  --kulv-workspace: #171b17;
+  --kulv-text: #f4f1e8;
+  --kulv-text-muted: #d4d9cc;
+  --kulv-text-subtle: #bec7b5;
+  --kulv-border: #71806a;
+  --kulv-border-hover: #9db38f;
+  --kulv-primary: #a7c080;
+  --kulv-primary-hover: #b9d49a;
+  --kulv-button-text: #20271f;
+  --kulv-focus: #c3d5a5;
+  --kulv-accent: #e39a6d;
+  --kulv-accent-soft: #4c3024;
+  --kulv-success: #a7c080;
+  --kulv-warning: #e5bd70;
+  --kulv-danger: #f2a6a6;
+  --kulv-info: #8ec9db;
   --kulv-shadow-card: 0 1px 2px rgb(0 0 0 / 0.28);
 }
 
 /* Gruvbox: warm paper in light mode; earthy charcoal in dark mode. */
-:root[data-palette="gruvbox"] {
-  --kulv-bg: #FBF1C7;
-  --kulv-surface: #F9F5D7;
-  --kulv-surface-muted: #EBDBB2;
-  --kulv-workspace: #F2E5BC;
-  --kulv-text: #3C3836;
+:root[data-palette='gruvbox'] {
+  --kulv-bg: #fbf1c7;
+  --kulv-surface: #f9f5d7;
+  --kulv-surface-muted: #ebdbb2;
+  --kulv-workspace: #f2e5bc;
+  --kulv-text: #3c3836;
   --kulv-text-muted: #504945;
-  --kulv-text-subtle: #665C54;
-  --kulv-border: #93856D;
-  --kulv-border-hover: #92831D;
-  --kulv-primary: #79740E;
-  --kulv-primary-hover: #665C54;
-  --kulv-button-text: #FFFFFF;
-  --kulv-focus: #9D0006;
-  --kulv-accent: #AF3A03;
-  --kulv-accent-soft: #F2D9B5;
-  --kulv-success: #79740E;
-  --kulv-warning: #B57614;
-  --kulv-danger: #9D0006;
+  --kulv-text-subtle: #665c54;
+  --kulv-border: #93856d;
+  --kulv-border-hover: #92831d;
+  --kulv-primary: #79740e;
+  --kulv-primary-hover: #665c54;
+  --kulv-button-text: #ffffff;
+  --kulv-focus: #9d0006;
+  --kulv-accent: #af3a03;
+  --kulv-accent-soft: #f2d9b5;
+  --kulv-success: #79740e;
+  --kulv-warning: #b57614;
+  --kulv-danger: #9d0006;
   --kulv-info: #076678;
   --kulv-shadow-card: 0 1px 2px rgb(60 56 54 / 0.08), 0 2px 6px rgb(60 56 54 / 0.04);
 }
 
-.dark[data-palette="gruvbox"] {
+.dark[data-palette='gruvbox'] {
   --kulv-bg: #282828;
-  --kulv-surface: #32302F;
-  --kulv-surface-muted: #3C3836;
+  --kulv-surface: #32302f;
+  --kulv-surface-muted: #3c3836;
   --kulv-workspace: #282828;
-  --kulv-text: #EBDBB2;
-  --kulv-text-muted: #D5C4A1;
-  --kulv-text-subtle: #BDAE93;
-  --kulv-border: #8B8074;
-  --kulv-border-hover: #B8BB26;
-  --kulv-primary: #B8BB26;
-  --kulv-primary-hover: #D79921;
+  --kulv-text: #ebdbb2;
+  --kulv-text-muted: #d5c4a1;
+  --kulv-text-subtle: #bdae93;
+  --kulv-border: #8b8074;
+  --kulv-border-hover: #b8bb26;
+  --kulv-primary: #b8bb26;
+  --kulv-primary-hover: #d79921;
   --kulv-button-text: #282828;
-  --kulv-focus: #FABD2F;
-  --kulv-accent: #FE8019;
+  --kulv-focus: #fabd2f;
+  --kulv-accent: #fe8019;
   --kulv-accent-soft: #504028;
-  --kulv-success: #B8BB26;
-  --kulv-warning: #FABD2F;
-  --kulv-danger: #FB4934;
-  --kulv-info: #83A598;
+  --kulv-success: #b8bb26;
+  --kulv-warning: #fabd2f;
+  --kulv-danger: #fb4934;
+  --kulv-info: #83a598;
   --kulv-shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
 }
 
 /* Catppuccin Latte (light) and Mocha (dark). */
-:root[data-palette="catppuccin"] {
-  --kulv-bg: #EFF1F5;
-  --kulv-surface: #E6E9EF;
-  --kulv-surface-muted: #DCE0E8;
-  --kulv-workspace: #E6E9EF;
-  --kulv-text: #4C4F69;
-  --kulv-text-muted: #5C5F77;
+:root[data-palette='catppuccin'] {
+  --kulv-bg: #eff1f5;
+  --kulv-surface: #e6e9ef;
+  --kulv-surface-muted: #dce0e8;
+  --kulv-workspace: #e6e9ef;
+  --kulv-text: #4c4f69;
+  --kulv-text-muted: #5c5f77;
   --kulv-text-subtle: #626580;
-  --kulv-border: #7B8091;
-  --kulv-border-hover: #1E66F5;
-  --kulv-primary: #1E66F5;
-  --kulv-primary-hover: #1755CB;
-  --kulv-button-text: #FFFFFF;
-  --kulv-focus: #1E66F5;
-  --kulv-accent: #FE640B;
-  --kulv-accent-soft: #FCE0D2;
-  --kulv-success: #40A02B;
-  --kulv-warning: #DF8E1D;
-  --kulv-danger: #D20F39;
-  --kulv-info: #04A5E5;
+  --kulv-border: #7b8091;
+  --kulv-border-hover: #1e66f5;
+  --kulv-primary: #1e66f5;
+  --kulv-primary-hover: #1755cb;
+  --kulv-button-text: #ffffff;
+  --kulv-focus: #1e66f5;
+  --kulv-accent: #fe640b;
+  --kulv-accent-soft: #fce0d2;
+  --kulv-success: #40a02b;
+  --kulv-warning: #df8e1d;
+  --kulv-danger: #d20f39;
+  --kulv-info: #04a5e5;
   --kulv-shadow-card: 0 1px 2px rgb(76 79 105 / 0.06), 0 2px 6px rgb(76 79 105 / 0.04);
 }
 
-.dark[data-palette="catppuccin"] {
-  --kulv-bg: #1E1E2E;
+.dark[data-palette='catppuccin'] {
+  --kulv-bg: #1e1e2e;
   --kulv-surface: #313244;
-  --kulv-surface-muted: #45475A;
+  --kulv-surface-muted: #45475a;
   --kulv-workspace: #181825;
-  --kulv-text: #CDD6F4;
-  --kulv-text-muted: #BAC2DE;
-  --kulv-text-subtle: #A6ADC8;
-  --kulv-border: #797D94;
-  --kulv-border-hover: #A6E3A1;
-  --kulv-primary: #A6E3A1;
-  --kulv-primary-hover: #B4F0AF;
-  --kulv-button-text: #1E1E2E;
-  --kulv-focus: #A6E3A1;
-  --kulv-accent: #FAB387;
-  --kulv-accent-soft: #503B3D;
-  --kulv-success: #A6E3A1;
-  --kulv-warning: #F9E2AF;
-  --kulv-danger: #F38BA8;
-  --kulv-info: #89DCEB;
+  --kulv-text: #cdd6f4;
+  --kulv-text-muted: #bac2de;
+  --kulv-text-subtle: #a6adc8;
+  --kulv-border: #797d94;
+  --kulv-border-hover: #a6e3a1;
+  --kulv-primary: #a6e3a1;
+  --kulv-primary-hover: #b4f0af;
+  --kulv-button-text: #1e1e2e;
+  --kulv-focus: #a6e3a1;
+  --kulv-accent: #fab387;
+  --kulv-accent-soft: #503b3d;
+  --kulv-success: #a6e3a1;
+  --kulv-warning: #f9e2af;
+  --kulv-danger: #f38ba8;
+  --kulv-info: #89dceb;
   --kulv-shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
 }
 
 /* Päevakas aed (Meadow): soe kreem paber, pehme rohe ja päikeseline oranž */
-:root[data-palette="meadow"] {
-  --kulv-bg: #F7F1E8;
-  --kulv-surface: #FFFDF8;
-  --kulv-surface-muted: #EFE6D4;
-  --kulv-workspace: #F3ECDF;
-  --kulv-text: #2A2E24;
-  --kulv-text-muted: #5F675A;
-  --kulv-text-subtle: #79806F;
-  --kulv-border: #C9BFA9;
-  --kulv-border-hover: #8FA47E;
-  --kulv-primary: #4F6B45;
-  --kulv-primary-hover: #3D5636;
-  --kulv-button-text: #FFFFFF;
-  --kulv-focus: #4F6B45;
-  --kulv-accent: #D97A3D;
-  --kulv-accent-soft: #F3D8C2;
-  --kulv-success: #4F6B45;
-  --kulv-warning: #B8761B;
-  --kulv-danger: #B85C33;
-  --kulv-info: #4F6B45;
+:root[data-palette='meadow'] {
+  --kulv-bg: #f7f1e8;
+  --kulv-surface: #fffdf8;
+  --kulv-surface-muted: #efe6d4;
+  --kulv-workspace: #f3ecdf;
+  --kulv-text: #2a2e24;
+  --kulv-text-muted: #5f675a;
+  --kulv-text-subtle: #79806f;
+  --kulv-border: #c9bfa9;
+  --kulv-border-hover: #8fa47e;
+  --kulv-primary: #4f6b45;
+  --kulv-primary-hover: #3d5636;
+  --kulv-button-text: #ffffff;
+  --kulv-focus: #4f6b45;
+  --kulv-accent: #d97a3d;
+  --kulv-accent-soft: #f3d8c2;
+  --kulv-success: #4f6b45;
+  --kulv-warning: #b8761b;
+  --kulv-danger: #b85c33;
+  --kulv-info: #4f6b45;
   --kulv-shadow-card: 0 1px 2px rgb(90 70 45 / 0.07), 0 2px 8px rgb(90 70 45 / 0.05);
 }
 
-.dark[data-palette="meadow"] {
-  --kulv-bg: #191D17;
+.dark[data-palette='meadow'] {
+  --kulv-bg: #191d17;
   --kulv-surface: #222820;
-  --kulv-surface-muted: #2B332A;
-  --kulv-workspace: #191D17;
-  --kulv-text: #F2EFE5;
-  --kulv-text-muted: #CFD5C7;
-  --kulv-text-subtle: #B2BAA9;
-  --kulv-border: #6E7A66;
-  --kulv-border-hover: #94A886;
-  --kulv-primary: #A7C080;
-  --kulv-primary-hover: #BCD493;
+  --kulv-surface-muted: #2b332a;
+  --kulv-workspace: #191d17;
+  --kulv-text: #f2efe5;
+  --kulv-text-muted: #cfd5c7;
+  --kulv-text-subtle: #b2baa9;
+  --kulv-border: #6e7a66;
+  --kulv-border-hover: #94a886;
+  --kulv-primary: #a7c080;
+  --kulv-primary-hover: #bcd493;
   --kulv-button-text: #222820;
-  --kulv-focus: #C3D5A5;
-  --kulv-accent: #E39A6D;
-  --kulv-accent-soft: #4C3024;
-  --kulv-warning: #E5BD70;
-  --kulv-danger: #F2A6A6;
+  --kulv-focus: #c3d5a5;
+  --kulv-accent: #e39a6d;
+  --kulv-accent-soft: #4c3024;
+  --kulv-warning: #e5bd70;
+  --kulv-danger: #f2a6a6;
 }
 
 @keyframes spin {
@@ -221,7 +227,7 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--kulv-border, #C9BFA9);
+  background: var(--kulv-border, #c9bfa9);
   border-radius: 4px;
 }
 
@@ -231,27 +237,34 @@
 }
 
 :focus-visible {
-  outline: 2px solid var(--kulv-focus, #385A40);
+  outline: 2px solid var(--kulv-focus, #385a40);
   outline-offset: 2px;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  background-color: var(--kulv-bg, #FAF6ED);
-  color: var(--kulv-text, #252A22);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  background-color: var(--kulv-bg, #faf6ed);
+  color: var(--kulv-text, #252a22);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 #root {
   min-height: 100vh;
-  background-color: var(--kulv-bg, #FAF6ED);
-  color: var(--kulv-text, #252A22);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  background-color: var(--kulv-bg, #faf6ed);
+  color: var(--kulv-text, #252a22);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -304,10 +317,10 @@ html, body {
   transform: translateX(-50%);
   width: 100%;
   max-width: 1440px;
-  background-color: var(--kulv-surface, #FFFDF8);
-  border-top: 1px solid var(--kulv-border, #C9BFA9);
-  border-left: 1px solid var(--kulv-border, #C9BFA9);
-  border-right: 1px solid var(--kulv-border, #C9BFA9);
+  background-color: var(--kulv-surface, #fffdf8);
+  border-top: 1px solid var(--kulv-border, #c9bfa9);
+  border-left: 1px solid var(--kulv-border, #c9bfa9);
+  border-right: 1px solid var(--kulv-border, #c9bfa9);
   justify-content: space-around;
   align-items: center;
   height: 64px;
@@ -325,7 +338,7 @@ html, body {
 .app-main-content {
   flex: 1;
   overflow-y: auto;
-  background-color: var(--kulv-bg, #FAF6ED);
+  background-color: var(--kulv-bg, #faf6ed);
   padding-bottom: 78px;
 }
 
@@ -354,8 +367,8 @@ html, body {
 /* Weather chart skeleton for lazy loaded Recharts */
 .weather-chart-skeleton {
   min-height: 220px;
-  background-color: var(--kulv-surface, #FFFDF8);
-  border: 1px solid var(--kulv-border, #C9BFA9);
+  background-color: var(--kulv-surface, #fffdf8);
+  border: 1px solid var(--kulv-border, #c9bfa9);
   border-radius: 16px;
   padding: 18px;
   display: flex;
@@ -363,6 +376,5 @@ html, body {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  color: var(--kulv-text-muted, #5F675A);
+  color: var(--kulv-text-muted, #5f675a);
 }
-

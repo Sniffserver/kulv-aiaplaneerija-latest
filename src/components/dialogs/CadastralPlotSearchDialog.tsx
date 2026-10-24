@@ -156,9 +156,7 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
   const setPanOffset = useYardStore((s) => s.setPanOffset);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedParcel, setSelectedParcel] = useState<CadastralParcelRecord>(
-    ESTONIAN_CADASTRAL_PRESETS[0]
-  );
+  const [selectedParcel, setSelectedParcel] = useState<CadastralParcelRecord>(ESTONIAN_CADASTRAL_PRESETS[0]);
   const [customWidth, setCustomWidth] = useState<number>(30);
   const [customLength, setCustomLength] = useState<number>(40);
   const [isCustomMode, setIsCustomMode] = useState<boolean>(false);
@@ -500,9 +498,7 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                           border: isSelected
                             ? '1.5px solid var(--kulv-primary, #4F6B45)'
                             : '1px solid var(--kulv-border, #C9BFA9)',
-                          backgroundColor: isSelected
-                            ? 'rgba(79, 107, 69, 0.08)'
-                            : 'var(--kulv-surface, #FFFDF8)',
+                          backgroundColor: isSelected ? 'rgba(79, 107, 69, 0.08)' : 'var(--kulv-surface, #FFFDF8)',
                           cursor: 'pointer',
                           transition: 'all 0.15s ease'
                         }}
@@ -522,7 +518,14 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                             {parcel.areaM2.toLocaleString('et-EE')} m²
                           </span>
                         </div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, marginTop: '2px', color: 'var(--kulv-text, #252A22)' }}>
+                        <div
+                          style={{
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            marginTop: '2px',
+                            color: 'var(--kulv-text, #252A22)'
+                          }}
+                        >
                           {parcel.address}
                         </div>
                         <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
@@ -561,7 +564,9 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                     gap: '12px'
                   }}
                 >
-                  <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div
+                    style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
                     <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)' }}>
                       {language === 'en' ? 'PARCEL POLYGON PREVIEW' : 'KRUNDI GEOMEETRIA EELVAADE'}
                     </span>
@@ -630,7 +635,9 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                   </svg>
 
                   {/* Parcel Details */}
-                  <div style={{ width: '100%', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div
+                    style={{ width: '100%', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '4px' }}
+                  >
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
                         {language === 'en' ? 'Official Area:' : 'Katastripindala:'}
@@ -680,8 +687,12 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                           flex: 1,
                           padding: '8px',
                           borderRadius: '6px',
-                          border: customShape === s ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-                          backgroundColor: customShape === s ? 'rgba(79, 107, 69, 0.1)' : 'var(--kulv-surface, #FFFDF8)',
+                          border:
+                            customShape === s
+                              ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                              : '1px solid var(--kulv-border, #C9BFA9)',
+                          backgroundColor:
+                            customShape === s ? 'rgba(79, 107, 69, 0.1)' : 'var(--kulv-surface, #FFFDF8)',
                           fontSize: '12px',
                           fontWeight: customShape === s ? 700 : 500,
                           cursor: 'pointer'
@@ -694,7 +705,9 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                 </div>
 
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}
+                  >
                     <span style={{ fontWeight: 600 }}>{language === 'en' ? 'Width (m):' : 'Krundi laius:'}</span>
                     <strong>{customWidth} m</strong>
                   </div>
@@ -709,7 +722,9 @@ export const CadastralPlotSearchDialog: React.FC<CadastralPlotSearchDialogProps>
                 </div>
 
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}
+                  >
                     <span style={{ fontWeight: 600 }}>{language === 'en' ? 'Length (m):' : 'Krundi pikkus:'}</span>
                     <strong>{customLength} m</strong>
                   </div>

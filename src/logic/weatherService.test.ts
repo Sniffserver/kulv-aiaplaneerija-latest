@@ -29,7 +29,7 @@ describe('WeatherService & Meteorological Warnings', () => {
     expect(typeof fallback.temperature).toBe('number');
     expect(typeof fallback.relativeHumidity).toBe('number');
     expect(fallback.dailyForecast?.length).toBe(7);
-    expect((fallback.hourlyForecast?.length ?? 0)).toBeGreaterThan(0);
+    expect(fallback.hourlyForecast?.length ?? 0).toBeGreaterThan(0);
     expect(fallback.isLive).toBe(false);
 
     // Verify frost risk detection on the 7-day forecast

@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeCsvCell, sanitizeCSVField, generateHarvestCSV, generateJournalCSV, generateSeasonalSowingCSV } from './csvExport';
+import {
+  sanitizeCsvCell,
+  sanitizeCSVField,
+  generateHarvestCSV,
+  generateJournalCSV,
+  generateSeasonalSowingCSV
+} from './csvExport';
 import { JournalEntry } from '../types';
 
 describe('CSV Sanitization and Export (CSV Injection Prevention)', () => {
@@ -20,7 +26,7 @@ describe('CSV Sanitization and Export (CSV Injection Prevention)', () => {
     expect(sanitizeCsvCell('\t\t-5+10')).toBe(`'\t\t-5+10`);
   });
 
-  it('prefixes dangerous calculation command =cmd|\'/c calc\'!A1 with single quote', () => {
+  it("prefixes dangerous calculation command =cmd|'/c calc'!A1 with single quote", () => {
     const maliciousPayload = "=cmd|'/c calc'!A1";
     const sanitized = sanitizeCsvCell(maliciousPayload);
     expect(sanitized).toBe(`'${maliciousPayload}`);

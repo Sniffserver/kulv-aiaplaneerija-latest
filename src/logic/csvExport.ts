@@ -42,16 +42,7 @@ export function generateHarvestCSV(journal: JournalEntry[]): string {
     ])
   ];
 
-  return (
-    '\uFEFF' +
-    rows
-      .map((row) =>
-        row
-          .map((cell) => `"${sanitizeCsvCell(cell)}"`)
-          .join(',')
-      )
-      .join('\n')
-  );
+  return '\uFEFF' + rows.map((row) => row.map((cell) => `"${sanitizeCsvCell(cell)}"`).join(',')).join('\n');
 }
 
 /**
@@ -74,16 +65,7 @@ export function generateJournalCSV(journal: JournalEntry[]): string {
     ])
   ];
 
-  return (
-    '\uFEFF' +
-    rows
-      .map((row) =>
-        row
-          .map((cell) => `"${sanitizeCsvCell(cell)}"`)
-          .join(',')
-      )
-      .join('\n')
-  );
+  return '\uFEFF' + rows.map((row) => row.map((cell) => `"${sanitizeCsvCell(cell)}"`).join(',')).join('\n');
 }
 
 export interface SeasonalSowingExportOptions {
@@ -196,14 +178,14 @@ export function generateSeasonalSowingCSV(
             ? 'Full Sun'
             : 'Täispäike'
           : p.sunNeed === 'partial'
-          ? lang === 'en'
-            ? 'Partial Shade'
-            : 'Poolvari'
-          : p.sunNeed === 'shade'
-          ? lang === 'en'
-            ? 'Shade'
-            : 'Vari'
-          : '';
+            ? lang === 'en'
+              ? 'Partial Shade'
+              : 'Poolvari'
+            : p.sunNeed === 'shade'
+              ? lang === 'en'
+                ? 'Shade'
+                : 'Vari'
+              : '';
 
       const plantedBeds = getBedsForPlant(p.id);
 
@@ -230,14 +212,5 @@ export function generateSeasonalSowingCSV(
     })
   ];
 
-  return (
-    '\uFEFF' +
-    rows
-      .map((row) =>
-        row
-          .map((cell) => `"${sanitizeCsvCell(cell)}"`)
-          .join(',')
-      )
-      .join('\n')
-  );
+  return '\uFEFF' + rows.map((row) => row.map((cell) => `"${sanitizeCsvCell(cell)}"`).join(',')).join('\n');
 }

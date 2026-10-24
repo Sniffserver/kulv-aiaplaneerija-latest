@@ -22,11 +22,7 @@ interface AddJournalDialogProps {
   ) => void;
 }
 
-export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
-  isOpen,
-  onDismiss,
-  onConfirm
-}) => {
+export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDismiss, onConfirm }) => {
   const { plants, beds } = useGarden();
 
   const [title, setTitle] = useState('');
@@ -141,13 +137,7 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
     { id: 'weather', label: 'Ilm' }
   ];
 
-  const stages = [
-    'Idanemine',
-    'Lehekasv',
-    'Õitsemine',
-    'Valmimine',
-    'Saagikoristus'
-  ];
+  const stages = ['Idanemine', 'Lehekasv', 'Õitsemine', 'Valmimine', 'Saagikoristus'];
 
   return (
     <div
@@ -211,7 +201,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Pealkiri *
             </label>
             <input
@@ -235,7 +233,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Kuupäev *
               </label>
               <input
@@ -256,7 +262,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  marginBottom: '4px',
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 Seotud taim
               </label>
               <select
@@ -289,7 +303,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '6px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '6px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Kategooria:
             </label>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -304,7 +326,8 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
                     fontSize: '13px',
                     fontWeight: 600,
                     border: '1px solid var(--kulv-border, #C9BFA9)',
-                    backgroundColor: category === cat.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                    backgroundColor:
+                      category === cat.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                     color: category === cat.id ? 'white' : 'var(--kulv-text, #2A2E24)',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
@@ -329,7 +352,16 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
                 gap: '8px'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, color: 'var(--kulv-accent, #D97A3D)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: 'var(--kulv-accent, #D97A3D)'
+                }}
+              >
                 <Scale size={16} />
                 <span>Saagikuse kogus ajatelje graafikule:</span>
               </div>
@@ -386,7 +418,16 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: 'var(--kulv-text, #2A2E24)'
+                  }}
+                >
                   <Sprout size={15} color="var(--kulv-primary, #4F6B45)" />
                   <span>Arengustaadium:</span>
                 </div>
@@ -412,7 +453,9 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
                         borderRadius: '6px',
                         fontSize: '11px',
                         fontWeight: isSel ? 700 : 500,
-                        border: isSel ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                        border: isSel
+                          ? '1px solid var(--kulv-primary, #4F6B45)'
+                          : '1px solid var(--kulv-border, #C9BFA9)',
                         backgroundColor: isSel ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
                         color: isSel ? 'white' : 'var(--kulv-text, #2A2E24)',
                         cursor: 'pointer'
@@ -427,7 +470,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
           )}
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Sisu ja tähelepanekud *
             </label>
             <textarea
@@ -452,7 +503,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({
 
           {/* Photo upload attachment */}
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Foto (valikuline)
             </label>
             <input

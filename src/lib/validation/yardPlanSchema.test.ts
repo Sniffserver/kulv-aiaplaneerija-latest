@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { validateYardPlan, validateGardenEntity, isSimplePolygon, dedupePoints, yardPlanSchema } from './yardPlanSchema';
+import {
+  validateYardPlan,
+  validateGardenEntity,
+  isSimplePolygon,
+  dedupePoints,
+  yardPlanSchema
+} from './yardPlanSchema';
 import { YardPlan, GardenEntity, DEFAULT_YARD_LAYERS, Point2D } from '../../types';
 
 describe('Zod YardPlan, GardenEntity Validation & Geometry Cleanliness', () => {
@@ -50,7 +56,9 @@ describe('Zod YardPlan, GardenEntity Validation & Geometry Cleanliness', () => {
     };
     const res = validateGardenEntity(invalidEntity);
     expect(res.success).toBe(false);
-    expect(res.errors?.some((e) => e.startsWith('x:') || e.includes('Infinity') || e.includes('X-koordinaat'))).toBe(true);
+    expect(res.errors?.some((e) => e.startsWith('x:') || e.includes('Infinity') || e.includes('X-koordinaat'))).toBe(
+      true
+    );
   });
 
   it('rejects negative or zero dimensions', () => {

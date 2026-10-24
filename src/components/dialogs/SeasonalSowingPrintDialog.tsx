@@ -158,7 +158,9 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
               className="font-serif-display"
               style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
             >
-              {language === 'en' ? 'Seasonal Sowing Schedule & Field Guide' : 'Hooajaline külvikava & aiatööde kalender'}
+              {language === 'en'
+                ? 'Seasonal Sowing Schedule & Field Guide'
+                : 'Hooajaline külvikava & aiatööde kalender'}
             </h2>
             <div style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
               {language === 'en'
@@ -278,7 +280,10 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
                 borderRadius: '6px',
                 fontSize: '11px',
                 fontWeight: activeFilter === f.id ? 700 : 500,
-                border: activeFilter === f.id ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
+                border:
+                  activeFilter === f.id
+                    ? '1px solid var(--kulv-primary, #4F6B45)'
+                    : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: activeFilter === f.id ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
                 color: activeFilter === f.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
                 cursor: 'pointer',
@@ -301,19 +306,33 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
         >
           {/* Printable Header (Visible in print only) */}
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '2px solid #385A40', paddingBottom: '6px', marginBottom: '8px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                borderBottom: '2px solid #385A40',
+                paddingBottom: '6px',
+                marginBottom: '8px'
+              }}
+            >
               <div style={{ fontSize: '18px', fontWeight: 800, color: '#385A40' }}>
                 KÜLV — {language === 'en' ? 'Seasonal Sowing Calendar' : 'Hooajaline külvikava & agrotehniline juhend'}
               </div>
               <div style={{ fontSize: '11px', color: '#555555' }}>
-                {language === 'en' ? 'Generated' : 'Koostatud'}: {new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'et-EE')}
+                {language === 'en' ? 'Generated' : 'Koostatud'}:{' '}
+                {new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'et-EE')}
               </div>
             </div>
             <div style={{ fontSize: '11px', color: '#444444', lineHeight: 1.5 }}>
-              <strong>{language === 'en' ? 'Climate Region' : 'Agrokliima vöönd'}:</strong> {regionProfile.nameEt} ({regionProfile.hardinessZone}) ·{' '}
-              <strong>{language === 'en' ? 'Spring Frost Target' : 'Kevadine öökülm'}:</strong> {frostData.springFrostMMDD} ·{' '}
-              <strong>{language === 'en' ? 'Autumn Frost Target' : 'Sügisene öökülm'}:</strong> {frostData.autumnFrostMMDD} ·{' '}
-              <strong>{language === 'en' ? 'Frost-Free Days' : 'Öökülmavaba periood'}:</strong> {frostData.frostFreeDays} {language === 'en' ? 'days' : 'päeva'}
+              <strong>{language === 'en' ? 'Climate Region' : 'Agrokliima vöönd'}:</strong> {regionProfile.nameEt} (
+              {regionProfile.hardinessZone}) ·{' '}
+              <strong>{language === 'en' ? 'Spring Frost Target' : 'Kevadine öökülm'}:</strong>{' '}
+              {frostData.springFrostMMDD} ·{' '}
+              <strong>{language === 'en' ? 'Autumn Frost Target' : 'Sügisene öökülm'}:</strong>{' '}
+              {frostData.autumnFrostMMDD} ·{' '}
+              <strong>{language === 'en' ? 'Frost-Free Days' : 'Öökülmavaba periood'}:</strong>{' '}
+              {frostData.frostFreeDays} {language === 'en' ? 'days' : 'päeva'}
             </div>
           </div>
 
@@ -327,7 +346,12 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
             }}
           >
             <thead>
-              <tr style={{ backgroundColor: 'var(--kulv-surface-muted, #F4EEDF)', borderBottom: '1.5px solid var(--kulv-border, #C9BFA9)' }}>
+              <tr
+                style={{
+                  backgroundColor: 'var(--kulv-surface-muted, #F4EEDF)',
+                  borderBottom: '1.5px solid var(--kulv-border, #C9BFA9)'
+                }}
+              >
                 <th style={{ padding: '8px 10px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                   {language === 'en' ? 'Crop & Cultivar' : 'Kultuur & Sordid'}
                 </th>
@@ -372,11 +396,15 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>{plant.icon}</span>
                         <div>
-                          <div style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
-                            {displayName}
-                          </div>
+                          <div style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>{displayName}</div>
                           {plant.scientificName && (
-                            <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
+                            <div
+                              style={{
+                                fontSize: '10px',
+                                color: 'var(--kulv-text-muted, #5F675A)',
+                                fontStyle: 'italic'
+                              }}
+                            >
                               {plant.scientificName}
                             </div>
                           )}
@@ -431,9 +459,7 @@ export const SeasonalSowingPrintDialog: React.FC<SeasonalSowingPrintDialogProps>
                     </td>
                     <td style={{ padding: '8px 10px', fontSize: '11px' }}>
                       {bedAllocation ? (
-                        <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>
-                          {bedAllocation}
-                        </span>
+                        <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>{bedAllocation}</span>
                       ) : (
                         <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontStyle: 'italic' }}>
                           {language === 'en' ? 'Unassigned' : 'Määramata'}

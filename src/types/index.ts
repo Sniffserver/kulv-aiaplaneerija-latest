@@ -12,7 +12,7 @@ export interface Plant {
   varieties: string[];
   optimalSowDateStart: string; // e.g. "03-15" (MM-DD)
   optimalPlantOutDate: string; // e.g. "05-20"
-  optimalHarvestDate: string;  // e.g. "08-10"
+  optimalHarvestDate: string; // e.g. "08-10"
   spacingCm: number;
   rowSpacingCm: number;
   depthCm: number;
@@ -53,14 +53,14 @@ export interface Point2D {
 }
 
 export type EntityCategory =
-  | 'bed'          // Raised beds, in-ground beds, greenhouse beds, pots
-  | 'structure'    // Houses, sheds, saunas, greenhouses, pergolas, terraces, compost bins
-  | 'tree'         // Fruit trees, deciduous trees, conifers
-  | 'shrub'        // Berry bushes, ornamental shrubs, roses
-  | 'hedge'        // Hedges, boundary fences, stone walls
-  | 'path'         // Stone paths, gravel walkways, wooden decking, lawn paths
-  | 'water'        // Ponds, water basins, rain barrels, drainage swales
-  | 'furniture';   // Benches, outdoor dining, swings, fire pits
+  | 'bed' // Raised beds, in-ground beds, greenhouse beds, pots
+  | 'structure' // Houses, sheds, saunas, greenhouses, pergolas, terraces, compost bins
+  | 'tree' // Fruit trees, deciduous trees, conifers
+  | 'shrub' // Berry bushes, ornamental shrubs, roses
+  | 'hedge' // Hedges, boundary fences, stone walls
+  | 'path' // Stone paths, gravel walkways, wooden decking, lawn paths
+  | 'water' // Ponds, water basins, rain barrels, drainage swales
+  | 'furniture'; // Benches, outdoor dining, swings, fire pits
 
 export interface GardenEntity {
   id: string;
@@ -73,24 +73,24 @@ export interface GardenEntity {
   x: number;
   y: number;
   elevationM?: number; // Elevation from ground level (for terrace pots, raised platforms)
-  rotation: number;    // Degrees clockwise (0 - 360°) around centre
+  rotation: number; // Degrees clockwise (0 - 360°) around centre
 
   // Dimensions & Shape (metres) - shared geometry contract for 2D and 3D
   shapeType: 'rectangle' | 'circle' | 'polygon' | 'polyline';
-  width: number;       // Width in metres
-  length: number;      // Length in metres
-  heightM: number;     // 3D physical height in metres (critical for solar shadows & 3D mesh extrusion)
+  width: number; // Width in metres
+  length: number; // Length in metres
+  heightM: number; // 3D physical height in metres (critical for solar shadows & 3D mesh extrusion)
 
   // Custom boundary vertices for irregular shapes
   customPolygon?: Point2D[];
   pathPoints?: Point2D[]; // For pathways / fences
-  pathWidthM?: number;    // Width of path or hedge
+  pathWidthM?: number; // Width of path or hedge
 
   // Physics & Optical properties (for solar shadows & 3D rendering)
   shadowCasting: boolean;
   foliageOpacity?: number; // 0.0 - 1.0 (light transparency through tree crowns)
-  materialType?: string;   // 'wood' | 'glass' | 'stone' | 'foliage' | 'metal' | 'water' | 'soil'
-  color?: string;          // 2D schematic color fallback
+  materialType?: string; // 'wood' | 'glass' | 'stone' | 'foliage' | 'metal' | 'water' | 'soil'
+  color?: string; // 2D schematic color fallback
 
   // Association with garden bed & planting data (when category === 'bed')
   bedData?: {
@@ -104,24 +104,24 @@ export interface GardenEntity {
 
   // Botanical parameters (when category === 'tree' | 'shrub')
   botanicalData?: {
-    plantId?: string;       // Linked plant catalog ID
-    canopyRadiusM: number;  // Mature canopy radius (metres)
-    trunkHeightM: number;   // Height to first branch (metres)
-    rootSpreadM?: number;   // Root spread radius (metres)
-    isDeciduous?: boolean;  // Winter leaf loss affects winter shadows
+    plantId?: string; // Linked plant catalog ID
+    canopyRadiusM: number; // Mature canopy radius (metres)
+    trunkHeightM: number; // Height to first branch (metres)
+    rootSpreadM?: number; // Root spread radius (metres)
+    isDeciduous?: boolean; // Winter leaf loss affects winter shadows
   };
 
   notes?: string;
 
   // Layering, lock and metadata
-  zIndex: number;              // Visual stacking order
-  layerId?: string;            // Grouping: 'structures' | 'beds' | 'plants' | 'infrastructure' | 'furniture'
-  locked?: boolean;            // Lock to prevent accidental dragging
-  visible?: boolean;           // Visibility toggle
-  tags?: string[];             // Search & filtering tags
+  zIndex: number; // Visual stacking order
+  layerId?: string; // Grouping: 'structures' | 'beds' | 'plants' | 'infrastructure' | 'furniture'
+  locked?: boolean; // Lock to prevent accidental dragging
+  visible?: boolean; // Visibility toggle
+  tags?: string[]; // Search & filtering tags
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string | null;   // Soft-delete timestamp: enables undo, redo, and recovery from trash
+  deletedAt?: string | null; // Soft-delete timestamp: enables undo, redo, and recovery from trash
   metadata?: Record<string, unknown>; // Extensible future fields
 }
 
@@ -143,17 +143,17 @@ export const DEFAULT_YARD_LAYERS: YardLayer[] = [
 export interface YardPlan {
   id: string;
   name: string;
-  schemaVersion: number;       // Schema version (e.g. 2)
-  units: 'metric';             // Metric units strictly
+  schemaVersion: number; // Schema version (e.g. 2)
+  units: 'metric'; // Metric units strictly
   widthM: number;
   lengthM: number;
-  northAngleDeg: number;       // North azimuth angle (0° = top/north)
+  northAngleDeg: number; // North azimuth angle (0° = top/north)
   boundaryPolygon?: Point2D[];
-  cadastralCode?: string;      // Official Estonian cadastral code (e.g. "79501:027:0011")
-  cadastralAreaM2?: number;    // Official area in m²
-  address?: string;            // Official address (e.g. "Männiku tee 14, Kohila vald")
+  cadastralCode?: string; // Official Estonian cadastral code (e.g. "79501:027:0011")
+  cadastralAreaM2?: number; // Official area in m²
+  address?: string; // Official address (e.g. "Männiku tee 14, Kohila vald")
   entities: GardenEntity[];
-  trash?: GardenEntity[];      // Soft-deleted entities (trash bin) for atomic undo/recovery
+  trash?: GardenEntity[]; // Soft-deleted entities (trash bin) for atomic undo/recovery
   layers: YardLayer[];
   createdAt?: string;
   updatedAt?: string;

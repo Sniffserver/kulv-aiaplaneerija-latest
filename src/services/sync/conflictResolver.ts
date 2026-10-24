@@ -46,8 +46,10 @@ export function resolveConflict(
   }
 
   // Tie-breaker: Deterministic fallback based on highest item count or ID comparison
-  const clientItemCount = (clientState.beds?.length || 0) + (clientState.tasks?.length || 0) + (clientState.journal?.length || 0);
-  const serverItemCount = (serverState.beds?.length || 0) + (serverState.tasks?.length || 0) + (serverState.journal?.length || 0);
+  const clientItemCount =
+    (clientState.beds?.length || 0) + (clientState.tasks?.length || 0) + (clientState.journal?.length || 0);
+  const serverItemCount =
+    (serverState.beds?.length || 0) + (serverState.tasks?.length || 0) + (serverState.journal?.length || 0);
 
   if (clientItemCount >= serverItemCount) {
     return {

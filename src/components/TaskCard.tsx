@@ -71,7 +71,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete }) 
         </div>
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '2px', fontSize: '11px' }}>
           <span style={{ fontWeight: 600, color: badge.color }}>{badge.label}</span>
-          <span aria-hidden="true" style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>·</span>
+          <span aria-hidden="true" style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
+            ·
+          </span>
           <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Tähtaeg: {task.dueDate}</span>
         </div>
       </div>

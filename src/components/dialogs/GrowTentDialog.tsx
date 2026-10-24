@@ -165,8 +165,12 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
                   padding: '8px 6px',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  border: growthStage === st.id ? '1.5px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-                  backgroundColor: growthStage === st.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                  border:
+                    growthStage === st.id
+                      ? '1.5px solid var(--kulv-primary, #4F6B45)'
+                      : '1px solid var(--kulv-border, #C9BFA9)',
+                  backgroundColor:
+                    growthStage === st.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                   color: growthStage === st.id ? 'white' : 'var(--kulv-text, #2A2E24)',
                   display: 'flex',
                   flexDirection: 'column',
@@ -195,19 +199,28 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
           }}
         >
           <div>
-            <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: getStatusColor() }}>
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                color: getStatusColor()
+              }}
+            >
               Aurumise defitsiit (Vapor Pressure Deficit)
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '2px' }}>
               <span style={{ fontSize: '34px', fontWeight: 900, color: 'var(--kulv-text, #2A2E24)', lineHeight: 1 }}>
                 {vpdFormatted}
               </span>
-              <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)' }}>
-                kPa
-              </span>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)' }}>kPa</span>
             </div>
             <div style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '4px' }}>
-              Sihtvahemik: <strong>{currentTarget.min} – {currentTarget.max} kPa</strong>
+              Sihtvahemik:{' '}
+              <strong>
+                {currentTarget.min} – {currentTarget.max} kPa
+              </strong>
             </div>
           </div>
 
@@ -227,7 +240,11 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
           >
             {vpdStatus === 'optimal' ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
             <span>
-              {vpdStatus === 'optimal' ? 'Optimaalne' : vpdStatus === 'low' ? 'Liiga madal (niiske)' : 'Liiga kõrge (kuiv)'}
+              {vpdStatus === 'optimal'
+                ? 'Optimaalne'
+                : vpdStatus === 'low'
+                  ? 'Liiga madal (niiske)'
+                  : 'Liiga kõrge (kuiv)'}
             </span>
           </div>
         </div>
@@ -243,8 +260,19 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
               padding: '12px'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}
+            >
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 <Thermometer size={16} color="var(--kulv-primary, #4F6B45)" /> Õhutemperatuur
               </span>
               <strong style={{ fontSize: '14px', color: 'var(--kulv-primary, #4F6B45)' }}>
@@ -260,7 +288,15 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
               onChange={(e) => setTemperature(parseFloat(e.target.value))}
               style={{ width: '100%', cursor: 'pointer' }}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '10px',
+                color: 'var(--kulv-text-muted, #5F675A)',
+                marginTop: '2px'
+              }}
+            >
               <span>12°C (Jahe)</span>
               <span>22°C (Mugav)</span>
               <span>36°C (Kuum)</span>
@@ -276,13 +312,22 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
               padding: '12px'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}
+            >
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--kulv-text, #2A2E24)'
+                }}
+              >
                 <Droplet size={16} color="var(--kulv-info, #176B87)" /> Suhteline õhuniiskus
               </span>
-              <strong style={{ fontSize: '14px', color: 'var(--kulv-info, #176B87)' }}>
-                {humidity}%
-              </strong>
+              <strong style={{ fontSize: '14px', color: 'var(--kulv-info, #176B87)' }}>{humidity}%</strong>
             </div>
             <input
               type="range"
@@ -293,7 +338,15 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
               onChange={(e) => setHumidity(parseInt(e.target.value))}
               style={{ width: '100%', cursor: 'pointer' }}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '10px',
+                color: 'var(--kulv-text-muted, #5F675A)',
+                marginTop: '2px'
+              }}
+            >
               <span>20% (Väga kuiv)</span>
               <span>60% (Tasakaalus)</span>
               <span>95% (Küllastunud)</span>
@@ -313,7 +366,16 @@ export const GrowTentDialog: React.FC<GrowTentDialogProps> = ({ isOpen, onDismis
             lineHeight: 1.45
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontWeight: 700,
+              marginBottom: '4px',
+              color: 'var(--kulv-text, #2A2E24)'
+            }}
+          >
             <Info size={15} color="var(--kulv-primary, #4F6B45)" />
             <span>Agronoomi soovitus antud näitudele:</span>
           </div>

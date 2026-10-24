@@ -83,7 +83,13 @@ export const AddTaskDialog: React.FC<AddTaskDialogProps> = ({ isOpen, onDismiss,
             onClick={onDismiss}
             aria-label="Sulge aken"
             className="touch-target"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)', borderRadius: '8px' }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--kulv-text-muted, #5F675A)',
+              borderRadius: '8px'
+            }}
           >
             <X size={20} />
           </button>
@@ -91,7 +97,15 @@ export const AddTaskDialog: React.FC<AddTaskDialogProps> = ({ isOpen, onDismiss,
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Ülesande kirjeldus
             </label>
             <input
@@ -113,7 +127,15 @@ export const AddTaskDialog: React.FC<AddTaskDialogProps> = ({ isOpen, onDismiss,
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '4px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '4px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Tähtaeg (AAAA-KK-PP)
             </label>
             <input
@@ -133,7 +155,15 @@ export const AddTaskDialog: React.FC<AddTaskDialogProps> = ({ isOpen, onDismiss,
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '6px', color: 'var(--kulv-text, #2A2E24)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                marginBottom: '6px',
+                color: 'var(--kulv-text, #2A2E24)'
+              }}
+            >
               Kategooria:
             </label>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -148,7 +178,8 @@ export const AddTaskDialog: React.FC<AddTaskDialogProps> = ({ isOpen, onDismiss,
                     fontSize: '12px',
                     fontWeight: 600,
                     border: '1px solid var(--kulv-border, #C9BFA9)',
-                    backgroundColor: category === cat.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                    backgroundColor:
+                      category === cat.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
                     color: category === cat.id ? 'white' : 'var(--kulv-text, #2A2E24)',
                     cursor: 'pointer'
                   }}

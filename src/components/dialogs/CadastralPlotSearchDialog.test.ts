@@ -34,8 +34,8 @@ describe('Cadastral parcel presets and boundary logic', () => {
     expect(foundKohila?.municipality).toBe('Kohila vald');
 
     const tartuQuery = 'tammelinn';
-    const foundTartu = ESTONIAN_CADASTRAL_PRESETS.filter((p) =>
-      p.address.toLowerCase().includes(tartuQuery) || p.municipality.toLowerCase().includes(tartuQuery)
+    const foundTartu = ESTONIAN_CADASTRAL_PRESETS.filter(
+      (p) => p.address.toLowerCase().includes(tartuQuery) || p.municipality.toLowerCase().includes(tartuQuery)
     );
     expect(foundTartu.length).toBe(1);
     expect(foundTartu[0].cadastralCode).toBe('79508:042:0018');

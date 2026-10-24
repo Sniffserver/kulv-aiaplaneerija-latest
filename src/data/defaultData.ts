@@ -1,4 +1,14 @@
-import { GardenBed, Task, JournalEntry, AppSettings, WeatherInfo, YardPlan, GardenEntity, DEFAULT_YARD_LAYERS, convertBedToGardenEntity } from '../types';
+import {
+  GardenBed,
+  Task,
+  JournalEntry,
+  AppSettings,
+  WeatherInfo,
+  YardPlan,
+  GardenEntity,
+  DEFAULT_YARD_LAYERS,
+  convertBedToGardenEntity
+} from '../types';
 
 export const INITIAL_SETTINGS: AppSettings = {
   locationName: 'Tallinn',
@@ -27,11 +37,61 @@ export const INITIAL_BEDS: GardenBed[] = [
     notes: 'Kompostimullaga täidetud kõrgpeenar',
     calculatedSunHours: 8.0,
     plantings: [
-      { id: 'c1', bedId: 'bed_1', plantId: 'porgand', plantName: 'Aedporgand', plantIcon: '🥕', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-      { id: 'c2', bedId: 'bed_1', plantId: 'sibul', plantName: 'Mugulsibul', plantIcon: '🧅', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-01' },
-      { id: 'c3', bedId: 'bed_1', plantId: 'peet', plantName: 'Aedpeet', plantIcon: '🟣', gridX: 2, gridY: 0, year: 2026, dateAdded: '2026-05-05' },
-      { id: 'c4_extra', bedId: 'bed_1', plantId: 'salat', plantName: 'Lehtsalat', plantIcon: '🥬', gridX: 0, gridY: 1, year: 2026, dateAdded: '2026-05-05' },
-      { id: 'c5_extra', bedId: 'bed_1', plantId: 'hernes', plantName: 'Aedhernes', plantIcon: '🫛', gridX: 1, gridY: 1, year: 2026, dateAdded: '2026-05-05' }
+      {
+        id: 'c1',
+        bedId: 'bed_1',
+        plantId: 'porgand',
+        plantName: 'Aedporgand',
+        plantIcon: '🥕',
+        gridX: 0,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-01'
+      },
+      {
+        id: 'c2',
+        bedId: 'bed_1',
+        plantId: 'sibul',
+        plantName: 'Mugulsibul',
+        plantIcon: '🧅',
+        gridX: 1,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-01'
+      },
+      {
+        id: 'c3',
+        bedId: 'bed_1',
+        plantId: 'peet',
+        plantName: 'Aedpeet',
+        plantIcon: '🟣',
+        gridX: 2,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-05'
+      },
+      {
+        id: 'c4_extra',
+        bedId: 'bed_1',
+        plantId: 'salat',
+        plantName: 'Lehtsalat',
+        plantIcon: '🥬',
+        gridX: 0,
+        gridY: 1,
+        year: 2026,
+        dateAdded: '2026-05-05'
+      },
+      {
+        id: 'c5_extra',
+        bedId: 'bed_1',
+        plantId: 'hernes',
+        plantName: 'Aedhernes',
+        plantIcon: '🫛',
+        gridX: 1,
+        gridY: 1,
+        year: 2026,
+        dateAdded: '2026-05-05'
+      }
     ]
   },
   {
@@ -48,9 +108,39 @@ export const INITIAL_BEDS: GardenBed[] = [
     notes: 'Kütteta polükarbonaat kasvuhoone tomatite ja kurkide jaoks',
     calculatedSunHours: 8.5,
     plantings: [
-      { id: 'c4', bedId: 'bed_2', plantId: 'tomat', plantName: 'Tomat', plantIcon: '🍅', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-      { id: 'c5', bedId: 'bed_2', plantId: 'kurk', plantName: 'Harilik kurk', plantIcon: '🥒', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-15' },
-      { id: 'c6_gh', bedId: 'bed_2', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌱', gridX: 0, gridY: 1, year: 2026, dateAdded: '2026-05-15' }
+      {
+        id: 'c4',
+        bedId: 'bed_2',
+        plantId: 'tomat',
+        plantName: 'Tomat',
+        plantIcon: '🍅',
+        gridX: 0,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-15'
+      },
+      {
+        id: 'c5',
+        bedId: 'bed_2',
+        plantId: 'kurk',
+        plantName: 'Harilik kurk',
+        plantIcon: '🥒',
+        gridX: 1,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-15'
+      },
+      {
+        id: 'c6_gh',
+        bedId: 'bed_2',
+        plantId: 'basiilik',
+        plantName: 'Basiilik',
+        plantIcon: '🌱',
+        gridX: 0,
+        gridY: 1,
+        year: 2026,
+        dateAdded: '2026-05-15'
+      }
     ]
   },
   {
@@ -67,25 +157,86 @@ export const INITIAL_BEDS: GardenBed[] = [
     notes: 'Köögilähedane värskete ürtide kast',
     calculatedSunHours: 6.0,
     plantings: [
-      { id: 'c6', bedId: 'bed_3', plantId: 'basiilik', plantName: 'Basiilik', plantIcon: '🌱', gridX: 0, gridY: 0, year: 2026, dateAdded: '2026-05-20' },
-      { id: 'c7', bedId: 'bed_3', plantId: 'till', plantName: 'Aedtill', plantIcon: '🌿', gridX: 1, gridY: 0, year: 2026, dateAdded: '2026-05-20' }
+      {
+        id: 'c6',
+        bedId: 'bed_3',
+        plantId: 'basiilik',
+        plantName: 'Basiilik',
+        plantIcon: '🌱',
+        gridX: 0,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-20'
+      },
+      {
+        id: 'c7',
+        bedId: 'bed_3',
+        plantId: 'till',
+        plantName: 'Aedtill',
+        plantIcon: '🌿',
+        gridX: 1,
+        gridY: 0,
+        year: 2026,
+        dateAdded: '2026-05-20'
+      }
     ]
   }
 ];
 
 export const INITIAL_TASKS: Task[] = [
-  { id: 't1', title: 'Tomatitaimede ettekülv toas', completed: true, dueDate: '2026-03-25', category: 'sow', plantId: 'tomat', createdAt: '2026-03-01' },
-  { id: 't2', title: 'Kurgi ettekülv pottidesse', completed: false, dueDate: '2026-04-15', category: 'sow', plantId: 'kurk', createdAt: '2026-03-01' },
-  { id: 't3', title: 'Porgandi ja sibula külv peenrasse', completed: false, dueDate: '2026-05-05', category: 'plant', plantId: 'porgand', createdAt: '2026-03-01' },
-  { id: 't4', title: 'Kasvuhoone mullale komposti lisamine', completed: false, dueDate: '2026-05-10', category: 'feed', plantId: null, createdAt: '2026-03-01' },
-  { id: 't5', title: 'Tomatite istutamine kasvuhoonesse', completed: false, dueDate: '2026-05-20', category: 'plant', plantId: 'tomat', createdAt: '2026-03-01' }
+  {
+    id: 't1',
+    title: 'Tomatitaimede ettekülv toas',
+    completed: true,
+    dueDate: '2026-03-25',
+    category: 'sow',
+    plantId: 'tomat',
+    createdAt: '2026-03-01'
+  },
+  {
+    id: 't2',
+    title: 'Kurgi ettekülv pottidesse',
+    completed: false,
+    dueDate: '2026-04-15',
+    category: 'sow',
+    plantId: 'kurk',
+    createdAt: '2026-03-01'
+  },
+  {
+    id: 't3',
+    title: 'Porgandi ja sibula külv peenrasse',
+    completed: false,
+    dueDate: '2026-05-05',
+    category: 'plant',
+    plantId: 'porgand',
+    createdAt: '2026-03-01'
+  },
+  {
+    id: 't4',
+    title: 'Kasvuhoone mullale komposti lisamine',
+    completed: false,
+    dueDate: '2026-05-10',
+    category: 'feed',
+    plantId: null,
+    createdAt: '2026-03-01'
+  },
+  {
+    id: 't5',
+    title: 'Tomatite istutamine kasvuhoonesse',
+    completed: false,
+    dueDate: '2026-05-20',
+    category: 'plant',
+    plantId: 'tomat',
+    createdAt: '2026-03-01'
+  }
 ];
 
 export const INITIAL_JOURNAL: JournalEntry[] = [
   {
     id: 'j1',
     title: 'Kevadine aia planeerimine algas',
-    content: 'Planeerisin uue hooaja peenarde paigutuse. Põhipeenrasse lähevad kõrvuti porgand ja sibul porgandikärbse tõrjeks. Kasvuhoonesse valitud Eesti klassikaline "Malle" sort.',
+    content:
+      'Planeerisin uue hooaja peenarde paigutuse. Põhipeenrasse lähevad kõrvuti porgand ja sibul porgandikärbse tõrjeks. Kasvuhoonesse valitud Eesti klassikaline "Malle" sort.',
     category: 'observation',
     date: '2026-03-15',
     photoUrl: null
@@ -104,7 +255,8 @@ export const INITIAL_JOURNAL: JournalEntry[] = [
   {
     id: 'j3',
     title: 'Tomatitaimede pikeerimine pottidesse',
-    content: 'Tõusmed on jõulised ja esimesed pärislehed arenenud. Taimed pikeeritud 0.5L pottidesse orgaanilise kompostmullaga.',
+    content:
+      'Tõusmed on jõulised ja esimesed pärislehed arenenud. Taimed pikeeritud 0.5L pottidesse orgaanilise kompostmullaga.',
     category: 'observation',
     date: '2026-04-12',
     plantId: 'tomat',
@@ -187,7 +339,8 @@ export const INITIAL_JOURNAL: JournalEntry[] = [
   {
     id: 'j10',
     title: 'Tomatid punetavad & valmimisfaas käib',
-    content: 'Esimesed "Malle" viljad hakkavad altpoolt punaseks tõmbuma. Kastmist veidi vähendatud maitse tihendamiseks.',
+    content:
+      'Esimesed "Malle" viljad hakkavad altpoolt punaseks tõmbuma. Kastmist veidi vähendatud maitse tihendamiseks.',
     category: 'observation',
     date: '2026-07-28',
     plantId: 'tomat',
@@ -420,4 +573,3 @@ export function buildInitialYardPlan(settings: AppSettings, beds: GardenBed[]): 
 }
 
 export const INITIAL_YARD_PLAN: YardPlan = buildInitialYardPlan(INITIAL_SETTINGS, INITIAL_BEDS);
-
