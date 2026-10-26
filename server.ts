@@ -223,8 +223,7 @@ export function createApp(): Express {
 
 async function registerStaticServing(app: Express): Promise<void> {
   const distPath = path.resolve(process.cwd(), 'dist');
-  const hasBuiltClient = fs.existsSync(path.join(distPath, 'index.html'));
-  const isDev = !isProduction() && (process.env.NODE_ENV === 'development' || !hasBuiltClient);
+  const isDev = !isProduction();
 
   if (isDev) {
     const { createServer: createViteServer } = await import('vite');
