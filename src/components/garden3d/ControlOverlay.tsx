@@ -18,6 +18,7 @@ import {
 import { useYardStore } from '../../stores/yardStore';
 import { useGarden } from '../../context/GardenContext';
 import { SOLAR_SEASON_PRESETS, SolarSeasonPresetId } from '../../logic/solarEngine';
+import { Camera, Sprout } from 'lucide-react';
 
 interface ControlOverlayProps {
   onBackTo2D: () => void;
@@ -33,6 +34,10 @@ interface ControlOverlayProps {
   onToggleFullScreen?: () => void;
   performanceMode?: boolean;
   onTogglePerformance?: () => void;
+  cameraPreset?: 'top' | 'iso' | 'ground';
+  onSelectCameraPreset?: (preset: 'top' | 'iso' | 'ground') => void;
+  showCompanionPins?: boolean;
+  onToggleCompanionPins?: () => void;
 }
 
 export const ControlOverlay: React.FC<ControlOverlayProps> = ({
@@ -48,7 +53,11 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
   isFullScreen = false,
   onToggleFullScreen,
   performanceMode = false,
-  onTogglePerformance
+  onTogglePerformance,
+  cameraPreset = 'iso',
+  onSelectCameraPreset,
+  showCompanionPins = true,
+  onToggleCompanionPins
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { language } = useGarden();
@@ -180,6 +189,62 @@ export const ControlOverlay: React.FC<ControlOverlayProps> = ({
                       : 'Varjud: VÄLJAS'}
                 </span>
               </button>
+
+              {/* 3D Camera Presets */}
+              {onSelectCameraPreset && (
+                <div className="flex items-center gap-1 bg-[#101711]/80 p-1 rounded-lg border border-[#2D3E2F] min-h-[40px]">
+                  <Camera size={13} className="text-[#A7C080] ml-1" />
+                  <button
+                    onClick={() => onSelectCameraPreset('top')}
+                    className={`px-2 py-1 text-[11px] font-semibold tracking-wide rounded transition-all ${
+                      cameraPreset === 'top'
+                        ? 'bg-[#385A40] text-white border border-[#A7C080] shadow-[0_0_8px_rgba(167,192,128,0.35)]'
+                        : 'text-[#D2DACB] hover:text-white'
+                    }`}
+                    title={language === 'en' ? 'Top-down bird eye view (90°)' : 'Plaaniline linnulennuvaade (90°)'}
+                  >
+                    {language === 'en' ? 'Top' : 'Plaan'}
+                  </button>
+                  <button
+                    onClick={() => onSelectCameraPreset('iso')}
+                    className={`px-2 py-1 text-[11px] font-semibold tracking-wide rounded transition-all ${
+                      cameraPreset === 'iso'
+                        ? 'bg-[#385A40] text-white border border-[#A7C080] shadow-[0_0_8px_rgba(167,192,128,0.35)]'
+                        : 'text-[#D2DACB] hover:text-white'
+                    }`}
+                    title={language === 'en' ? 'Isometric 45° view' : 'Isomeetriline vaade (45°)'}
+                  >
+                    {language === 'en' ? 'Iso' : 'Isomeetria'}
+                  </button>
+                  <button
+                    onClick={() => onSelectCameraPreset('ground')}
+                    className={`px-2 py-1 text-[11px] font-semibold tracking-wide rounded transition-all ${
+                      cameraPreset === 'ground'
+                        ? 'bg-[#385A40] text-white border border-[#A7C080] shadow-[0_0_8px_rgba(167,192,128,0.35)]'
+                        : 'text-[#D2DACB] hover:text-white'
+                    }`}
+                    title={language === 'en' ? 'Ground level pedestrian view' : 'Maapinnalt jalakäija vaade'}
+                  >
+                    {language === 'en' ? 'Ground' : 'Maapind'}
+                  </button>
+                </div>
+              )}
+
+              {/* 3D Companion Harmony Pins Toggle */}
+              {onToggleCompanionPins && (
+                <button
+                  onClick={onToggleCompanionPins}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold tracking-wide rounded-lg transition-all border min-h-[40px] ${
+                    showCompanionPins
+                      ? 'bg-[#385A40] text-white border-[#A7C080] shadow-[0_0_8px_rgba(167,192,128,0.35)]'
+                      : 'bg-[#222E23] text-[#D2DACB] border-[#3E5A35]/50 hover:bg-[#2D3E2F]'
+                  }`}
+                  title={language === 'en' ? 'Toggle companion planting harmony pins' : 'Lülita kaaslaste harmoonia märgid sisse/välja'}
+                >
+                  <Sprout size={14} className={showCompanionPins ? 'text-[#CDE6A8]' : 'text-[#8EA883]'} />
+                  <span className="hidden sm:inline">{language === 'en' ? 'Companions' : 'Kaaslased'}</span>
+                </button>
+              )}
             </div>
 
             {/* Solar Elevation & Azimuth Badges */}

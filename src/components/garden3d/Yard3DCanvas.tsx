@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
+import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useYardStore } from '../../stores/yardStore';
 import { useGarden } from '../../context/GardenContext';
 import { SolarEngine, SOLAR_SEASON_PRESETS } from '../../logic/solarEngine';
+import { CompanionEngine } from '../../logic/companionEngine';
+import { toThreePosition } from '../../lib/three/coords';
 import { Entity3DMesh } from './Entity3DMesh';
 import { ControlOverlay } from './ControlOverlay';
 
@@ -31,12 +33,25 @@ const Yard3DScene: React.FC<{
   solarAzimuth: number;
   shadowsEnabled: boolean;
   performanceMode?: boolean;
-}> = ({ solarAltitude, solarAzimuth, shadowsEnabled, performanceMode = false }) => {
+  cameraPreset?: 'top' | 'iso' | 'ground';
+  showCompanionPins?: boolean;
+}> = ({
+  solarAltitude,
+  solarAzimuth,
+  shadowsEnabled,
+  performanceMode = false,
+  cameraPreset = 'iso',
+  showCompanionPins = true
+}) => {
   const plan = useYardStore((s) => s.plan);
   const selectedEntityId = useYardStore((s) => s.selectedEntityId);
   const hoveredEntityId = useYardStore((s) => s.hoveredEntityId);
   const setSelectedEntityId = useYardStore((s) => s.setSelectedEntityId);
   const setHoveredEntityId = useYardStore((s) => s.setHoveredEntityId);
+  const { beds: gardenBeds, plants, language, isDarkMode } = useGarden();
+
+  const { camera } = useThree();
+  const controlsRef = useRef<any>(null);
 
   // Active entities only (exclude soft-deleted entities)
   const activeEntities = useMemo(() => {
@@ -92,6 +107,50 @@ const Yard3DScene: React.FC<{
   const maxDimension = Math.max(widthM, lengthM);
   const shadowResolution = performanceMode ? 512 : isSoftwareGl ? 1024 : 2048;
 
+  // Reposition camera when cameraPreset changes
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    const maxDim = Math.max(widthM, lengthM);
+
+    if (cameraPreset === 'top') {
+      camera.position.set(0, maxDim * 1.5, 0.001);
+      controlsRef.current.target.set(0, 0, 0);
+    } else if (cameraPreset === 'ground') {
+      camera.position.set(0, 1.6, maxDim * 0.55);
+      controlsRef.current.target.set(0, 0.8, 0);
+    } else {
+      // 'iso' default angle
+      camera.position.set(maxDim * 0.75, maxDim * 0.85, maxDim * 1.05);
+      controlsRef.current.target.set(0, 0, 0);
+    }
+    controlsRef.current.update();
+  }, [cameraPreset, camera, widthM, lengthM]);
+
+  // Compute companion harmony scores for bed entities to billboard floating pins in 3D
+  const bedHarmonyPins = useMemo(() => {
+    if (!showCompanionPins || !plan) return [];
+    return activeEntities
+      .filter((e) => e.category === 'bed' || e.category === 'structure')
+      .map((entity) => {
+        const plantings = entity.bedData?.plantings?.length
+          ? entity.bedData.plantings
+          : (gardenBeds.find((b) => b.id === entity.id)?.plantings || []);
+        if (!plantings || plantings.length === 0) return null;
+
+        const harmony = CompanionEngine.calculateBedHarmony(plantings, plants, language);
+        const [x, y, z] = toThreePosition(entity, plan);
+        const elevation = (entity.heightM || 0.4) / 2 + 0.5;
+
+        return {
+          entity,
+          harmony,
+          position: [x, y + elevation, z] as [number, number, number],
+          plantCount: plantings.length
+        };
+      })
+      .filter((pin): pin is NonNullable<typeof pin> => pin !== null);
+  }, [showCompanionPins, plan, activeEntities, gardenBeds, plants, language]);
+
   return (
     <>
       {/* Soft Ambient Fill Lighting */}
@@ -120,6 +179,7 @@ const Yard3DScene: React.FC<{
 
       {/* OrbitControls with responsive damping and smooth iPad/iPhone/Android touch gestures */}
       <OrbitControls
+        ref={controlsRef}
         enableDamping
         dampingFactor={0.07}
         maxPolarAngle={Math.PI / 2 - 0.04} // Prevent camera going underground
@@ -185,6 +245,50 @@ const Yard3DScene: React.FC<{
             }}
           />
         ))}
+
+      {/* 3D Floating Companion Harmony Badges */}
+      {showCompanionPins &&
+        bedHarmonyPins.map(({ entity, harmony, position, plantCount }) => {
+          const isSelected = entity.id === selectedEntityId;
+          const hasConflicts = harmony.negativePairs > 0;
+          const hasSynergy = harmony.positivePairs > 0;
+
+          const badgeTheme = isDarkMode
+            ? hasConflicts
+              ? 'bg-[#2D1C1D]/95 text-[#FFC4C4] border-[#F2A6A6] shadow-[0_0_12px_rgba(242,166,166,0.5)]'
+              : hasSynergy
+                ? 'bg-[#1A281C]/95 text-[#CDE6A8] border-[#A7C080] shadow-[0_0_12px_rgba(167,192,128,0.5)]'
+                : 'bg-[#1E2820]/95 text-[#D2DACB] border-[#5A735C] shadow-[0_0_8px_rgba(90,115,92,0.4)]'
+            : hasConflicts
+              ? 'bg-[#C76D3A] text-[#FAF6ED] border-[#D97D4E]'
+              : hasSynergy
+                ? 'bg-[#3E5A35] text-[#FAF6ED] border-[#5A7C4F]'
+                : 'bg-[#2E3C2F]/90 text-[#E7E2D6] border-[#4A5D4B]';
+
+          return (
+            <group key={`pin-${entity.id}`} position={position}>
+              <Html center distanceFactor={15} zIndexRange={[50, 0]}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedEntityId(entity.id);
+                  }}
+                  title={`${entity.name}: ${harmony.harmonyPercentage}% ${language === 'en' ? 'harmony' : 'koosmõju'}`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold tracking-wide backdrop-blur-md border transition-all duration-200 cursor-pointer pointer-events-auto select-none ${badgeTheme} ${
+                    isSelected
+                      ? (isDarkMode ? 'ring-2 ring-[#C5E0A5] scale-110 shadow-2xl' : 'ring-2 ring-[#FAF6ED] scale-110 shadow-xl')
+                      : 'hover:scale-105'
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
+                  <span className="font-serif-display font-semibold">{harmony.harmonyPercentage}%</span>
+                  <span className="text-[10px] opacity-80">({plantCount})</span>
+                </button>
+              </Html>
+            </group>
+          );
+        })}
     </>
   );
 };
@@ -199,6 +303,8 @@ export const Yard3DCanvas: React.FC<Yard3DCanvasProps> = ({ onBackTo2D }) => {
 
   const [shadowsEnabled, setShadowsEnabled] = useState(!isSoftwareGl);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [cameraPreset, setCameraPreset] = useState<'top' | 'iso' | 'ground'>('iso');
+  const [showCompanionPins, setShowCompanionPins] = useState(true);
   const [performanceMode, setPerformanceMode] = useState(() => {
     if (typeof window === 'undefined') return false;
     return isSoftwareGl || window.innerWidth < 768;
@@ -298,6 +404,8 @@ export const Yard3DCanvas: React.FC<Yard3DCanvasProps> = ({ onBackTo2D }) => {
           solarAzimuth={solarAzimuth}
           shadowsEnabled={shadowsEnabled}
           performanceMode={performanceMode}
+          cameraPreset={cameraPreset}
+          showCompanionPins={showCompanionPins}
         />
       </Canvas>
 
@@ -316,6 +424,10 @@ export const Yard3DCanvas: React.FC<Yard3DCanvasProps> = ({ onBackTo2D }) => {
         onToggleFullScreen={() => setIsFullScreen((prev) => !prev)}
         performanceMode={performanceMode}
         onTogglePerformance={() => setPerformanceMode((prev) => !prev)}
+        cameraPreset={cameraPreset}
+        onSelectCameraPreset={setCameraPreset}
+        showCompanionPins={showCompanionPins}
+        onToggleCompanionPins={() => setShowCompanionPins((prev) => !prev)}
       />
 
       {/* Floating Bottom HUD: Selected Entity Details */}

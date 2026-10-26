@@ -1816,6 +1816,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                   language={language}
                   filter={companionFilter}
                   onSelectEntity={(id) => setSelectedEntityId(id)}
+                  onOpenBedDetail={onSelectBedDetail}
                 />
               )}
 

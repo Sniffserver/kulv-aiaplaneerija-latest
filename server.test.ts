@@ -173,11 +173,50 @@ describe('KÜLV server', () => {
     );
   });
 
-  it('forwards an incoming request ID', async () => {
-    const response = await request(createApp())
-      .get('/health')
-      .set('X-Request-Id', 'test-request-id');
+  it('rate limits each IP independently', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify(weatherResponse), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+    );
 
-    expect(response.headers['x-request-id']).toBe('test-request-id');
+    process.env.NODE_ENV = 'production';
+    const app = createApp();
+    const query = { lat: '59.100', lon: '24.100' };
+
+    for (let index = 0; index < 30; index += 1) {
+      await request(app)
+        .get('/api/weather')
+        .set('X-Forwarded-For', '203.0.113.10')
+        .query(query);
+    }
+
+    const blocked = await request(app)
+      .get('/api/weather')
+      .set('X-Forwarded-For', '203.0.113.10')
+      .query(query);
+
+    const otherIp = await request(app)
+      .get('/api/weather')
+      .set('X-Forwarded-For', '203.0.113.11')
+      .query(query);
+
+    expect(blocked.status).toBe(429);
+    expect(otherIp.status).toBe(200);
+  });
+
+  it('sets baseline security headers in production', async () => {
+    process.env.NODE_ENV = 'production';
+
+    const response = await request(createApp()).get('/health');
+
+    expect(response.headers['x-content-type-options']).toBe('nosniff');
+    expect(response.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+    expect(response.headers['content-security-policy']).toContain("default-src 'self'");
   });
 });
+

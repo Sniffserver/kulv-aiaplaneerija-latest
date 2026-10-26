@@ -2,11 +2,13 @@ import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
+import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 
 const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
 const WEATHER_REQUEST_TIMEOUT_MS = 8_000;
+const MAX_WEATHER_CACHE_SIZE = 500;
 
 const weatherQuerySchema = z.object({
   lat: z.coerce.number().min(-90).max(90),
@@ -19,6 +21,29 @@ type CacheEntry = {
 };
 
 const weatherCache = new Map<string, CacheEntry>();
+
+function setWeatherCache(key: string, data: unknown): void {
+  if (weatherCache.size >= MAX_WEATHER_CACHE_SIZE) {
+    const now = Date.now();
+    for (const [k, entry] of weatherCache.entries()) {
+      if (entry.expiresAt <= now) {
+        weatherCache.delete(k);
+      }
+    }
+
+    if (weatherCache.size >= MAX_WEATHER_CACHE_SIZE) {
+      const oldestKey = weatherCache.keys().next().value;
+      if (oldestKey) {
+        weatherCache.delete(oldestKey);
+      }
+    }
+  }
+
+  weatherCache.set(key, {
+    expiresAt: Date.now() + WEATHER_CACHE_TTL_MS,
+    data
+  });
+}
 
 const developmentOrigins = new Set([
   'http://localhost:3000',
@@ -55,12 +80,11 @@ function isProduction(): boolean {
 }
 
 function getHost(): string {
-  const envHost = process.env.HOST;
-  // If HOST is set to a specific IP or custom domain (ignore Linux automatic container hostname 'das')
-  if (envHost && envHost !== 'das' && envHost !== 'localhost' && envHost !== '127.0.0.1') {
-    return envHost;
+  if (process.env.HOST) {
+    return process.env.HOST;
   }
-  return '0.0.0.0';
+
+  return isProduction() ? '0.0.0.0' : '127.0.0.1';
 }
 
 function createWeatherLimiter() {
@@ -69,7 +93,6 @@ function createWeatherLimiter() {
     limit: 30,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    validate: false,
     message: {
       error: 'Too many weather requests, please try again later.'
     }
@@ -106,8 +129,41 @@ export function createApp(): Express {
   const app = express();
   const allowedOrigins = getAllowedOrigins();
 
-  app.set('trust proxy', 1);
+  if (isProduction()) {
+    app.set('trust proxy', 1);
+  }
   app.disable('x-powered-by');
+
+  const production = isProduction();
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: production
+        ? {
+            useDefaults: true,
+            directives: {
+              defaultSrc: ["'self'"],
+              scriptSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'"],
+              imgSrc: ["'self'", 'data:', 'blob:'],
+              fontSrc: ["'self'", 'data:'],
+              connectSrc: ["'self'"],
+              objectSrc: ["'none'"],
+              frameAncestors: ["'none'"],
+              baseUri: ["'self'"],
+              formAction: ["'self'"],
+              upgradeInsecureRequests: []
+            }
+          }
+        : false,
+      crossOriginEmbedderPolicy: false,
+      strictTransportSecurity: production
+        ? { maxAge: 63_072_000, includeSubDomains: true }
+        : false,
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      permittedCrossDomainPolicies: { permittedPolicies: 'none' }
+    })
+  );
 
   app.use(requestLogger);
 
@@ -165,13 +221,13 @@ export function createApp(): Express {
       return res.json(cached.data);
     }
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(
-        () => controller.abort(),
-        WEATHER_REQUEST_TIMEOUT_MS
-      );
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      WEATHER_REQUEST_TIMEOUT_MS
+    );
 
+    try {
       const upstreamUrl = new URL('https://api.openweathermap.org/data/2.5/weather');
       upstreamUrl.searchParams.set('lat', lat.toString());
       upstreamUrl.searchParams.set('lon', lon.toString());
@@ -182,8 +238,6 @@ export function createApp(): Express {
         signal: controller.signal
       });
 
-      clearTimeout(timeoutId);
-
       if (!response.ok) {
         return res.status(502).json({
           error: 'Weather provider unavailable or returned an error'
@@ -192,10 +246,7 @@ export function createApp(): Express {
 
       const data: unknown = await response.json();
 
-      weatherCache.set(cacheKey, {
-        expiresAt: Date.now() + WEATHER_CACHE_TTL_MS,
-        data
-      });
+      setWeatherCache(cacheKey, data);
 
       res.setHeader('X-Cache', 'MISS');
       return res.json(data);
@@ -209,6 +260,8 @@ export function createApp(): Express {
       return res.status(500).json({
         error: 'Failed to fetch weather data'
       });
+    } finally {
+      clearTimeout(timeoutId);
     }
   });
 

@@ -39,7 +39,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
   onPlantInCell,
   onRemoveFromCell
 }) => {
-  const { addJournalEntry, addTask, language, t } = useGarden();
+  const { addJournalEntry, addTask, language, t, isDarkMode } = useGarden();
 
   const cols = Math.max(3, Math.round(bed.length / 0.5));
   const rows = Math.max(2, Math.round(bed.width / 0.5));
@@ -53,6 +53,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [heatmapActive, setHeatmapActive] = useState(false);
   const [showDesktopGrowthChart, setShowDesktopGrowthChart] = useState(false);
+  const [showHarmonyDrawer, setShowHarmonyDrawer] = useState(false);
 
   // Overall bed harmony
   const bedHarmony = CompanionEngine.calculateBedHarmony(bed.plantings, allPlants);
@@ -232,6 +233,45 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            {/* Companion Harmony Badge & Breakdown Toggle */}
+            <button
+              onClick={() => setShowHarmonyDrawer((prev) => !prev)}
+              data-testid="toggle_companion_harmony_drawer_btn"
+              title={language === 'en' ? 'Click to inspect companion planting harmony breakdown' : 'Klõpsa peenra kaaslastaimede harmoonia vaatamiseks'}
+              className="touch-target"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: isDarkMode
+                  ? (bedHarmony.harmonyPercentage >= 80 ? '1.5px solid #A7C080' : bedHarmony.harmonyPercentage >= 50 ? '1.5px solid #E5BD70' : '1.5px solid #F2A6A6')
+                  : (bedHarmony.harmonyPercentage >= 80 ? '1px solid #4F6B45' : bedHarmony.harmonyPercentage >= 50 ? '1px solid #D9A03D' : '1px solid #D97A3D'),
+                backgroundColor: showHarmonyDrawer
+                  ? (bedHarmony.harmonyPercentage >= 80 ? '#385A40' : '#D9A03D')
+                  : isDarkMode
+                    ? (bedHarmony.harmonyPercentage >= 80 ? 'rgba(26, 42, 28, 0.9)' : bedHarmony.harmonyPercentage >= 50 ? 'rgba(45, 36, 20, 0.9)' : 'rgba(46, 24, 25, 0.9)')
+                    : (bedHarmony.harmonyPercentage >= 80 ? '#EBF4E8' : bedHarmony.harmonyPercentage >= 50 ? '#FFF8E6' : '#FDF0E9'),
+                color: showHarmonyDrawer
+                  ? 'white'
+                  : isDarkMode
+                    ? (bedHarmony.harmonyPercentage >= 80 ? '#CDE6A8' : bedHarmony.harmonyPercentage >= 50 ? '#F8DF9F' : '#FFC4C4')
+                    : (bedHarmony.harmonyPercentage >= 80 ? '#2F4F24' : bedHarmony.harmonyPercentage >= 50 ? '#8F5800' : '#9E3C12'),
+                boxShadow: isDarkMode
+                  ? (bedHarmony.harmonyPercentage >= 80 ? '0 0 10px rgba(167, 192, 128, 0.35)' : bedHarmony.harmonyPercentage >= 50 ? '0 0 10px rgba(229, 189, 112, 0.35)' : '0 0 10px rgba(242, 166, 166, 0.35)')
+                  : undefined,
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Sprout size={14} />
+              <span>{bedHarmony.harmonyPercentage}% {language === 'en' ? 'Harmony' : 'Koosmõju'}</span>
+              {showHarmonyDrawer ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            </button>
+
             {/* Companion Heatmap Toggle */}
             <button
               onClick={() => setHeatmapActive((prev) => !prev)}
@@ -310,6 +350,75 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
             </div>
           )}
         </div>
+
+        {/* Expandable Companion Harmony Breakdown Drawer */}
+        {showHarmonyDrawer && (
+          <div
+            style={{
+              marginTop: '12px',
+              padding: '12px 14px',
+              borderRadius: '10px',
+              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+              border: '1px solid var(--kulv-border, #C9BFA9)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              animation: 'fadeIn 0.2s ease-out'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontWeight: 700, fontSize: '12px', color: 'var(--kulv-text, #2A2E24)' }}>
+                {language === 'en' ? 'Companion Planting Harmony Breakdown' : 'Kaaslastaimede harmoonia analüüs'} ({bedHarmony.harmonyPercentage}%)
+              </span>
+              <button
+                onClick={() => setShowHarmonyDrawer(false)}
+                style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)' }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: '1.4' }}>
+              {bedHarmony.summary}
+            </div>
+            {companionConflicts.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, color: isDarkMode ? '#FFC4C4' : '#9E3C12' }}>
+                  {language === 'en' ? 'Incompatible Plantings Detected:' : 'Tuvastatud ebasoodsad naabrused:'}
+                </span>
+                {companionConflicts.map((c, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      fontSize: '10px',
+                      backgroundColor: isDarkMode ? 'rgba(242, 166, 166, 0.18)' : '#FDF0E9',
+                      color: isDarkMode ? '#FFC4C4' : '#9E3C12',
+                      border: isDarkMode ? '1px solid rgba(242, 166, 166, 0.4)' : 'none',
+                      padding: '4px 8px',
+                      borderRadius: '4px'
+                    }}
+                  >
+                    <span style={{ fontWeight: 600 }}>{c.plantA} & {c.plantB}:</span> {c.message}
+                  </div>
+                ))}
+              </div>
+            )}
+            {bedHarmony.recommendations && bedHarmony.recommendations.length > 0 && (
+              <div
+                style={{
+                  fontSize: '10px',
+                  color: isDarkMode ? '#CDE6A8' : '#2F4F24',
+                  backgroundColor: isDarkMode ? 'rgba(167, 192, 128, 0.18)' : '#EBF4E8',
+                  border: isDarkMode ? '1px solid rgba(167, 192, 128, 0.4)' : 'none',
+                  padding: '6px 8px',
+                  borderRadius: '4px',
+                  marginTop: '4px'
+                }}
+              >
+                <strong>{language === 'en' ? 'Agronomist Tip:' : 'Soovitus:'}</strong> {bedHarmony.recommendations[0].explanation || bedHarmony.recommendations[0].message}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Companion Synergy Live Heatmap Overview Bar */}
         {heatmapActive && (
@@ -454,13 +563,36 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     if (!planted && isHovered && selectedPlant) {
                       const syn = CompanionEngine.getCellSynergy(c, r, selectedPlant, bed.plantings, allPlants);
                       if (syn.status === 'good') {
-                        cellBorderColor = 'var(--kulv-primary, #4F6B45)';
+                        cellBorderColor = isDarkMode ? '#A7C080' : 'var(--kulv-primary, #4F6B45)';
                         cellBorderWidth = '2px';
-                        cellBoxShadow = '0 0 0 3px rgba(79, 107, 69, 0.3)';
+                        cellBoxShadow = isDarkMode ? '0 0 12px rgba(167, 192, 128, 0.6)' : '0 0 0 3px rgba(79, 107, 69, 0.3)';
                       } else if (syn.status === 'bad') {
-                        cellBorderColor = 'var(--kulv-accent, #D97A3D)';
+                        cellBorderColor = isDarkMode ? '#F2A6A6' : 'var(--kulv-accent, #D97A3D)';
                         cellBorderWidth = '2px';
-                        cellBoxShadow = '0 0 0 3px rgba(217, 122, 61, 0.3)';
+                        cellBoxShadow = isDarkMode ? '0 0 12px rgba(242, 166, 166, 0.6)' : '0 0 0 3px rgba(217, 122, 61, 0.3)';
+                      }
+                    }
+
+                    // Prospective neighbor synergy highlight when an empty cell is hovered with a selected plant:
+                    let neighborSynergy: 'positive' | 'negative' | null = null;
+                    if (planted && hoveredCell && selectedPlant && !(hoveredCell.x === c && hoveredCell.y === r)) {
+                      const isHoveredEmpty = !bed.plantings.some((p) => p.gridX === hoveredCell.x && p.gridY === hoveredCell.y);
+                      if (isHoveredEmpty) {
+                        const isAdjacent = Math.abs(c - hoveredCell.x) <= 1 && Math.abs(r - hoveredCell.y) <= 1;
+                        if (isAdjacent) {
+                          const pairRec = CompanionEngine.evaluatePair(planted.plantId, selectedPlant.id, allPlants, language);
+                          if (pairRec.classification === 'beneficial') {
+                            neighborSynergy = 'positive';
+                            cellBorderColor = isDarkMode ? '#A7C080' : 'var(--kulv-primary, #4F6B45)';
+                            cellBorderWidth = '2px';
+                            cellBoxShadow = isDarkMode ? '0 0 10px rgba(167, 192, 128, 0.55)' : '0 0 0 3px rgba(79, 107, 69, 0.45)';
+                          } else if (pairRec.classification === 'incompatible') {
+                            neighborSynergy = 'negative';
+                            cellBorderColor = isDarkMode ? '#F2A6A6' : 'var(--kulv-accent, #D97A3D)';
+                            cellBorderWidth = '2px';
+                            cellBoxShadow = isDarkMode ? '0 0 10px rgba(242, 166, 166, 0.55)' : '0 0 0 3px rgba(217, 122, 61, 0.5)';
+                          }
+                        }
                       }
                     }
 
@@ -518,6 +650,40 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       >
                         {planted ? (
                           <>
+                            {/* Live neighbor companion synergy cue */}
+                            {neighborSynergy && (
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  top: '-6px',
+                                  right: '-6px',
+                                  backgroundColor: isDarkMode
+                                    ? (neighborSynergy === 'positive' ? 'rgba(26, 42, 28, 0.95)' : 'rgba(46, 24, 25, 0.95)')
+                                    : (neighborSynergy === 'positive' ? '#EBF4E8' : '#FDF0E9'),
+                                  color: isDarkMode
+                                    ? (neighborSynergy === 'positive' ? '#CDE6A8' : '#FFC4C4')
+                                    : (neighborSynergy === 'positive' ? '#2F4F24' : '#9E3C12'),
+                                  border: isDarkMode
+                                    ? `1.5px solid ${neighborSynergy === 'positive' ? '#A7C080' : '#F2A6A6'}`
+                                    : `1px solid ${neighborSynergy === 'positive' ? '#4F6B45' : '#D97A3D'}`,
+                                  borderRadius: '10px',
+                                  fontSize: '9px',
+                                  fontWeight: 800,
+                                  padding: '1px 5px',
+                                  boxShadow: isDarkMode
+                                    ? (neighborSynergy === 'positive' ? '0 0 8px rgba(167, 192, 128, 0.45)' : '0 0 8px rgba(242, 166, 166, 0.45)')
+                                    : '0 2px 5px rgba(0,0,0,0.2)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '2px',
+                                  zIndex: 4
+                                }}
+                              >
+                                <span>{neighborSynergy === 'positive' ? '🌿' : '⚠️'}</span>
+                                <span>{neighborSynergy === 'positive' ? '+' : '!'}</span>
+                              </div>
+                            )}
+
                             <span style={{ fontSize: '22px' }}>{planted.plantIcon}</span>
                             <span
                               style={{

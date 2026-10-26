@@ -45,26 +45,32 @@
 
 .dark {
   color-scheme: dark;
-  --kulv-bg: #171b17;
-  --kulv-surface: #20271f;
-  --kulv-surface-muted: #2a3329;
-  --kulv-workspace: #171b17;
-  --kulv-text: #f4f1e8;
-  --kulv-text-muted: #d4d9cc;
-  --kulv-text-subtle: #bec7b5;
-  --kulv-border: #71806a;
-  --kulv-border-hover: #9db38f;
+  /* Warm Pine Forest Night Palette */
+  --kulv-bg: #131914;
+  --kulv-surface: #1a231b;
+  --kulv-surface-muted: #232f25;
+  --kulv-surface-elevated: #2c3a2f;
+  --kulv-workspace: #151d16;
+  --kulv-text: #f5f2eb;
+  --kulv-text-muted: #d2dacb;
+  --kulv-text-subtle: #afbba6;
+  --kulv-border: #38493a;
+  --kulv-border-hover: #5a735c;
   --kulv-primary: #a7c080;
-  --kulv-primary-hover: #b9d49a;
-  --kulv-button-text: #20271f;
-  --kulv-focus: #c3d5a5;
-  --kulv-accent: #e39a6d;
-  --kulv-accent-soft: #4c3024;
+  --kulv-primary-hover: #b8d49a;
+  --kulv-button-text: #131914;
+  --kulv-focus: #c5e0a5;
+  --kulv-accent: #e59b6e;
+  --kulv-accent-soft: #3d281e;
   --kulv-success: #a7c080;
   --kulv-warning: #e5bd70;
   --kulv-danger: #f2a6a6;
   --kulv-info: #8ec9db;
-  --kulv-shadow-card: 0 1px 2px rgb(0 0 0 / 0.28);
+  --kulv-shadow-card: 0 1px 3px rgb(0 0 0 / 0.45), 0 4px 12px rgb(0 0 0 / 0.35);
+  --kulv-ring-glow: 0 0 10px rgba(167, 192, 128, 0.4);
+  --kulv-badge-glow-success: 0 0 12px rgba(167, 192, 128, 0.45);
+  --kulv-badge-glow-warning: 0 0 12px rgba(229, 189, 112, 0.45);
+  --kulv-badge-glow-danger: 0 0 12px rgba(242, 166, 166, 0.45);
 }
 
 /* Gruvbox: warm paper in light mode; earthy charcoal in dark mode. */
@@ -186,21 +192,22 @@
 }
 
 .dark[data-palette='meadow'] {
-  --kulv-bg: #191d17;
-  --kulv-surface: #222820;
-  --kulv-surface-muted: #2b332a;
-  --kulv-workspace: #191d17;
-  --kulv-text: #f2efe5;
-  --kulv-text-muted: #cfd5c7;
-  --kulv-text-subtle: #b2baa9;
-  --kulv-border: #6e7a66;
-  --kulv-border-hover: #94a886;
+  --kulv-bg: #131914;
+  --kulv-surface: #1a231b;
+  --kulv-surface-muted: #232f25;
+  --kulv-surface-elevated: #2c3a2f;
+  --kulv-workspace: #151d16;
+  --kulv-text: #f5f2eb;
+  --kulv-text-muted: #d2dacb;
+  --kulv-text-subtle: #afbba6;
+  --kulv-border: #38493a;
+  --kulv-border-hover: #5a735c;
   --kulv-primary: #a7c080;
   --kulv-primary-hover: #bcd493;
-  --kulv-button-text: #222820;
-  --kulv-focus: #c3d5a5;
-  --kulv-accent: #e39a6d;
-  --kulv-accent-soft: #4c3024;
+  --kulv-button-text: #131914;
+  --kulv-focus: #c5e0a5;
+  --kulv-accent: #e59b6e;
+  --kulv-accent-soft: #3d281e;
   --kulv-warning: #e5bd70;
   --kulv-danger: #f2a6a6;
 }
@@ -259,6 +266,113 @@ body {
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
+}
+
+/* Typography readability enhancements: Boost weight and optical letter spacing in dark mode to prevent halation */
+.dark {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.012em;
+}
+
+.dark body,
+.dark #root {
+  font-weight: 450;
+  color: var(--kulv-text, #f5f2eb);
+}
+
+.dark p,
+.dark span,
+.dark label,
+.dark button,
+.dark input,
+.dark select {
+  letter-spacing: 0.01em;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.dark .font-serif-display {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #f7f4ed;
+}
+
+/* Luminous botanical badge utility classes with glowing rings */
+.luminous-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  transition: all 0.2s ease;
+}
+
+/* Light mode defaults */
+.luminous-badge-success {
+  background-color: #ebf4e8;
+  border: 1px solid #4f6b45;
+  color: #24421b;
+}
+
+.luminous-badge-warning {
+  background-color: #fff8e6;
+  border: 1px solid #d9a03d;
+  color: #7a4b00;
+}
+
+.luminous-badge-danger {
+  background-color: #fdf0e9;
+  border: 1px solid #d9534f;
+  color: #8c1d18;
+}
+
+.luminous-badge-neutral {
+  background-color: #f1ebdd;
+  border: 1px solid #958b79;
+  color: #384033;
+}
+
+/* Dark mode: Luminous glowing rings */
+.dark .luminous-badge-success {
+  background-color: rgba(26, 42, 28, 0.9);
+  border: 1.5px solid #a7c080;
+  color: #cde6a8;
+  box-shadow: 0 0 10px rgba(167, 192, 128, 0.4), inset 0 0 6px rgba(167, 192, 128, 0.2);
+}
+
+.dark .luminous-badge-warning {
+  background-color: rgba(45, 36, 20, 0.9);
+  border: 1.5px solid #e5bd70;
+  color: #f8df9f;
+  box-shadow: 0 0 10px rgba(229, 189, 112, 0.4), inset 0 0 6px rgba(229, 189, 112, 0.2);
+}
+
+.dark .luminous-badge-danger {
+  background-color: rgba(46, 24, 25, 0.9);
+  border: 1.5px solid #f2a6a6;
+  color: #ffc4c4;
+  box-shadow: 0 0 10px rgba(242, 166, 166, 0.4), inset 0 0 6px rgba(242, 166, 166, 0.2);
+}
+
+.dark .luminous-badge-neutral {
+  background-color: rgba(28, 37, 29, 0.9);
+  border: 1.5px solid #5a735c;
+  color: #d2dacb;
+  box-shadow: 0 0 8px rgba(90, 115, 92, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
