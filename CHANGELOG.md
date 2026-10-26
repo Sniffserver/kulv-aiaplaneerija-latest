@@ -5,7 +5,23 @@ Formaat põhineb [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standa
 
 ---
 
-## [Unreleased]
+## [1.1.0] - 2026-10-26
+
+### Turvalisus & Serveri Töökindlus (Security & Reliability)
+- **Helmet Security Headers:** Toodangukeskkonnas rakendatud range CSP (`default-src 'self'`, `script-src 'self'`), HSTS (`max-age=63072000; includeSubDomains`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`.
+- **Inline Skriptide Eemaldamine:** Kõik `index.html` sees asunud koodijupid viidud eraldiseisvasse moodulisse `src/boot-theme.ts`, võimaldades ranget CSP `script-src 'self'` reeglit ilma `'unsafe-inline'` erandita.
+- **Sõltuvuste Süstimine (Dependency Injection):** `createApp()` võtab vastu isoleeritud `weatherCache` ja `weatherLimiter` instantsid, vältides serveri moodulitaseme globaalolekut ja tagades hermeetilise testide isolatsiooni.
+- **Päringupiirangud (Rate Limiting):** Päringupiirangu olek on eraldatud iga limiteri lõikes; lisatud struktureeritud hoiatuslogid (`rate_limit_exceeded`) ilma tundlikke koordinaate või žetoone logimata.
+- **Ilmamälu & Väljaviskamine (Weather Cache & Eviction):** Ilmaandmete vahemälule lisatud LRU ja aegumise (TTL) puhastus, tagades maksimaalselt 500 kirje piirangu ja vältides mälulekkeid.
+- **Sujuv Sulgumine (Graceful Shutdown):** Lisatud `SIGTERM` ja `SIGINT` signaalide käsitleja 10-sekundilise maksimaalse sulgumise ajalõpuga (`setupGracefulShutdown`), oodates pooleliolevate päringute lõppemist.
+- **Valmisoleku Kontroll (Readiness Probe):** Lisatud `/readyz` otspunkt, mis kontrollib serveri tööd ja vajalike keskkonnamuutujate olemasolu ilma saladusi paljastamata.
+
+### CI/CD, Konteinerid & Väljalase (CI/CD & Deployment)
+- **Mitmeastmeline Dockerfile:** Loodud multi-stage konteiner (Node 22 Alpine ehitaja + minimaalne Alpine Nginx staatiline veebiserver) koos SPA tagavaraga (`try_files $uri $uri/ /index.html`) ja `/health` kontrolliga.
+- **Trivy Turvakontroll CI-s:** Lisatud GitHub Actions samm, mis ehitab konteineri, testib `/health` otspunkti ja peatab ehituse HIGH/CRITICAL turvanõrkuste leidumisel.
+- **Gitleaks Saladuste Tuvastus:** Lisatud automaatne Gitleaks skaneerimine CI-s ja kohalik Husky `pre-commit` konks, mis välistab võtmete või keelatud lukufailide (`bun.lock`) commit'imise.
+- **npm Kanooniline Standardiseerimine:** Eemaldatud `bun.lock` ja iganenud `coverage-test/` kaust, uuendatud `package-lock.json` ning CI töövood Node 22 peale.
+- **Serveri Integratsioonitestid:** 19 deterministlikku testi `server.test.ts` failis, mis kinnitavad vahemälu ja limiteri isolatsiooni, päringupiiranguid, turvapäiseid ja sulgumist.
 
 ### Parandatud (Fixed)
 - Taastamine eristab puuduvaid varukoopia jaotisi selgesõnaliselt tühjadest loenditest; kõik taastamised jäävad ühe IndexedDB tehingu piiresse.

@@ -1,0 +1,6 @@
+{
+  "summary":  "Comprehensive production-hardening and release engineering plan for KÜLV. Covers:\n1. Canonical npm standardization and removal of stale artifacts (coverage-test/).\n2. Dependency injection for server.ts (isolated weatherCache, isolated rateLimiter, eviction testing).\n3. Graceful shutdown (SIGTERM/SIGINT with 10s timeout) and /readyz readiness probe.\n4. Strict CSP extraction removing inline scripts from index.html into a modular boot script for script-src 'self'.\n5. Multi-stage Dockerfile + Nginx static SPA runtime with /health check and Trivy security gate in CI.\n6. Secret scanning with Gitleaks in CI and Husky pre-commit hooks.\n7. Observability enhancements with structured JSON logging (no coordinates/tokens logged).\n8. Semantic release workflow, CHANGELOG entry, SECURITY.md, and docs/architecture.md.",
+  "updatedAt":  "2026-10-26T18:22:27.195789811Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

@@ -1,46 +1,51 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import express, { type Express, type Request, type Response, type NextFunction } from 'express';
+import http from 'node:http';
+import express, { type Express, type Request, type Response, type NextFunction, type RequestHandler } from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 
-const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
-const WEATHER_REQUEST_TIMEOUT_MS = 8_000;
-const MAX_WEATHER_CACHE_SIZE = 500;
+export const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
+export const WEATHER_REQUEST_TIMEOUT_MS = 8_000;
+export const MAX_WEATHER_CACHE_SIZE = 500;
 
-const weatherQuerySchema = z.object({
+export const weatherQuerySchema = z.object({
   lat: z.coerce.number().min(-90).max(90),
   lon: z.coerce.number().min(-180).max(180)
 });
 
-type CacheEntry = {
+export type CacheEntry = {
   expiresAt: number;
   data: unknown;
 };
 
-const weatherCache = new Map<string, CacheEntry>();
-
-function setWeatherCache(key: string, data: unknown): void {
-  if (weatherCache.size >= MAX_WEATHER_CACHE_SIZE) {
-    const now = Date.now();
-    for (const [k, entry] of weatherCache.entries()) {
-      if (entry.expiresAt <= now) {
-        weatherCache.delete(k);
+export function setWeatherCache(
+  cache: Map<string, CacheEntry>,
+  key: string,
+  data: unknown,
+  maxSize: number = MAX_WEATHER_CACHE_SIZE,
+  ttlMs: number = WEATHER_CACHE_TTL_MS,
+  nowMs: number = Date.now()
+): void {
+  if (cache.size >= maxSize) {
+    for (const [k, entry] of cache.entries()) {
+      if (entry.expiresAt <= nowMs) {
+        cache.delete(k);
       }
     }
 
-    if (weatherCache.size >= MAX_WEATHER_CACHE_SIZE) {
-      const oldestKey = weatherCache.keys().next().value;
+    if (cache.size >= maxSize) {
+      const oldestKey = cache.keys().next().value;
       if (oldestKey) {
-        weatherCache.delete(oldestKey);
+        cache.delete(oldestKey);
       }
     }
   }
 
-  weatherCache.set(key, {
-    expiresAt: Date.now() + WEATHER_CACHE_TTL_MS,
+  cache.set(key, {
+    expiresAt: nowMs + ttlMs,
     data
   });
 }
@@ -48,13 +53,14 @@ function setWeatherCache(key: string, data: unknown): void {
 const developmentOrigins = new Set([
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'http://0.0.0.0:3000',
   'http://localhost:4173',
   'http://127.0.0.1:4173',
   'http://localhost:5173',
   'http://127.0.0.1:5173'
 ]);
 
-function getAllowedOrigins(): Set<string> {
+export function getAllowedOrigins(): Set<string> {
   const configuredOrigins = (process.env.CORS_ORIGINS ?? '')
     .split(',')
     .map((origin) => origin.trim())
@@ -71,30 +77,37 @@ function getAllowedOrigins(): Set<string> {
   return origins;
 }
 
-function isProduction(): boolean {
-  return (
-    process.env.NODE_ENV === 'production' ||
-    Boolean(process.env.K_SERVICE) ||
-    Boolean(process.env.K_REVISION)
-  );
+export function isProduction(): boolean {
+  return process.env.NODE_ENV === 'production';
 }
 
-function getHost(): string {
+export function getHost(): string {
   if (process.env.HOST) {
     return process.env.HOST;
   }
 
-  return isProduction() ? '0.0.0.0' : '127.0.0.1';
+  return '0.0.0.0';
 }
 
-function createWeatherLimiter() {
+export function createWeatherLimiter(): RequestHandler {
   return rateLimit({
     windowMs: 60_000,
     limit: 30,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
-    message: {
-      error: 'Too many weather requests, please try again later.'
+    handler: (req: Request, res: Response) => {
+      console.warn(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          type: 'rate_limit_exceeded',
+          requestId: req.header('x-request-id') ?? 'unknown',
+          endpoint: '/api/weather'
+        })
+      );
+      res.status(429).json({
+        error: 'Too many weather requests, please try again later.'
+      });
     }
   });
 }
@@ -125,9 +138,18 @@ function requestLogger(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-export function createApp(): Express {
+export interface AppDependencies {
+  weatherCache?: Map<string, CacheEntry>;
+  weatherLimiter?: RequestHandler;
+  now?: () => number;
+}
+
+export function createApp(deps: AppDependencies = {}): Express {
   const app = express();
   const allowedOrigins = getAllowedOrigins();
+  const weatherCache = deps.weatherCache ?? new Map<string, CacheEntry>();
+  const weatherLimiter = deps.weatherLimiter ?? createWeatherLimiter();
+  const getNow = deps.now ?? (() => Date.now());
 
   if (isProduction()) {
     app.set('trust proxy', 1);
@@ -143,20 +165,25 @@ export function createApp(): Express {
             useDefaults: true,
             directives: {
               defaultSrc: ["'self'"],
+              // Strict script-src: all inline scripts extracted to boot-theme.ts; no 'unsafe-inline'
               scriptSrc: ["'self'"],
+              // Follow-up ticket KULV-CSP-2026: Refactor dynamic canvas inline styles to CSS modules/classes to eliminate 'unsafe-inline'
               styleSrc: ["'self'", "'unsafe-inline'"],
-              imgSrc: ["'self'", 'data:', 'blob:'],
+              imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
               fontSrc: ["'self'", 'data:'],
-              connectSrc: ["'self'"],
+              connectSrc: ["'self'", 'https:', 'data:', 'blob:'],
               objectSrc: ["'none'"],
-              frameAncestors: ["'none'"],
+              frameAncestors: ["'self'", 'https:'],
               baseUri: ["'self'"],
               formAction: ["'self'"],
               upgradeInsecureRequests: []
             }
           }
         : false,
+      frameguard: false,
       crossOriginEmbedderPolicy: false,
+      crossOriginOpenerPolicy: false,
+      crossOriginResourcePolicy: false,
       strictTransportSecurity: production
         ? { maxAge: 63_072_000, includeSubDomains: true }
         : false,
@@ -195,8 +222,23 @@ export function createApp(): Express {
     });
   });
 
-  app.get('/api/weather', createWeatherLimiter(), async (req: Request, res: Response) => {
+  app.get('/readyz', (_req: Request, res: Response) => {
+    const weatherConfigured = Boolean(process.env.OPENWEATHER_API_KEY);
+    const ready = weatherConfigured;
+
+    return res.status(ready ? 200 : 503).json({
+      status: ready ? 'ready' : 'not_ready',
+      checks: {
+        server: 'ok',
+        weatherConfigured
+      },
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  app.get('/api/weather', weatherLimiter, async (req: Request, res: Response) => {
     const parsedQuery = weatherQuerySchema.safeParse(req.query);
+    const requestId = req.header('x-request-id') ?? 'unknown';
 
     if (!parsedQuery.success) {
       return res.status(400).json({
@@ -208,24 +250,52 @@ export function createApp(): Express {
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
+      console.warn(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          type: 'weather_config_missing',
+          requestId
+        })
+      );
       return res.status(500).json({
         error: 'Weather API key not configured'
       });
     }
 
     const cacheKey = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+    const nowMs = getNow();
     const cached = weatherCache.get(cacheKey);
 
-    if (cached && cached.expiresAt > Date.now()) {
+    if (cached && cached.expiresAt > nowMs) {
+      console.log(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          type: 'weather_cache_hit',
+          requestId
+        })
+      );
       res.setHeader('X-Cache', 'HIT');
       return res.json(cached.data);
     }
+
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        type: 'weather_cache_miss',
+        requestId
+      })
+    );
 
     const controller = new AbortController();
     const timeoutId = setTimeout(
       () => controller.abort(),
       WEATHER_REQUEST_TIMEOUT_MS
     );
+
+    const upstreamStart = process.hrtime.bigint();
 
     try {
       const upstreamUrl = new URL('https://api.openweathermap.org/data/2.5/weather');
@@ -238,7 +308,29 @@ export function createApp(): Express {
         signal: controller.signal
       });
 
+      const upstreamDurationMs = Number(process.hrtime.bigint() - upstreamStart) / 1_000_000;
+
+      console.log(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          type: 'upstream_weather_response',
+          requestId,
+          status: response.status,
+          latencyMs: Number(upstreamDurationMs.toFixed(2))
+        })
+      );
+
       if (!response.ok) {
+        console.error(
+          JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            type: 'upstream_weather_failure',
+            requestId,
+            status: response.status
+          })
+        );
         return res.status(502).json({
           error: 'Weather provider unavailable or returned an error'
         });
@@ -246,17 +338,33 @@ export function createApp(): Express {
 
       const data: unknown = await response.json();
 
-      setWeatherCache(cacheKey, data);
+      setWeatherCache(weatherCache, cacheKey, data, MAX_WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL_MS, getNow());
 
       res.setHeader('X-Cache', 'MISS');
       return res.json(data);
     } catch (error: unknown) {
       if (error instanceof Error && error.name === 'AbortError') {
+        console.error(
+          JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            type: 'upstream_weather_timeout',
+            requestId
+          })
+        );
         return res.status(504).json({
           error: 'Weather request timed out'
         });
       }
 
+      console.error(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          type: 'weather_fetch_exception',
+          requestId
+        })
+      );
       return res.status(500).json({
         error: 'Failed to fetch weather data'
       });
@@ -274,7 +382,7 @@ export function createApp(): Express {
   return app;
 }
 
-async function registerStaticServing(app: Express): Promise<void> {
+export async function registerStaticServing(app: Express): Promise<void> {
   const distPath = path.resolve(process.cwd(), 'dist');
   const isDev = !isProduction();
 
@@ -300,8 +408,13 @@ async function registerStaticServing(app: Express): Promise<void> {
       return next();
     }
 
-    if (req.path.startsWith('/api') || req.path === '/health') {
+    if (req.path.startsWith('/api') || req.path === '/health' || req.path === '/readyz') {
       return next();
+    }
+
+    // Do NOT return index.html for missing /assets/* files (prevents syntax errors on stale chunk requests)
+    if (req.path.startsWith('/assets/')) {
+      return res.status(404).send('Asset not found');
     }
 
     res.sendFile(path.join(distPath, 'index.html'));
@@ -314,7 +427,87 @@ async function registerStaticServing(app: Express): Promise<void> {
   });
 }
 
-async function startServer(): Promise<void> {
+export function setupGracefulShutdown(
+  server: http.Server,
+  forceTimeoutMs: number = 10_000
+): (signal?: string) => Promise<void> {
+  let isShuttingDown = false;
+
+  const shutdown = (signal: string = 'SIGTERM'): Promise<void> => {
+    if (isShuttingDown) {
+      return Promise.resolve();
+    }
+    isShuttingDown = true;
+
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: 'Graceful shutdown initiated',
+        signal
+      })
+    );
+
+    const forceTimer = setTimeout(() => {
+      console.error(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: 'Graceful shutdown timed out, forcing exit'
+        })
+      );
+      if (process.env.NODE_ENV !== 'test') {
+        process.exit(1);
+      }
+    }, forceTimeoutMs);
+    forceTimer.unref();
+
+    return new Promise<void>((resolve, reject) => {
+      server.close((err) => {
+        clearTimeout(forceTimer);
+        if (err) {
+          console.error(
+            JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'error',
+              message: 'Error closing HTTP server',
+              error: err.message
+            })
+          );
+          return reject(err);
+        }
+
+        console.log(
+          JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'info',
+            message: 'Server closed gracefully'
+          })
+        );
+        resolve();
+      });
+    });
+  };
+
+  const onSigterm = () => {
+    shutdown('SIGTERM').then(() => {
+      if (process.env.NODE_ENV !== 'test') process.exit(0);
+    });
+  };
+
+  const onSigint = () => {
+    shutdown('SIGINT').then(() => {
+      if (process.env.NODE_ENV !== 'test') process.exit(0);
+    });
+  };
+
+  process.once('SIGTERM', onSigterm);
+  process.once('SIGINT', onSigint);
+
+  return shutdown;
+}
+
+export async function startServer(): Promise<http.Server> {
   const app = createApp();
 
   await registerStaticServing(app);
@@ -322,17 +515,21 @@ async function startServer(): Promise<void> {
   const port = Number(process.env.PORT) || 3000;
   const host = getHost();
 
-  app.listen(port, host, () => {
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: 'Server started',
-        host,
-        port,
-        environment: isProduction() ? 'production' : (process.env.NODE_ENV ?? 'development')
-      })
-    );
+  return new Promise((resolve) => {
+    const server = app.listen(port, host, () => {
+      console.log(
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: 'Server started',
+          host,
+          port,
+          environment: isProduction() ? 'production' : (process.env.NODE_ENV ?? 'development')
+        })
+      );
+      setupGracefulShutdown(server);
+      resolve(server);
+    });
   });
 }
 

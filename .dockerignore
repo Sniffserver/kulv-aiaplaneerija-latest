@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+coverage-test/
+playwright-report/
+test-results/
+.git/
+.github/
+.husky/
+.env*
+!*.example
+*.log
+npm-audit.json

@@ -7,6 +7,18 @@ import { GardenEntity } from './types';
 import './index.css';
 
 if (typeof window !== 'undefined') {
+  window.addEventListener('vite:preloadError', (event: any) => {
+    console.warn('[KÜLV] Vite preload error intercepted:', event);
+    // Reload once to fetch updated bundles if a hash mismatch occurs across builds
+    const lastReloadKey = 'kulv_preload_error_reload';
+    const lastReload = sessionStorage.getItem(lastReloadKey);
+    const now = Date.now();
+    if (!lastReload || now - Number(lastReload) > 8000) {
+      sessionStorage.setItem(lastReloadKey, String(now));
+      window.location.reload();
+    }
+  });
+
   (window as any).__useYardStore = useYardStore;
   (window as any).__loadBenchmarkPlan = (count: number) => {
     const categories: any[] = ['bed', 'structure', 'tree', 'shrub', 'hedge', 'path', 'water', 'furniture'];

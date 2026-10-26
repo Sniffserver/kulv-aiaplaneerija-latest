@@ -5,9 +5,8 @@ Täname huvi eest KÜLV aia- ja taimekasvatuse planeerijasse panustamise vastu!
 ## Arenduskeskkonna seadistamine
 
 ### Nõuded
-- **Node.js**: 24.x (matches `.nvmrc` and CI)
-- **npm**: ≥ 10.0.0 (projekt kasutab ametlikult `npm`-i)
-- **Python**: 3.11+ (kui arendate FastAPI taustaserverit)
+- **Node.js**: 22.x
+- **npm**: ≥ 10.0.0 (Projekt kasutab rangelt ja ainult `npm`-i; `bun` ja `yarn` pole lubatud)
 
 ### Alustamine
 ```bash

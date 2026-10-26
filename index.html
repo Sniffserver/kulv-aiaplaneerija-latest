@@ -14,77 +14,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="KÜLV" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https: data: blob:;" />
-    <script>
-      // Vite HMR is disabled in this environment. Intercept vite-hmr WebSockets to prevent
-      // background HMR connection errors from bubbling to the AI Studio preview container.
-      (function() {
-        if (typeof window === 'undefined') return;
-        const NativeWebSocket = window.WebSocket;
-        if (NativeWebSocket) {
-          window.WebSocket = function(url, protocols) {
-            const isViteHmr =
-              protocols === 'vite-hmr' ||
-              (Array.isArray(protocols) && protocols.includes('vite-hmr')) ||
-              (typeof url === 'string' && (url.includes('token=') || url.includes(':24678') || url.includes('localhost:3000')));
-            if (isViteHmr) {
-              const dummy = new EventTarget();
-              dummy.binaryType = 'blob';
-              dummy.readyState = 1; // OPEN
-              dummy.bufferedAmount = 0;
-              dummy.extensions = '';
-              dummy.protocol = 'vite-hmr';
-              dummy.url = String(url);
-              dummy.send = function() {};
-              dummy.close = function() {
-                dummy.readyState = 3; // CLOSED
-                dummy.dispatchEvent(new Event('close'));
-              };
-              setTimeout(() => {
-                dummy.dispatchEvent(new Event('open'));
-              }, 0);
-              return dummy;
-            }
-            return new NativeWebSocket(url, protocols);
-          };
-          window.WebSocket.prototype = NativeWebSocket.prototype;
-          window.WebSocket.CONNECTING = NativeWebSocket.CONNECTING;
-          window.WebSocket.OPEN = NativeWebSocket.OPEN;
-          window.WebSocket.CLOSING = NativeWebSocket.CLOSING;
-          window.WebSocket.CLOSED = NativeWebSocket.CLOSED;
-        }
-
-        window.addEventListener('error', function(event) {
-          if (event && event.filename && event.filename.includes('@vite/client')) {
-            event.preventDefault();
-          }
-        });
-      })();
-
-      // Apply boot hints before first paint; IndexedDB settings are authoritative after startup.
-      try {
-        const cachedTheme = localStorage.getItem('kulv-theme');
-        const prefersDark = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const shouldUseDark = cachedTheme === 'dark' || (cachedTheme !== 'light' && cachedTheme !== 'dark' && prefersDark);
-        document.documentElement.classList.toggle('dark', shouldUseDark);
-
-        const paletteOptions = ['kulv', 'gruvbox', 'catppuccin'];
-        const cachedPalette = localStorage.getItem('kulv-palette');
-        const palette = paletteOptions.includes(cachedPalette) ? cachedPalette : 'kulv';
-        document.documentElement.dataset.palette = palette;
-        const paletteThemeColors = {
-          kulv: { light: '#FAF6ED', dark: '#131914' },
-          gruvbox: { light: '#FBF1C7', dark: '#282828' },
-          catppuccin: { light: '#EFF1F5', dark: '#1E1E2E' }
-        };
-        const themeColor = document.querySelector('meta[name="theme-color"]');
-        if (themeColor) themeColor.setAttribute('content', paletteThemeColors[palette][shouldUseDark ? 'dark' : 'light']);
-      } catch {
-        // Storage can be blocked in privacy modes; use the system mode and default palette.
-        document.documentElement.classList.toggle('dark', typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        document.documentElement.dataset.palette = 'kulv';
-      }
-    </script>
+    <script type="module" src="/src/boot-theme.ts"></script>
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" type="image/svg+xml" href="./icon.svg" />
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />

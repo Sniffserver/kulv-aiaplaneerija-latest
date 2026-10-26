@@ -2,6 +2,8 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useGarden } from '../../context/GardenContext';
 import { Plant, ColorPalette } from '../../types';
 import { HomeScreen } from '../../screens/HomeScreen';
+import { JournalScreen } from '../../screens/JournalScreen';
+import { BlogScreen } from '../../screens/BlogScreen';
 import { AddBedDialog } from '../dialogs/AddBedDialog';
 import { AddTaskDialog } from '../dialogs/AddTaskDialog';
 import { AddPlantDialog } from '../dialogs/AddPlantDialog';
@@ -19,34 +21,54 @@ import {
   Printer
 } from 'lucide-react';
 
-// Lazy-load non-initial screens to trim initial bundle size and boost Web Vitals (FCP/LCP)
-const GardenCanvasScreen = lazy(() =>
+// Resilient dynamic loader with automatic retry on transient chunk loading errors
+function lazyWithRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+  retries = 2,
+  interval = 300
+): React.LazyExoticComponent<T> {
+  return lazy(() =>
+    new Promise<{ default: T }>((resolve, reject) => {
+      const attempt = (remainingRetries: number) => {
+        factory()
+          .then(resolve)
+          .catch((error) => {
+            if (remainingRetries > 0) {
+              setTimeout(() => {
+                attempt(remainingRetries - 1);
+              }, interval);
+            } else {
+              reject(error);
+            }
+          });
+      };
+      attempt(retries);
+    })
+  );
+}
+
+// Lazy-load heavier screens to trim initial bundle size and boost Web Vitals (FCP/LCP)
+const GardenCanvasScreen = lazyWithRetry(() =>
   import('../../screens/GardenCanvasScreen').then((m) => ({ default: m.GardenCanvasScreen }))
 );
-const PlantsCatalogScreen = lazy(() =>
+const PlantsCatalogScreen = lazyWithRetry(() =>
   import('../../screens/PlantsCatalogScreen').then((m) => ({ default: m.PlantsCatalogScreen }))
 );
-const CalendarScreen = lazy(() =>
+const CalendarScreen = lazyWithRetry(() =>
   import('../../screens/CalendarScreen').then((m) => ({ default: m.CalendarScreen }))
-);
-const JournalScreen = lazy(() =>
-  import('../../screens/JournalScreen').then((m) => ({ default: m.JournalScreen }))
-);
-const BlogScreen = lazy(() =>
-  import('../../screens/BlogScreen').then((m) => ({ default: m.BlogScreen }))
 );
 
 // Lazy-load heavy dialogs and print worksheets
-const PlantDetailDialog = lazy(() =>
+const PlantDetailDialog = lazyWithRetry(() =>
   import('../dialogs/PlantDetailDialog').then((m) => ({ default: m.PlantDetailDialog }))
 );
-const GardenBinderPrintDialog = lazy(() =>
+const GardenBinderPrintDialog = lazyWithRetry(() =>
   import('../dialogs/GardenBinderPrintDialog').then((m) => ({ default: m.GardenBinderPrintDialog }))
 );
-const SoilRecipesDialog = lazy(() =>
+const SoilRecipesDialog = lazyWithRetry(() =>
   import('../dialogs/SoilRecipesDialog').then((m) => ({ default: m.SoilRecipesDialog }))
 );
-const GrowTentDialog = lazy(() =>
+const GrowTentDialog = lazyWithRetry(() =>
   import('../dialogs/GrowTentDialog').then((m) => ({ default: m.GrowTentDialog }))
 );
 
@@ -61,12 +83,6 @@ const prefetchScreen = (screen: NavigationScreen) => {
       break;
     case 'calendar':
       import('../../screens/CalendarScreen');
-      break;
-    case 'journal':
-      import('../../screens/JournalScreen');
-      break;
-    case 'blog':
-      import('../../screens/BlogScreen');
       break;
   }
 };
