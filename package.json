@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server.ts",
+    "dev": "NODE_ENV=development tsx server.ts",
+    "start": "node server.ts",
     "build": "vite build && node scripts/generate-precache-manifest.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "lint": "tsc --noEmit",

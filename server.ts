@@ -1,5 +1,6 @@
+import path from 'node:path';
+import fs from 'node:fs';
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
 import { z } from 'zod';
 
 const weatherQuerySchema = z.object({
@@ -23,15 +24,8 @@ async function startServer() {
     next();
   });
 
-  const vite = await createViteServer({
-    server: { middlewareMode: true, hmr: false },
-    appType: 'spa'
-  });
-
-  app.use(vite.middlewares);
-
   // API routes
-  app.get('/health', (req, res) => {
+  app.get('/health', (_req, res) => {
     res.json({
       ok: true,
       timestamp: new Date().toISOString(),
@@ -78,11 +72,37 @@ async function startServer() {
     }
   });
 
+  const distPath = path.resolve(process.cwd(), 'dist');
+  const isDev =
+    process.env.NODE_ENV === 'development' ||
+    (!process.env.NODE_ENV && !fs.existsSync(path.join(distPath, 'index.html')));
+
+  if (isDev) {
+    const { createServer: createViteServer } = await import('vite');
+    const vite = await createViteServer({
+      server: { middlewareMode: true, hmr: false },
+      appType: 'spa'
+    });
+    app.use(vite.middlewares);
+  } else {
+    app.use(express.static(distPath));
+    app.use((req, res, next) => {
+      if (req.method !== 'GET') {
+        return next();
+      }
+      if (req.path.startsWith('/api') || req.path === '/health') {
+        return next();
+      }
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
+
   const port = Number(process.env.PORT) || 3000;
-  const host = process.env.HOST || '0.0.0.0';
+  // Always bind to 0.0.0.0 so Cloud Run and container runtimes can route health checks and external traffic
+  const host = '0.0.0.0';
 
   app.listen(port, host, () => {
-    console.log(`Server listening on http://${host}:${port}`);
+    console.log(`Server listening on http://${host}:${port} (${isDev ? 'development' : 'production'})`);
   });
 }
 
