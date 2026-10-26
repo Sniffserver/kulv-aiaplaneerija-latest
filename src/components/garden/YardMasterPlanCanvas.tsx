@@ -105,7 +105,13 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
   const [drawError, setDrawError] = useState<string | null>(null);
 
   // Magnetic snap visual guide
-  const [snapGuide, setSnapGuide] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
+  const [snapGuide, setSnapGuide] = useState<{
+    x: number | null;
+    y: number | null;
+    alignLineX?: number | null;
+    alignLineY?: number | null;
+    targetName?: string;
+  }>({ x: null, y: null, alignLineX: null, alignLineY: null });
 
   // Solar simulation state (hour of day: 7.0 to 21.0)
   const [solarHour, setSolarHour] = useState<number>(14.0); // 14:00 default
@@ -460,16 +466,26 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
 
       let guideX: number | null = null;
       let guideY: number | null = null;
+      let alignLineX: number | null = null;
+      let alignLineY: number | null = null;
 
       if (snapCandidates.snapX !== null) {
         targetX = snapCandidates.snapX;
         guideX = targetX;
+        alignLineX = snapCandidates.alignLineX ?? targetX;
       }
       if (snapCandidates.snapY !== null) {
         targetY = snapCandidates.snapY;
         guideY = targetY;
+        alignLineY = snapCandidates.alignLineY ?? targetY;
       }
-      setSnapGuide({ x: guideX, y: guideY });
+      setSnapGuide({
+        x: guideX,
+        y: guideY,
+        alignLineX,
+        alignLineY,
+        targetName: snapCandidates.targetEntity?.name
+      });
 
       // Cadastral Boundary Edge Snapping (when property polygon exists)
       if (snapToGrid && plan.boundaryPolygon && plan.boundaryPolygon.length >= 3) {
@@ -532,7 +548,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       setDragPreviewPos(null);
     }
     setDraggedEntityId(null);
-    setSnapGuide({ x: null, y: null });
+    setSnapGuide({ x: null, y: null, alignLineX: null, alignLineY: null });
   }, [dragPreviewPos, moveEntity, snapToGrid]);
 
   // Touch gesture refs for responsive iPad, iPhone, and Android canvas interaction
@@ -1806,35 +1822,59 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               )}
 
               {/* Magnetic Alignment Snap Guidelines & Crosshair */}
-              {snapGuide.x !== null && (
-                <line
-                  x1={snapGuide.x * zoom}
-                  y1={0}
-                  x2={snapGuide.x * zoom}
-                  y2={yardLength * zoom}
-                  stroke="var(--kulv-accent, #D97A3D)"
-                  strokeWidth={1.5}
-                  strokeDasharray="4 4"
-                  pointerEvents="none"
-                />
+              {(snapGuide.alignLineX != null || snapGuide.x != null) && (
+                <g pointerEvents="none">
+                  <line
+                    x1={(snapGuide.alignLineX ?? snapGuide.x!) * zoom}
+                    y1={0}
+                    x2={(snapGuide.alignLineX ?? snapGuide.x!) * zoom}
+                    y2={yardLength * zoom}
+                    stroke="var(--kulv-primary, #385A40)"
+                    strokeWidth={2}
+                    strokeDasharray="6 4"
+                  />
+                  {snapGuide.targetName && (
+                    <text
+                      x={(snapGuide.alignLineX ?? snapGuide.x!) * zoom + 6}
+                      y={18}
+                      fontSize={11}
+                      fill="var(--kulv-primary, #385A40)"
+                      fontWeight={700}
+                    >
+                      Joondatud: {snapGuide.targetName}
+                    </text>
+                  )}
+                </g>
               )}
-              {snapGuide.y !== null && (
-                <line
-                  x1={0}
-                  y1={snapGuide.y * zoom}
-                  x2={yardWidth * zoom}
-                  y2={snapGuide.y * zoom}
-                  stroke="var(--kulv-accent, #D97A3D)"
-                  strokeWidth={1.5}
-                  strokeDasharray="4 4"
-                  pointerEvents="none"
-                />
+              {(snapGuide.alignLineY != null || snapGuide.y != null) && (
+                <g pointerEvents="none">
+                  <line
+                    x1={0}
+                    y1={(snapGuide.alignLineY ?? snapGuide.y!) * zoom}
+                    x2={yardWidth * zoom}
+                    y2={(snapGuide.alignLineY ?? snapGuide.y!) * zoom}
+                    stroke="var(--kulv-primary, #385A40)"
+                    strokeWidth={2}
+                    strokeDasharray="6 4"
+                  />
+                  {snapGuide.targetName && (
+                    <text
+                      x={8}
+                      y={(snapGuide.alignLineY ?? snapGuide.y!) * zoom - 6}
+                      fontSize={11}
+                      fill="var(--kulv-primary, #385A40)"
+                      fontWeight={700}
+                    >
+                      Joondatud: {snapGuide.targetName}
+                    </text>
+                  )}
+                </g>
               )}
               {snapGuide.x !== null && snapGuide.y !== null && (
                 <g transform={`translate(${snapGuide.x * zoom}, ${snapGuide.y * zoom})`} pointerEvents="none">
-                  <circle r={6} fill="none" stroke="var(--kulv-accent, #D97A3D)" strokeWidth={1.5} />
-                  <line x1={-8} y1={0} x2={8} y2={0} stroke="var(--kulv-accent, #D97A3D)" strokeWidth={1.5} />
-                  <line x1={0} y1={-8} x2={0} y2={8} stroke="var(--kulv-accent, #D97A3D)" strokeWidth={1.5} />
+                  <circle r={7} fill="none" stroke="var(--kulv-primary, #385A40)" strokeWidth={2} />
+                  <line x1={-10} y1={0} x2={10} y2={0} stroke="var(--kulv-primary, #385A40)" strokeWidth={2} />
+                  <line x1={0} y1={-10} x2={0} y2={10} stroke="var(--kulv-primary, #385A40)" strokeWidth={2} />
                 </g>
               )}
             </g>

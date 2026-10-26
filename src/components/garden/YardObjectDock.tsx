@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GARDEN_ENTITY_PRESETS, EntityPreset } from '../../data/gardenEntityPresets';
-import { Plus, Home, Trees, Shovel, Box, Sparkles, ChevronRight, HelpCircle } from 'lucide-react';
+import { Plus, Home, Trees, Shovel, Box, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface YardObjectDockProps {
   onAddPreset: (preset: EntityPreset) => void;
@@ -11,12 +11,13 @@ type TabKey = 'structures' | 'plants' | 'infrastructure' | 'beds';
 
 export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onDragStartPreset }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('structures');
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [
-    { key: 'structures', label: 'Ehitised', icon: <Home size={15} /> },
-    { key: 'plants', label: 'Taimestik', icon: <Trees size={15} /> },
-    { key: 'infrastructure', label: 'Taristu & Vesi', icon: <Shovel size={15} /> },
-    { key: 'beds', label: 'Peenrad', icon: <Box size={15} /> }
+    { key: 'structures', label: 'Ehitised', icon: <Home size={16} /> },
+    { key: 'plants', label: 'Taimestik', icon: <Trees size={16} /> },
+    { key: 'infrastructure', label: 'Taristu & Vesi', icon: <Shovel size={16} /> },
+    { key: 'beds', label: 'Peenrad', icon: <Box size={16} /> }
   ];
 
   const currentPresets = GARDEN_ENTITY_PRESETS[activeTab] || [];
@@ -31,47 +32,89 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
         display: 'flex',
         flexDirection: 'column',
         boxShadow: 'var(--kulv-shadow-card, 0 1px 3px rgba(0,0,0,0.06))',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: 'all 0.2s ease'
       }}
     >
-      {/* Category Tabs */}
+      {/* Dock Header & Collapse Toggle */}
       <div
         style={{
           display: 'flex',
-          borderBottom: '1px solid var(--kulv-border, #C9BFA9)',
-          backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-          overflowX: 'auto'
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '6px 12px',
+          borderBottom: isCollapsed ? 'none' : '1px solid var(--kulv-border, #C9BFA9)',
+          backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)'
         }}
       >
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              data-testid={`dock_tab_${tab.key}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '10px 14px',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--kulv-primary, #4F6B45)' : '2px solid transparent',
-                backgroundColor: isActive ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: isActive ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text-muted, #5F675A)',
-                fontSize: '12px',
-                fontWeight: isActive ? 700 : 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+        <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+          Aiaobjektide dokk ({currentPresets.length} näidist)
+        </span>
+        <button
+          onClick={() => setIsCollapsed((prev) => !prev)}
+          data-testid="dock_collapse_toggle"
+          aria-label={isCollapsed ? 'Laienda objektide dokk' : 'Ahenda objektide dokk'}
+          className="touch-target"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            border: 'none',
+            background: 'none',
+            color: 'var(--kulv-primary, #4F6B45)',
+            fontSize: '11px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            minHeight: '44px',
+            padding: '4px 8px'
+          }}
+        >
+          <span>{isCollapsed ? 'Ava dokk' : 'Peida'}</span>
+          {isCollapsed ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>
       </div>
+
+      {!isCollapsed && (
+        <>
+          {/* Category Tabs with 44px thumb target height */}
+          <div
+            style={{
+              display: 'flex',
+              borderBottom: '1px solid var(--kulv-border, #C9BFA9)',
+              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+              overflowX: 'auto'
+            }}
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  data-testid={`dock_tab_${tab.key}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 14px',
+                    minHeight: '44px',
+                    border: 'none',
+                    borderBottom: isActive ? '2px solid var(--kulv-primary, #4F6B45)' : '2px solid transparent',
+                    backgroundColor: isActive ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
+                    color: isActive ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text-muted, #5F675A)',
+                    fontSize: '12px',
+                    fontWeight: isActive ? 700 : 600,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
       {/* Preset Cards List */}
       <div
@@ -145,9 +188,11 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
               aria-label={`Lisa ${preset.name}`}
               className="touch-target"
               style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '6px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
+                borderRadius: '8px',
                 border: '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
                 color: 'var(--kulv-primary, #4F6B45)',
@@ -158,7 +203,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
                 flexShrink: 0
               }}
             >
-              <Plus size={15} />
+              <Plus size={18} />
             </button>
           </div>
         ))}
@@ -169,7 +214,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
         style={{
           borderTop: '1px solid var(--kulv-border, #C9BFA9)',
           backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-          padding: '6px 12px',
+          padding: '8px 12px',
           fontSize: '11px',
           color: 'var(--kulv-text-muted, #5F675A)',
           display: 'flex',
@@ -180,6 +225,8 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
         <Sparkles size={12} color="var(--kulv-primary, #4F6B45)" />
         <span>Klõpsa "+" või lohista objekt otse krundiplaanile. Kõik mõõtmed on reaalsetes meetrites.</span>
       </div>
+        </>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
-  "name": "Remix kulv-aiaplaneerija",
-  "description": "Imported from GitHub: Sniffserver/kulv-aiaplaneerija",
+  "name": "KÜLV – Aia- ja taimekasvatuse planeerija",
+  "description": "Põhjamaine aia- ja taimekasvatuse planeerija: päikese simulatsioon, peenarde paigutus, külvikalender ning aiapäevik.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

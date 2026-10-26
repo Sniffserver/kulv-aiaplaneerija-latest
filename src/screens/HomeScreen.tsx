@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy } from 'react';
 import { useGarden } from '../context/GardenContext';
-import { WeatherOverview } from '../components/WeatherOverview';
+import { WeatherWidget } from '../components/WeatherWidget';
 import { TaskCard } from '../components/TaskCard';
 import {
   Grid,
@@ -150,7 +150,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </div>
 
       {/* Real-time Weather Forecast Widget */}
-      <WeatherOverview />
+      <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
 
       {/* 5-Day Recharts Temperature Visualization (Lazy Loaded) */}
       <Suspense

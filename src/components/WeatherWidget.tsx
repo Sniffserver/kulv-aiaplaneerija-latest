@@ -67,8 +67,8 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ weather, isLoading
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              minWidth: '40px',
-              minHeight: '40px'
+              minWidth: '44px',
+              minHeight: '44px'
             }}
           >
             <RefreshCw

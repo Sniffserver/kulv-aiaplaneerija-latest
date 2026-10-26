@@ -57,10 +57,10 @@ function isProduction(): boolean {
 function getHost(): string {
   const envHost = process.env.HOST;
   // If HOST is set to a specific IP or custom domain (ignore Linux automatic container hostname 'das')
-  if (envHost && envHost !== 'das') {
+  if (envHost && envHost !== 'das' && envHost !== 'localhost' && envHost !== '127.0.0.1') {
     return envHost;
   }
-  return isProduction() ? '0.0.0.0' : '127.0.0.1';
+  return '0.0.0.0';
 }
 
 function createWeatherLimiter() {
@@ -69,6 +69,7 @@ function createWeatherLimiter() {
     limit: 30,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
+    validate: false,
     message: {
       error: 'Too many weather requests, please try again later.'
     }
@@ -105,6 +106,7 @@ export function createApp(): Express {
   const app = express();
   const allowedOrigins = getAllowedOrigins();
 
+  app.set('trust proxy', 1);
   app.disable('x-powered-by');
 
   app.use(requestLogger);

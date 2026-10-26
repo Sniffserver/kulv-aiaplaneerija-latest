@@ -157,7 +157,15 @@ export class GardenSpatialIndex {
     length: number,
     snapThresholdM: number = 0.3,
     excludeId?: string
-  ): { snapX: number | null; snapY: number | null; targetEntity: GardenEntity | null } {
+  ): {
+    snapX: number | null;
+    snapY: number | null;
+    alignLineX: number | null;
+    alignLineY: number | null;
+    targetEntity: GardenEntity | null;
+    alignmentTypeX?: 'left' | 'center' | 'right';
+    alignmentTypeY?: 'top' | 'center' | 'bottom';
+  } {
     const searchMargin = 5.0; // 5 metres proximity radius
     const searchArea = {
       minX: x - searchMargin,
@@ -170,12 +178,24 @@ export class GardenSpatialIndex {
 
     let snapX: number | null = null;
     let snapY: number | null = null;
+    let alignLineX: number | null = null;
+    let alignLineY: number | null = null;
     let closestDistX = snapThresholdM;
     let closestDistY = snapThresholdM;
     let matchedEntity: GardenEntity | null = null;
+    let alignmentTypeX: 'left' | 'center' | 'right' | undefined;
+    let alignmentTypeY: 'top' | 'center' | 'bottom' | undefined;
 
-    const myEdgesX = [x, x + width / 2, x + width];
-    const myEdgesY = [y, y + length / 2, y + length];
+    const myEdgesX: { val: number; type: 'left' | 'center' | 'right' }[] = [
+      { val: x, type: 'left' },
+      { val: x + width / 2, type: 'center' },
+      { val: x + width, type: 'right' }
+    ];
+    const myEdgesY: { val: number; type: 'top' | 'center' | 'bottom' }[] = [
+      { val: y, type: 'top' },
+      { val: y + length / 2, type: 'center' },
+      { val: y + length, type: 'bottom' }
+    ];
 
     for (const item of nearby) {
       const e = item.entity;
@@ -184,31 +204,43 @@ export class GardenSpatialIndex {
       const targetEdgesY = [aabb.minY, (aabb.minY + aabb.maxY) / 2, aabb.maxY];
 
       // Check X alignment
-      for (const myX of myEdgesX) {
+      for (const myEdge of myEdgesX) {
         for (const targetX of targetEdgesX) {
-          const diff = Math.abs(myX - targetX);
+          const diff = Math.abs(myEdge.val - targetX);
           if (diff <= closestDistX) {
             closestDistX = diff;
-            snapX = targetX - (myX - x);
+            snapX = targetX - (myEdge.val - x);
+            alignLineX = targetX;
+            alignmentTypeX = myEdge.type;
             matchedEntity = e;
           }
         }
       }
 
       // Check Y alignment
-      for (const myY of myEdgesY) {
+      for (const myEdge of myEdgesY) {
         for (const targetY of targetEdgesY) {
-          const diff = Math.abs(myY - targetY);
+          const diff = Math.abs(myEdge.val - targetY);
           if (diff <= closestDistY) {
             closestDistY = diff;
-            snapY = targetY - (myY - y);
+            snapY = targetY - (myEdge.val - y);
+            alignLineY = targetY;
+            alignmentTypeY = myEdge.type;
             matchedEntity = e;
           }
         }
       }
     }
 
-    return { snapX, snapY, targetEntity: matchedEntity };
+    return {
+      snapX,
+      snapY,
+      alignLineX,
+      alignLineY,
+      targetEntity: matchedEntity,
+      alignmentTypeX,
+      alignmentTypeY
+    };
   }
 
   /**

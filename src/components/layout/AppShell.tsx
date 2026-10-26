@@ -15,7 +15,8 @@ import { PlantDetailDialog } from '../dialogs/PlantDetailDialog';
 import { GrowTentDialog } from '../dialogs/GrowTentDialog';
 import { SoilRecipesDialog } from '../dialogs/SoilRecipesDialog';
 import { SettingsModal, applyPaletteToDOM } from '../SettingsModal';
-import { Home, Grid, Sprout, Calendar, BookOpen, Lightbulb, Settings, FlaskConical, Newspaper } from 'lucide-react';
+import { GardenBinderPrintDialog } from '../dialogs/GardenBinderPrintDialog';
+import { Home, Grid, Sprout, Calendar, BookOpen, Lightbulb, Settings, FlaskConical, Newspaper, Printer } from 'lucide-react';
 
 export type NavigationScreen = 'home' | 'garden' | 'plants' | 'calendar' | 'journal' | 'blog';
 
@@ -57,6 +58,7 @@ export const AppShell: React.FC = () => {
   const [showGrowTent, setShowGrowTent] = useState(false);
   const [showSoilRecipes, setShowSoilRecipes] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showBinderDialog, setShowBinderDialog] = useState(false);
   const [selectedPlantDetail, setSelectedPlantDetail] = useState<Plant | null>(null);
 
   const handleSaveSettings = (newSettings: {
@@ -276,16 +278,44 @@ export const AppShell: React.FC = () => {
             </div>
 
             <button
-              onClick={() => setShowSoilRecipes(true)}
-              data-testid="action_soil_recipes"
-              title={t('action_soil_recipes')}
-              aria-label={t('action_soil_recipes')}
+              onClick={() => setShowBinderDialog(true)}
+              data-testid="action_print_binder"
+              title={language === 'en' ? 'Print Garden Binder (PDF)' : 'Aiatäisköite välitrükk ja pass (PDF)'}
+              aria-label={language === 'en' ? 'Print Garden Binder' : 'Aiatäisköite välitrükk'}
+              className="touch-target"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
+                borderRadius: '8px',
+                border: '1px solid var(--kulv-border, #958B79)',
+                backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
+                cursor: 'pointer',
+                color: 'var(--kulv-primary, #385A40)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Printer size={18} />
+            </button>
+
+            <button
+              onClick={() => setShowSoilRecipes(true)}
+              data-testid="action_soil_recipes"
+              title={t('action_soil_recipes')}
+              aria-label={t('action_soil_recipes')}
+              className="touch-target"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 borderRadius: '8px',
                 border: '1px solid var(--kulv-border, #958B79)',
                 backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
@@ -302,12 +332,15 @@ export const AppShell: React.FC = () => {
               data-testid="action_grow_tent"
               title={t('action_grow_tent')}
               aria-label={t('action_grow_tent')}
+              className="touch-target"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 borderRadius: '8px',
                 border: '1px solid var(--kulv-border, #958B79)',
                 backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
@@ -324,12 +357,15 @@ export const AppShell: React.FC = () => {
               data-testid="action_settings"
               title={t('action_settings')}
               aria-label={t('action_settings')}
+              className="touch-target"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 borderRadius: '8px',
                 border: '1px solid var(--kulv-border, #958B79)',
                 backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
@@ -483,6 +519,12 @@ export const AppShell: React.FC = () => {
       />
 
       <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
+
+      <GardenBinderPrintDialog
+        isOpen={showBinderDialog}
+        onClose={() => setShowBinderDialog(false)}
+        language={language}
+      />
     </div>
   );
 };

@@ -663,6 +663,167 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
               KÜLV · Põhjamaine aiaplaneerimise süsteem · Väljatrükk kehtib hooajaks {selectedYear || 2026}
             </div>
           </section>
+
+          {/* ================= PAGE 5: 4-YEAR CROP ROTATION WORKSHEET & FIELD LOG ================= */}
+          <section className="binder-page">
+            <div style={{ borderBottom: '2px solid #2B3A26', paddingBottom: '12px', marginBottom: '20px' }}>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#4F6B45'
+                }}
+              >
+                LISA 4 · VÄLIPASS & PÄEVIK
+              </div>
+              <h2
+                className="font-serif-display"
+                style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1C2419' }}
+              >
+                4-aastane viljavahelduse välipass ja vaatlused ({selectedYear || 2026}–{(selectedYear || 2026) + 3})
+              </h2>
+              <div style={{ fontSize: '12px', color: '#555C4F', marginTop: '4px' }}>
+                Kanna siia käsitsi tegelikud külvid, komposti lisamised ja saagivaatlused aias töötamisel.
+              </div>
+            </div>
+
+            <table
+              style={{
+                width: '100%',
+                fontSize: '11px',
+                borderCollapse: 'collapse',
+                backgroundColor: '#FFFFFF',
+                border: '1.5px solid #2B3A26',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                marginBottom: '20px'
+              }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: '#F3EFE6', color: '#1C2419', borderBottom: '2px solid #2B3A26' }}>
+                  <th style={{ padding: '8px 10px', textAlign: 'left', width: '22%' }}>Peenar / Asukoht</th>
+                  <th style={{ padding: '8px 8px', textAlign: 'left', width: '18%' }}>
+                    Aasta 1 ({selectedYear || 2026})
+                  </th>
+                  <th style={{ padding: '8px 8px', textAlign: 'left', width: '18%' }}>
+                    Aasta 2 ({(selectedYear || 2026) + 1})
+                  </th>
+                  <th style={{ padding: '8px 8px', textAlign: 'left', width: '18%' }}>
+                    Aasta 3 ({(selectedYear || 2026) + 2})
+                  </th>
+                  <th style={{ padding: '8px 8px', textAlign: 'left', width: '24%' }}>Välipäevik & Märkmed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {beds.map((b, idx) => {
+                  const bSlots = successionSlots.filter((s) => s.bedId === b.id && s.year === (selectedYear || 2026));
+                  const currentCropStr =
+                    bSlots.length > 0
+                      ? bSlots.map((s) => s.plantName).join(', ')
+                      : b.plantings.length > 0
+                        ? b.plantings.map((p) => p.plantName).slice(0, 2).join(', ')
+                        : 'Vaba peenar';
+
+                  return (
+                    <tr
+                      key={b.id}
+                      style={{
+                        borderBottom: '1px solid #D5CEBE',
+                        backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAF8F4'
+                      }}
+                    >
+                      <td style={{ padding: '10px 10px', verticalAlign: 'top' }}>
+                        <strong style={{ display: 'block', color: '#2B3A26', fontSize: '12px' }}>{b.name}</strong>
+                        <span style={{ fontSize: '10px', color: '#6A7264' }}>
+                          {b.width}m × {b.length}m ({b.type === 'greenhouse' ? 'Kasvuhoone' : 'Avamaa'})
+                        </span>
+                      </td>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'top', color: '#2B3A26', fontWeight: 600 }}>
+                        {currentCropStr}
+                      </td>
+                      <td
+                        style={{
+                          padding: '10px 8px',
+                          verticalAlign: 'top',
+                          borderLeft: '1px dotted #D5CEBE',
+                          color: '#888F82'
+                        }}
+                      >
+                        <div style={{ height: '22px', borderBottom: '1px dashed #C9BFA9' }} />
+                      </td>
+                      <td
+                        style={{
+                          padding: '10px 8px',
+                          verticalAlign: 'top',
+                          borderLeft: '1px dotted #D5CEBE',
+                          color: '#888F82'
+                        }}
+                      >
+                        <div style={{ height: '22px', borderBottom: '1px dashed #C9BFA9' }} />
+                      </td>
+                      <td
+                        style={{
+                          padding: '10px 8px',
+                          verticalAlign: 'top',
+                          borderLeft: '1px dotted #D5CEBE',
+                          color: '#888F82'
+                        }}
+                      >
+                        <div style={{ height: '22px', borderBottom: '1px dashed #C9BFA9' }} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* Field Notes Section */}
+            <div
+              style={{
+                backgroundColor: '#F3EFE6',
+                border: '1px solid #C9BFA9',
+                borderRadius: '8px',
+                padding: '14px 16px',
+                marginBottom: '20px'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 700, color: '#2B3A26', marginBottom: '8px' }}>
+                HOOAJA KOKKUVÕTE JA VÄETAMISE PÄEVIK:
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', fontSize: '11px' }}>
+                  <span style={{ color: '#555C4F', minWidth: '140px' }}>Kevadine kompost / lupjamine:</span>
+                  <div style={{ flex: 1, borderBottom: '1px dotted #999', minHeight: '14px' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', fontSize: '11px' }}>
+                  <span style={{ color: '#555C4F', minWidth: '140px' }}>Viimane kevadine öökülm:</span>
+                  <div style={{ flex: 1, borderBottom: '1px dotted #999', minHeight: '14px' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', fontSize: '11px' }}>
+                  <span style={{ color: '#555C4F', minWidth: '140px' }}>Esimene sügisene öökülm:</span>
+                  <div style={{ flex: 1, borderBottom: '1px dotted #999', minHeight: '14px' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', fontSize: '11px' }}>
+                  <span style={{ color: '#555C4F', minWidth: '140px' }}>Parim saagikus / tähelepanek:</span>
+                  <div style={{ flex: 1, borderBottom: '1px dotted #999', minHeight: '14px' }} />
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: '11px',
+                color: '#888F82',
+                borderTop: '1px solid #EAE5D9',
+                paddingTop: '12px'
+              }}
+            >
+              KÜLV · Põhjamaine aiaplaneerimise süsteem · Väljatrükk köidetav aianduskausta (A4 formaat)
+            </div>
+          </section>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ interface WeatherData {
 }
 
 export const WeatherOverview: React.FC = () => {
-  const { settings } = useGarden();
+  const { settings, weather: gardenWeather } = useGarden();
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,11 +20,45 @@ export const WeatherOverview: React.FC = () => {
     setError(null);
     try {
       const response = await fetch(`/api/weather?lat=${settings.lat}&lon=${settings.lng}`);
-      if (!response.ok) throw new Error('Failed to fetch weather');
+      if (!response.ok) {
+        if (gardenWeather) {
+          setWeather({
+            name: gardenWeather.locationName || 'Aed',
+            main: {
+              temp: gardenWeather.temperature,
+              humidity: gardenWeather.relativeHumidity ?? 65
+            },
+            weather: [
+              {
+                description: gardenWeather.weatherDescription,
+                icon: gardenWeather.icon
+              }
+            ]
+          });
+          return;
+        }
+        throw new Error('Failed to fetch weather');
+      }
       const data = await response.json();
       setWeather(data);
-    } catch (err) {
-      setError('Could not load weather');
+    } catch {
+      if (gardenWeather) {
+        setWeather({
+          name: gardenWeather.locationName || 'Aed',
+          main: {
+            temp: gardenWeather.temperature,
+            humidity: gardenWeather.relativeHumidity ?? 65
+          },
+          weather: [
+            {
+              description: gardenWeather.weatherDescription,
+              icon: gardenWeather.icon
+            }
+          ]
+        });
+      } else {
+        setError('Could not load weather');
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +75,7 @@ export const WeatherOverview: React.FC = () => {
     <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800">{weather.name}</h3>
-        <button onClick={fetchWeather} disabled={loading} className="p-1 rounded hover:bg-gray-100">
+        <button onClick={fetchWeather} disabled={loading} className="p-1 rounded hover:bg-gray-100" title="Värskenda">
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
         </button>
       </div>
@@ -49,10 +83,10 @@ export const WeatherOverview: React.FC = () => {
         <div className="text-4xl font-bold">{Math.round(weather.main.temp)}°C</div>
         <div className="flex flex-col">
           <div className="flex items-center gap-1 text-gray-600">
-            <Cloud size={16} /> {weather.weather[0].description}
+            <Cloud size={16} /> {weather.weather[0]?.description}
           </div>
           <div className="flex items-center gap-1 text-gray-600">
-            <Droplets size={16} /> {weather.main.humidity}% Humidity
+            <Droplets size={16} /> {weather.main.humidity}% Õhuniiskus
           </div>
         </div>
       </div>
