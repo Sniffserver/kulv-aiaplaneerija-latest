@@ -1,68 +1,127 @@
-# Implementation Plan: Cadastral Boundary Snapping, Freeform Placement & Printable Garden Binder
+# Server Security Hardening, Rate Limiting, Server Tests & CI Integration (Revised)
 
-This plan details the implementation of cadastral boundary snapping with freeform placement flexibility, together with a printable high-resolution garden binder featuring companion planting charts and bed inventories.
+Comprehensive hardening of the KÜLV backend service: installing `express-rate-limit` and `supertest`, upgrading `server.ts` with an exportable `createApp()` factory, structured JSON logging with UUID request correlation, environment-aware CORS origin filtering, 5-minute coordinate-rounded weather caching, dedicated Vitest server integration tests (`server.test.ts`), a dedicated `server` CI job in `.github/workflows/ci.yml`, and clean segmentation of `.env.example`.
 
----
+## User Review & Critical Decisions
 
-## 1. User Directives & Architecture Alignment
-
-- **Cadastral Boundary Snapping**:
-  - Implement magnetic snapping of garden beds and structures to the imported cadastral boundary segments (property perimeter/fence lines) within an intuitive snap distance threshold (0.5m – 1.0m).
-  - Provide visual boundary snap indicators (highlighted boundary edge and snap guideline).
-- **Freeform Placement**:
-  - Maintain complete freedom of placement across the canvas grid without rigid boundary locking (as explicitly requested: *Allow free placement anywhere on the canvas grid*).
-  - When an entity crosses or sits outside the boundary, display an unobtrusive, gentle outline hint without blocking placement or dragging.
-- **Printable High-Resolution Garden Binder**:
-  - Add a dedicated multi-page printable Garden Binder modal (`GardenBinderPrintDialog.tsx`) accessible from both the Garden Canvas toolbar and the Home/Calendar screen.
-  - Multi-section binder designed with Nordic archival editorial aesthetic:
-    1. **Kaanepilt & Krundi pass (Cover & Cadastral Dossier)**: Cadastral code, address, parcel area ($m^2$ and ha), orientation compass, and garden summary.
-    2. **Peenarde detailpass (Bed-by-Bed Dossier)**: Microclimate, soil type, dimensions, current succession slots, and calculated sun exposure.
-    3. **Seltsilistaimede maatriks (Companion Planting Matrix)**: Clear tabular matrix of beneficial and antagonist pairings, family disease prevention advice, and spacing guides.
-    4. **Aasta külvi- ja koristuskalender (Sowing & Harvest Chronology)**: Grouped month-by-month planting and harvest schedule.
-  - Optimized for print and PDF export with clean `@media print` rules, page breaks (`break-after: page`), high-contrast ink, and no UI clutter.
+> [!IMPORTANT]
+> The implementation incorporates all explicit technical specifications provided:
+> - **Dependency Installation**: `express-rate-limit` for runtime rate limiting; `supertest` and `@types/supertest` for Vitest HTTP integration testing.
+> - **Server Architecture (`createApp` Factory)**: `server.ts` exports `createApp()` so integration tests can mount the Express app directly via `supertest(createApp())` without port collisions, while `startServer()` binds to the network only when executed directly.
+> - **Host & Port Resolution**: `process.env.HOST ?? (isProduction() ? '0.0.0.0' : '127.0.0.1')`. Local development defaults to `127.0.0.1`, and container/production defaults to `0.0.0.0`.
+> - **CORS Allowlist**: Explicit allowlist parsed from `CORS_ORIGINS`. In non-production, standard local and preview dev origins (`localhost:3000`, `127.0.0.1:3000`, `4173`, `5173`) are permitted automatically. Unknown origins receive no CORS allowance headers.
+> - **Rate Limiting & Memory Cache**: 30 requests/minute per IP with `draft-7` headers on `/api/weather`. Successful responses cached for 5 minutes (`WEATHER_CACHE_TTL_MS = 300_000`) with `X-Cache: HIT` / `X-Cache: MISS` headers.
+> - **Structured Logging & Tracing**: Every request is assigned an `x-request-id` (forwarded or `crypto.randomUUID()`) and logs structured JSON with `timestamp`, `level`, `requestId`, `method`, `path`, `status`, and `durationMs`.
+> - **Payload Limiting & Error Typing**: Explicit `express.json({ limit: '100kb' })` and strict error narrowing (`error instanceof Error`) avoiding `any`.
+> - **CI Server Job**: `.github/workflows/ci.yml` introduces a dedicated `server` integration test job running `npm run test:server` after `quality`, with `release` dependent on `[quality, e2e, server]`.
+> - **Environment Manifest**: `.env.example` categorized into required, optional, and planned sections.
 
 ---
 
-## 2. Proposed Changes & Technical Architecture
+## 1. Overview & Core Concept
 
-### A. Cadastral Boundary Snapping Engine (`src/logic/cadastralSnapping.ts`)
-- Build a robust 2D geometry helper for distance-to-polygon-edges:
-  - `findNearestBoundarySegment(point: Point2D, polygon: Point2D[], thresholdM: number)`: Calculates the closest projection onto any segment of the polygon.
-  - Returns `snappedPoint`, `segmentIndex`, `distanceM`, and `edgeAngleDeg` (enabling optional alignment parallel to the fence/property line).
-- Unit tests in `src/logic/cadastralSnapping.test.ts` covering perpendicular projection, corner vertices, and edge snapping.
-
-### B. Master Plan Canvas Integration (`src/components/garden/YardMasterPlanCanvas.tsx`)
-- In `handlePointerMove`:
-  - When dragging an entity and `plan.boundaryPolygon` is present, check `findNearestBoundarySegment`.
-  - If within threshold, snap the dragged entity to the boundary guideline and render a subtle snapped guideline on the canvas SVG.
-- Allow seamless free movement anywhere across the grid; snapping can be bypassed naturally or toggled.
-- Add "Prindi aiamapp (Binder)" button to the canvas toolbar alongside the existing export options.
-
-### C. Printable High-Resolution Garden Binder (`src/components/dialogs/GardenBinderPrintDialog.tsx`)
-- Editorial layout following the *Nordic Botanical Archive* aesthetic:
-  - High-contrast serif display typography (`Fraunces` / `Lora`), restrained warm paper tones, and zero static pill clutter.
-  - Print button executing `window.print()` with styled print stylesheets (`@media print` hiding modal overlay, backdrop, and browser navigation).
-  - Page-by-page organization with automatic CSS page breaks:
-    - Page 1: Garden parcel overview & high-resolution SVG boundary plan.
-    - Page 2: Bed inventory and microclimate/soil details.
-    - Page 3: Companion planting compatibility table and crop family warnings.
-    - Page 4: Sowing and harvest calendar timeline.
-
-### D. Navigation & Triggers
-- Connect binder modal trigger in:
-  - `src/components/garden/YardMasterPlanCanvas.tsx` (Toolbar action: "Aiamapp")
-  - `src/screens/CalendarScreen.tsx` / `src/screens/HomeScreen.tsx` (Export/Print section)
+- **What It Delivers**: Transforms `server.ts` into a secure, hardened, and testable backend service that defends against quota abuse, denial-of-service, and cross-origin exploitation.
+- **Target Audience & Context**: KÜLV application runtime, Cloud Run production container instances, local developer workflows, and automated GitHub Actions CI pipelines.
+- **Key Value**: Closes all remaining P1 and P2 vulnerabilities with high test coverage and zero regressions in local or cloud environments.
 
 ---
 
-## 3. Verification & Acceptance Criteria
+## 2. Developer Experience & API Contracts
 
-1. **Cadastral Boundary Snapping**:
-   - Beds smoothly snap to property boundary edges when dragged within 0.8m of a fence/boundary segment.
-   - Placement remains completely unrestricted across the full grid without hard boundary locking.
-2. **Garden Binder Printability**:
-   - Clicking "Aiamapp" opens the preview modal with rich botanical data, companion matrix, and parcel map.
-   - `@media print` generates a clean 3–4 page document without header/footer artifacts, modal overlays, or distorted SVG graphics.
-3. **Automated Testing & Compilation**:
-   - All 138+ vitest tests pass.
-   - Clean compilation via `compile_applet` and 0 lint warnings via `lint_applet`.
+- **Health Endpoint (`GET /health`)**:
+  - Status 200: `{ "ok": true, "timestamp": "...", "version": "1.0.0", "environment": "..." }`
+  - Unaffected by weather rate limiting.
+- **Weather Proxy (`GET /api/weather?lat=...&lon=...`)**:
+  - Status 200: Forwarded OpenWeather payload with `X-Cache: HIT` or `X-Cache: MISS`.
+  - Status 400: Out-of-bounds coordinates or missing parameters (`lat` between -90 and 90, `lon` between -180 and 180).
+  - Status 429: Too many requests (> 30 per min per IP) with Draft-7 `RateLimit` headers.
+  - Status 500: Missing `OPENWEATHER_API_KEY` configuration.
+  - Status 502: Upstream provider HTTP error.
+  - Status 504: Upstream provider timeout (> 8s).
+- **CORS Handling**:
+  - Matches origin against `getAllowedOrigins()`.
+  - Sets `Access-Control-Allow-Origin: <origin>`, `Vary: Origin`, `Access-Control-Allow-Methods: GET, OPTIONS`, and `Access-Control-Allow-Headers: Content-Type, X-Request-Id`.
+  - Rejects preflight `OPTIONS` with 204 or omits CORS headers for unauthorized origins.
+
+---
+
+## 3. Key Product Decisions & Trade-Offs
+
+- **Decision 1: Programmatic Test Harness (`createApp`) vs. Port Binding**
+  - *Chosen Approach*: Decouple Express app creation (`createApp()`) from listener execution (`startServer()`).
+  - *Why*: Allows `supertest` to dispatch requests directly in memory within Vitest workers without spawning listening ports, avoiding port clashes in parallel test execution.
+- **Decision 2: In-Memory TTL Cache vs. External KV**
+  - *Chosen Approach*: Node.js `Map<string, CacheEntry>` with coordinate keys rounded to 3 decimal places (`~110m` resolution).
+  - *Why*: Simple, instant, zero latency, and perfectly suited for single-container Cloud Run deployment.
+- **Decision 3: Dedicated CI Server Job**
+  - *Chosen Approach*: Separate `server` job in GitHub Actions rather than bundling with `quality`.
+  - *Why*: Pinpoints backend failures immediately on pull requests and enables independent caching and retry semantics.
+
+---
+
+## 4. Technical Architecture & Component Mapping
+
+### System Architecture Diagram
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        HTTP / REST Client                              │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Origin: ... / X-Request-Id: ...
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                         Express Server (createApp)                     │
+│                                                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ 1. requestLogger: crypto.randomUUID(), res.on('finish'), JSON log│  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │                                    │
+│  ┌────────────────────────────────▼─────────────────────────────────┐  │
+│  │ 2. CORS Guard: getAllowedOrigins() (CORS_ORIGINS + dev defaults) │  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │                                    │
+│  ┌────────────────────────────────▼─────────────────────────────────┐  │
+│  │ 3. express.json({ limit: '100kb' })                              │  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │                                    │
+│         ┌─────────────────────────┴────────────────────────┐           │
+│         ▼                                                  ▼           │
+│  ┌──────────────┐                               ┌────────────────────┐ │
+│  │ GET /health  │                               │  GET /api/weather  │ │
+│  └──────────────┘                               └──────────┬─────────┘ │
+│                                                            │           │
+│                                                 ┌──────────▼─────────┐ │
+│                                                 │ createWeatherLimit │ │
+│                                                 │ (30 req/min/IP)    │ │
+│                                                 └──────────┬─────────┘ │
+│                                                            │           │
+│                                                 ┌──────────▼─────────┐ │
+│                                                 │ weatherCache Check │ │
+│                                                 │ (5-min TTL, Map)   │ │
+│                                                 └─────┬────────▲─────┘ │
+│                                            Cache Miss │        │ Store │
+│                                                       ▼        │       │
+│                                                 ┌──────────────┴─────┐ │
+│                                                 │ OpenWeather fetch  │ │
+│                                                 │ (8s AbortTimeout)  │ │
+│                                                 └────────────────────┘ │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### File Changes
+
+1. **`package.json`**:
+   - Dependencies: add `"express-rate-limit": "^8.0.0"`.
+   - Dev Dependencies: add `"supertest": "^7.0.0"`, `"@types/supertest": "^6.0.0"`.
+   - Scripts: add `"test:server": "vitest run server.test.ts"`.
+2. **`server.ts`**:
+   - Replace with the complete hardened implementation provided: `createApp()`, structured logging, `weatherCache`, `createWeatherLimiter()`, strict error typing, `registerStaticServing()`, and conditional `startServer()`.
+3. **`server.test.ts`**:
+   - Create comprehensive Vitest integration suite with 10 test cases covering health, coordinate validation, upstream errors, timeouts, caching, rate limiting, CORS origins, and request IDs.
+4. **`.github/workflows/ci.yml`**:
+   - Add `server` job with `npm run test:server` after `quality`.
+   - Update `release` job dependencies to `needs: [quality, e2e, server]`.
+5. **`.env.example`**:
+   - Replace with clean structured template separating required, optional, and planned variables.
+6. **Verification**:
+   - Run `npm test`, `npm run test:server`, `npm run typecheck`, and `npm run build`.
