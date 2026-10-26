@@ -42,10 +42,12 @@ import {
   Leaf,
   MapPin,
   Printer,
-  BookOpen
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 import { CadastralPlotSearchDialog } from '../dialogs/CadastralPlotSearchDialog';
 import { GardenBinderPrintDialog } from '../dialogs/GardenBinderPrintDialog';
+import { CanvasMinimap } from './CanvasMinimap';
 import {
   findNearestBoundarySegment,
   BoundarySegmentSnapResult,
@@ -304,6 +306,35 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       if (e.key === '?' || (e.shiftKey && e.key === '/')) {
         e.preventDefault();
         setShowShortcutsModal((prev) => !prev);
+        return;
+      }
+
+      // Zoom In: + or =
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        setZoom((z) => Math.min(56, z + 4));
+        return;
+      }
+
+      // Zoom Out: - or _
+      if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        setZoom((z) => Math.max(12, z - 4));
+        return;
+      }
+
+      // Reset View to fit: 0
+      if (e.key === '0') {
+        e.preventDefault();
+        setZoom(22);
+        setPanOffset({ x: 30, y: 30 });
+        return;
+      }
+
+      // Tool Switch: L for polyline / path tool
+      if (e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        setToolMode('polyline');
         return;
       }
 
@@ -2044,10 +2075,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               title="Suurenda vaadet (+)"
               aria-label="Suurenda"
               style={{
-                width: '40px',
-                height: '40px',
-                minWidth: '40px',
-                minHeight: '40px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -2061,14 +2092,45 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               <ZoomIn size={18} />
             </button>
             <button
+              onClick={() => {
+                setZoom((z) => {
+                  if (z <= 20) return 24;
+                  if (z <= 28) return 36;
+                  if (z <= 40) return 48;
+                  return 18;
+                });
+              }}
+              title="Suumi tase (klõpsa tsükliks 100% → 150% → 200% → 75%)"
+              aria-label="Suumi tase"
+              style={{
+                padding: '0 8px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                color: 'var(--kulv-text, #2A2E24)',
+                fontSize: '11px',
+                fontWeight: 700,
+                fontFamily: 'monospace',
+                cursor: 'pointer'
+              }}
+            >
+              {Math.round((zoom / 24) * 100)}%
+            </button>
+            <button
               onClick={() => setZoom((z) => Math.max(12, z - 4))}
               title="Vähenda vaadet (-)"
               aria-label="Vähenda"
               style={{
-                width: '40px',
-                height: '40px',
-                minWidth: '40px',
-                minHeight: '40px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -2090,8 +2152,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               aria-label="Sobita"
               style={{
                 padding: '0 10px',
-                height: '40px',
-                minHeight: '40px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -2107,6 +2170,27 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             >
               <Maximize2 size={16} />
               <span className="hidden sm:inline">Sobita</span>
+            </button>
+            <button
+              onClick={() => setShowShortcutsModal(true)}
+              title="Klaviatuuri kiirklahvid (?)"
+              aria-label="Kiirklahvid"
+              style={{
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                color: 'var(--kulv-text, #2A2E24)',
+                cursor: 'pointer'
+              }}
+            >
+              <HelpCircle size={18} />
             </button>
 
             {/* Quick action controls when an entity is selected */}
@@ -2126,10 +2210,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                     title="Pööra 45°"
                     aria-label="Pööra"
                     style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
+                      width: '44px',
+                      height: '44px',
+                      minWidth: '44px',
+                      minHeight: '44px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -2152,10 +2236,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                     title="Kustuta valitud objekt"
                     aria-label="Kustuta"
                     style={{
-                      width: '40px',
-                      height: '40px',
-                      minWidth: '40px',
-                      minHeight: '40px',
+                      width: '44px',
+                      height: '44px',
+                      minWidth: '44px',
+                      minHeight: '44px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -2172,6 +2256,18 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               </>
             )}
           </div>
+
+          {/* Interactive Canvas Minimap (Bird's eye overview & click-to-pan) */}
+          <CanvasMinimap
+            plan={plan}
+            entities={activeEntities}
+            zoom={zoom}
+            panOffset={panOffset}
+            canvasWidth={800}
+            canvasHeight={560}
+            onPanChange={setPanOffset}
+            language={language === 'en' ? 'en' : 'et'}
+          />
         </div>
 
         {/* Right Inspector & Layer Control Panel */}
@@ -2802,6 +2898,45 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                   Ctrl+Y
                 </kbd>{' '}
                 Uuesti (Redo)
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  L
+                </kbd>{' '}
+                Tee / joone tööriist
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  + / -
+                </kbd>{' '}
+                Suumi sisse / välja
+              </div>
+              <div>
+                <kbd
+                  style={{
+                    backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 700
+                  }}
+                >
+                  0
+                </kbd>{' '}
+                Sobita vaade krundile
               </div>
               <div>
                 <kbd

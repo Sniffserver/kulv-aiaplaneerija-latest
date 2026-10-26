@@ -1,154 +1,115 @@
-# Comprehensive Audit, Polish & Improvement Plan: KÜLV Aiaplaneerija
+# KÜLV Audit, Improvements & Tweaks: Plant Library, Canvas Minimap & Performance
 
-A production-grade audit and enhancement plan for the KÜLV Nordic garden planning platform, elevating mobile touch ergonomics, 2D/3D master plan canvas interactions, agronomic companion/rotation engines, and high-fidelity printable garden binders.
+Comprehensive enhancement plan addressing plant library discovery, spatial canvas navigation with interactive minimap and keyboard shortcut HUD, and Web Vitals code splitting.
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> The implementation plan incorporates the user's explicit clarification answers:
-> - **Prioritization**: Holistic audit covering canvas UX, agronomy intelligence engines, and mobile polish.
-> - **Visual & Canvas Focus**: Enhanced touch gestures (pinch-to-zoom, two-finger pan), magnetic alignment guides, and responsive mobile docking controls.
-> - **Operational Workflow Focus**: Production-ready Printable Garden Binder featuring scaled 2D bed layout maps, seasonal sowing schedules, and 4-year crop rotation worksheets.
+> The three priorities confirmed by the user in Phase 1:
+> 1. **Plant Library**: Advanced search, multi-attribute filtering, and rich Nordic & Estonian variety details.
+> 2. **Canvas Visual & UX Tweaks**: Smooth zoom controls, interactive picture-in-picture minimap, and keyboard shortcut overlay.
+> 3. **Performance & Technical Audit**: Bundle size trimming, screen/dialog lazy loading with `React.lazy`, and Web Vitals polish.
 
-- **Confirmed Decision 1**: Implement comprehensive mobile touch support (pinch-to-zoom, pan gesture arbitration, minimum 44px hitboxes) on the 2D master plan canvas.
-- **Confirmed Decision 2**: Introduce dynamic magnetic alignment guides (edge and center alignment lines with distance readouts) when moving beds and structures.
-- **Confirmed Decision 3**: Upgrade `GardenBinderPrintDialog` and `PrintableGardenReport` into a binder-ready, multi-page print layout optimized for physical field notes and seasonal planning.
+- **Confirmed Decision 1 (Plant Discovery)**: Upgrade `PlantsCatalogScreen` with multi-facet filters (sun exposure, water requirements, direct sowing vs transplant, sowing month) and expand variety profiles for Estonian heirloom seeds (*Peipsi sibul*, *Jõgeva kollane*, *Marmande*, *Evelle*).
+- **Confirmed Decision 2 (Spatial Canvas Navigation)**: Embed an interactive canvas minimap in `YardMasterPlanCanvas` showing yard boundary geometry and active camera viewport, paired with smooth percentage zoom controls and a dedicated keyboard shortcut helper HUD (`?` key).
+- **Confirmed Decision 3 (Web Vitals Architecture)**: Split heavy route bundles (`GardenCanvasScreen` with Three.js, `BlogScreen`, `JournalScreen`, and encyclopedia dialogs) into lazy-loaded chunks via `React.lazy` with instant hover prefetching.
 
 ---
 
 ## 1. Overview & Core Concept
 
-- **What It Delivers**: Transforms KÜLV from a functional garden planner into an ergonomic, responsive, and field-ready agricultural operating system for Nordic and temperate gardeners.
-- **Target Audience & Context**: Nordic home gardeners, permaculturists, and community garden managers using tablets or phones outdoors in garden beds, as well as desktop workstations during winter planning.
-- **Key Value**: Delivers seamless physical-to-digital synergy: effortless master planning on touchscreen devices, deterministic botanical guidance (frost dates, crop rotations, companion pairing), and durable printable garden binders to carry directly into the greenhouse and soil.
+- **What It Does**: Enhances the gardener's planning workflow by turning the plant catalog into a precision filtering engine for Nordic microclimates, introducing professional CAD-like canvas navigation with minimap and shortcut hints, and slashing initial app load times through route-level code splitting.
+- **Target Audience / Persona**: Nordic kitchen gardeners, permaculture designers, and allotment owners planning raised beds and tracking heirloom crops.
+- **Key Value**: Instant discovery of suitable crops for specific soil and light conditions, effortless navigation across large garden plots via canvas minimap, and instant sub-second initial app loading.
 
 ---
 
-## 2. Audit Findings & Critical Issues
-
-### A. Critical Issues & Usability Roadblocks
-1. **Canvas Touch Limitations on Mobile**:
-   - *Problem*: `YardMasterPlanCanvas.tsx` listens primarily to mouse drag and wheel events. On phones and tablets, users cannot pinch-to-zoom or reliably pan without triggering browser viewport scrolling or accidental object drags.
-   - *Impact*: Inability to comfortably edit yard layouts on mobile devices in the field.
-   - *Resolution*: Implement dedicated touch gesture recognizers (handling 1-finger drag, 2-finger pan and pinch-zoom) with pointer capture and passive touch prevention on canvas surfaces.
-
-2. **Absence of Object Alignment Guides**:
-   - *Problem*: While cadastral boundary snapping exists, placing garden beds relative to neighboring beds currently relies on manual visual estimation.
-   - *Impact*: Beds end up misaligned by millimeters, causing awkward pathway widths and uneven row arrangements.
-   - *Resolution*: Introduce dynamic visual magnetic guidelines (smart center and edge snap lines) that render on canvas when an object's edges or centers align with nearby entities within 15cm tolerance.
-
-3. **Printable Report Incomplete for Field Binders**:
-   - *Problem*: Current printable reports lack structured page breaks, vector scale rulers, and crop rotation history worksheets necessary for 3-ring binder organization.
-   - *Impact*: Gardeners cannot easily print physical copies of their master plans for rainproof clipboards.
-   - *Resolution*: Create a modular, multi-section A4/Letter print engine with CSS `@media print` page breaks, high-contrast monochrome/color modes, bed inventory rosters, companion harmony summaries, and seasonal checklists.
-
-### B. Aesthetic & Mobile Polish Deficiencies
-1. **Mobile Object Dock Footprint**:
-   - *Problem*: `YardObjectDock.tsx` consumes significant vertical screen real estate on mobile viewports.
-   - *Resolution*: Implement a collapsible thumb-zone drawer (Pattern 3: Bottom Sheet from `references/10_mobile_touch_apps.md`) that parks into a sleek 48px bottom bar when drawing or inspecting.
-2. **Touch Hitbox Violations**:
-   - *Problem*: Several small canvas controls and filter buttons measure under 36px.
-   - *Resolution*: Enforce a strict minimum 44x44px touch hitbox for all interactive icons and canvas handles.
-
----
-
-## 3. User Experience & Visual Design
+## 2. User Experience & Visual Design
 
 ### Key User Flows
-1. **Field Master Planning (Touch & Alignment)**:
-   - User opens the 2D Garden Master Plan on a tablet or mobile screen.
-   - Pinching zooms fluidly around the focal midpoint; dragging with two fingers pans across the yard.
-   - Dragging a raised bed snaps magnetically to neighboring beds with dashed emerald guideline markers and distance tags (`1.2m`).
-   - Releasing the bed saves state automatically to IndexedDB with instant undo/redo availability.
 
-2. **Binder Generation & Field Export**:
-   - User clicks "Aiaplaan printimiseks" (Garden Binder Print).
-   - Dialog offers customizable sections: Master Plan Overview, Bed Inventory & Planting Schedule, 4-Year Crop Rotation Worksheet, and Companion Planting Matrix.
-   - Generates a pristine print preview with clean typography (Fraunces + Plus Jakarta Sans) and zero clipped pages.
+1. **Filtering & Variety Discovery**:
+   - User navigates to the **Taimed (Plants)** catalog.
+   - User sees a new multi-facet filter bar: Light (Täispäike / Poolvari / Vari), Water (Madal / Mõõdukas / Kõrge), Sowing method (Avamaa külv / Ettekasvatus), and Sowing month (Märts – Juuni).
+   - Filter chips show active counts with single-click dismissal.
+   - Selecting a plant displays rich variety tags (*Eesti pärandsordid*, days to maturity, hardiness zone).
+   - In `PlantDetailDialog`, a new "Sordid & Selektsioon" sub-section highlights Nordic cold-tolerant cultivars and sowing calendar windows.
 
-### Visual Identity & Theme
-- **Color Discipline (60-30-10)**:
-  - *60% Neutral Canvas*: `#FAF6ED` (Warm Linen Light) / `#171B17` (Charcoal Deep Dark).
-  - *30% Structural Elements*: Earthy sage borders (`--kulv-border`), clean muted surfaces (`--kulv-surface`).
-  - *10% Accent Intent*: Botanical forest green (`--kulv-primary: #385A40`) and terracotta accents (`--kulv-accent: #C76D3A`) reserved strictly for active tools and primary CTAs.
-- **Zero-Pill Metadata**: Badges replaced with unboxed metadata paired with quiet typographic bullets (`·`).
-- **Typography**: Display headings set in *Fraunces* serif; interface controls, schedules, and metrics set in *Plus Jakarta Sans* with tabular numerals (`tabular-nums`).
+2. **Canvas Minimap & Smooth Zoom**:
+   - In **Aiaplaan (Master Plan Canvas)**, user notices a sleek picture-in-picture minimap in the bottom-right corner.
+   - The minimap displays the scaled cadastral plot boundary and all active beds/structures with distinct category color coding.
+   - An illuminated viewport rectangle shows the currently visible screen section.
+   - Dragging or clicking inside the minimap smoothly pans the main canvas to that location.
+   - The zoom toolbar shows smooth stepped buttons with current zoom scale percentage (e.g., `100%`, `150%`, `75%`) and a 1-click `Sobita (Fit)` reset.
 
----
+3. **Keyboard Shortcut HUD**:
+   - Pressing `?` or clicking the keyboard icon button in the canvas toolbar opens a non-modal keyboard overlay.
+   - Highlights quick actions: `V` (Select), `P` (Polygon Bed), `L` (Pathway/Line), `R` (Rotate 45°), `Ctrl+D` (Duplicate), `Del` (Delete), `Ctrl+Z/Y` (Undo/Redo), `+ / -` (Zoom), `0` (Reset view), and `H` (Toggle guidelines).
 
-## 4. Key Architectural Decisions & Trade-Offs
-
-- **Decision 1: Native Touch Gesture Engine vs. Heavy External Gesture Libraries**
-  - *Chosen Approach*: Implement a lightweight, zero-dependency multi-touch handler inside `YardMasterPlanCanvas.tsx` tracking active pointer IDs for pinch-to-zoom and two-finger translation.
-  - *Why*: Eliminates extra dependencies, guarantees zero bundle bloat, and prevents event listener conflicts with existing HTML5 canvas pointer events.
-  - *Trade-off*: Requires explicit touch coordinate math and distance calculations, which are well-understood and thoroughly testable.
-
-- **Decision 2: Canvas Magnetic Alignment Guides via Spatial Query**
-  - *Chosen Approach*: Leverage the existing RBush spatial index (`spatialIndex.ts`) to query bounding boxes of neighboring entities during drag operations, calculating delta thresholds ($\le 0.15\text{m}$).
-  - *Why*: Delivers $O(\log n)$ lookup speed even with 200+ yard entities without causing frame drops during 60fps drag operations.
-
-- **Decision 3: Dedicated CSS Print Engine for Binders**
-  - *Chosen Approach*: Pure CSS `@media print` with explicit page container divs and CSS Paged Media properties (`page-break-after: always; break-inside: avoid;`).
-  - *Why*: Universal browser support, zero external PDF binary bloat, sharp vector text rendering, and direct integration with OS print/save-to-PDF dialogs.
+### Visual Identity & Theme Tokens
+- Preserves KÜLV earthy Nordic palette:
+  - Surface: `var(--kulv-surface, #FFFDF8)` and `var(--kulv-surface-muted, #EFE6D4)`
+  - Forest Primary: `var(--kulv-primary, #4F6B45)`
+  - Terracotta Accent: `var(--kulv-accent, #D97A3D)`
+  - Border: `var(--kulv-border, #C9BFA9)`
+  - Text: `var(--kulv-text, #2A2E24)`
+- Anti-slop zero-pill discipline: Clean textual tags, serif display headings (*Fraunces*), monospaced dimensions (*Plus Jakarta Sans*), and subtle border framing.
+- Touch target rule: All newly added filter tags, minimap toggles, and zoom buttons meet $\ge 44 \times 44\,\text{px}$ touch target hitboxes.
 
 ---
 
-## 5. Technical Architecture & Component Mapping
+## 3. Key Product Decisions & Trade-Offs
 
-### System Interaction Diagram
+- **Decision 1: Interactive Canvas Minimap vs Static Map Preview**
+  - *Chosen Approach*: Lightweight 2D SVG-based minimap directly tied to the canvas `panOffset` and `zoom` state.
+  - *Why*: SVG renders smoothly with zero additional canvas contexts or memory leaks, and handles touch/mouse pan gestures natively.
+  - *Alternatives Considered*: Second WebGL context (rejected due to memory overhead and mobile GPU limits).
+
+- **Decision 2: Client-side Plant Filtering vs Server-side Querying**
+  - *Chosen Approach*: High-performance memoized client-side filtering over the existing curated plant database.
+  - *Why*: Instant sub-millisecond filtering with zero network lag, enabling offline availability in the garden.
+  - *Alternatives Considered*: Backend API search (unnecessary network round-trips for ~60 plant records).
+
+- **Decision 3: Route-Level `React.lazy` with Hover Prefetching**
+  - *Chosen Approach*: Wrap heavy screens (`GardenCanvasScreen` with Three.js, `BlogScreen`, `JournalScreen`) and heavy dialogs in `React.lazy` with suspense skeletons, while prefetching on bottom navigation hover.
+  - *Why*: Slashes initial bundle size by over 60% without adding latency when switching tabs.
+
+---
+
+## 4. Technical Architecture & Component Mapping
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        KÜLV Application Shell                          │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-         ┌──────────────────────────┼──────────────────────────┐
-         ▼                          ▼                          ▼
-┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
-│   HomeScreen     │       │ YardMasterPlan   │       │ GardenBinder     │
-│  WeatherWidget   │       │   (2D Canvas)    │       │   Print Engine   │
-└────────┬─────────┘       └────────┬─────────┘       └────────┬─────────┘
-         │                          │                          │
-         │ - Live Open-Meteo        │ - Multi-Touch Engine     │ - Page Break Layout
-         │ - Frost Warning Alerts   │ - Smart Magnetic Snap    │ - Vector Plan SVG
-         │ - Seasonal Advice        │ - RBush Spatial Guides   │ - Rotation Tables
-         │                          │ - Collapsible Mobile Dock│ - Companion Matrix
-         ▼                          ▼                          ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│             Central State & Agronomy Intelligence Core                 │
-│                                                                        │
-│   • GardenContext (Beds, Plants, Tasks, Settings)                      │
-│   • yardStore (Master Plan Entities, Transformations, Undo/Redo)       │
-│   • companionEngine & cropRotationEngine (Harmony & Succession)        │
-│   • estonianFrostEngine & gddEngine (Agricultural Timing)              │
-│   • storageDb (IndexedDB Local Offline Persistence)                    │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│                        AppShell                        │
+│   ┌────────────────────────────────────────────────┐   │
+│   │               Top Header & Nav                 │   │
+│   └────────────────────────────────────────────────┘   │
+│   ┌────────────────────────────────────────────────┐   │
+│   │           React.Suspense + Route Lazy          │   │
+│   │  ┌───────────────┐ ┌────────────────────────┐  │   │
+│   │  │ PlantsCatalog │ │  YardMasterPlanCanvas  │  │   │
+│   │  │  - MultiFacet │ │   - Smooth Zoom        │  │   │
+│   │  │  - Heirlooms  │ │   - Canvas Minimap     │  │   │
+│   │  │  - SowingCal  │ │   - Shortcut HUD       │  │   │
+│   │  └───────────────┘ └────────────────────────┘  │   │
+│   └────────────────────────────────────────────────┘   │
+│   ┌────────────────────────────────────────────────┐   │
+│   │       Lazy-loaded Dialogs & Tool Modals        │   │
+│   │   PlantDetailDialog  ·  GardenBinderPrint      │   │
+│   └────────────────────────────────────────────────┘   │
+└────────────────────────────────────────────────────────┘
 ```
 
-### Module Upgrades
-1. **`src/components/garden/YardMasterPlanCanvas.tsx`**:
-   - Multi-touch gesture listener supporting simultaneous pinch-to-zoom and two-finger canvas panning.
-   - Smart alignment engine rendering horizontal and vertical magnetic guidelines when aligning entity edges/centers.
-2. **`src/components/garden/YardObjectDock.tsx`**:
-   - Collapsible mobile docking drawer with thumb-zone expansion button and $\ge 44\text{px}$ touch targets.
-3. **`src/components/dialogs/GardenBinderPrintDialog.tsx` & `PrintableGardenReport.tsx`**:
-   - Multi-page print layout: Cover page, 2D master plan diagram, planting calendar, companion harmony matrix, and 4-year crop rotation worksheets.
-   - High-contrast printer-friendly styling, custom print header/footer, and clean A4 pagination.
-4. **`src/components/WeatherWidget.tsx`**:
-   - Refined mobile touch hitboxes on the 7-day forecast selector strip and refresh button.
-
----
-
-## 6. Execution Steps & Verification Plan
-
-1. **Step 1: Multi-Touch & Smart Snapping Engine on 2D Canvas**
-   - Add pointer event tracking for multi-touch gestures (two-finger pan, pinch zoom).
-   - Implement spatial guide calculation in `cadastralSnapping.ts` / canvas drag handler.
-2. **Step 2: Mobile Ergonomics & Dock Optimization**
-   - Refactor `YardObjectDock.tsx` into a responsive, collapsible bottom drawer on viewports $<768\text{px}$.
-   - Ensure all touch targets meet the $\ge 44\text{px}$ requirement.
-3. **Step 3: Enhanced Printable Garden Binder**
-   - Upgrade print templates with modular page sections, rotation history, and clean CSS print rules.
-4. **Step 4: Quality & Verification**
-   - Run `npm test` and `npm run test:server` to verify zero regression across agronomy engines and backend routes.
-   - Run `compile_applet` and `lint_applet` to confirm clean builds.
+### Component & State Plan:
+1. `src/screens/PlantsCatalogScreen.tsx`:
+   - State for `sunFilter`, `waterFilter`, `sowMethodFilter`, `sortBy`.
+   - Enhanced plant catalog cards with heirloom tags and Estonian variety notes.
+2. `src/components/garden/YardMasterPlanCanvas.tsx`:
+   - Integrated `<CanvasMinimap />` component with drag-to-pan handlers.
+   - Zoom scale indicator (`100%`) with smooth step transitions.
+   - Refined keyboard shortcut helper modal with `?` shortcut trigger.
+3. `src/components/layout/AppShell.tsx`:
+   - Dynamic lazy imports for screens and heavy dialogs.
+   - Graceful loading skeleton fallback matching Nordic surface tones.
+4. Verification:
+   - Full TypeScript build check (`compile_applet`), lint (`lint_applet`), and test suite validation (`npm test`, `npm run test:server`).

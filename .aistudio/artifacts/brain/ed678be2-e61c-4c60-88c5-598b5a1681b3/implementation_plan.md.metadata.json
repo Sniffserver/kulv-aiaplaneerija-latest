@@ -1,6 +1,6 @@
 {
-  "summary":  "Comprehensive audit and polish implementation plan for KÜLV, focusing on canvas touch gestures & alignment guides, agronomic engine integration, mobile field ergonomics, and an enhanced printable garden binder.",
-  "updatedAt":  "2026-10-26T13:45:20.163003529Z",
+  "summary":  "Implementation plan for KÜLV audit, improvements, and tweaks covering:\n1. Plant library advanced search, multi-attribute filtering (sunlight, moisture, direct sow vs indoor, sowing calendar months), and Estonian heirloom variety details.\n2. Canvas UX upgrades featuring smooth incremental zoom, an interactive picture-in-picture minimap with draggable viewport rectangle, and an accessible keyboard shortcut HUD overlay (? key).\n3. Web Vitals & performance optimization with React.lazy code splitting across screens and heavy dialogs, lazy-loading Three.js/3D and Recharts bundles, and intelligent prefetch on hover.",
+  "updatedAt":  "2026-10-26T14:34:01.423859685Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

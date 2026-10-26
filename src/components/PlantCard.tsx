@@ -108,11 +108,26 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick }) => {
           <span>
             {language === 'en' ? 'Spacing:' : 'Vahe:'} {plant.spacingCm} cm
           </span>
+          <span aria-hidden="true">·</span>
+          <span>
+            {plant.sunNeed === 'full'
+              ? (language === 'en' ? '☀️ Full Sun' : '☀️ Täispäike')
+              : plant.sunNeed === 'partial'
+                ? (language === 'en' ? '⛅ Part Shade' : '⛅ Poolvari')
+                : (language === 'en' ? '☁️ Shade' : '☁️ Vari')}
+          </span>
+          <span aria-hidden="true">·</span>
+          <span>
+            {plant.weeksBeforeFrostSowIndoors !== null && plant.weeksBeforeFrostSowIndoors !== undefined
+              ? (language === 'en' ? '🌱 Indoor Pre-grow' : '🌱 Ettekasvatus')
+              : (language === 'en' ? '🌾 Direct Sow' : '🌾 Otsekülv')}
+          </span>
           {plant.varieties && plant.varieties.length > 0 && (
             <>
               <span aria-hidden="true">·</span>
-              <span>
+              <span style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>
                 {language === 'en' ? 'Cultivars:' : 'Sordid:'} {plant.varieties.slice(0, 3).join(', ')}
+                {plant.varieties.length > 3 && ` +${plant.varieties.length - 3}`}
               </span>
             </>
           )}
