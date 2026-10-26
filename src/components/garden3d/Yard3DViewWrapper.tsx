@@ -63,3 +63,5 @@ export const Yard3DViewWrapper: React.FC<Yard3DViewWrapperProps> = ({ onBackTo2D
     </ThreeErrorBoundary>
   );
 };
+
+export default Yard3DViewWrapper;

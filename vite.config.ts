@@ -7,6 +7,30 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
     allowedHosts: true,
+    hmr: false,
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom']
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      '@react-three/fiber',
+      '@react-three/drei',
+      'three',
+      'lucide-react',
+      'zustand',
+      'zustand/middleware',
+      'zustand/middleware/immer',
+      'immer',
+      'recharts',
+      'rbush',
+      'zod',
+      'zundo'
+    ]
   },
   build: {
     chunkSizeWarningLimit: 600,

@@ -16,6 +16,51 @@
     <meta name="apple-mobile-web-app-title" content="KÜLV" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https: data: blob:;" />
     <script>
+      // Vite HMR is disabled in this environment. Intercept vite-hmr WebSockets to prevent
+      // background HMR connection errors from bubbling to the AI Studio preview container.
+      (function() {
+        if (typeof window === 'undefined') return;
+        const NativeWebSocket = window.WebSocket;
+        if (NativeWebSocket) {
+          window.WebSocket = function(url, protocols) {
+            const isViteHmr =
+              protocols === 'vite-hmr' ||
+              (Array.isArray(protocols) && protocols.includes('vite-hmr')) ||
+              (typeof url === 'string' && (url.includes('token=') || url.includes(':24678') || url.includes('localhost:3000')));
+            if (isViteHmr) {
+              const dummy = new EventTarget();
+              dummy.binaryType = 'blob';
+              dummy.readyState = 1; // OPEN
+              dummy.bufferedAmount = 0;
+              dummy.extensions = '';
+              dummy.protocol = 'vite-hmr';
+              dummy.url = String(url);
+              dummy.send = function() {};
+              dummy.close = function() {
+                dummy.readyState = 3; // CLOSED
+                dummy.dispatchEvent(new Event('close'));
+              };
+              setTimeout(() => {
+                dummy.dispatchEvent(new Event('open'));
+              }, 0);
+              return dummy;
+            }
+            return new NativeWebSocket(url, protocols);
+          };
+          window.WebSocket.prototype = NativeWebSocket.prototype;
+          window.WebSocket.CONNECTING = NativeWebSocket.CONNECTING;
+          window.WebSocket.OPEN = NativeWebSocket.OPEN;
+          window.WebSocket.CLOSING = NativeWebSocket.CLOSING;
+          window.WebSocket.CLOSED = NativeWebSocket.CLOSED;
+        }
+
+        window.addEventListener('error', function(event) {
+          if (event && event.filename && event.filename.includes('@vite/client')) {
+            event.preventDefault();
+          }
+        });
+      })();
+
       // Apply boot hints before first paint; IndexedDB settings are authoritative after startup.
       try {
         const cachedTheme = localStorage.getItem('kulv-theme');

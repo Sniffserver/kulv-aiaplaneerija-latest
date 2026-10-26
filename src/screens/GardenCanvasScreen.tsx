@@ -11,9 +11,9 @@ import { CropRotationTimeline } from '../components/garden/CropRotationTimeline'
 import { PrintableGardenReport } from '../components/garden/PrintableGardenReport';
 import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calendar, Printer } from 'lucide-react';
 
-const LazyYard3DViewWrapper = lazy(() =>
-  import('../components/garden3d/Yard3DViewWrapper').then((m) => ({ default: m.Yard3DViewWrapper }))
-);
+import { ThreeErrorBoundary } from '../components/garden3d/ThreeErrorBoundary';
+
+const LazyYard3DViewWrapper = lazy(() => import('../components/garden3d/Yard3DViewWrapper'));
 
 interface GardenCanvasScreenProps {
   onOpenAddBed: () => void;
@@ -251,16 +251,18 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
       {plannerMode === 'yard' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {viewMode === '3d' ? (
-            <Suspense
-              fallback={
-                <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)] min-h-[500px] bg-slate-900 rounded-xl border border-slate-700 text-slate-400">
-                  <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mb-2" />
-                  <p className="text-sm">Laadin 3D komponenti...</p>
-                </div>
-              }
-            >
-              <LazyYard3DViewWrapper onBackTo2D={() => setViewMode('2d')} />
-            </Suspense>
+            <ThreeErrorBoundary onFallbackTo2D={() => setViewMode('2d')}>
+              <Suspense
+                fallback={
+                  <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)] min-h-[500px] bg-slate-900 rounded-xl border border-slate-700 text-slate-400">
+                    <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mb-2" />
+                    <p className="text-sm">Laadin 3D komponenti...</p>
+                  </div>
+                }
+              >
+                <LazyYard3DViewWrapper onBackTo2D={() => setViewMode('2d')} />
+              </Suspense>
+            </ThreeErrorBoundary>
           ) : (
             <>
               {/* Object Palette Dock */}
