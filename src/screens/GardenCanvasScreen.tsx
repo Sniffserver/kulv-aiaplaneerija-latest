@@ -13,6 +13,8 @@ import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calend
 
 import { ThreeErrorBoundary } from '../components/garden3d/ThreeErrorBoundary';
 import { Yard3DViewWrapper } from '../components/garden3d/Yard3DViewWrapper';
+import { EmptyState } from '../components/common/EmptyState';
+import { GardenEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 import emptyGardenImg from '../assets/images/kulv_empty_garden_1793083975050.jpg';
 
 interface GardenCanvasScreenProps {
@@ -385,68 +387,18 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
               onRemoveFromCell={removePlantFromBed}
             />
           ) : (
-            <div
-              style={{
-                backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-                border: '1px solid var(--kulv-border, #C9BFA9)',
-                borderRadius: '16px',
-                padding: '36px 20px',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: 'auto 0'
-              }}
-            >
-              <img
-                src={emptyGardenImg}
-                alt="Tühi peenar"
-                style={{
-                  width: '200px',
-                  height: '150px',
-                  borderRadius: '12px',
-                  objectFit: 'cover',
-                  marginBottom: '16px',
-                  border: '1px solid var(--kulv-border, #C9BFA9)'
-                }}
-                referrerPolicy="no-referrer"
-              />
-              <h3
-                style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--kulv-text, #2A2E24)' }}
-              >
-                Aias pole veel ühtegi peenart
-              </h3>
-              <p
-                style={{
-                  fontSize: '13px',
-                  color: 'var(--kulv-text-muted, #5F675A)',
-                  maxWidth: '340px',
-                  margin: '0 0 16px 0'
-                }}
-              >
-                Lisa esimene peenar või kasvuhoone, et alustada taimede paigutamist ruudustikule.
-              </p>
-              <button
-                onClick={onOpenAddBed}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '10px 18px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                  color: 'white',
-                  border: 'none',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                <Plus size={16} />
-                <span>Lisa peenar</span>
-              </button>
-            </div>
+            <EmptyState
+              illustration={<GardenEmptyIllustration />}
+              title={language === 'en' ? 'No garden beds yet' : 'Aiaplaan on tühi'}
+              description={
+                language === 'en'
+                  ? 'Add your first raised bed or greenhouse to start planning plant placements.'
+                  : 'Lisa esimene peenar ja alusta oma aia planeerimist.'
+              }
+              actionLabel={language === 'en' ? 'Add bed' : 'Lisa peenar'}
+              onAction={onOpenAddBed}
+              testId="garden-empty-state"
+            />
           )}
         </div>
       )}

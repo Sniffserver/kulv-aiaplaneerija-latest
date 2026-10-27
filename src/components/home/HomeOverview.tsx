@@ -21,9 +21,9 @@ export function HomeOverview({
 }: HomeOverviewProps) {
   return (
     <div className="kulv-home-overview">
-      <section className="kulv-card kulv-card--focus">
+      <section className="kulv-card kulv-card--focus" aria-labelledby="home-focus-title">
         <div className="kulv-card__header">
-          <h2>Tänane fookus</h2>
+          <h2 id="home-focus-title">Tänane fookus</h2>
           <span className="kulv-badge kulv-badge--accent">
             {taskCount} ülesannet
           </span>
@@ -45,9 +45,9 @@ export function HomeOverview({
         </button>
       </section>
 
-      <section className="kulv-card">
+      <section className="kulv-card" aria-labelledby="home-garden-title">
         <div className="kulv-card__header">
-          <h2>Aed</h2>
+          <h2 id="home-garden-title">Aed</h2>
           <RaisedBedIcon className="kulv-icon" size={20} />
         </div>
 
@@ -71,9 +71,9 @@ export function HomeOverview({
         </button>
       </section>
 
-      <section className="kulv-card kulv-card--muted">
+      <section className="kulv-card kulv-card--muted" aria-labelledby="home-weather-title">
         <div className="kulv-card__header">
-          <h2>Ilma</h2>
+          <h2 id="home-weather-title">Ilma</h2>
           <SunIcon className="kulv-icon--accent" size={20} />
         </div>
 

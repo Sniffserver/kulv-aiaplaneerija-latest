@@ -5,7 +5,6 @@ export function CarrotIcon(props: IconProps) {
     <IconBase {...props}>
       <path d="M14.5 9.5 6 18" />
       <path d="M14.5 9.5c2.5 0 4-1.5 4-4-2.5 0-4 1.5-4 4Z" />
-      <path d="M6 18c-1.5 1.5-1.5 1.5-1.5 1.5S4.5 19.5 6 18Z" />
       <path d="M13 11l1 1" />
       <path d="M11 13l1 1" />
     </IconBase>
@@ -124,6 +123,136 @@ export function PotatoIcon(props: IconProps) {
       <path d="M10 12h.01" />
       <path d="M14 14h.01" />
       <path d="M12 9h.01" />
+    </IconBase>
+  );
+}
+
+export function ChiliIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M15 5c3 1 4 4 3 7-1 4-5 7-9 7-2 0-4-1-4-3 0-5 4-10 10-11Z" />
+      <path d="M15 5c1-1 2-1 3 0-1 1-2 1-3 0Z" />
+    </IconBase>
+  );
+}
+
+export function PumpkinIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <ellipse cx="12" cy="14" rx="8" ry="6" />
+      <path d="M12 8V5" />
+      <path d="M12 5c2-1 4 0 4 2" />
+      <path d="M8 14c0-3 2-5 4-5" />
+    </IconBase>
+  );
+}
+
+export function ZucchiniIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M16 5c3 2 3 6 0 9l-6 6c-3 2-6 1-7-2s1-6 4-8l5-5c1-1 3-1 4 0Z" />
+      <path d="M11 13h.01" />
+    </IconBase>
+  );
+}
+
+export function BeetrootIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 10c4 0 6 3 6 6s-2 5-6 5-6-2-6-5 2-6 6-6Z" />
+      <path d="M12 10V5" />
+      <path d="M12 5c-2-2-4-2-5-1 1 2 3 2 5 1Z" />
+      <path d="M12 5c2-2 4-2 5-1-1 2-3 2-5 1Z" />
+    </IconBase>
+  );
+}
+
+export function KaleIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21V9" />
+      <path d="M12 12c-4 0-6-3-6-6 4 0 6 2 6 6Z" />
+      <path d="M12 12c4 0 6-3 6-6-4 0-6 2-6 6Z" />
+      <path d="M12 18c-3 0-5-2-5-4 3 0 5 1 5 4Z" />
+      <path d="M12 18c3 0 5-2 5-4-3 0-5 1-5 4Z" />
+    </IconBase>
+  );
+}
+
+export function SpinachIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21V10" />
+      <path d="M12 13c-4 0-7-3-7-7 4 0 7 3 7 7Z" />
+      <path d="M12 13c4 0 7-3 7-7-4 0-7 3-7 7Z" />
+      <path d="M12 18c-3 0-5-2-5-4 3 0 5 1 5 4Z" />
+      <path d="M12 18c3 0 5-2 5-4-3 0-5 1-5 4Z" />
+    </IconBase>
+  );
+}
+
+export function BlueberryIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="9" cy="14" r="5" />
+      <circle cx="16" cy="10" r="4" />
+      <path d="M9 9V7" />
+      <path d="M16 6V4" />
+    </IconBase>
+  );
+}
+
+export function AppleIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 9c3-2 7 0 7 4s-3 8-7 8-7-4-7-8 4-6 7-4Z" />
+      <path d="M12 9V5" />
+      <path d="M12 5c2-2 4-1 4 1-2 1-3 0-4-1Z" />
+    </IconBase>
+  );
+}
+
+export function HerbPotIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 13h10l-1 8H8l-1-8Z" />
+      <path d="M12 13V7" />
+      <path d="M12 9c-3 0-5-2-5-5 3 0 5 2 5 5Z" />
+      <path d="M12 9c3 0 5-2 5-5-3 0-5 2-5 5Z" />
+    </IconBase>
+  );
+}
+
+export function FlowerIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="10" r="2" />
+      <path d="M12 8c-2 0-3-2-2-3 2 0 3 1 2 3Z" />
+      <path d="M12 8c2 0 3-2 2-3-2 0-3 1-2 3Z" />
+      <path d="M10 12c-2 0-3 2-2 3 2 0 3-1 2-3Z" />
+      <path d="M14 12c2 0 3 2 2 3-2 0-3-1-2-3Z" />
+      <path d="M12 14v7" />
+    </IconBase>
+  );
+}
+
+export function SeedlingIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21V11" />
+      <path d="M12 13c-4 0-6-3-6-6 4 0 6 2 6 6Z" />
+      <path d="M12 13c4 0 6-3 6-6-4 0-6 2-6 6Z" />
+      <path d="M7 21h10" />
+    </IconBase>
+  );
+}
+
+export function SproutIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21v-8" />
+      <path d="M12 13c-4 0-6-3-6-6 4 0 6 2 6 6Z" />
+      <path d="M12 13c4 0 6-3 6-6-4 0-6 2-6 6Z" />
     </IconBase>
   );
 }
