@@ -4,10 +4,7 @@ import { CompanionEngine, CompanionConflict } from '../logic/companionEngine';
 import { CropRotationEngine } from '../logic/cropRotationEngine';
 import { useGarden } from '../context/GardenContext';
 import { MobileCellSheet } from './MobileCellSheet';
-
-const PlantGrowthProgressChart = React.lazy(() =>
-  import('./PlantGrowthProgressChart').then((m) => ({ default: m.PlantGrowthProgressChart }))
-);
+import { PlantGrowthProgressChart } from './PlantGrowthProgressChart';
 import {
   Sun,
   AlertTriangle,
@@ -906,17 +903,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       {/* Desktop Growth Chart inline preview */}
                       {showDesktopGrowthChart && plantInfo && (
                         <div style={{ marginTop: '4px' }}>
-                          <React.Suspense
-                            fallback={
-                              <div
-                                style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}
-                              >
-                                Laadin kasvuprognoosi graafikut...
-                              </div>
-                            }
-                          >
-                            <PlantGrowthProgressChart planting={inspectingCell.planting} plant={plantInfo} />
-                          </React.Suspense>
+                          <PlantGrowthProgressChart planting={inspectingCell.planting} plant={plantInfo} />
                         </div>
                       )}
                     </>

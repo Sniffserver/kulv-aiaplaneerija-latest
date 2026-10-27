@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BedPlantingCell, GardenBed, Plant } from '../types';
 import { CompanionEngine, CellSynergyDetails } from '../logic/companionEngine';
 import { CropRotationEngine } from '../logic/cropRotationEngine';
-
-const PlantGrowthProgressChart = React.lazy(() =>
-  import('./PlantGrowthProgressChart').then((m) => ({ default: m.PlantGrowthProgressChart }))
-);
+import { PlantGrowthProgressChart } from './PlantGrowthProgressChart';
 import {
   X,
   Sprout,
@@ -491,15 +488,7 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
             {/* Expandable Recharts Growth Chart */}
             {showGrowthChart && (
               <div style={{ marginTop: '8px' }}>
-                <React.Suspense
-                  fallback={
-                    <div style={{ padding: '12px', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                      Laadin kasvuprognoosi graafikut...
-                    </div>
-                  }
-                >
-                  <PlantGrowthProgressChart planting={cell} plant={plantInfo} />
-                </React.Suspense>
+                <PlantGrowthProgressChart planting={cell} plant={plantInfo} />
               </div>
             )}
           </>

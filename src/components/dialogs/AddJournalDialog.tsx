@@ -35,6 +35,7 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
   const [growthStage, setGrowthStage] = useState<string>('Idanemine');
   const [growthProgressPct, setGrowthProgressPct] = useState<number>(50);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [compressionStats, setCompressionStats] = useState<CompressionResult | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -80,13 +81,15 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setPhotoError(null);
     try {
       setIsCompressing(true);
       const res = await compressImageFile(file, 1280, 1280, 0.82);
       setPhotoUrl(res.dataUrl);
       setCompressionStats(res);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Pildi tihendamine ebaõnnestus', err);
+      setPhotoError(err?.message || 'Pildi tihendamine ebaõnnestus. Lubatud on JPEG, PNG või WebP.');
     } finally {
       setIsCompressing(false);
       if (fileInputRef.current) {
@@ -97,6 +100,7 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
 
   const handleRemovePhoto = () => {
     setPhotoUrl(null);
+    setPhotoError(null);
     setCompressionStats(null);
   };
 
@@ -580,6 +584,19 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
                 <Camera size={16} />
                 <span>{isCompressing ? 'Tihendan pilti...' : 'Lisa foto päevikukirjele'}</span>
               </button>
+            )}
+            {photoError && (
+              <div
+                role="alert"
+                style={{
+                  color: 'var(--kulv-danger, #D9534F)',
+                  fontSize: '12px',
+                  marginTop: '6px',
+                  fontWeight: 500
+                }}
+              >
+                {photoError}
+              </div>
             )}
           </div>
 

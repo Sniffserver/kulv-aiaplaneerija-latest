@@ -1,14 +1,22 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGarden } from '../../context/GardenContext';
 import { Plant, ColorPalette } from '../../types';
 import { HomeScreen } from '../../screens/HomeScreen';
+import { GardenCanvasScreen } from '../../screens/GardenCanvasScreen';
+import { PlantsCatalogScreen } from '../../screens/PlantsCatalogScreen';
+import { CalendarScreen } from '../../screens/CalendarScreen';
 import { JournalScreen } from '../../screens/JournalScreen';
 import { BlogScreen } from '../../screens/BlogScreen';
 import { AddBedDialog } from '../dialogs/AddBedDialog';
 import { AddTaskDialog } from '../dialogs/AddTaskDialog';
 import { AddPlantDialog } from '../dialogs/AddPlantDialog';
 import { AddJournalDialog } from '../dialogs/AddJournalDialog';
+import { PlantDetailDialog } from '../dialogs/PlantDetailDialog';
+import { GardenBinderPrintDialog } from '../dialogs/GardenBinderPrintDialog';
+import { SoilRecipesDialog } from '../dialogs/SoilRecipesDialog';
+import { GrowTentDialog } from '../dialogs/GrowTentDialog';
 import { SettingsModal, applyPaletteToDOM } from '../SettingsModal';
+import appIconUrl from '../../assets/images/kulv_app_icon_1793083974365.jpg';
 import {
   Home,
   Grid,
@@ -21,136 +29,7 @@ import {
   Printer
 } from 'lucide-react';
 
-// Resilient dynamic loader with automatic retry on transient chunk loading errors
-function lazyWithRetry<T extends React.ComponentType<any>>(
-  factory: () => Promise<{ default: T }>,
-  retries = 2,
-  interval = 300
-): React.LazyExoticComponent<T> {
-  return lazy(() =>
-    new Promise<{ default: T }>((resolve, reject) => {
-      const attempt = (remainingRetries: number) => {
-        factory()
-          .then(resolve)
-          .catch((error) => {
-            if (remainingRetries > 0) {
-              setTimeout(() => {
-                attempt(remainingRetries - 1);
-              }, interval);
-            } else {
-              reject(error);
-            }
-          });
-      };
-      attempt(retries);
-    })
-  );
-}
-
-// Lazy-load heavier screens to trim initial bundle size and boost Web Vitals (FCP/LCP)
-const GardenCanvasScreen = lazyWithRetry(() =>
-  import('../../screens/GardenCanvasScreen').then((m) => ({ default: m.GardenCanvasScreen }))
-);
-const PlantsCatalogScreen = lazyWithRetry(() =>
-  import('../../screens/PlantsCatalogScreen').then((m) => ({ default: m.PlantsCatalogScreen }))
-);
-const CalendarScreen = lazyWithRetry(() =>
-  import('../../screens/CalendarScreen').then((m) => ({ default: m.CalendarScreen }))
-);
-
-// Lazy-load heavy dialogs and print worksheets
-const PlantDetailDialog = lazyWithRetry(() =>
-  import('../dialogs/PlantDetailDialog').then((m) => ({ default: m.PlantDetailDialog }))
-);
-const GardenBinderPrintDialog = lazyWithRetry(() =>
-  import('../dialogs/GardenBinderPrintDialog').then((m) => ({ default: m.GardenBinderPrintDialog }))
-);
-const SoilRecipesDialog = lazyWithRetry(() =>
-  import('../dialogs/SoilRecipesDialog').then((m) => ({ default: m.SoilRecipesDialog }))
-);
-const GrowTentDialog = lazyWithRetry(() =>
-  import('../dialogs/GrowTentDialog').then((m) => ({ default: m.GrowTentDialog }))
-);
-
-// Prefetch triggers on hover/touch to eliminate tab switch latency
-const prefetchScreen = (screen: NavigationScreen) => {
-  switch (screen) {
-    case 'garden':
-      import('../../screens/GardenCanvasScreen');
-      break;
-    case 'plants':
-      import('../../screens/PlantsCatalogScreen');
-      break;
-    case 'calendar':
-      import('../../screens/CalendarScreen');
-      break;
-  }
-};
-
-const prefetchBinderDialog = () => {
-  import('../dialogs/GardenBinderPrintDialog');
-};
-
-const prefetchSoilDialog = () => {
-  import('../dialogs/SoilRecipesDialog');
-};
-
 export type NavigationScreen = 'home' | 'garden' | 'plants' | 'calendar' | 'journal' | 'blog';
-
-// Nordic skeleton fallback matching theme tokens
-const ScreenLoadingSkeleton: React.FC = () => (
-  <div
-    style={{
-      padding: '24px 16px',
-      maxWidth: '1440px',
-      margin: '0 auto',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px'
-    }}
-  >
-    <div
-      style={{
-        height: '40px',
-        width: '280px',
-        backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-        borderRadius: '8px',
-        animation: 'pulse 1.5s infinite ease-in-out'
-      }}
-    />
-    <div
-      style={{
-        height: '48px',
-        width: '100%',
-        backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-        borderRadius: '10px',
-        animation: 'pulse 1.5s infinite ease-in-out'
-      }}
-    />
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap: '12px',
-        marginTop: '8px'
-      }}
-    >
-      {[1, 2, 3, 4, 5, 6].map((i) => (
-        <div
-          key={i}
-          style={{
-            height: '90px',
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '12px',
-            animation: 'pulse 1.5s infinite ease-in-out'
-          }}
-        />
-      ))}
-    </div>
-  </div>
-);
 
 export const AppShell: React.FC = () => {
   const { addBed, addTask, addPlant, addJournalEntry, settings, updateSettings, saveStatus, language, setLanguage, t } =
@@ -243,22 +122,18 @@ export const AppShell: React.FC = () => {
         }}
       >
         <div style={{ padding: '20px 16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
+          <img
+            src={appIconUrl}
+            alt="KÜLV"
             style={{
               width: '34px',
               height: '34px',
               borderRadius: '8px',
-              backgroundColor: 'var(--kulv-primary, #4F6B45)',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: '18px'
+              objectFit: 'cover',
+              border: '1px solid var(--kulv-border, #C9BFA9)'
             }}
-          >
-            K
-          </div>
+            referrerPolicy="no-referrer"
+          />
           <div>
             <h1
               className="font-serif-display"
@@ -283,8 +158,6 @@ export const AppShell: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => navigateTo(tab.id as NavigationScreen)}
-                onMouseEnter={() => prefetchScreen(tab.id as NavigationScreen)}
-                onTouchStart={() => prefetchScreen(tab.id as NavigationScreen)}
                 data-testid={`desktop_nav_item_${tab.id}`}
                 aria-label={tab.label}
                 aria-current={active ? 'page' : undefined}
@@ -365,6 +238,17 @@ export const AppShell: React.FC = () => {
           }}
         >
           <div className="flex md:hidden items-center gap-2">
+            <img
+              src={appIconUrl}
+              alt="KÜLV"
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
+                objectFit: 'cover'
+              }}
+              referrerPolicy="no-referrer"
+            />
             <span
               className="font-serif-display"
               style={{ fontSize: '18px', fontWeight: 700, color: 'var(--kulv-primary, #4F6B45)' }}
@@ -383,8 +267,6 @@ export const AppShell: React.FC = () => {
             {/* Garden Binder Print Action */}
             <button
               onClick={() => setShowBinderDialog(true)}
-              onMouseEnter={prefetchBinderDialog}
-              onTouchStart={prefetchBinderDialog}
               data-testid="action_print_binder"
               title={language === 'en' ? 'Print Garden Binder' : 'Prindi aia kaust & välipass'}
               aria-label={language === 'en' ? 'Print Garden Binder' : 'Prindi aia kaust'}
@@ -411,8 +293,6 @@ export const AppShell: React.FC = () => {
             {/* Soil Recipes Dialog Trigger */}
             <button
               onClick={() => setShowSoilRecipes(true)}
-              onMouseEnter={prefetchSoilDialog}
-              onTouchStart={prefetchSoilDialog}
               data-testid="action_soil_recipes"
               title={language === 'en' ? 'Soil Recipes' : 'Mullaretseptid'}
               aria-label={language === 'en' ? 'Soil Recipes' : 'Mullaretseptid'}
@@ -464,37 +344,35 @@ export const AppShell: React.FC = () => {
           </div>
         </header>
 
-        {/* Main Content Area wrapped in Suspense with Nordic skeleton fallback */}
+        {/* Main Content Area */}
         <main className="app-main-content" style={{ flex: 1 }}>
-          <Suspense fallback={<ScreenLoadingSkeleton />}>
-            {currentScreen === 'home' && (
-              <HomeScreen
-                onNavigateToGarden={() => navigateTo('garden')}
-                onNavigateToPlants={() => navigateTo('plants')}
-                onNavigateToJournal={() => navigateTo('journal')}
-                onNavigateToCalendar={() => navigateTo('calendar')}
-                onOpenAddTask={() => setShowAddTask(true)}
-                onOpenAddJournal={() => setShowAddJournal(true)}
-                onOpenSoilRecipes={() => setShowSoilRecipes(true)}
-                onOpenGrowTent={() => setShowGrowTent(true)}
-              />
-            )}
+          {currentScreen === 'home' && (
+            <HomeScreen
+              onNavigateToGarden={() => navigateTo('garden')}
+              onNavigateToPlants={() => navigateTo('plants')}
+              onNavigateToJournal={() => navigateTo('journal')}
+              onNavigateToCalendar={() => navigateTo('calendar')}
+              onOpenAddTask={() => setShowAddTask(true)}
+              onOpenAddJournal={() => setShowAddJournal(true)}
+              onOpenSoilRecipes={() => setShowSoilRecipes(true)}
+              onOpenGrowTent={() => setShowGrowTent(true)}
+            />
+          )}
 
-            {currentScreen === 'garden' && <GardenCanvasScreen onOpenAddBed={() => setShowAddBed(true)} />}
+          {currentScreen === 'garden' && <GardenCanvasScreen onOpenAddBed={() => setShowAddBed(true)} />}
 
-            {currentScreen === 'plants' && (
-              <PlantsCatalogScreen
-                onSelectPlant={(plant) => setSelectedPlantDetail(plant)}
-                onOpenAddCustomPlant={() => setShowAddPlant(true)}
-              />
-            )}
+          {currentScreen === 'plants' && (
+            <PlantsCatalogScreen
+              onSelectPlant={(plant) => setSelectedPlantDetail(plant)}
+              onOpenAddCustomPlant={() => setShowAddPlant(true)}
+            />
+          )}
 
-            {currentScreen === 'calendar' && <CalendarScreen />}
+          {currentScreen === 'calendar' && <CalendarScreen />}
 
-            {currentScreen === 'journal' && <JournalScreen onOpenAddEntry={() => setShowAddJournal(true)} />}
+          {currentScreen === 'journal' && <JournalScreen onOpenAddEntry={() => setShowAddJournal(true)} />}
 
-            {currentScreen === 'blog' && <BlogScreen />}
-          </Suspense>
+          {currentScreen === 'blog' && <BlogScreen />}
         </main>
 
         {/* Bottom Navigation Bar (Mobile) */}
@@ -505,8 +383,6 @@ export const AppShell: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => navigateTo(tab.id as NavigationScreen)}
-                onMouseEnter={() => prefetchScreen(tab.id as NavigationScreen)}
-                onTouchStart={() => prefetchScreen(tab.id as NavigationScreen)}
                 data-testid={`nav_item_${tab.id}`}
                 aria-label={tab.label}
                 aria-current={active ? 'page' : undefined}
@@ -594,20 +470,18 @@ export const AppShell: React.FC = () => {
         }}
       />
 
-      <Suspense fallback={null}>
-        {showGrowTent && <GrowTentDialog isOpen={showGrowTent} onDismiss={() => setShowGrowTent(false)} />}
-        {showSoilRecipes && <SoilRecipesDialog isOpen={showSoilRecipes} onDismiss={() => setShowSoilRecipes(false)} />}
-        {selectedPlantDetail && (
-          <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
-        )}
-        {showBinderDialog && (
-          <GardenBinderPrintDialog
-            isOpen={showBinderDialog}
-            onClose={() => setShowBinderDialog(false)}
-            language={language}
-          />
-        )}
-      </Suspense>
+      {showGrowTent && <GrowTentDialog isOpen={showGrowTent} onDismiss={() => setShowGrowTent(false)} />}
+      {showSoilRecipes && <SoilRecipesDialog isOpen={showSoilRecipes} onDismiss={() => setShowSoilRecipes(false)} />}
+      {selectedPlantDetail && (
+        <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
+      )}
+      {showBinderDialog && (
+        <GardenBinderPrintDialog
+          isOpen={showBinderDialog}
+          onClose={() => setShowBinderDialog(false)}
+          language={language}
+        />
+      )}
 
       <SettingsModal
         isOpen={showSettings}

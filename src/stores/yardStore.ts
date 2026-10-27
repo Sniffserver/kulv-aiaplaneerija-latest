@@ -2,10 +2,14 @@ import { create, useStore } from 'zustand';
 import { temporal } from 'zundo';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { current } from 'immer';
+import { current, isDraft } from 'immer';
 import { YardPlan, GardenEntity, YardLayer, DEFAULT_YARD_LAYERS, Point2D } from '../types';
 import { GardenSpatialIndex } from '../logic/spatialIndex';
 import { SolarSeasonPresetId } from '../logic/solarEngine';
+
+function getEntitiesSnapshot(entities: GardenEntity[]): GardenEntity[] {
+  return isDraft(entities) ? current(entities) : entities;
+}
 
 export interface YardState {
   plan: YardPlan;
@@ -111,7 +115,7 @@ export const useYardStore = create<YardState>()(
             set((state) => {
               state.plan.entities.push(normalized);
               state.plan.updatedAt = now;
-              state.spatialIndex.rebuild(current(state.plan.entities));
+              state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               state.selectedEntityId = normalized.id;
             });
           },
@@ -123,7 +127,7 @@ export const useYardStore = create<YardState>()(
               if (e) {
                 Object.assign(e, patch, { updatedAt: now });
                 state.plan.updatedAt = now;
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               }
             });
           },
@@ -137,7 +141,7 @@ export const useYardStore = create<YardState>()(
                 e.y = Math.max(0, Math.min(y, state.plan.lengthM - e.length));
                 e.updatedAt = now;
                 state.plan.updatedAt = now;
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               }
             });
           },
@@ -150,7 +154,7 @@ export const useYardStore = create<YardState>()(
                 e.rotation = (e.rotation + degreesDelta + 360) % 360;
                 e.updatedAt = now;
                 state.plan.updatedAt = now;
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               }
             });
           },
@@ -164,7 +168,7 @@ export const useYardStore = create<YardState>()(
                 e.length = Math.max(0.2, length);
                 e.updatedAt = now;
                 state.plan.updatedAt = now;
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               }
             });
           },
@@ -192,7 +196,7 @@ export const useYardStore = create<YardState>()(
                 state.selectedEntityId = null;
               }
               state.plan.updatedAt = now;
-              state.spatialIndex.rebuild(current(state.plan.entities));
+              state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
             });
           },
 
@@ -212,7 +216,7 @@ export const useYardStore = create<YardState>()(
                     state.plan.entities.push(restored);
                   }
                   state.plan.updatedAt = now;
-                  state.spatialIndex.rebuild(current(state.plan.entities));
+                  state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
                   state.selectedEntityId = id;
                   return;
                 }
@@ -223,7 +227,7 @@ export const useYardStore = create<YardState>()(
                 e.deletedAt = null;
                 e.updatedAt = now;
                 state.plan.updatedAt = now;
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
                 state.selectedEntityId = id;
               }
             });
@@ -240,7 +244,7 @@ export const useYardStore = create<YardState>()(
                 state.selectedEntityId = null;
               }
               state.plan.updatedAt = now;
-              state.spatialIndex.rebuild(current(state.plan.entities));
+              state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
             });
           },
 
@@ -250,7 +254,7 @@ export const useYardStore = create<YardState>()(
               state.plan.trash = [];
               state.plan.entities = state.plan.entities.filter((e) => !e.deletedAt);
               state.plan.updatedAt = now;
-              state.spatialIndex.rebuild(current(state.plan.entities));
+              state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
             });
           },
 
@@ -264,7 +268,7 @@ export const useYardStore = create<YardState>()(
                     e.visible = layer.visible;
                   }
                 });
-                state.spatialIndex.rebuild(current(state.plan.entities));
+                state.spatialIndex.rebuild(getEntitiesSnapshot(state.plan.entities));
               }
             });
           },

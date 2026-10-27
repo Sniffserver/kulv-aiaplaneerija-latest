@@ -1,8 +1,58 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
+function viteHmrStubPlugin(): Plugin {
+  return {
+    name: 'vite-hmr-stub',
+    apply: 'serve',
+    transformIndexHtml: {
+      order: 'pre',
+      handler() {
+        return [
+          {
+            tag: 'script',
+            attrs: { type: 'text/javascript' },
+            children: `
+              if (typeof window !== 'undefined' && window.WebSocket) {
+                const _OrigWS = window.WebSocket;
+                window.WebSocket = function (url, protocols) {
+                  const isHmr = protocols === 'vite-hmr' || (Array.isArray(protocols) && protocols.includes('vite-hmr')) || String(url).includes('token=') || String(url).includes('vite');
+                  if (isHmr) {
+                    const l = {};
+                    const ws = {
+                      readyState: 1,
+                      OPEN: 1, CLOSED: 3, CLOSING: 2, CONNECTING: 0,
+                      url: String(url),
+                      protocol: 'vite-hmr',
+                      addEventListener: (e, fn) => {
+                        l[e] = l[e] || [];
+                        l[e].push(fn);
+                        if (e === 'open') setTimeout(() => fn({ type: 'open' }), 0);
+                      },
+                      removeEventListener: (e, fn) => {
+                        if (l[e]) l[e] = l[e].filter((f) => f !== fn);
+                      },
+                      dispatchEvent: () => true,
+                      send: () => {},
+                      close: () => { ws.readyState = 3; }
+                    };
+                    return ws;
+                  }
+                  return new _OrigWS(url, protocols);
+                };
+                Object.assign(window.WebSocket, _OrigWS);
+              }
+            `,
+            injectTo: 'head-prepend'
+          }
+        ];
+      }
+    }
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), viteHmrStubPlugin()],
   server: {
     host: '0.0.0.0',
     port: 3000,

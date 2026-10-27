@@ -12,8 +12,8 @@ import { PrintableGardenReport } from '../components/garden/PrintableGardenRepor
 import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calendar, Printer } from 'lucide-react';
 
 import { ThreeErrorBoundary } from '../components/garden3d/ThreeErrorBoundary';
-
-const LazyYard3DViewWrapper = lazy(() => import('../components/garden3d/Yard3DViewWrapper'));
+import { Yard3DViewWrapper } from '../components/garden3d/Yard3DViewWrapper';
+import emptyGardenImg from '../assets/images/kulv_empty_garden_1793083975050.jpg';
 
 interface GardenCanvasScreenProps {
   onOpenAddBed: () => void;
@@ -252,16 +252,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {viewMode === '3d' ? (
             <ThreeErrorBoundary onFallbackTo2D={() => setViewMode('2d')}>
-              <Suspense
-                fallback={
-                  <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)] min-h-[500px] bg-slate-900 rounded-xl border border-slate-700 text-slate-400">
-                    <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mb-2" />
-                    <p className="text-sm">Laadin 3D komponenti...</p>
-                  </div>
-                }
-              >
-                <LazyYard3DViewWrapper onBackTo2D={() => setViewMode('2d')} />
-              </Suspense>
+              <Yard3DViewWrapper onBackTo2D={() => setViewMode('2d')} />
             </ThreeErrorBoundary>
           ) : (
             <>
@@ -399,7 +390,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 backgroundColor: 'var(--kulv-surface, #FFFDF8)',
                 border: '1px solid var(--kulv-border, #C9BFA9)',
                 borderRadius: '16px',
-                padding: '32px 20px',
+                padding: '36px 20px',
                 textAlign: 'center',
                 display: 'flex',
                 flexDirection: 'column',
@@ -408,6 +399,19 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 margin: 'auto 0'
               }}
             >
+              <img
+                src={emptyGardenImg}
+                alt="Tühi peenar"
+                style={{
+                  width: '200px',
+                  height: '150px',
+                  borderRadius: '12px',
+                  objectFit: 'cover',
+                  marginBottom: '16px',
+                  border: '1px solid var(--kulv-border, #C9BFA9)'
+                }}
+                referrerPolicy="no-referrer"
+              />
               <h3
                 style={{ fontSize: '18px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--kulv-text, #2A2E24)' }}
               >

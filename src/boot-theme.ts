@@ -7,6 +7,33 @@
 (function initHmrSuppressor() {
   if (typeof window === 'undefined') return;
 
+  // Filter known benign Vite dev-server WebSocket messages in iframe environment
+  const isViteWsNotice = (str: string) =>
+    str.includes('failed to connect to websocket') ||
+    str.includes('WebSocket closed without opened') ||
+    str.includes('vite-hmr') ||
+    str.includes('createWebSocketModuleRunnerTransport') ||
+    str.includes('ws://') ||
+    str.includes('wss://');
+
+  const originalConsoleError = console.error;
+  console.error = function (...args: any[]) {
+    const text = args.map((a) => (typeof a === 'string' ? a : (a?.message || ''))).join(' ');
+    if (isViteWsNotice(text)) {
+      return;
+    }
+    originalConsoleError.apply(console, args);
+  };
+
+  const originalConsoleWarn = console.warn;
+  console.warn = function (...args: any[]) {
+    const text = args.map((a) => (typeof a === 'string' ? a : (a?.message || ''))).join(' ');
+    if (isViteWsNotice(text)) {
+      return;
+    }
+    originalConsoleWarn.apply(console, args);
+  };
+
   window.addEventListener(
     'error',
     (event) => {
@@ -14,10 +41,8 @@
       const message = typeof event?.message === 'string' ? event.message : '';
       if (
         filename.includes('@vite/client') ||
-        message.includes('WebSocket') ||
-        message.includes('vite-hmr') ||
-        message.includes('ws://') ||
-        message.includes('wss://')
+        isViteWsNotice(message) ||
+        isViteWsNotice(filename)
       ) {
         event.preventDefault();
         event.stopImmediatePropagation?.();
@@ -27,17 +52,21 @@
   );
 
   window.addEventListener('unhandledrejection', (event) => {
-    const reasonStr = event?.reason ? String(event.reason) : '';
-    if (
-      reasonStr.includes('WebSocket') ||
-      reasonStr.includes('vite') ||
-      reasonStr.includes('ws://') ||
-      reasonStr.includes('wss://')
-    ) {
+    const reasonStr = event?.reason ? String(event.reason?.message || event.reason) : '';
+    if (isViteWsNotice(reasonStr)) {
       event.preventDefault();
       event.stopImmediatePropagation?.();
     }
   });
+
+  // Ensure stale service workers from any past session do not intercept Vite dev modules
+  if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const reg of registrations) {
+        reg.unregister();
+      }
+    }).catch(() => {});
+  }
 })();
 
 

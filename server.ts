@@ -68,6 +68,18 @@ export function getAllowedOrigins(): Set<string> {
 
   const origins = new Set(configuredOrigins);
 
+  if (process.env.NODE_ENV === 'production' && origins.size === 0) {
+    console.warn(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'warn',
+        type: 'cors_origins_unconfigured',
+        message:
+          'No CORS_ORIGINS configured in production; cross-origin browser requests will be blocked by default.'
+      })
+    );
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     for (const origin of developmentOrigins) {
       origins.add(origin);
@@ -113,6 +125,23 @@ export function createWeatherLimiter(): RequestHandler {
 }
 
 function requestLogger(req: Request, res: Response, next: NextFunction) {
+  // Skip logging internal Vite dev server module and static asset requests
+  if (
+    req.path.startsWith('/src/') ||
+    req.path.startsWith('/@') ||
+    req.path.startsWith('/node_modules/') ||
+    req.path.startsWith('/assets/') ||
+    req.path.startsWith('/fonts/') ||
+    req.path.startsWith('/icons/') ||
+    req.path.endsWith('.svg') ||
+    req.path.endsWith('.ico') ||
+    req.path.endsWith('.png') ||
+    req.path.endsWith('.woff2') ||
+    req.path.endsWith('.json')
+  ) {
+    return next();
+  }
+
   const requestId = req.header('x-request-id') ?? crypto.randomUUID();
 
   res.setHeader('x-request-id', requestId);

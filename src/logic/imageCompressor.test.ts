@@ -64,6 +64,11 @@ describe('ImageCompressor (Journal Photo Optimization & Magic Bytes Security)', 
 
     const shortBlob = new Blob(['short'], { type: 'image/jpeg' });
     expect(await sniffImageType(shortBlob)).toBeNull();
+
+    // Invalid or null objects
+    expect(await sniffImageType(null as any)).toBeNull();
+    expect(await sniffImageType({} as any)).toBeNull();
+    expect(await sniffImageType(undefined as any)).toBeNull();
   });
 
   it('compressImageFile processes valid JPEG mock', async () => {

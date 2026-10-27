@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGarden } from '../context/GardenContext';
 import {
   Plus,
@@ -13,13 +13,11 @@ import {
   FileSpreadsheet,
   Loader2
 } from 'lucide-react';
-
-const LazyJournalTimelineChart = lazy(() =>
-  import('../components/JournalTimelineChart').then((m) => ({ default: m.JournalTimelineChart }))
-);
+import { JournalTimelineChart } from '../components/JournalTimelineChart';
 import { JournalEntry } from '../types';
 import { generateHarvestCSV } from '../logic/csvExport';
 import { ConfirmDeleteDialog } from '../components/dialogs/ConfirmDeleteDialog';
+import emptyJournalImg from '../assets/images/kulv_empty_journal_1793083976005.jpg';
 
 interface JournalScreenProps {
   onOpenAddEntry: () => void;
@@ -189,17 +187,8 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
         </div>
       </div>
 
-      {/* Recharts Timeline Visualization (Growth & Yield) - Lazy Loaded */}
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center p-6 bg-amber-50/50 rounded-xl border border-amber-200/50 text-slate-500 text-xs gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
-            <span>Laadin saagikuse ajajoont...</span>
-          </div>
-        }
-      >
-        <LazyJournalTimelineChart entries={journal} plants={plants} />
-      </Suspense>
+      {/* Recharts Timeline Visualization (Growth & Yield) */}
+      <JournalTimelineChart entries={journal} plants={plants} />
 
       {/* Search & Filter Bar */}
       <div
@@ -279,24 +268,61 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
           style={{
             backgroundColor: 'var(--kulv-surface, #FFFDF8)',
             border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '12px',
-            padding: '32px 20px',
+            borderRadius: '16px',
+            padding: '36px 20px',
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '8px'
+            gap: '12px'
           }}
         >
-          <Sprout size={32} color="var(--kulv-primary, #4F6B45)" />
+          {searchQuery ? (
+            <Search size={32} color="var(--kulv-primary, #4F6B45)" />
+          ) : (
+            <img
+              src={emptyJournalImg}
+              alt="Tühi päevik"
+              style={{
+                width: '200px',
+                height: '150px',
+                borderRadius: '12px',
+                objectFit: 'cover',
+                border: '1px solid var(--kulv-border, #C9BFA9)'
+              }}
+              referrerPolicy="no-referrer"
+            />
+          )}
           <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--kulv-text, #2A2E24)' }}>
-            Sissekandeid ei leitud
+            {searchQuery ? 'Sissekandeid ei leitud' : 'Päevikus pole veel sissekandeid'}
           </h3>
           <p style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', margin: 0, maxWidth: '400px' }}>
             {searchQuery
               ? `Otsingule "${searchQuery}" vastavaid märkmeid ei leitud. Proovi teist otsisõna.`
-              : 'Lisa oma esimene sissekanne seemnete idanemise, kasvuhoone temperatuuri või koristatud saagi kohta.'}
+              : 'Alusta oma esimest sissekannet seemnete idanemise, kasvuhoone temperatuuri või koristatud saagi kohta.'}
           </p>
+          {!searchQuery && (
+            <button
+              onClick={onOpenAddEntry}
+              style={{
+                marginTop: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '9px 16px',
+                borderRadius: '8px',
+                backgroundColor: 'var(--kulv-primary, #4F6B45)',
+                color: 'white',
+                border: 'none',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              <Plus size={15} />
+              <span>Lisa esimene sissekanne</span>
+            </button>
+          )}
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

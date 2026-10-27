@@ -289,4 +289,125 @@ describe('useYardStore with Zustand, Zundo, Immer and Persist', () => {
     expect(cleared.cadastralAreaM2).toBeUndefined();
     expect(cleared.boundaryPolygon).toBeUndefined();
   });
+
+  it('updates entity attributes, duplicates entity with offset, and empties trash', () => {
+    useYardStore.getState().addEntity(testEntity);
+
+    // Update entity
+    useYardStore.getState().updateEntity('test-bed', {
+      name: 'Uuendatud peenar',
+      rotation: 45,
+      zIndex: 25
+    });
+
+    const updated = useYardStore.getState().plan.entities[0];
+    expect(updated.name).toBe('Uuendatud peenar');
+    expect(updated.rotation).toBe(45);
+    expect(updated.zIndex).toBe(25);
+
+    // Copy/duplicate entity with offset
+    const original = useYardStore.getState().plan.entities[0];
+    useYardStore.getState().addEntity({
+      ...original,
+      id: 'test-bed-copy',
+      name: `${original.name} (kopeeritud)`,
+      x: original.x + 1.0,
+      y: original.y + 1.0
+    });
+    const entities = useYardStore.getState().plan.entities;
+    expect(entities.length).toBe(2);
+    const duplicated = entities.find((e) => e.id === 'test-bed-copy');
+    expect(duplicated).toBeDefined();
+    expect(duplicated?.x).toBe(original.x + 1.0);
+    expect(duplicated?.y).toBe(original.y + 1.0);
+
+    // Delete and empty trash
+    useYardStore.getState().deleteEntity('test-bed', true);
+    expect(useYardStore.getState().plan.trash?.length).toBe(1);
+
+    useYardStore.getState().emptyTrash();
+    expect(useYardStore.getState().plan.trash?.length).toBe(0);
+  });
+
+  it('toggles layer visibility and lock state across associated entities', () => {
+    const layerId = 'structures';
+    useYardStore.getState().addEntity({
+      ...testEntity,
+      id: 'entity-on-layer',
+      layerId
+    });
+
+    // Toggle visibility
+    useYardStore.getState().toggleLayerVisibility(layerId);
+    let layer = useYardStore.getState().plan.layers.find((l) => l.id === layerId);
+    let entity = useYardStore.getState().plan.entities.find((e) => e.id === 'entity-on-layer');
+    expect(layer?.visible).toBe(false);
+    expect(entity?.visible).toBe(false);
+
+    // Toggle back
+    useYardStore.getState().toggleLayerVisibility(layerId);
+    layer = useYardStore.getState().plan.layers.find((l) => l.id === layerId);
+    entity = useYardStore.getState().plan.entities.find((e) => e.id === 'entity-on-layer');
+    expect(layer?.visible).toBe(true);
+    expect(entity?.visible).toBe(true);
+
+    // Toggle lock
+    useYardStore.getState().toggleLayerLock(layerId);
+    layer = useYardStore.getState().plan.layers.find((l) => l.id === layerId);
+    entity = useYardStore.getState().plan.entities.find((e) => e.id === 'entity-on-layer');
+    expect(layer?.locked).toBe(true);
+    expect(entity?.locked).toBe(true);
+  });
+
+  it('updates yard dimensions and north angle with clamping', () => {
+    useYardStore.getState().updateYardDimensions(60, 80);
+    let plan = useYardStore.getState().plan;
+    expect(plan.widthM).toBe(60);
+    expect(plan.lengthM).toBe(80);
+
+    // Clamp bounds (5 to 500)
+    useYardStore.getState().updateYardDimensions(1, 9999);
+    plan = useYardStore.getState().plan;
+    expect(plan.widthM).toBe(5);
+    expect(plan.lengthM).toBe(500);
+
+    // North angle normalization (0..359)
+    useYardStore.getState().updateNorthAngle(400);
+    expect(useYardStore.getState().plan.northAngleDeg).toBe(40);
+    useYardStore.getState().updateNorthAngle(-90);
+    expect(useYardStore.getState().plan.northAngleDeg).toBe(270);
+  });
+
+  it('manages untracked interactive UI state setters', () => {
+    const store = useYardStore.getState();
+
+    store.setSelectedEntityId('test-selected');
+    expect(useYardStore.getState().selectedEntityId).toBe('test-selected');
+
+    store.setHoveredEntityId('test-hovered');
+    expect(useYardStore.getState().hoveredEntityId).toBe('test-hovered');
+
+    store.setZoom(50);
+    expect(useYardStore.getState().zoom).toBe(50);
+    // Zoom clamping (10..80)
+    store.setZoom(5);
+    expect(useYardStore.getState().zoom).toBe(10);
+    store.setZoom(100);
+    expect(useYardStore.getState().zoom).toBe(80);
+
+    store.setPanOffset({ x: 120, y: -45 });
+    expect(useYardStore.getState().panOffset).toEqual({ x: 120, y: -45 });
+
+    store.setSnapToGrid(false);
+    expect(useYardStore.getState().snapToGrid).toBe(false);
+
+    store.setSolarHour(14);
+    expect(useYardStore.getState().solarHour).toBe(14);
+
+    store.setSolarSeasonId('autumn_equinox');
+    expect(useYardStore.getState().solarSeasonId).toBe('autumn_equinox');
+
+    store.setViewMode('3d');
+    expect(useYardStore.getState().viewMode).toBe('3d');
+  });
 });

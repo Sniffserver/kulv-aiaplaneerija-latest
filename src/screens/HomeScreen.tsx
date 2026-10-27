@@ -1,7 +1,8 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState } from 'react';
 import { useGarden } from '../context/GardenContext';
 import { WeatherWidget } from '../components/WeatherWidget';
 import { TaskCard } from '../components/TaskCard';
+import { WeatherChart } from '../components/WeatherChart';
 import {
   Grid,
   Sprout,
@@ -20,9 +21,6 @@ import {
 } from 'lucide-react';
 import { SeasonalSowingPrintDialog } from '../components/dialogs/SeasonalSowingPrintDialog';
 import { GardenBinderPrintDialog } from '../components/dialogs/GardenBinderPrintDialog';
-
-// Code-split heavy Recharts visualization bundle
-const WeatherChart = lazy(() => import('../components/WeatherChart').then((m) => ({ default: m.WeatherChart })));
 
 interface HomeScreenProps {
   onNavigateToGarden: () => void;
@@ -152,19 +150,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* Real-time Weather Forecast Widget */}
       <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
 
-      {/* 5-Day Recharts Temperature Visualization (Lazy Loaded) */}
-      <Suspense
-        fallback={
-          <div className="weather-chart-skeleton">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-              <RefreshCw size={16} className="spin-animation" />
-              <span>Laadin ilmagraafikut...</span>
-            </div>
-          </div>
-        }
-      >
-        <WeatherChart weather={weather} />
-      </Suspense>
+      {/* 5-Day Recharts Temperature Visualization */}
+      <WeatherChart weather={weather} />
 
       {/* High-Productivity Quick Actions Section */}
       <div
