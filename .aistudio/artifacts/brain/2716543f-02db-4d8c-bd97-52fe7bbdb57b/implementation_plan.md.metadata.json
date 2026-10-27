@@ -1,0 +1,6 @@
+{
+  "summary":  "Comprehensive architectural plan to transform KÜLV into an authoritative 2D Nordic garden planning system. Safely removes the legacy 3D canvas and Three.js dependencies, redesigns the home page as a calm field-notebook dashboard with an interactive 2D garden preview and botanical illustration zero-states, enhances the 2D yard planner with a desktop slide-out inspector and mobile sheet, refines Plants/Calendar/Journal/Weather/Settings views, and builds a tokenized accessible component library verified by axe and vitest suites.",
+  "updatedAt":  "2026-10-27T14:39:30.427869962Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

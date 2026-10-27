@@ -20,7 +20,7 @@ export interface YardState {
   snapToGrid: boolean;
   solarHour: number;
   solarSeasonId: SolarSeasonPresetId;
-  viewMode: '2d' | '3d';
+  viewMode: '2d';
   spatialIndex: GardenSpatialIndex;
 
   // Plan modification actions (tracked by undo history via temporal)
@@ -57,7 +57,7 @@ export interface YardState {
   setSnapToGrid: (snap: boolean) => void;
   setSolarHour: (hour: number) => void;
   setSolarSeasonId: (seasonId: SolarSeasonPresetId) => void;
-  setViewMode: (mode: '2d' | '3d') => void;
+  setViewMode: (mode?: '2d') => void;
 }
 
 export const createInitialPlan = (): YardPlan => {
@@ -339,7 +339,7 @@ export const useYardStore = create<YardState>()(
           setSnapToGrid: (snapToGrid) => set({ snapToGrid }),
           setSolarHour: (solarHour) => set({ solarHour }),
           setSolarSeasonId: (solarSeasonId) => set({ solarSeasonId }),
-          setViewMode: (viewMode) => set({ viewMode })
+          setViewMode: (_viewMode) => set({ viewMode: '2d' })
         };
       }),
       {

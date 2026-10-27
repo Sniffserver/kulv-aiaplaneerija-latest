@@ -68,9 +68,6 @@ export default defineConfig({
       'react-dom',
       'react/jsx-runtime',
       'react/jsx-dev-runtime',
-      '@react-three/fiber',
-      '@react-three/drei',
-      'three',
       'lucide-react',
       'zustand',
       'zustand/middleware',
@@ -87,9 +84,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/three') || id.includes('node_modules/@react-three')) {
-            return 'vendor-three';
-          }
           if (id.includes('node_modules/recharts')) {
             return 'vendor-recharts';
           }

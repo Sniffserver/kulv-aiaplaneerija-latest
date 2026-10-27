@@ -56,6 +56,8 @@ import {
 import { CompanionOverlayLayer } from './CompanionOverlayLayer';
 import { CompanionInspectorPanel } from './CompanionInspectorPanel';
 import { CompanionLegend } from './CompanionLegend';
+import { BedInspector } from './BedInspector';
+import { GardenEmptyIllustration } from '../common/EmptyStateIllustrations';
 
 interface YardMasterPlanCanvasProps {
   onSelectBedDetail?: (bedId: string) => void;
@@ -1195,29 +1197,6 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             </button>
           )}
 
-          {/* Switch to 3D View */}
-          <button
-            onClick={() => useYardStore.getState().setViewMode('3d')}
-            data-testid="yard_canvas_3d_toggle_btn"
-            title="Lülitu interaktiivsesse 3D aiavaatesse"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-primary, #4F6B45)',
-              backgroundColor: 'rgba(79, 107, 69, 0.1)',
-              color: 'var(--kulv-primary, #4F6B45)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 700
-            }}
-          >
-            <Box size={14} />
-            <span>3D Vaade</span>
-          </button>
-
           {/* Toggleable Companion Intelligence Overlay */}
           <button
             type="button"
@@ -2028,27 +2007,70 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                backgroundColor: 'rgba(255, 253, 248, 0.95)',
-                border: '1.5px dashed var(--kulv-primary, #4F6B45)',
-                borderRadius: '12px',
-                padding: '24px 32px',
+                backgroundColor: 'rgba(255, 253, 248, 0.98)',
+                border: '1.5px dashed var(--kulv-border, #C9BFA9)',
+                borderRadius: '16px',
+                padding: '24px 28px',
                 textAlign: 'center',
-                maxWidth: '420px',
+                maxWidth: '440px',
                 boxShadow: 'var(--kulv-shadow-card, 0 4px 16px rgba(0,0,0,0.08))',
-                pointerEvents: 'none',
-                zIndex: 4
+                zIndex: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              <div style={{ fontSize: '28px', marginBottom: '8px' }}>🌱</div>
+              <GardenEmptyIllustration />
               <div
                 className="font-serif-display"
-                style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', marginBottom: '4px' }}
+                style={{ fontSize: '18px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
               >
-                Alusta siit — lohista peenar krundile
+                {language === 'en'
+                  ? 'Your yard plan is empty — add your first bed.'
+                  : 'Aiaplaan on tühi — lisa oma esimene peenar.'}
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: 1.5 }}>
-                Lohista peenar, kasvuhoone või viljapuu allolevast dokist otse aia krundile.
+              <div style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: 1.5 }}>
+                {language === 'en'
+                  ? 'Start by placing a raised bed or dragging an element from the dock below onto your garden plot.'
+                  : 'Alusta kõrgpeenra lisamisest või lohista peenar, kasvuhoone või viljapuu allolevast dokist otse aia krundile.'}
               </div>
+              <button
+                type="button"
+                data-testid="empty_plan_add_bed_btn"
+                onClick={() => {
+                  const now = new Date().toISOString();
+                  const newBedEntity: GardenEntity = {
+                    id: `bed_${Date.now().toString(36)}`,
+                    name: language === 'en' ? 'Raised Bed 1' : 'Kõrgepeenar 1',
+                    category: 'bed',
+                    subType: 'raisedBed',
+                    icon: '🌱',
+                    x: Math.max(1, Math.round(yardWidth / 2 - 1.2)),
+                    y: Math.max(1, Math.round(yardLength / 2 - 0.6)),
+                    rotation: 0,
+                    shapeType: 'rectangle',
+                    width: 1.2,
+                    length: 2.4,
+                    heightM: 0.4,
+                    shadowCasting: true,
+                    materialType: 'wood',
+                    color: '#8A5D3B',
+                    zIndex: 20,
+                    layerId: 'beds',
+                    locked: false,
+                    visible: true,
+                    createdAt: now,
+                    updatedAt: now
+                  };
+                  addEntity(newBedEntity);
+                  setSelectedEntityId(newBedEntity.id);
+                }}
+                className="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-lg bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5436)] active:scale-95 transition-all shadow-xs cursor-pointer"
+              >
+                <span>🌱</span>
+                <span>{language === 'en' ? 'Add First Raised Bed' : 'Lisa esimene peenar'}</span>
+              </button>
             </div>
           )}
 
@@ -2446,7 +2468,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                   </span>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>3D Kõrgus: </span>
+                  <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
+                    {language === 'en' ? 'Height: ' : 'Kõrgus: '}
+                  </span>
                   <span className="tabular-nums" style={{ fontWeight: 700 }}>
                     {selectedEntity.heightM} m
                   </span>
@@ -3325,6 +3349,28 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       <GardenBinderPrintDialog
         isOpen={showBinderDialog}
         onClose={() => setShowBinderDialog(false)}
+        language={language}
+      />
+
+      {/* Slide-out Bed & Entity Inspector Drawer */}
+      <BedInspector
+        isOpen={Boolean(selectedEntity)}
+        onClose={() => setSelectedEntityId(null)}
+        entity={selectedEntity}
+        bed={beds.find((b) => b.id === selectedEntity?.id)}
+        onOpenBedDetail={onSelectBedDetail}
+        onOpenSoilRecipes={(dims) => {
+          setSoilDialogDims(dims);
+          setShowSoilDialog(true);
+        }}
+        onRotate={(id, deg) => rotateEntity(id, deg)}
+        onToggleLock={(_id) => {
+          if (selectedEntity) toggleLayerLock(selectedEntity.layerId || 'structures');
+        }}
+        onDelete={(id) => {
+          deleteEntity(id, true);
+          setSelectedEntityId(null);
+        }}
         language={language}
       />
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGarden } from '../context/GardenContext';
 import { WeatherWidget } from '../components/WeatherWidget';
 import { TaskCard } from '../components/TaskCard';
@@ -7,17 +7,22 @@ import { HomeOverview } from '../components/home/HomeOverview';
 import {
   Sprout,
   BookOpen,
-  Calendar,
+  Calendar as CalendarIcon,
   Droplets,
   Plus,
   FlaskConical,
   Lightbulb,
   Check,
   Printer,
-  FileText
+  FileText,
+  Clock,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 import { SeasonalSowingPrintDialog } from '../components/dialogs/SeasonalSowingPrintDialog';
 import { GardenBinderPrintDialog } from '../components/dialogs/GardenBinderPrintDialog';
+import { EmptyState } from '../components/common/EmptyState';
+import { GardenEmptyIllustration, JournalEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 
 interface HomeScreenProps {
   onNavigateToGarden: () => void;
@@ -45,7 +50,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     tasks,
     beds,
     plants,
+    journal,
     language,
+    settings,
     toggleTask,
     deleteTask,
     isWeatherLoading,
@@ -57,13 +64,59 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [showPrintDialog, setShowPrintDialog] = useState<boolean>(false);
   const [showBinderDialog, setShowBinderDialog] = useState<boolean>(false);
 
+  const isEn = language === 'en';
   const totalPlantings = beds.reduce((sum, b) => sum + b.plantings.length, 0);
   const activeTasks = tasks.filter((t) => !t.completed);
+  const completedTasks = tasks.filter((t) => t.completed);
+
+  // Formatted current date
+  const formattedDate = useMemo(() => {
+    const now = new Date();
+    if (isEn) {
+      return now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
+    return now.toLocaleDateString('et-EE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }, [isEn]);
+
+  // Autumn frost days countdown estimation
+  const frostDays = useMemo(() => {
+    if (!settings?.autumnFrostDate) return null;
+    const [month, day] = settings.autumnFrostDate.split('-').map(Number);
+    const now = new Date();
+    const frostDate = new Date(now.getFullYear(), month - 1, day);
+    if (frostDate.getTime() < now.getTime()) {
+      frostDate.setFullYear(now.getFullYear() + 1);
+    }
+    const diffDays = Math.ceil((frostDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }, [settings?.autumnFrostDate]);
+
+  const recentNotes = journal || [];
+
+  // Upcoming sowing calendar preview
+  const upcomingSowings = useMemo(() => {
+    return plants.slice(0, 3).map((p) => ({
+      name: isEn && p.nameEn ? p.nameEn : p.name,
+      icon: p.icon || '🌱',
+      date: p.optimalSowDateStart || '04-15',
+      family: p.family
+    }));
+  }, [plants, isEn]);
 
   const handleQuickWater = () => {
     const res = quickWaterAllPlants();
     setFeedbackToast({
-      title: language === 'en' ? 'Plants marked as watered' : 'Taimed märgitud kastetuks',
+      title: isEn ? 'Plants marked as watered' : 'Taimed märgitud kastetuks',
       subtitle: res.message
     });
     setTimeout(() => {
@@ -72,41 +125,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px 24px' }}>
+    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto">
       {/* Toast Notification for Quick Actions */}
       {feedbackToast && (
         <div
           role="status"
           aria-live="polite"
-          className="kulv-paper-card"
-          style={{
-            borderColor: 'var(--kulv-primary)',
-            padding: '12px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            animation: 'fadeIn 0.2s ease-in'
-          }}
+          className="p-3.5 px-4 rounded-xl border border-[var(--kulv-primary,#4F6B45)] bg-[var(--kulv-surface,#FFFDF8)] shadow-md flex items-center gap-3 animate-in fade-in duration-200"
         >
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--kulv-primary-soft)',
-              color: 'var(--kulv-primary-strong)',
-              display: 'grid',
-              placeItems: 'center',
-              flexShrink: 0
-            }}
-          >
+          <div className="w-8 h-8 rounded-full bg-[var(--kulv-primary-soft,#E2ECE3)] text-[var(--kulv-primary-strong,#243D2B)] flex items-center justify-center shrink-0">
             <Check size={18} />
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--kulv-text)' }}>
+          <div className="flex-1">
+            <div className="text-sm font-bold text-[var(--kulv-text,#2A2E24)]">
               {feedbackToast.title}
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--kulv-text-muted)', marginTop: '2px' }}>
+            <div className="text-xs text-[var(--kulv-text-muted,#5F675A)] mt-0.5">
               {feedbackToast.subtitle}
             </div>
           </div>
@@ -114,31 +148,40 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       )}
 
       {/* Header Welcome Section */}
-      <header>
-        <h1
-          style={{
-            fontFamily: "var(--kulv-font-display, 'Fraunces', Georgia, serif)",
-            fontSize: '1.85rem',
-            fontWeight: 700,
-            color: 'var(--kulv-text)',
-            margin: 0,
-            letterSpacing: '-0.02em'
-          }}
-        >
-          {language === 'en' ? 'Welcome to the Garden' : 'Tere tulemast aeda!'}
-        </h1>
-        <p style={{ fontSize: '0.9rem', color: 'var(--kulv-text-muted)', margin: '4px 0 0 0' }}>
-          {language === 'en' ? 'Nordic garden planner' : 'Põhjamaine aiaplaneerija'} · {weather.locationName}
-        </p>
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--kulv-border,#C9BFA9)]">
+        <div>
+          <div className="text-xs uppercase font-bold tracking-wider text-[var(--kulv-primary,#4F6B45)] mb-1">
+            {formattedDate}
+          </div>
+          <h1 className="font-serif-display text-2xl sm:text-3xl font-bold text-[var(--kulv-text,#2A2E24)] m-0 tracking-tight">
+            {isEn ? 'Welcome to the Garden' : 'Tere tulemast aeda!'}
+          </h1>
+          <p className="text-sm text-[var(--kulv-text-muted,#5F675A)] mt-1 mb-0">
+            {isEn ? 'Nordic botanical field notebook' : 'Põhjamaine aiaplaneerija'} · {weather.locationName}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenAddTask}
+            className="min-h-[44px] px-4 py-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors cursor-pointer"
+          >
+            <Plus size={16} />
+            <span>{isEn ? 'Add Task' : 'Lisa ülesanne'}</span>
+          </button>
+        </div>
       </header>
 
-      {/* Hero Visual Anchor: HomeOverview (Focus, Garden stats, Weather summary) */}
+      {/* Hero Visual Anchor: HomeOverview (Focus, Garden stats with mini 2D map, Weather summary) */}
       <HomeOverview
         bedCount={beds.length}
         plantCount={totalPlantings}
         taskCount={activeTasks.length}
         temperature={weather.temperature}
         weatherSummary={weather.weatherDescription}
+        rainRiskPct={weather.precipitation > 0 ? 60 : 15}
+        frostRiskDays={frostDays}
         onOpenGarden={onNavigateToGarden}
         onOpenTasks={() => {
           const el = document.getElementById('today-tasks-section');
@@ -148,161 +191,209 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onOpenAddTask();
           }
         }}
+        language={language}
       />
 
       {/* High-Productivity Quick Actions Toolstrip */}
-      <section className="kulv-paper-card" style={{ padding: '16px 20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-          <h2 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: 'var(--kulv-text)' }}>
-            {language === 'en' ? 'Quick Actions' : 'Kiirtegevused'}
+      <section
+        className="p-4 sm:p-5 rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-sm"
+        aria-labelledby="quick-actions-title"
+      >
+        <div className="flex items-center justify-between mb-3">
+          <h2
+            id="quick-actions-title"
+            className="text-sm sm:text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display"
+          >
+            {isEn ? 'Quick Actions' : 'Kiirtegevused'}
           </h2>
-          <span style={{ fontSize: '0.8rem', color: 'var(--kulv-text-muted)' }}>
-            {language === 'en' ? 'Care & planning' : 'Hooldus & planeerimine'}
+          <span className="text-xs text-[var(--kulv-text-muted,#5F675A)]">
+            {isEn ? 'Care & field workflows' : 'Hooldus & planeerimine'}
           </span>
         </div>
 
-        <div data-testid="quick_actions_section" className="kulv-toolstrip">
+        <div data-testid="quick_actions_section" className="kulv-toolstrip grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
           <button
             onClick={handleQuickWater}
             data-testid="quick_action_water_plants"
-            aria-label={language === 'en' ? 'Water plants' : 'Kasta taimi'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'Water plants' : 'Kasta taimi'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Droplets size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Water Plants' : 'Kasta taimi'}</span>
+            <Droplets size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <span>{isEn ? 'Water Plants' : 'Kasta taimi'}</span>
           </button>
 
           <button
             onClick={onNavigateToCalendar}
             data-testid="quick_action_check_calendar"
-            aria-label={language === 'en' ? 'View sowing calendar' : 'Vaata külvikalendrit'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'View sowing calendar' : 'Vaata külvikalendrit'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Calendar size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Sowing Calendar' : 'Külvikalender'}</span>
+            <CalendarIcon size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <span>{isEn ? 'Sowing Calendar' : 'Külvikalender'}</span>
           </button>
 
           <button
             onClick={onNavigateToGarden}
             data-testid="quick_action_crop_rotation"
-            aria-label={language === 'en' ? 'Crop rotation timeline' : 'Külvikorra ajajoon'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'Crop rotation timeline' : 'Külvikorra ajajoon'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Sprout size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Crop Rotation' : 'Külvikord'}</span>
+            <Sprout size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <span>{isEn ? 'Crop Rotation' : 'Külvikord'}</span>
           </button>
 
           <button
             onClick={onOpenSoilRecipes}
             data-testid="quick_action_soil_recipes"
-            aria-label={language === 'en' ? 'Soil recipes and brews' : 'Mullaretseptid ja leotised'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'Soil recipes and brews' : 'Mullaretseptid ja leotised'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <FlaskConical size={16} color="var(--kulv-accent)" />
-            <span>{language === 'en' ? 'Soil Recipes' : 'Mullaretseptid'}</span>
+            <FlaskConical size={16} className="text-[var(--kulv-accent,#E08A3C)]" />
+            <span>{isEn ? 'Soil Recipes' : 'Mullaretseptid'}</span>
           </button>
 
           <button
             onClick={onOpenAddTask}
             data-testid="quick_action_add_task"
-            aria-label={language === 'en' ? 'Add garden task' : 'Lisa aiatöö'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'Add garden task' : 'Lisa aiatöö'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Plus size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Add Task' : 'Lisa aiatöö'}</span>
+            <Plus size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <span>{isEn ? 'Add Task' : 'Lisa aiatöö'}</span>
           </button>
 
           <button
             onClick={onOpenAddJournal}
             data-testid="quick_action_add_journal"
-            aria-label={language === 'en' ? 'Add journal entry' : 'Lisa päeviku märge'}
-            className="kulv-toolstrip__button"
+            aria-label={isEn ? 'Add journal entry' : 'Lisa päeviku märge'}
+            className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <BookOpen size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Garden Journal' : 'Aiapäevik'}</span>
-          </button>
-
-          <button
-            onClick={onOpenGrowTent}
-            data-testid="quick_action_grow_tent"
-            aria-label={language === 'en' ? 'Indoor pre-grow' : 'Ettekasvatus'}
-            className="kulv-toolstrip__button"
-          >
-            <Lightbulb size={16} color="var(--kulv-accent)" />
-            <span>{language === 'en' ? 'Indoor Pre-grow' : 'Ettekasvatus'}</span>
-          </button>
-
-          <button
-            onClick={() => setShowPrintDialog(true)}
-            data-testid="quick_action_print_schedule"
-            aria-label={language === 'en' ? 'Print sowing schedule' : 'Külvikava print'}
-            className="kulv-toolstrip__button"
-          >
-            <Printer size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Print Schedule' : 'Külvikava print'}</span>
-          </button>
-
-          <button
-            onClick={() => setShowBinderDialog(true)}
-            data-testid="quick_action_garden_binder"
-            aria-label={language === 'en' ? 'Garden binder dossier' : 'Aiamapp'}
-            className="kulv-toolstrip__button"
-          >
-            <FileText size={16} color="var(--kulv-primary)" />
-            <span>{language === 'en' ? 'Garden Binder' : 'Aiamapp'}</span>
+            <BookOpen size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <span>{isEn ? 'Garden Journal' : 'Aiapäevik'}</span>
           </button>
         </div>
       </section>
 
-      {/* Main Grid: Today's Tasks on Left, Weather Forecast on Right */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+      {/* Main Grid: Today's Tasks on Left, Weather & Planting Preview on Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Today's Garden Tasks Section */}
         <section
           id="today-tasks-section"
-          className="kulv-paper-card"
-          style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}
+          className="p-5 rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-sm flex flex-col gap-4"
+          aria-labelledby="tasks-heading"
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--kulv-text)', margin: 0 }}>
-              {language === 'en' ? 'Garden Tasks' : 'Aiatööd ja meelespead'}
+          <div className="flex items-center justify-between">
+            <h2
+              id="tasks-heading"
+              className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display"
+            >
+              {isEn ? 'Garden Tasks' : 'Aiatööd ja meelespead'}
             </h2>
             <button
               onClick={onOpenAddTask}
-              aria-label={language === 'en' ? 'Add new task' : 'Lisa uus aiatöö'}
-              className="kulv-button kulv-button--secondary"
-              style={{ minHeight: '36px', padding: '6px 12px', fontSize: '0.85rem' }}
+              aria-label={isEn ? 'Add new task' : 'Lisa uus aiatöö'}
+              className="min-h-[40px] px-3 py-1.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface-muted,#EFE6D4)] flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Plus size={14} />
-              <span>{language === 'en' ? 'Add task' : 'Lisa ülesanne'}</span>
+              <span>{isEn ? 'Add task' : 'Lisa ülesanne'}</span>
             </button>
           </div>
 
           {tasks.length === 0 ? (
-            <div
-              style={{
-                backgroundColor: 'var(--kulv-surface-muted)',
-                borderRadius: '12px',
-                padding: '28px 20px',
-                textAlign: 'center',
-                color: 'var(--kulv-text-muted)',
-                fontSize: '0.9rem'
-              }}
-            >
-              {language === 'en' ? 'All tasks complete! Enjoy the garden 🌿' : 'Kõik tööd tehtud! Naudi aiarahu 🌿'}
+            <div className="p-6 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] text-center text-sm text-[var(--kulv-text-muted,#5F675A)]">
+              {isEn ? 'All tasks complete! Enjoy the garden 🌿' : 'Kõik tööd tehtud! Naudi aiarahu 🌿'}
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="flex flex-col gap-2">
               {tasks.map((task) => (
                 <TaskCard key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
               ))}
             </div>
           )}
+
+          {/* Sowing Calendar Preview */}
+          <div className="mt-2 pt-4 border-t border-[var(--kulv-border,#C9BFA9)]">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--kulv-text-muted,#5F675A)] m-0">
+                {isEn ? 'Upcoming Sowing Windows' : 'Eelseisvad külviajad'}
+              </h3>
+              <button
+                type="button"
+                onClick={onNavigateToCalendar}
+                className="text-xs text-[var(--kulv-primary,#4F6B45)] font-semibold hover:underline flex items-center gap-1"
+              >
+                <span>{isEn ? 'Full Calendar' : 'Kogu kalender'}</span>
+                <ArrowRight size={12} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {upcomingSowings.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] flex items-center gap-2"
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  <div>
+                    <div className="text-xs font-bold text-[var(--kulv-text,#2A2E24)]">{item.name}</div>
+                    <div className="text-[10px] text-[var(--kulv-text-muted,#5F675A)] font-mono">
+                      {item.date} · {item.family}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {/* Weather Forecast Section */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Right Column: Weather Forecast & Recent Journal Activity */}
+        <section className="flex flex-col gap-6">
           <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
           <WeatherChart weather={weather} />
+
+          {/* Recent Journal Activity */}
+          <div className="p-5 rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-sm flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display">
+                {isEn ? 'Recent Field Notes' : 'Hiljutised aiamärkmed'}
+              </h2>
+              <button
+                type="button"
+                onClick={onNavigateToJournal}
+                className="text-xs text-[var(--kulv-primary,#4F6B45)] font-semibold hover:underline flex items-center gap-1"
+              >
+                <span>{isEn ? 'View Journal' : 'Vaata päevikut'}</span>
+                <ArrowRight size={12} />
+              </button>
+            </div>
+
+            {recentNotes.length === 0 ? (
+              <div className="text-center py-4 text-xs text-[var(--kulv-text-muted,#5F675A)] bg-[var(--kulv-surface-muted,#EFE6D4)] rounded-xl p-4">
+                {isEn
+                  ? 'No journal entries logged yet. Record your first garden observation!'
+                  : 'Päevikus pole veel märkmeid. Pane kirja esimene aiavaatlus!'}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {recentNotes.slice(0, 3).map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="p-3 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] flex items-start justify-between gap-3 text-xs"
+                  >
+                    <div>
+                      <div className="font-bold text-[var(--kulv-text,#2A2E24)]">{entry.title}</div>
+                      <div className="text-[var(--kulv-text-muted,#5F675A)] line-clamp-1 mt-0.5">
+                        {entry.content}
+                      </div>
+                    </div>
+                    <span className="shrink-0 text-[10px] font-mono text-[var(--kulv-text-muted,#5F675A)]">
+                      {entry.date}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </section>
       </div>
 

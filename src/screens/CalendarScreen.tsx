@@ -28,6 +28,8 @@ import {
   Printer
 } from 'lucide-react';
 import { GddEngine } from '../logic/gddEngine';
+import { EmptyState } from '../components/common/EmptyState';
+import { CalendarEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 
 const MONTH_NAMES = ['Jaan', 'Veebr', 'Märts', 'Apr', 'Mai', 'Juuni', 'Juuli', 'Aug', 'Sept', 'Okt', 'Nov', 'Dets'];
 
@@ -835,8 +837,28 @@ export const CalendarScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* VIEW 1: GANTT VISUAL TIMELINE */}
-      {viewMode === 'gantt' && (
+      {/* Empty State or Timelines */}
+      {filteredTimelines.length === 0 ? (
+        <EmptyState
+          illustration={<CalendarEmptyIllustration />}
+          title={language === 'en' ? 'No calendar timelines match' : 'Külvikalendri tulemusi ei leitud'}
+          description={
+            language === 'en'
+              ? 'Try adjusting your search query or seasonal filter.'
+              : 'Ükski taim ei vasta valitud otsingule või filtritele.'
+          }
+          actionLabel={language === 'en' ? 'Reset search' : 'Tühjenda otsing'}
+          onAction={() => {
+            setSearchQuery('');
+            setSelectedCategory('all');
+            setSelectedFrostFilter('all');
+          }}
+          testId="calendar-empty-state"
+        />
+      ) : (
+        <>
+          {/* VIEW 1: GANTT VISUAL TIMELINE */}
+          {viewMode === 'gantt' && (
         <div
           data-testid="gantt_calendar_view"
           style={{
@@ -1209,6 +1231,8 @@ export const CalendarScreen: React.FC = () => {
           ))}
         </div>
       )}
+      </>
+    )}
 
       {/* Plant Details Dialog */}
       <PlantDetailDialog plant={inspectingPlant} onDismiss={() => setInspectingPlant(null)} />

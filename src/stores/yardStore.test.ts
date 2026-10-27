@@ -407,7 +407,7 @@ describe('useYardStore with Zustand, Zundo, Immer and Persist', () => {
     store.setSolarSeasonId('autumn_equinox');
     expect(useYardStore.getState().solarSeasonId).toBe('autumn_equinox');
 
-    store.setViewMode('3d');
-    expect(useYardStore.getState().viewMode).toBe('3d');
+    store.setViewMode('2d');
+    expect(useYardStore.getState().viewMode).toBe('2d');
   });
 });

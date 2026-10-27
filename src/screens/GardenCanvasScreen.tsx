@@ -9,10 +9,8 @@ import { EntityPreset } from '../data/gardenEntityPresets';
 import { useYardStore } from '../stores/yardStore';
 import { CropRotationTimeline } from '../components/garden/CropRotationTimeline';
 import { PrintableGardenReport } from '../components/garden/PrintableGardenReport';
-import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Box, Loader2, Calendar, Printer } from 'lucide-react';
+import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Loader2, Calendar, Printer } from 'lucide-react';
 
-import { ThreeErrorBoundary } from '../components/garden3d/ThreeErrorBoundary';
-import { Yard3DViewWrapper } from '../components/garden3d/Yard3DViewWrapper';
 import { EmptyState } from '../components/common/EmptyState';
 import { GardenEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 import emptyGardenImg from '../assets/images/kulv_empty_garden_1793083975050.jpg';
@@ -26,8 +24,6 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
 
   // Mode: 'yard' (overall property layout) vs 'timeline' (multi-year crop rotation) vs 'bed' (individual bed cell grid)
   const [plannerMode, setPlannerMode] = useState<'yard' | 'timeline' | 'bed'>('yard');
-  const viewMode = useYardStore((s) => s.viewMode);
-  const setViewMode = useYardStore((s) => s.setViewMode);
   const [selectedBedId, setSelectedBedId] = useState<string>(() => beds[0]?.id || '');
   const [bedToDelete, setBedToDelete] = useState<GardenBed | null>(null);
 
@@ -72,14 +68,11 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
             {/* 2D Plan Button */}
             <button
               role="tab"
-              aria-selected={plannerMode === 'yard' && viewMode === '2d'}
-              onClick={() => {
-                setPlannerMode('yard');
-                setViewMode('2d');
-              }}
+              aria-selected={plannerMode === 'yard'}
+              onClick={() => setPlannerMode('yard')}
               data-testid="planner_mode_yard_btn"
               className={`kulv-segmented-control__item ${
-                plannerMode === 'yard' && viewMode === '2d' ? 'kulv-segmented-control__item--active' : ''
+                plannerMode === 'yard' ? 'kulv-segmented-control__item--active' : ''
               }`}
             >
               <Map size={15} />
@@ -88,23 +81,6 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                   ? `2D Layout (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`
                   : `2D Plaan (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`}
               </span>
-            </button>
-
-            {/* 3D View Button */}
-            <button
-              role="tab"
-              aria-selected={plannerMode === 'yard' && viewMode === '3d'}
-              onClick={() => {
-                setPlannerMode('yard');
-                setViewMode('3d');
-              }}
-              data-testid="planner_mode_3d_btn"
-              className={`kulv-segmented-control__item ${
-                plannerMode === 'yard' && viewMode === '3d' ? 'kulv-segmented-control__item--active' : ''
-              }`}
-            >
-              <Box size={15} />
-              <span>{language === 'en' ? '3D View' : '3D Vaade'}</span>
             </button>
 
             {/* Crop Rotation & Succession Timeline Button */}
@@ -159,27 +135,19 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
         </div>
       </div>
 
-      {/* MODE 1: YARD MASTER PLAN (2D Canvas or 3D R3F View) */}
+      {/* MODE 1: YARD MASTER PLAN (Authoritative 2D Metric Canvas) */}
       {plannerMode === 'yard' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {viewMode === '3d' ? (
-            <ThreeErrorBoundary onFallbackTo2D={() => setViewMode('2d')}>
-              <Yard3DViewWrapper onBackTo2D={() => setViewMode('2d')} />
-            </ThreeErrorBoundary>
-          ) : (
-            <>
-              {/* Object Palette Dock */}
-              <YardObjectDock
-                onAddPreset={handleAddPreset}
-                onDragStartPreset={(e, preset) => {
-                  e.dataTransfer.setData('application/json', JSON.stringify(preset));
-                }}
-              />
+          {/* Object Palette Dock */}
+          <YardObjectDock
+            onAddPreset={handleAddPreset}
+            onDragStartPreset={(e, preset) => {
+              e.dataTransfer.setData('application/json', JSON.stringify(preset));
+            }}
+          />
 
-              {/* Master 2D Metric Canvas */}
-              <YardMasterPlanCanvas onSelectBedDetail={handleOpenBedDetail} onDropPreset={handleDropPreset} />
-            </>
-          )}
+          {/* Master 2D Metric Canvas */}
+          <YardMasterPlanCanvas onSelectBedDetail={handleOpenBedDetail} onDropPreset={handleDropPreset} />
         </div>
       )}
 

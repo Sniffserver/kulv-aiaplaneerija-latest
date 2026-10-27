@@ -17,14 +17,15 @@ import { JournalTimelineChart } from '../components/JournalTimelineChart';
 import { JournalEntry } from '../types';
 import { generateHarvestCSV } from '../logic/csvExport';
 import { ConfirmDeleteDialog } from '../components/dialogs/ConfirmDeleteDialog';
-import emptyJournalImg from '../assets/images/kulv_empty_journal_1793083976005.jpg';
+import { EmptyState } from '../components/common/EmptyState';
+import { JournalEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 
 interface JournalScreenProps {
   onOpenAddEntry: () => void;
 }
 
 export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) => {
-  const { journal, plants, deleteJournalEntry, exportBackup } = useGarden();
+  const { journal, plants, deleteJournalEntry, exportBackup, language } = useGarden();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -264,66 +265,38 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
 
       {/* Journal Entries List */}
       {filteredJournal.length === 0 ? (
-        <div
-          style={{
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '16px',
-            padding: '36px 20px',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '12px'
-          }}
-        >
-          {searchQuery ? (
-            <Search size={32} color="var(--kulv-primary, #4F6B45)" />
-          ) : (
-            <img
-              src={emptyJournalImg}
-              alt="Tühi päevik"
-              style={{
-                width: '200px',
-                height: '150px',
-                borderRadius: '12px',
-                objectFit: 'cover',
-                border: '1px solid var(--kulv-border, #C9BFA9)'
-              }}
-              referrerPolicy="no-referrer"
-            />
-          )}
-          <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--kulv-text, #2A2E24)' }}>
-            {searchQuery ? 'Sissekandeid ei leitud' : 'Päevikus pole veel sissekandeid'}
-          </h3>
-          <p style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', margin: 0, maxWidth: '400px' }}>
-            {searchQuery
-              ? `Otsingule "${searchQuery}" vastavaid märkmeid ei leitud. Proovi teist otsisõna.`
-              : 'Alusta oma esimest sissekannet seemnete idanemise, kasvuhoone temperatuuri või koristatud saagi kohta.'}
-          </p>
-          {!searchQuery && (
-            <button
-              onClick={onOpenAddEntry}
-              style={{
-                marginTop: '8px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '9px 16px',
-                borderRadius: '8px',
-                backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                color: 'white',
-                border: 'none',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              <Plus size={15} />
-              <span>Lisa esimene sissekanne</span>
-            </button>
-          )}
-        </div>
+        <EmptyState
+          illustration={<JournalEmptyIllustration />}
+          title={
+            searchQuery
+              ? language === 'en'
+                ? 'No notes matched your search'
+                : 'Sissekandeid ei leitud'
+              : language === 'en'
+              ? 'Your garden notebook is empty'
+              : 'Päevikus pole veel sissekandeid'
+          }
+          description={
+            searchQuery
+              ? language === 'en'
+                ? `No notes match "${searchQuery}". Try another keyword.`
+                : `Otsingule "${searchQuery}" vastavaid märkmeid ei leitud. Proovi teist otsisõna.`
+              : language === 'en'
+              ? 'Record observations, first seed sprouts, harvest yields, or greenhouse temperatures.'
+              : 'Alusta oma esimest sissekannet seemnete idanemise, kasvuhoone temperatuuri või koristatud saagi kohta.'
+          }
+          actionLabel={
+            searchQuery
+              ? language === 'en'
+                ? 'Clear search'
+                : 'Tühjenda otsing'
+              : language === 'en'
+              ? 'New Journal Entry'
+              : 'Lisa esimene sissekanne'
+          }
+          onAction={searchQuery ? () => setSearchQuery('') : onOpenAddEntry}
+          testId="journal-empty-state"
+        />
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {filteredJournal.map((entry) => {
