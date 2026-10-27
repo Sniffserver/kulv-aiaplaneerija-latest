@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useGarden } from '../context/GardenContext';
 import { Plant } from '../types';
 import { PlantCard } from '../components/PlantCard';
+import { EmptyState } from '../components/common/EmptyState';
+import { PlantsEmptyIllustration } from '../components/common/EmptyStateIllustrations';
 import {
   Search,
   Plus,
@@ -808,42 +810,18 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
 
       {/* Responsive Herbarium Grid */}
       {filteredPlants.length === 0 ? (
-        <div
-          style={{
-            padding: '48px 24px',
-            textAlign: 'center',
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '12px',
-            color: 'var(--kulv-text-muted, #5F675A)',
-            fontSize: '13px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '12px'
-          }}
-        >
-          <span>
-            {language === 'en'
-              ? `No plants found matching the selected filters.`
-              : `Ühtegi taime ei leitud valitud filtritega.`}
-          </span>
-          <button
-            onClick={handleResetFilters}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              backgroundColor: 'var(--kulv-primary, #4F6B45)',
-              color: 'white',
-              border: 'none',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            {language === 'en' ? 'Reset filters' : 'Lähtesta filtrid'}
-          </button>
-        </div>
+        <EmptyState
+          illustration={<PlantsEmptyIllustration />}
+          title={language === 'en' ? 'No matching plants found' : 'Ühtegi taime ei leitud'}
+          description={
+            language === 'en'
+              ? 'No plant species matched your search criteria or active filters.'
+              : 'Valitud filtrite või otsingusõnaga ei leitud ühtegi taime.'
+          }
+          actionLabel={language === 'en' ? 'Reset filters' : 'Tühjenda filtrid'}
+          onAction={handleResetFilters}
+          testId="plants-catalog-empty"
+        />
       ) : (
         <div
           style={{

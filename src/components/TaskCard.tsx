@@ -47,6 +47,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete }) 
         checked={task.completed}
         onChange={() => onToggle(task.id)}
         data-testid={`task_checkbox_${task.id}`}
+        aria-label={`Märgi ülesanne tehtuks: ${task.title}`}
         style={{
           width: '18px',
           height: '18px',

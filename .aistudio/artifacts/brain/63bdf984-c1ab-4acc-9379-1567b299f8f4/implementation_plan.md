@@ -1,193 +1,214 @@
-# KÜLV System Audit Report & Engineering Hardening Plan
+# KÜLV UI/UX Design System & Experience Audit
 
-Comprehensive technical audit of KÜLV (Nordic Garden & Crop Planner) evaluating system security, runtime performance, horticultural calculation precision, and codebase architectural health based on user-selected criteria.
+Senior UI/UX audit and architectural implementation plan for **KÜLV** (Nordic Garden & Crop Planner). Evaluates information architecture, visual design tokens, typographic hierarchy, core horticultural planning workflows, and accessibility (WCAG 2.1 AA) under a **Nordic botanical papercraft** aesthetic.
 
 ---
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> The audit evaluates the live full-stack system across three core engineering pillars: **Security & Data Integrity**, **Runtime & Rendering Performance**, and **Code Quality & Test Rigor**. The findings below establish a prioritized implementation roadmap.
+> This audit synthesizes findings from a comprehensive heuristic review across all main screens (`AppShell`, `HomeScreen`, `GardenCanvasScreen`, `PlantsCatalogScreen`, `CalendarScreen`, `JournalScreen`, and modal dialogs). It establishes an actionable implementation roadmap to elevate KÜLV into a polished, tactile, production-grade garden planning tool.
 
-- **Confirmed Scope**: Full security, performance, and code quality audit.
-- **Confirmed Deliverable**: Detailed audit report accompanied by a prioritized, actionable implementation roadmap.
-- **Key Decision Gate**: Immediate security lockfile creation (`package-lock.json`) and test suite expansion for store reducers (`cropRotationStore`, `syncQueue`) before releasing next semantic version.
-
----
-
-## 1. Executive Summary & Audit Scorecard
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        KÜLV AUDIT SCORECARD                            │
-├─────────────────────────┬───────────────┬──────────────┬───────────────┤
-│ Pillar                  │ Score (0-100) │ Status       │ Key Finding   │
-├─────────────────────────┼───────────────┼──────────────┼───────────────┤
-│ 1. Security & Integrity │ 92 / 100      │ EXCELLENT    │ Strict CSP    │
-│ 2. Runtime Performance  │ 88 / 100      │ SOLID        │ Clean Chunks  │
-│ 3. Code Quality & Types │ 91 / 100      │ EXCELLENT    │ 0 TS Errors   │
-│ 4. Test Coverage & CI   │ 74 / 100      │ NEEDS EXPANS │ Store gaps    │
-└─────────────────────────┴───────────────┴──────────────┴───────────────┘
-```
-
-### Current System Health Highlights:
-- **Zero TypeScript Errors**: Complete strict-mode compliance (`tsc --noEmit` passes with 0 warnings).
-- **174 Automated Tests Passing**: 29 test suites running in under 55 seconds across Vitest and JSDOM.
-- **Strict Content Security Policy**: Zero `'unsafe-inline'` scripts in production; inline styles restricted to dynamic canvas coordinate computation.
-- **Rate-Limited Weather Proxy**: Server-side token isolation (`OPENWEATHER_API_KEY`) with 30 req/min rate limit and in-memory TTL caching (500 items max with LRU/FIFO eviction).
-- **R-Tree Spatial Indexing (`rbush`)**: $O(\log n)$ spatial bounding box lookups allowing smooth 60 FPS 2D canvas manipulation with over 500 simultaneous garden entities.
+- **Confirmed Scope**: Full-app design system and core planning workflows.
+- **Confirmed Deliverable**: Detailed audit findings paired with an actionable UI/UX implementation plan.
+- **Confirmed Aesthetic**: Nordic botanical papercraft with warm earth tones (organic forest green `#385A40`, warm linen `#FAF6ED`, crisp paper sheet `#FFFDF8`, muted terracotta `#C76D3A`, and sage tints `#E2ECE3`).
+- **Critical Architectural Gate**: Complete eradication of ad-hoc inline styling (`style={{ ... }}`) across core screens in favor of reusable `.kulv-*` design system tokens, establishing a strict 60-30-10 color balance and single-elevation surface hierarchy.
 
 ---
 
-## 2. In-Depth Audit Findings
+## 1. Executive Heuristic Evaluation & UX Scorecard
 
-### Pillar 1: Security & Data Integrity
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          KÜLV UI/UX AUDIT SCORECARD                         │
+├──────────────────────────────┬───────────────┬──────────────┬───────────────┤
+│ UX Dimension                 │ Score (0-100) │ Status       │ Key Finding   │
+├──────────────────────────────┼───────────────┼──────────────┼───────────────┤
+│ 1. Visual Token Discipline   │ 72 / 100      │ NEEDS WORK   │ Mixed Inlines │
+│ 2. Information Hierarchy     │ 76 / 100      │ MODERATE     │ Competing CTAs│
+│ 3. Typographic Math & Flow   │ 82 / 100      │ SOLID        │ Tabular gaps  │
+│ 4. Workflow Ergonomics       │ 85 / 100      │ STRONG       │ Canvas smooth │
+│ 5. Accessibility & Inclusivity│ 88 / 100     │ VERY GOOD    │ A11y tests ok │
+│ 6. Aesthetic Distinctiveness │ 89 / 100      │ STRONG       │ Nordic vibe   │
+└──────────────────────────────┴───────────────┴──────────────┴───────────────┘
+```
+
+### Key Diagnostic Findings
 
 #### 🟢 Strengths
-1. **Zero Client Secret Exposure**: API keys (`OPENWEATHER_API_KEY`) remain strictly server-side. The client calls `/api/weather?lat=...&lon=...` with zod-validated coordinate boundaries ($-90 \le \text{lat} \le 90$, $-180 \le \text{lon} \le 180$).
-2. **Strict Production Helmet Configuration**:
-   - `default-src 'self'`
-   - `script-src 'self'` (theme boot scripts extracted to `boot-theme.ts`)
-   - `object-src 'none'`
-   - `frame-ancestors 'self' https:`
-   - `upgrade-insecure-requests`
-3. **Zod Schema Hardening**:
-   - Backup files validated against strict schemas (`yardPlanSchema`, `backupSchema`) before importing.
-   - Prevents Prototype Pollution and arbitrary script execution through malicious JSON payloads.
-4. **Offline Isolation**:
-   - All user garden data (beds, plants, tasks, journals, cadastral boundaries) is persisted locally in client-side IndexedDB with transparent fallback. No unauthenticated cloud data exfiltration risk.
+1. **Compelling Nordic Botanical Identity**:
+   - The foundation of warm cream canvas (`--kulv-bg: #faf6ed`), deep pine dark mode (`#131914`), and serif display headers (`Fraunces`) gives KÜLV an authentic, tactile notebook character rather than a sterile SaaS clone.
+2. **Accessible Base Components**:
+   - Recent additions (`EmptyState`, `HomeOverview`, `PlantCard`, SVG icon suites) strictly honor semantic HTML (`<button>`, `<section>`, `aria-labelledby`, `aria-describedby`, `:focus-visible`) and pass `axe-core` accessibility checks with zero violations.
+3. **Rich Horticultural Capabilities**:
+   - Multi-mode planning (2D cadastral yard master plan, 3D sun/shadow simulation with Three.js, bed cell grid planting, crop rotation timeline, companion engine) provides high domain value.
 
-#### 🟡 Vulnerabilities & Actionable Items
-1. **Missing `package-lock.json` in Root**:
-   - Running `npm audit` fails with `ENOLOCK` error.
-   - *Risk*: Non-deterministic sub-dependency installation in CI and inability to execute automated vulnerability scanners (`audit:ci`).
-   - *Remediation*: Generate canonical lockfile (`npm i --package-lock-only`) and incorporate into automated CI security scanning.
-2. **CORS Configuration in Dev vs. Production**:
-   - Currently, local dev origins (`localhost:3000`, `127.0.0.1:3000`, `localhost:5173`) are explicitly configured. Production requires setting `CORS_ORIGINS` in `.env`.
-   - *Remediation*: Add strict fallback validation in `server.ts` to log a warning if production boots without explicit `CORS_ORIGINS`.
+#### 🟡 Critical UX Friction Points & Anti-Patterns Identified
 
----
-
-### Pillar 2: Runtime & Rendering Performance
-
-#### 🟢 Strengths
-1. **Rollup Manual Chunk Splitting**:
-   - Three.js / R3F isolated to `vendor-three` (~880 kB).
-   - Recharts isolated to `vendor-recharts` (~370 kB).
-   - Lucide icons isolated to `vendor-lucide` (~65 kB).
-   - Core React runtime isolated to `vendor-react` (~140 kB).
-2. **Spatial Indexing & Hit Testing**:
-   - `spatialIndex.ts` wraps RBush for fast 2D rectangular and circular intersection testing.
-   - Canvas drag/drop, multi-selection, and collision boundaries avoid $O(n^2)$ comparisons.
-3. **Server Cache Resilience**:
-   - Weather upstream responses cached with 5-minute TTL.
-   - Cache size capped at 500 entries to prevent memory exhaustion in long-running Node processes.
-
-#### 🟡 Bottlenecks & Actionable Items
-1. **Shadow Geometry Re-computation During Canvas Zoom**:
-   - Solar elevation and azimuth calculations re-calculate shadow polygons on every zoom tick.
-   - *Remediation*: Cache shadow polygons based on fixed object rotation and sun angle; only invalidate on object translation or sun slider movement.
-2. **WebGL Context Loss Handler Verification**:
-   - `ThreeErrorBoundary` and `isWebGL2Available()` provide reliable detection, but context restoration events (`webglcontextrestored`) should explicitly reload material textures.
-3. **Image Compression in Journal**:
-   - Attaching full-resolution garden photos can rapidly fill IndexedDB.
-   - `imageCompressor.ts` exists (68% coverage) with client-side canvas downsampling (max 1600px, 0.82 JPEG quality). Ensure all file upload handlers uniformly enforce this compression pipeline.
+1. **Inline Style Fragmentation vs. Design System Debt**:
+   - Screens like `HomeScreen.tsx`, `AppShell.tsx`, and `GardenCanvasScreen.tsx` contain hundreds of lines of ad-hoc `style={{ ... }}` objects with hardcoded hex codes (`#FFFDF8`, `#C9BFA9`, `#4F6B45`) and differing corner radii (`6px`, `8px`, `10px`, `12px`, `16px`).
+   - *Impact*: Theme switching (light/dark or custom garden palettes) leaves un-themed or mismatched borders; visual rhythm is inconsistent.
+2. **Cognitive Overload & Lack of Single Focal Anchor on Home**:
+   - `HomeScreen.tsx` presents 7 competing full-width sections in immediate vertical succession: Feedback Toast $\to$ Welcome Title $\to$ WeatherWidget $\to$ 5-day WeatherChart $\to$ Quick Actions section $\to$ Stats Overview $\to$ Daily Tasks list.
+   - *Impact*: The user is greeted by a wall of high-contrast cards with no clear primary action. The newly created `HomeOverview` component was built but never integrated as the primary dashboard anchor.
+3. **"Cards Within Cards" Violation in Quick Actions**:
+   - The Quick Actions container (`bg-surface-muted`, `border`) nests four individual bordered buttons with internal icon tiles. This creates nested border-box visual clutter ("box inside a box").
+4. **Tabular Numerals Missing on Agricultural Measurements**:
+   - Metric displays, dates (`2026-10-27`), spacing (`15 cm`), maturity days (`75p`), and coordinates lack `font-variant-numeric: tabular-nums` or `font-mono tabular-nums`, leading to subtle layout shifts.
+5. **Mobile Top & Bottom Navigation Height Cap**:
+   - On viewports $<768\text{px}$, the top header ($56\text{px}$) plus bottom nav bar ($64\text{px}$) plus sticky quick-filter controls consume up to 22% of vertical screen height, exceeding the recommended 15% mobile sticky budget.
 
 ---
 
-### Pillar 3: Code Quality, Testing & Horticultural Accuracy
-
-#### 🟢 Strengths
-1. **Horticultural Engine Precision**:
-   - `estonianFrostEngine.ts` (97.4% test coverage): Accurately differentiates air temperature (2m) from ground radiative cooling (0cm maapinna halla), applying safety offsets for tender Nordic crops.
-   - `gddEngine.ts` (72.4% test coverage): Correctly computes Growing Degree Days with Base 5°C and Base 10°C thresholds for Nordic varieties.
-   - `companionEngine.ts` (74.8% test coverage): Scientific companion planting matrix with validated antagonist warnings (e.g. fennel vs beans, nightshades vs brassicas).
-2. **State Architecture**:
-   - Zustand stores with Immer middleware for immutable nested updates.
-   - Zundo temporal middleware for full undo/redo capabilities on yard plans.
-
-#### 🟡 Test Coverage Deficits (from Vitest V8 report)
-```
-┌─────────────────────────────────┬───────────┬────────────┬─────────────┐
-│ Module                          │ % Stmts   │ % Branch   │ Target Goal │
-├─────────────────────────────────┼───────────┼────────────┼─────────────┤
-│ stores/cropRotationStore.ts     │ 27.6%     │ 0%         │ > 80%       │
-│ services/sync/syncQueue.ts      │ 33.3%     │ 0%         │ > 85%       │
-│ stores/yardStore.ts             │ 47.0%     │ 27.3%      │ > 75%       │
-│ logic/microclimateEngine.ts     │ 57.6%     │ 37.5%      │ > 80%       │
-│ logic/imageCompressor.ts        │ 68.3%     │ 75.9%      │ > 85%       │
-└─────────────────────────────────┴───────────┴────────────┴─────────────┘
-```
-
----
-
-## 3. Prioritized Implementation Roadmap
-
-### Phase 1: Security & Lockfile Standardization (P0 — Immediate)
-- [ ] Run `npm i --package-lock-only` to generate canonical lockfile for vulnerability auditing.
-- [ ] Verify `npm audit` passes with 0 high/critical vulnerabilities.
-- [ ] Add explicit warning when `NODE_ENV=production` is active and `CORS_ORIGINS` is unset.
-
-### Phase 2: Test Suite Hardening & Coverage Expansion (P1 — High)
-- [ ] **Crop Rotation Store**: Add unit tests for rotation cycle step insertion, bed assignment, year shifting, and validation constraints (`src/stores/cropRotationStore.test.ts`).
-- [ ] **Sync Queue**: Add unit test coverage for network offline queuing, max retry exhaustion, and FIFO draining (`src/services/sync/syncQueue.test.ts`).
-- [ ] **Yard Store**: Add tests for entity multi-selection, alignment snapping, layer z-indexing, and undo/redo history limits (`src/stores/yardStore.test.ts`).
-- [ ] **Microclimate Engine**: Add edge case tests for windbreak obstruction heights, greenhouse solar gain multipliers, and slope frost pocket calculation.
-
-### Phase 3: Performance Optimization (P2 — Medium)
-- [ ] **Shadow Polygon Memoization**: Memoize solar projection vectors in `InteractiveGardenCanvas.tsx` to decouple pan/zoom rendering from mathematical shadow projection.
-- [ ] **IndexedDB Photo Upload Enforcement**: Ensure journal photo uploads strictly flow through `imageCompressor.ts` prior to blob storage.
-- [ ] **WebGL Context Restoration**: Implement active texture re-bind on `webglcontextrestored` in `Yard3DCanvas.tsx`.
-
-### Phase 4: Polish & Documentation (P3 — Low)
-- [ ] Update `CHANGELOG.md` with audit outcomes.
-- [ ] Add audit verification checklist to `README.md`.
-
----
-
-## 4. Technical Architecture Diagram
+## 2. Target Visual Identity: Nordic Botanical Papercraft
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        KÜLV SYSTEM ARCHITECTURE                        │
-└────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       NORDIC BOTANICAL PAPERCRAFT                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  CANVAS (60%)       SURFACES (30%)      ACCENTS (10%)       TYPOGRAPHY      │
+│  ────────────       ──────────────      ─────────────       ──────────      │
+│  #FAF6ED (Linen)    #FFFDF8 (Paper)     #385A40 (Forest)    Fraunces 700    │
+│  #131914 (Night)    #F1EBDD (Muted)     #C76D3A (Terracotta)Plus Jakarta 400│
+│  Hairline: 1px      Radius: 12-16px     #E2ECE3 (Sage soft) Tabular figures │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-  [ Client Browser (PWA) ]
-     │
-     ├── AppShell (Synchronous Route Dispatcher)
-     │     ├── HomeScreen (Weather Overview, Tasks, Quick Sowing)
-     │     ├── GardenCanvasScreen (2D R-Tree Canvas / 3D Three.js Viewport)
-     │     ├── PlantsCatalogScreen (Faceted Search & Heirloom Cultivars)
-     │     ├── CalendarScreen (Frost Radar & GDD Calculation)
-     │     ├── JournalScreen (Photo Logs & Harvest Yield Charts)
-     │     └── BlogScreen (Nordic Agricultural Knowledge Base)
-     │
-     ├── Local State & Storage Layer
-     │     ├── Zustand Stores (yardStore [Undo/Redo], cropRotationStore)
-     │     ├── GardenContext (Beds, Plants, Tasks, Journal)
-     │     └── IndexedDB Engine (StorageDb, Automatic Migrations)
-     │
-     └── Horticultural Domain Engines
-           ├── EstonianFrostEngine (0cm ground vs 2m air frost calculation)
-           ├── CompanionEngine (Evidence-rated companion synergies)
-           ├── GddEngine (Growing Degree Days Nordic baseline)
-           └── SpatialIndex (RBush 2D R-Tree collision/selection)
-     │
-     ▼ HTTP / HTTPS (Local Proxy)
-  [ Express 5 Security Server (server.ts) ]
-     ├── Helmet (Strict CSP script-src 'self', frameguard, HSTS)
-     ├── Rate Limiter (30 req/min window on /api/weather)
-     ├── In-Memory LRU Cache (500 entries max, 5-min TTL)
-     ├── Zod Validation (lat/lon coordinates, backup schemas)
-     └── Upstream Weather Proxy (OpenWeatherMap / Open-Meteo)
+### Visual Constitution & Anti-Slop Rules
+1. **Zero-Pill Metadata**:
+   - All botanical families, harvest days, variety counts, and dates must be quiet unboxed text separated by subtle typographic dots (`·`), never static pill capsules or candy tags.
+2. **Single-Elevation Depth**:
+   - Exactly 1 level of elevation per screen. Surfaces use crisp hairline borders (`1px solid var(--kulv-border)`) and a subtle warm paper drop-shadow (`0 1px 3px rgba(67, 52, 35, 0.05)`).
+3. **No Decorative Pulse Dots or Comment Headers**:
+   - Remove fake telemetry indicators and decorative green dots. Headings must use clean, natural title case.
+4. **Natural Editorial Numbering**:
+   - Steps, guides, and list chapters use clean editorial numbers (`01.`, `02.`), never mechanical code syntax (`// 01_`).
+5. **Human Action Verbs**:
+   - Buttons use everyday action verbs: `"Kasta taimi"`, `"Lisa peenar"`, `"Vali taim"`, `"Salvesta"`.
+
+---
+
+## 3. Core Workflow UX Redesign
+
+### Flow A: Home Dashboard (The Gardener's Morning Overview)
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│ [Top Bar: Wordmark "KÜLV" · Weather Location Badge · Quick Actions · Lang] │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  TERE TULEMAST AEDA!                                                      │
+│  Põhjamaine aiaplaneerija · Tartu vald, 27. oktoober                      │
+│                                                                           │
+│ ┌──────────────────────┐ ┌──────────────────────┐ ┌─────────────────────┐ │
+│ │ TÄNANE FOOKUS        │ │ AED                  │ │ ILM                 │ │
+│ │ 3 ülesannet ootel    │ │ 4 peenart · 18 taime │ │ 12°C · Mõõdukas tuul│ │
+│ │ [Kasta herned jne.]  │ │ [Ava aiaplaan →]     │ │ [Vaata prognoosi →] │ │
+│ └──────────────────────┘ └──────────────────────┘ └─────────────────────┘ │
+│                                                                           │
+│ ┌──────────────────────────────────────┐ ┌──────────────────────────────┐ │
+│ │ TÄNASED HOOLDUSTÖÖD                  │ │ 5 PÄEVA ILMAPROGNOOS         │ │
+│ │ • [ ] Kasta tomatipeenar (Hommik)    │ │ [Puhas Recharts graafik]     │ │
+│ │ • [ ] Kata salat öökülma eest        │ │ Min 2°C / Max 14°C           │ │
+│ │ • [x] Porgandi rohimine (Tehtud)     │ │                              │ │
+│ └──────────────────────────────────────┘ └──────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+- **Changes**:
+  - Replace the scattered 7-section stack with the unified `HomeOverview` hero anchor.
+  - Pair daily tasks with weather forecast in a balanced 2-column desktop grid (`lg:grid-cols-2`).
+  - Flatten Quick Actions into quiet contextual buttons in the header toolbar, eliminating nested cards.
+
+### Flow B: Garden Canvas & Spatial Planner
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│ [← Krundi plaan]   Mode: [Krundi plaan | Detailvaade | Külvikord]  [Prindi]│
+├─────────────────────────────────────────────────────────────┬─────────────┤
+│                                                             │ DOCK:       │
+│                                                             │ • Peenrad   │
+│                 INTERACTIVE 2D / 3D CANVAS                  │ • Rajatised │
+│                (Pan, Zoom, Rotate, Drag-Drop)               │ • Kastmissüst│
+│                                                             │ • Taimed    │
+│                                                             │             │
+│                                                             │ [Juhend]    │
+└─────────────────────────────────────────────────────────────┴─────────────┘
+```
+- **Changes**:
+  - Unify mode toggles (`yard` / `bed` / `timeline`) into a segmented control complying with the Single-Line Control contract.
+  - Empty bed states seamlessly transition to `EmptyState` with `GardenEmptyIllustration`.
+  - Add contextual keyboard hints (`[Space] + Drag to Pan`, `Scroll to Zoom`) for intuitive spatial navigation.
+
+### Flow C: Plants Catalog & Plant Detail
+- **Changes**:
+  - Full keyboard accessibility: every `PlantCard` is a focusable `<button>` with clear `:focus-visible` ring.
+  - Unboxed metadata (`Perekonnanimi · ~75p valmimiseni · Vahe 5 cm`).
+  - Seamless filter bar with search, botanical family filter, and sun/water requirements.
+  - Dedicated empty state (`PlantsEmptyIllustration`) when search filters yield zero matches, with a 1-click `"Tühjenda filtrid"` button.
+
+---
+
+## 4. Technical Architecture & Component Hierarchy
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            KÜLV COMPONENT SHELL                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  AppShell (Desktop 240px Sidebar + Mobile 56px Header + 60px Bottom Bar)   │
+│   │                                                                         │
+│   ├── HomeScreen                                                            │
+│   │    ├── HomeOverview (Tänane fookus · Aia statistika · Ilm)              │
+│   │    ├── TodayTasksSection (TaskCard, checkbox interactions)              │
+│   │    └── WeatherForecastSection (WeatherWidget, WeatherChart)             │
+│   │                                                                         │
+│   ├── GardenCanvasScreen                                                    │
+│   │    ├── ModeSwitcherBar (Krundi plaan / Peenar / Külvikord)              │
+│   │    ├── YardMasterPlanCanvas (2D Fabric/Canvas + R-Tree spatial index)   │
+│   │    ├── Yard3DViewWrapper (Three.js WebGL spatial lighting)              │
+│   │    └── EmptyState (GardenEmptyIllustration fallback)                    │
+│   │                                                                         │
+│   ├── PlantsCatalogScreen                                                   │
+│   │    ├── FilterBar (Search, family select, sun/water segmented buttons)   │
+│   │    ├── PlantGrid (Accessible PlantCard with PlantIcon SVG/Emoji)        │
+│   │    └── EmptyState (PlantsEmptyIllustration + Clear Filters CTA)         │
+│   │                                                                         │
+│   └── Dialogs & Modals (Sheet elevations with accessible focus traps)       │
+│        ├── PlantDetailDialog                                                │
+│        ├── AddBedDialog                                                     │
+│        ├── AddTaskDialog                                                    │
+│        └── GardenBinderPrintDialog                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 5. Verification Gates
+## 5. Phased Implementation Roadmap
 
-1. **Compilation**: `npm run typecheck` (`tsc --noEmit`) passes with 0 errors.
-2. **Build**: `npm run build` succeeds with PWA precache manifest generation.
-3. **Unit Tests**: All Vitest test suites pass (`npm test`).
-4. **Coverage Target**: Statement coverage increases from 72.3% to $\ge 80\%$.
-5. **Security Audit**: `npm audit` executes cleanly against canonical lockfile.
+### Phase 1: Shell & Home Dashboard Modernization
+- **Task 1.1**: Integrate `HomeOverview` into `HomeScreen.tsx` as the primary hero focal point.
+- **Task 1.2**: Remove "cards within cards" in `HomeScreen` Quick Actions, converting actions into an uncluttered toolstrip.
+- **Task 1.3**: Clean up desktop sidebar in `AppShell.tsx`: replace inline style objects with `.kulv-nav-item`, `.kulv-sidebar`, and consistent typography.
+- **Task 1.4**: Enforce `tabular-nums` on all home stats, temperature values, and date strings.
+
+### Phase 2: Garden Canvas & Spatial Planner Ergonomics
+- **Task 2.1**: Restyle planner mode switchers (`yard` / `timeline` / `bed`) into an accessible segmented control with tactile active states.
+- **Task 2.2**: Refactor empty state in `GardenCanvasScreen.tsx` to use the unified `EmptyState` component.
+- **Task 2.3**: Clean up the Yard Object Dock with `.kulv-icon-tile` badges and cohesive paper elevation borders.
+
+### Phase 3: Plant Catalog & Modal Dialog Unification
+- **Task 3.1**: Verify `PlantsCatalogScreen` uses accessible `<button>` plant cards with unboxed metadata strings.
+- **Task 3.2**: Add empty state handling with a clean `"Tühjenda filtrid"` button when search queries return zero results.
+- **Task 3.3**: Standardize modal dialogs (`AddBedDialog`, `PlantDetailDialog`) with consistent papercraft sheet elevations, clear close buttons, and focus traps.
+
+### Phase 4: CSS Token Consolidation & Automated Verification
+- **Task 4.1**: Expand `src/index.css` to cover all unified layout classes (`.kulv-toolstrip`, `.kulv-segmented-control`, `.kulv-dialog-sheet`), eliminating remaining ad-hoc hex codes.
+- **Task 4.2**: Verify full test suite (`npm test`), TypeScript verification (`tsc --noEmit`), and production build (`npm run build`).
+
+---
+
+## 6. Verification & Acceptance Criteria
+
+1. **Accessibility**: All interactive elements navigable via keyboard (<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>) with visible focus rings (`3px solid var(--kulv-focus)`). Zero `axe-core` accessibility violations.
+2. **Design Token Integrity**: Zero un-themed raw hex codes (`#FFFDF8`, `#C9BFA9`) in core component JSX; all styling delegates to CSS custom properties.
+3. **Responsive Limits**: Mobile sticky elements strictly capped at $\le 15\%$ viewport height.
+4. **Zero Regressions**: 100% of existing tests in `src/**/*.{test,spec}.{ts,tsx}` pass without error.

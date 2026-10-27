@@ -52,15 +52,13 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '14px 16px', gap: '12px' }}>
       {/* Top Planner Mode Switcher */}
       <div
+        className="kulv-paper-card"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '10px',
-          backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-          border: '1px solid var(--kulv-border, #C9BFA9)',
-          borderRadius: '12px',
           padding: '8px 12px'
         }}
       >
@@ -69,15 +67,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
           <div
             role="tablist"
             aria-label={language === 'en' ? 'Planner view mode' : 'Planeerija vaate režiim'}
-            style={{
-              display: 'inline-flex',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              borderRadius: '8px',
-              padding: '3px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              gap: '2px',
-              flexWrap: 'wrap'
-            }}
+            className="kulv-segmented-control"
           >
             {/* 2D Plan Button */}
             <button
@@ -88,26 +78,9 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 setViewMode('2d');
               }}
               data-testid="planner_mode_yard_btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                minHeight: '40px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: plannerMode === 'yard' && viewMode === '2d' ? 700 : 500,
-                backgroundColor:
-                  plannerMode === 'yard' && viewMode === '2d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color:
-                  plannerMode === 'yard' && viewMode === '2d'
-                    ? 'var(--kulv-primary, #4F6B45)'
-                    : 'var(--kulv-text, #2A2E24)',
-                boxShadow: plannerMode === 'yard' && viewMode === '2d' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
-              }}
+              className={`kulv-segmented-control__item ${
+                plannerMode === 'yard' && viewMode === '2d' ? 'kulv-segmented-control__item--active' : ''
+              }`}
             >
               <Map size={15} />
               <span>
@@ -126,26 +99,9 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 setViewMode('3d');
               }}
               data-testid="planner_mode_3d_btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                minHeight: '40px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: plannerMode === 'yard' && viewMode === '3d' ? 700 : 500,
-                backgroundColor:
-                  plannerMode === 'yard' && viewMode === '3d' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color:
-                  plannerMode === 'yard' && viewMode === '3d'
-                    ? 'var(--kulv-primary, #4F6B45)'
-                    : 'var(--kulv-text, #2A2E24)',
-                boxShadow: plannerMode === 'yard' && viewMode === '3d' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
-              }}
+              className={`kulv-segmented-control__item ${
+                plannerMode === 'yard' && viewMode === '3d' ? 'kulv-segmented-control__item--active' : ''
+              }`}
             >
               <Box size={15} />
               <span>{language === 'en' ? '3D View' : '3D Vaade'}</span>
@@ -157,22 +113,9 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
               aria-selected={plannerMode === 'timeline'}
               onClick={() => setPlannerMode('timeline')}
               data-testid="planner_mode_timeline_btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                minHeight: '40px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: plannerMode === 'timeline' ? 700 : 500,
-                backgroundColor: plannerMode === 'timeline' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: plannerMode === 'timeline' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
-                boxShadow: plannerMode === 'timeline' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
-              }}
+              className={`kulv-segmented-control__item ${
+                plannerMode === 'timeline' ? 'kulv-segmented-control__item--active' : ''
+              }`}
             >
               <Calendar size={15} />
               <span>{language === 'en' ? 'Crop Rotation & Timeline' : 'Külvikord & Ajajoon'}</span>
@@ -184,22 +127,9 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
               aria-selected={plannerMode === 'bed'}
               onClick={() => setPlannerMode('bed')}
               data-testid="planner_mode_bed_btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                minHeight: '40px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: plannerMode === 'bed' ? 700 : 500,
-                backgroundColor: plannerMode === 'bed' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: plannerMode === 'bed' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
-                boxShadow: plannerMode === 'bed' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
-              }}
+              className={`kulv-segmented-control__item ${
+                plannerMode === 'bed' ? 'kulv-segmented-control__item--active' : ''
+              }`}
             >
               <Grid size={15} />
               <span>{language === 'en' ? 'Bed Detail Grid' : 'Peenra detailvaade'}</span>
@@ -207,46 +137,26 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
           </div>
         </div>
 
-        {plannerMode !== 'yard' && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {plannerMode !== 'yard' && (
+            <button
+              onClick={() => setPlannerMode('yard')}
+              className="kulv-button kulv-button--secondary"
+              style={{ minHeight: '36px', padding: '6px 12px', fontSize: '0.85rem' }}
+            >
+              <ArrowLeft size={14} />
+              <span>{language === 'en' ? 'Back to Yard Plan' : 'Tagasi krundiplaanile'}</span>
+            </button>
+          )}
           <button
-            onClick={() => setPlannerMode('yard')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              minHeight: '40px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 600,
-              transition: 'all 0.15s ease'
-            }}
+            onClick={() => window.print()}
+            className="kulv-button kulv-button--secondary"
+            style={{ minHeight: '36px', padding: '6px 12px', fontSize: '0.85rem' }}
           >
-            <ArrowLeft size={14} />
-            <span>{language === 'en' ? 'Back to Yard Plan' : 'Tagasi krundiplaanile'}</span>
+            <Printer size={15} />
+            <span>{language === 'en' ? 'Print Report' : 'Trüki raport'}</span>
           </button>
-        )}
-        <button
-          onClick={() => window.print()}
-          style={{
-            padding: '8px 14px',
-            borderRadius: '8px',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          <Printer size={15} />
-          <span>Print Report</span>
-        </button>
+        </div>
       </div>
 
       {/* MODE 1: YARD MASTER PLAN (2D Canvas or 3D R3F View) */}

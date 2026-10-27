@@ -3,19 +3,16 @@ import { useGarden } from '../context/GardenContext';
 import { WeatherWidget } from '../components/WeatherWidget';
 import { TaskCard } from '../components/TaskCard';
 import { WeatherChart } from '../components/WeatherChart';
+import { HomeOverview } from '../components/home/HomeOverview';
 import {
-  Grid,
   Sprout,
   BookOpen,
   Calendar,
   Droplets,
   Plus,
   FlaskConical,
-  CheckCircle,
   Lightbulb,
   Check,
-  Zap,
-  RefreshCw,
   Printer,
   FileText
 } from 'lucide-react';
@@ -61,11 +58,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [showBinderDialog, setShowBinderDialog] = useState<boolean>(false);
 
   const totalPlantings = beds.reduce((sum, b) => sum + b.plantings.length, 0);
+  const activeTasks = tasks.filter((t) => !t.completed);
 
   const handleQuickWater = () => {
     const res = quickWaterAllPlants();
     setFeedbackToast({
-      title: 'Taimed märgitud kastetuks',
+      title: language === 'en' ? 'Plants marked as watered' : 'Taimed märgitud kastetuks',
       subtitle: res.message
     });
     setTimeout(() => {
@@ -74,21 +72,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px 20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px 24px' }}>
       {/* Toast Notification for Quick Actions */}
       {feedbackToast && (
         <div
           role="status"
           aria-live="polite"
+          className="kulv-paper-card"
           style={{
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1.5px solid var(--kulv-primary, #4F6B45)',
-            boxShadow: 'var(--kulv-shadow-card, 0 4px 16px rgba(0,0,0,0.12))',
-            borderRadius: '12px',
-            padding: '12px 14px',
+            borderColor: 'var(--kulv-primary)',
+            padding: '12px 16px',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '12px',
             animation: 'fadeIn 0.2s ease-in'
           }}
         >
@@ -97,589 +93,217 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               width: '32px',
               height: '32px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(79, 107, 69, 0.15)',
-              color: 'var(--kulv-primary, #4F6B45)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              backgroundColor: 'var(--kulv-primary-soft)',
+              color: 'var(--kulv-primary-strong)',
+              display: 'grid',
+              placeItems: 'center',
               flexShrink: 0
             }}
           >
             <Check size={18} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--kulv-text)' }}>
               {feedbackToast.title}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--kulv-text-muted)', marginTop: '2px' }}>
               {feedbackToast.subtitle}
             </div>
           </div>
         </div>
       )}
 
-      {/* Welcome & Tagline */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          gap: '8px'
-        }}
-      >
-        <div>
-          <h1
-            className="font-serif-display"
-            style={{
-              fontSize: '28px',
-              fontWeight: 700,
-              color: 'var(--kulv-text, #2A2E24)',
-              margin: 0,
-              letterSpacing: '-0.02em'
-            }}
-          >
-            Tere tulemast aeda!
-          </h1>
-          <p style={{ fontSize: '13px', color: 'var(--kulv-text-muted, #5F675A)', margin: '4px 0 0 0' }}>
-            Põhjamaine aiaplaneerija · {weather.locationName}
-          </p>
-        </div>
-      </div>
-
-      {/* Real-time Weather Forecast Widget */}
-      <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
-
-      {/* 5-Day Recharts Temperature Visualization */}
-      <WeatherChart weather={weather} />
-
-      {/* High-Productivity Quick Actions Section */}
-      <div
-        data-testid="quick_actions_section"
-        style={{
-          backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-          borderRadius: '16px',
-          padding: '16px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          border: '1px solid var(--kulv-border, #C9BFA9)'
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '12px',
-              fontWeight: 800,
-              color: 'var(--kulv-text, #2A2E24)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}
-          >
-            <Zap size={15} color="var(--kulv-accent, #D97A3D)" />
-            <span>Kiirtegevused</span>
-          </div>
-          <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Hooldus & planeerimine</span>
-        </div>
-
-        <div
+      {/* Header Welcome Section */}
+      <header>
+        <h1
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-            gap: '8px'
+            fontFamily: "var(--kulv-font-display, 'Fraunces', Georgia, serif)",
+            fontSize: '1.85rem',
+            fontWeight: 700,
+            color: 'var(--kulv-text)',
+            margin: 0,
+            letterSpacing: '-0.02em'
           }}
         >
-          {/* 1. Water Plants Action */}
+          {language === 'en' ? 'Welcome to the Garden' : 'Tere tulemast aeda!'}
+        </h1>
+        <p style={{ fontSize: '0.9rem', color: 'var(--kulv-text-muted)', margin: '4px 0 0 0' }}>
+          {language === 'en' ? 'Nordic garden planner' : 'Põhjamaine aiaplaneerija'} · {weather.locationName}
+        </p>
+      </header>
+
+      {/* Hero Visual Anchor: HomeOverview (Focus, Garden stats, Weather summary) */}
+      <HomeOverview
+        bedCount={beds.length}
+        plantCount={totalPlantings}
+        taskCount={activeTasks.length}
+        temperature={weather.temperature}
+        weatherSummary={weather.weatherDescription}
+        onOpenGarden={onNavigateToGarden}
+        onOpenTasks={() => {
+          const el = document.getElementById('today-tasks-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            onOpenAddTask();
+          }
+        }}
+      />
+
+      {/* High-Productivity Quick Actions Toolstrip */}
+      <section className="kulv-paper-card" style={{ padding: '16px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <h2 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: 'var(--kulv-text)' }}>
+            {language === 'en' ? 'Quick Actions' : 'Kiirtegevused'}
+          </h2>
+          <span style={{ fontSize: '0.8rem', color: 'var(--kulv-text-muted)' }}>
+            {language === 'en' ? 'Care & planning' : 'Hooldus & planeerimine'}
+          </span>
+        </div>
+
+        <div data-testid="quick_actions_section" className="kulv-toolstrip">
           <button
             onClick={handleQuickWater}
             data-testid="quick_action_water_plants"
-            aria-label="Kasta taimi"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1.5px solid var(--kulv-info, #4F6B45)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Water plants' : 'Kasta taimi'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(23, 107, 135, 0.12)',
-                color: 'var(--kulv-info, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Droplets size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Kasta taimi</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Märgi kastetuks</div>
-            </div>
+            <Droplets size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Water Plants' : 'Kasta taimi'}</span>
           </button>
 
-          {/* 2. Check Calendar Action */}
           <button
             onClick={onNavigateToCalendar}
             data-testid="quick_action_check_calendar"
-            aria-label="Vaata külvikalendrit"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'View sowing calendar' : 'Vaata külvikalendrit'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(79, 107, 69, 0.12)',
-                color: 'var(--kulv-primary, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Calendar size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Külvikalender</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Ajastused & saak</div>
-            </div>
+            <Calendar size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Sowing Calendar' : 'Külvikalender'}</span>
           </button>
 
-          {/* Quick Action: Crop Rotation & Succession */}
           <button
             onClick={onNavigateToGarden}
             data-testid="quick_action_crop_rotation"
-            aria-label="Külvikorra ja järjestikülvi ajajoon"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Crop rotation timeline' : 'Külvikorra ajajoon'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(52, 117, 89, 0.12)',
-                color: '#347559',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Sprout size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Külvikord</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Järjestikülv & haigused</div>
-            </div>
+            <Sprout size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Crop Rotation' : 'Külvikord'}</span>
           </button>
 
-          {/* 3. Soil Recipes & Brews */}
           <button
             onClick={onOpenSoilRecipes}
             data-testid="quick_action_soil_recipes"
-            aria-label="Mullaretseptid ja väetised"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Soil recipes and brews' : 'Mullaretseptid ja leotised'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(217, 122, 61, 0.12)',
-                color: 'var(--kulv-accent, #D97A3D)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <FlaskConical size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Mullaretseptid</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Elav muld & leotised</div>
-            </div>
+            <FlaskConical size={16} color="var(--kulv-accent)" />
+            <span>{language === 'en' ? 'Soil Recipes' : 'Mullaretseptid'}</span>
           </button>
 
-          {/* 4. Add Task */}
           <button
             onClick={onOpenAddTask}
             data-testid="quick_action_add_task"
-            aria-label="Lisa aiatöö"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Add garden task' : 'Lisa aiatöö'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(79, 107, 69, 0.12)',
-                color: 'var(--kulv-primary, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Plus size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Lisa aiatöö</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Uus ülesanne</div>
-            </div>
+            <Plus size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Add Task' : 'Lisa aiatöö'}</span>
           </button>
 
-          {/* 5. Add Journal Entry */}
           <button
             onClick={onOpenAddJournal}
             data-testid="quick_action_add_journal"
-            aria-label="Lisa päeviku märge"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Add journal entry' : 'Lisa päeviku märge'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(79, 107, 69, 0.12)',
-                color: 'var(--kulv-primary, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <BookOpen size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Aiapäevik</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>Märge / saagikus</div>
-            </div>
+            <BookOpen size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Garden Journal' : 'Aiapäevik'}</span>
           </button>
 
-          {/* 6. Grow Tent & Ettekasvatus */}
           <button
             onClick={onOpenGrowTent}
             data-testid="quick_action_grow_tent"
-            aria-label="Ettekasvatus ja mikrokliima"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Indoor pre-grow' : 'Ettekasvatus'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(217, 122, 61, 0.12)',
-                color: 'var(--kulv-accent, #D97A3D)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Lightbulb size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>Ettekasvatus</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>VPD & mikrokliima</div>
-            </div>
+            <Lightbulb size={16} color="var(--kulv-accent)" />
+            <span>{language === 'en' ? 'Indoor Pre-grow' : 'Ettekasvatus'}</span>
           </button>
 
-          {/* 7. Print Sowing Schedule & CSV Export */}
           <button
             onClick={() => setShowPrintDialog(true)}
             data-testid="quick_action_print_schedule"
-            aria-label="Külvikava print ja CSV eksport"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Print sowing schedule' : 'Külvikava print'}
+            className="kulv-toolstrip__button"
           >
-            <div
-              style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(79, 107, 69, 0.12)',
-                color: 'var(--kulv-primary, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Printer size={16} />
-            </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>
-                {language === 'en' ? 'Print Schedule' : 'Külvikava print'}
-              </div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                {language === 'en' ? 'PDF & CSV Export' : 'PDF & CSV eksport'}
-              </div>
-            </div>
+            <Printer size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Print Schedule' : 'Külvikava print'}</span>
           </button>
 
-          {/* 8. Printable High-Resolution Garden Binder */}
           <button
             onClick={() => setShowBinderDialog(true)}
             data-testid="quick_action_garden_binder"
-            aria-label="Aia täisköide ja krundipass"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              textAlign: 'left'
-            }}
+            aria-label={language === 'en' ? 'Garden binder dossier' : 'Aiamapp'}
+            className="kulv-toolstrip__button"
           >
+            <FileText size={16} color="var(--kulv-primary)" />
+            <span>{language === 'en' ? 'Garden Binder' : 'Aiamapp'}</span>
+          </button>
+        </div>
+      </section>
+
+      {/* Main Grid: Today's Tasks on Left, Weather Forecast on Right */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+        {/* Today's Garden Tasks Section */}
+        <section
+          id="today-tasks-section"
+          className="kulv-paper-card"
+          style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--kulv-text)', margin: 0 }}>
+              {language === 'en' ? 'Garden Tasks' : 'Aiatööd ja meelespead'}
+            </h2>
+            <button
+              onClick={onOpenAddTask}
+              aria-label={language === 'en' ? 'Add new task' : 'Lisa uus aiatöö'}
+              className="kulv-button kulv-button--secondary"
+              style={{ minHeight: '36px', padding: '6px 12px', fontSize: '0.85rem' }}
+            >
+              <Plus size={14} />
+              <span>{language === 'en' ? 'Add task' : 'Lisa ülesanne'}</span>
+            </button>
+          </div>
+
+          {tasks.length === 0 ? (
             <div
               style={{
-                width: '30px',
-                height: '30px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(79, 107, 69, 0.15)',
-                color: 'var(--kulv-primary, #4F6B45)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
+                backgroundColor: 'var(--kulv-surface-muted)',
+                borderRadius: '12px',
+                padding: '28px 20px',
+                textAlign: 'center',
+                color: 'var(--kulv-text-muted)',
+                fontSize: '0.9rem'
               }}
             >
-              <FileText size={16} />
+              {language === 'en' ? 'All tasks complete! Enjoy the garden 🌿' : 'Kõik tööd tehtud! Naudi aiarahu 🌿'}
             </div>
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>{language === 'en' ? 'Garden Binder' : 'Aiamapp'}</div>
-              <div style={{ fontSize: '10px', color: 'var(--kulv-text-muted, #5F675A)' }}>
-                {language === 'en' ? 'Full Dossier & Map' : 'Krundipass & seltsilised'}
-              </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {tasks.map((task) => (
+                <TaskCard key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
+              ))}
             </div>
-          </button>
-        </div>
-      </div>
+          )}
+        </section>
 
-      {/* Garden Summary Statistics */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        <div
-          onClick={onNavigateToGarden}
-          style={{
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '16px',
-            padding: '20px',
-            boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
-            cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))';
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span
-              style={{
-                fontSize: '12px',
-                color: 'var(--kulv-text-muted, #5F675A)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              Peenrad & kastid
-            </span>
-            <Grid size={18} color="var(--kulv-primary, #4F6B45)" />
-          </div>
-          <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)', marginTop: '8px' }}>
-            {beds.length}
-          </div>
-        </div>
-
-        <div
-          onClick={onNavigateToPlants}
-          style={{
-            backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-            border: '1px solid var(--kulv-border, #C9BFA9)',
-            borderRadius: '16px',
-            padding: '20px',
-            boxShadow: 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))',
-            cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'var(--kulv-shadow-card, 0 4px 12px rgba(0,0,0,0.08))';
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span
-              style={{
-                fontSize: '12px',
-                color: 'var(--kulv-text-muted, #5F675A)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              Istutatud taimi
-            </span>
-            <Sprout size={18} color="var(--kulv-primary, #4F6B45)" />
-          </div>
-          <div style={{ fontSize: '32px', fontWeight: 800, color: 'var(--kulv-primary, #4F6B45)', marginTop: '8px' }}>
-            {totalPlantings}
-          </div>
-        </div>
-      </div>
-
-      {/* Today's Garden Tasks */}
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0 }}>
-            Aiatööd ja meelespead
-          </h2>
-          <button
-            onClick={onOpenAddTask}
-            aria-label="Lisa uus aiatöö"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              background: 'none',
-              border: 'none',
-              color: 'var(--kulv-primary, #4F6B45)',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              padding: '4px 6px'
-            }}
-          >
-            <Plus size={14} />
-            <span>Lisa ülesanne</span>
-          </button>
-        </div>
-
-        {tasks.length === 0 ? (
-          <div
-            style={{
-              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              borderRadius: '12px',
-              padding: '24px',
-              textAlign: 'center',
-              color: 'var(--kulv-text-muted, #5F675A)',
-              fontSize: '13px'
-            }}
-          >
-            Kõik tööd tehtud! Naudi aiarahu 🌿
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} />
-            ))}
-          </div>
-        )}
+        {/* Weather Forecast Section */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
+          <WeatherChart weather={weather} />
+        </section>
       </div>
 
       {/* Seasonal Sowing Print & Export Dialog */}

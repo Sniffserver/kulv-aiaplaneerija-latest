@@ -161,21 +161,7 @@ export const AppShell: React.FC = () => {
                 data-testid={`desktop_nav_item_${tab.id}`}
                 aria-label={tab.label}
                 aria-current={active ? 'page' : undefined}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  backgroundColor: active ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
-                  color: active ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
-                  fontWeight: active ? 700 : 500,
-                  fontSize: '13px',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'background-color 0.15s ease'
-                }}
+                className={`kulv-nav-item ${active ? 'kulv-nav-item--active' : ''}`}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
