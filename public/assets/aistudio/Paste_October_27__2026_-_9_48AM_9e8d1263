@@ -1,0 +1,1133 @@
+Allpool on valmis komponendikomplekt KÜLV-i jaoks: ikoonid, tühjad vaated, esilehe uuendus, puistee/ilmastiku ikoonid ja taimede kataloog. Kood kasutab olemasolevat CSS-muutujate süsteemi ja sobib `HomeModule`, `PlantsModule` ning `GardenCanvas` kõrvale.
+
+## 1. Ikoonide baas
+
+Loo `src/components/icons/IconBase.tsx`:
+
+```tsx
+import type { SVGProps } from 'react';
+
+export type IconProps = SVGProps<SVGSVGElement> & {
+  size?: number;
+};
+
+export function IconBase({
+  size = 20,
+  children,
+  ...props
+}: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+```
+
+Loo `src/components/icons/PlantIcons.tsx`:
+
+```tsx
+import { IconBase, type IconProps } from './IconBase';
+
+export function CarrotIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M14.5 9.5 6 18" />
+      <path d="M14.5 9.5c2.5 0 4-1.5 4-4-2.5 0-4 1.5-4 4Z" />
+      <path d="M6 18c-1.5 1.5-1.5 1.5-1.5 1.5S4.5 19.5 6 18Z" />
+      <path d="M13 11l1 1" />
+      <path d="M11 13l1 1" />
+    </IconBase>
+  );
+}
+
+export function TomatoIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="14" r="7" />
+      <path d="M12 7V4" />
+      <path d="M9 7c1-2 5-2 6 0" />
+    </IconBase>
+  );
+}
+
+export function CucumberIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M17 5c2 2 2 5 0 7l-7 7c-2 2-5 2-7 0s-2-5 0-7l7-7c2-2 5-2 7 0Z" />
+      <path d="M9 13h.01" />
+    </IconBase>
+  );
+}
+
+export function LettuceIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 20c-4 0-7-3-7-7 0-4 3-8 7-8s7 4 7 8c0 4-3 7-7 7Z" />
+      <path d="M12 20V8" />
+      <path d="M8 12c1-1 2-1 4-1s3 0 4 1" />
+    </IconBase>
+  );
+}
+
+export function RadishIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="15" r="5" />
+      <path d="M12 10V6" />
+      <path d="M12 6c-2-2-4-2-5-1 1 2 3 2 5 1Z" />
+      <path d="M12 6c2-2 4-2 5-1-1 2-3 2-5 1Z" />
+    </IconBase>
+  );
+}
+
+export function PeaIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 16c0-6 4-10 10-10" />
+      <path d="M15 6c3 0 5 2 5 5s-2 5-5 5H8" />
+      <circle cx="11" cy="13" r="1" />
+      <circle cx="14" cy="13" r="1" />
+    </IconBase>
+  );
+}
+
+export function BeanIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 17c-2-4 0-9 4-11 4-2 8 0 8 4 0 5-5 9-9 9-2 0-3-1-3-2Z" />
+      <path d="M10 14h.01" />
+      <path d="M13 10h.01" />
+    </IconBase>
+  );
+}
+
+export function OnionIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 8c4 0 7 3 7 7s-3 6-7 6-7-2-7-6 3-7 7-7Z" />
+      <path d="M12 8V4" />
+      <path d="M12 4c-1-1-2-1-3 0 1 1 2 1 3 0Z" />
+      <path d="M12 4c1-1 2-1 3 0-1 1-2 1-3 0Z" />
+    </IconBase>
+  );
+}
+
+export function GarlicIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 9c4 0 6 3 6 6s-2 5-6 5-6-2-6-5 2-6 6-6Z" />
+      <path d="M12 9V5" />
+      <path d="M9 8c-1-2 0-4 3-4s4 2 3 4" />
+    </IconBase>
+  );
+}
+
+export function StrawberryIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 20c-4 0-7-3-7-7 0-3 3-5 7-5s7 2 7 5c0 4-3 7-7 7Z" />
+      <path d="M12 8V5" />
+      <path d="M9 5c1-2 5-2 6 0" />
+      <path d="M10 13h.01" />
+      <path d="M14 13h.01" />
+    </IconBase>
+  );
+}
+
+export function BasilIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21V9" />
+      <path d="M12 12c-3 0-5-2-5-5 3 0 5 2 5 5Z" />
+      <path d="M12 12c3 0 5-2 5-5-3 0-5 2-5 5Z" />
+      <path d="M12 6c-1-2 0-4 2-4 0 2-1 3-2 4Z" />
+    </IconBase>
+  );
+}
+
+export function PotatoIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 10c0-3 3-5 6-5s6 2 6 5-2 7-6 7-6-4-6-7Z" />
+      <path d="M10 12h.01" />
+      <path d="M14 14h.01" />
+      <path d="M12 9h.01" />
+    </IconBase>
+  );
+}
+```
+
+## 2. Puistee ja ilmaikoonid
+
+Loo `src/components/icons/GardenIcons.tsx`:
+
+```tsx
+import { IconBase, type IconProps } from './IconBase';
+
+export function RaisedBedIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3" y="9" width="18" height="10" rx="2" />
+      <path d="M3 13h18" />
+      <path d="M8 13v6" />
+      <path d="M16 13v6" />
+    </IconBase>
+  );
+}
+
+export function GreenhouseIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3 20V11l9-7 9 7v9" />
+      <path d="M3 20h18" />
+      <path d="M12 4v16" />
+      <path d="M7 20v-7" />
+      <path d="M17 20v-7" />
+    </IconBase>
+  );
+}
+
+export function GrowTentIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <path d="M5 8h14" />
+      <path d="M12 12v5" />
+      <path d="M9 15c1-2 5-2 6 0" />
+    </IconBase>
+  );
+}
+
+export function ContainerIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M6 9h12l-1 11H7L6 9Z" />
+      <path d="M9 9V6a3 3 0 0 1 6 0v3" />
+      <path d="M12 13v3" />
+    </IconBase>
+  );
+}
+
+export function SoilIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3 16h18" />
+      <path d="M5 16c0-3 3-5 7-5s7 2 7 5" />
+      <path d="M9 8c1-2 3-2 4 0" />
+    </IconBase>
+  );
+}
+
+export function CompostIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 14a7 7 0 0 1 14 0" />
+      <path d="M3 17h18" />
+      <path d="M12 4v4" />
+      <path d="M9 6c1-2 5-2 6 0" />
+    </IconBase>
+  );
+}
+
+export function WateringIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M6 10h8l3 4v6H6v-6l0-4Z" />
+      <path d="M14 10l4-4" />
+      <path d="M18 6h2" />
+      <path d="M18 6v2" />
+    </IconBase>
+  );
+}
+
+export function SunIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2" />
+      <path d="M12 19v2" />
+      <path d="M3 12h2" />
+      <path d="M19 12h2" />
+      <path d="M6 6l1.5 1.5" />
+      <path d="M16.5 16.5 18 18" />
+      <path d="M18 6l-1.5 1.5" />
+      <path d="M7.5 16.5 6 18" />
+    </IconBase>
+  );
+}
+
+export function ShadeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 17h16" />
+      <path d="M12 17V7" />
+      <path d="M12 7c-4 0-7-2-7-4 3 0 6 1 7 4Z" />
+      <path d="M12 7c4 0 7-2 7-4-3 0-6 1-7 4Z" />
+    </IconBase>
+  );
+}
+
+export function FenceIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 20V6" />
+      <path d="M12 20V6" />
+      <path d="M19 20V6" />
+      <path d="M3 10h18" />
+      <path d="M3 15h18" />
+    </IconBase>
+  );
+}
+
+export function PathIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M8 21c0-6 8-6 8-12 0-3-2-5-4-6" />
+      <path d="M16 21c0-6-8-6-8-12 0-3 2-5 4-6" />
+    </IconBase>
+  );
+}
+
+export function PlantSupportIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 21V4" />
+      <path d="M8 8h8" />
+      <path d="M8 13h8" />
+      <path d="M12 13c-2 0-4-1-4-3 2 0 4 1 4 3Z" />
+      <path d="M12 13c2 0 4-1 4-3-2 0-4 1-4 3Z" />
+    </IconBase>
+  );
+}
+```
+
+Loo `src/components/icons/WeatherIcons.tsx`:
+
+```tsx
+import { IconBase, type IconProps } from './IconBase';
+
+export function ClearSkyIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2" />
+      <path d="M12 19v2" />
+      <path d="M3 12h2" />
+      <path d="M19 12h2" />
+      <path d="M6 6l1.5 1.5" />
+      <path d="M16.5 16.5 18 18" />
+      <path d="M18 6l-1.5 1.5" />
+      <path d="M7.5 16.5 6 18" />
+    </IconBase>
+  );
+}
+
+export function PartlyCloudyIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 2v1" />
+      <path d="M3 8H2" />
+      <path d="M4.5 4.5 3.8 3.8" />
+      <path d="M7 17a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 17H7Z" />
+    </IconBase>
+  );
+}
+
+export function CloudyIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 18H7Z" />
+    </IconBase>
+  );
+}
+
+export function RainIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 15H7Z" />
+      <path d="M9 18v2" />
+      <path d="M13 18v2" />
+      <path d="M17 18v2" />
+    </IconBase>
+  );
+}
+
+export function LightRainIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 15H7Z" />
+      <path d="M10 18v1" />
+      <path d="M14 18v1" />
+    </IconBase>
+  );
+}
+
+export function ThunderstormIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 14a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 14H7Z" />
+      <path d="M13 14l-3 4h3l-2 4" />
+    </IconBase>
+  );
+}
+
+export function SnowIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 15a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 15H7Z" />
+      <path d="M9 19h.01" />
+      <path d="M13 19h.01" />
+      <path d="M17 19h.01" />
+    </IconBase>
+  );
+}
+
+export function WindIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3 8h11a3 3 0 1 0-3-3" />
+      <path d="M3 13h15a3 3 0 1 1-3 3" />
+      <path d="M3 18h8" />
+    </IconBase>
+  );
+}
+
+export function FogIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 13a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 13H7Z" />
+      <path d="M4 17h16" />
+      <path d="M6 20h12" />
+    </IconBase>
+  );
+}
+
+export function FrostIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 3v18" />
+      <path d="M4 7l16 10" />
+      <path d="M20 7 4 17" />
+    </IconBase>
+  );
+}
+
+export function HeatIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v3" />
+      <path d="M12 19v3" />
+      <path d="M2 12h3" />
+      <path d="M19 12h3" />
+    </IconBase>
+  );
+}
+
+export function DewIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z" />
+      <path d="M9 14a3 3 0 0 0 3 3" />
+    </IconBase>
+  );
+}
+```
+
+## 3. Tühjade vaadete komponent
+
+Loo `src/components/common/EmptyState.tsx`:
+
+```tsx
+import type { ReactNode } from 'react';
+
+type EmptyStateProps = {
+  illustration: ReactNode;
+  title: string;
+  description: string;
+  actionLabel?: string;
+  onAction?: () => void;
+  testId?: string;
+};
+
+export function EmptyState({
+  illustration,
+  title,
+  description,
+  actionLabel,
+  onAction,
+  testId = 'empty-state'
+}: EmptyStateProps) {
+  return (
+    <section className="kulv-empty-state" data-testid={testId}>
+      <div className="kulv-empty-state__illustration" aria-hidden="true">
+        {illustration}
+      </div>
+
+      <h2 className="kulv-empty-state__title">{title}</h2>
+      <p className="kulv-empty-state__description">{description}</p>
+
+      {actionLabel && onAction && (
+        <button
+          type="button"
+          className="kulv-button kulv-button--primary"
+          onClick={onAction}
+        >
+          {actionLabel}
+        </button>
+      )}
+    </section>
+  );
+}
+```
+
+Loo `src/components/common/EmptyStateIllustrations.tsx`:
+
+```tsx
+export function GardenEmptyIllustration() {
+  return (
+    <svg viewBox="0 0 240 160" role="presentation" aria-hidden="true">
+      <rect x="60" y="80" width="120" height="48" rx="8" fill="var(--kulv-surface-muted)" />
+      <rect x="72" y="92" width="96" height="24" rx="4" fill="#79634F" />
+      <path d="M120 92v-16" stroke="var(--kulv-primary)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M120 76c-8-4-14-2-16 2 5 3 11 2 16-2Z" fill="var(--kulv-primary)" />
+      <path d="M120 76c8-4 14-2 16 2-5 3-11 2-16-2Z" fill="var(--kulv-primary)" />
+      <circle cx="96" cy="112" r="4" fill="var(--kulv-accent)" />
+      <circle cx="144" cy="112" r="4" fill="var(--kulv-accent)" />
+    </svg>
+  );
+}
+
+export function PlantsEmptyIllustration() {
+  return (
+    <svg viewBox="0 0 240 160" role="presentation" aria-hidden="true">
+      <rect x="70" y="80" width="100" height="40" rx="8" fill="var(--kulv-surface-muted)" />
+      <rect x="82" y="90" width="24" height="20" rx="4" fill="var(--kulv-bg)" />
+      <rect x="112" y="90" width="24" height="20" rx="4" fill="var(--kulv-bg)" />
+      <rect x="142" y="90" width="24" height="20" rx="4" fill="var(--kulv-bg)" />
+      <path d="M94 90v-12" stroke="var(--kulv-primary)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M94 78c-6-3-10-1-11 2 3 2 8 1 11-2Z" fill="var(--kulv-primary)" />
+      <circle cx="166" cy="72" r="5" fill="var(--kulv-accent)" />
+    </svg>
+  );
+}
+
+export function CalendarEmptyIllustration() {
+  return (
+    <svg viewBox="0 0 240 160" role="presentation" aria-hidden="true">
+      <rect x="70" y="50" width="100" height="70" rx="10" fill="var(--kulv-surface)" />
+      <rect x="70" y="50" width="100" height="20" rx="10" fill="var(--kulv-primary-soft)" />
+      {[0, 1, 2, 3].map((row) =>
+        [0, 1, 2, 3].map((column) => (
+          <rect
+            key={`${row}-${column}`}
+            x={82 + column * 22}
+            y={80 + row * 10}
+            width="16"
+            height="6"
+            rx="3"
+            fill="var(--kulv-surface-muted)"
+          />
+        ))
+      )}
+      <circle cx="170" cy="90" r="6" fill="var(--kulv-accent)" />
+    </svg>
+  );
+}
+
+export function JournalEmptyIllustration() {
+  return (
+    <svg viewBox="0 0 240 160" role="presentation" aria-hidden="true">
+      <rect x="75" y="55" width="90" height="60" rx="8" fill="var(--kulv-surface)" />
+      <path d="M120 55v60" stroke="var(--kulv-border)" strokeWidth="2" />
+      <path d="M90 75h20M90 90h20M130 75h20M130 90h20" stroke="var(--kulv-border)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M170 90c10-10 20-8 22 0-8 5-17 4-22 0Z" fill="var(--kulv-primary)" />
+      <rect x="158" y="55" width="8" height="24" rx="4" fill="var(--kulv-accent)" />
+    </svg>
+  );
+}
+
+export function OfflineIllustration() {
+  return (
+    <svg viewBox="0 0 240 160" role="presentation" aria-hidden="true">
+      <path d="M90 50c0-12 10-22 22-22s22 10 22 22" stroke="var(--kulv-border)" strokeWidth="3" strokeLinecap="round" fill="none" />
+      <path d="M120 100V70" stroke="var(--kulv-primary)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M120 70c-9-5-16-2-18 3 6 4 13 2 18-3Z" fill="var(--kulv-primary)" />
+      <path d="M120 70c9-5 16-2 18 3-6 4-13 2-18-3Z" fill="var(--kulv-primary)" />
+      <rect x="100" y="100" width="40" height="28" rx="8" fill="var(--kulv-surface-muted)" />
+      <rect x="150" y="88" width="36" height="30" rx="6" fill="var(--kulv-surface)" />
+      <rect x="158" y="84" width="6" height="18" rx="3" fill="var(--kulv-accent)" />
+    </svg>
+  );
+}
+```
+
+## 4. CSS
+
+Lisa `src/index.css`:
+
+```css
+.kulv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px 24px;
+  border-radius: 20px;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+  text-align: center;
+}
+
+.kulv-empty-state__illustration {
+  width: min(260px, 100%);
+}
+
+.kulv-empty-state__illustration svg {
+  width: 100%;
+  height: auto;
+}
+
+.kulv-empty-state__title {
+  margin: 0;
+  color: var(--kulv-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.kulv-empty-state__description {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--kulv-text-muted);
+  line-height: 1.5;
+}
+
+.kulv-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.kulv-button--primary {
+  background: var(--kulv-primary);
+  color: var(--kulv-surface);
+}
+
+.kulv-button--primary:hover {
+  background: var(--kulv-primary-strong);
+}
+
+.kulv-button:focus-visible {
+  outline: 3px solid var(--kulv-focus);
+  outline-offset: 2px;
+}
+
+.kulv-icon {
+  color: var(--kulv-primary);
+}
+
+.kulv-icon--accent {
+  color: var(--kulv-accent-strong);
+}
+```
+
+## 5. Esilehe visuaalne uuendus
+
+Loo `src/components/home/HomeOverview.tsx`:
+
+```tsx
+import { RaisedBedIcon, SunIcon, WateringIcon } from '../icons/GardenIcons';
+
+type HomeOverviewProps = {
+  bedCount: number;
+  plantCount: number;
+  taskCount: number;
+  temperature?: number;
+  weatherSummary?: string;
+  onOpenGarden: () => void;
+  onOpenTasks: () => void;
+};
+
+export function HomeOverview({
+  bedCount,
+  plantCount,
+  taskCount,
+  temperature,
+  weatherSummary,
+  onOpenGarden,
+  onOpenTasks
+}: HomeOverviewProps) {
+  return (
+    <div className="kulv-home-overview">
+      <section className="kulv-card kulv-card--focus">
+        <div className="kulv-card__header">
+          <h2>Tänane fookus</h2>
+          <span className="kulv-badge kulv-badge--accent">
+            {taskCount} ülesannet
+          </span>
+        </div>
+
+        <p className="kulv-card__description">
+          {taskCount > 0
+            ? 'Alusta tähtsaimast aiatoimest.'
+            : 'Täna pole ühtegi ülesannet. Planeeri järgmist külvit.'}
+        </p>
+
+        <button
+          type="button"
+          className="kulv-button kulv-button--primary"
+          onClick={onOpenTasks}
+        >
+          <WateringIcon size={18} />
+          Ava ülesanded
+        </button>
+      </section>
+
+      <section className="kulv-card">
+        <div className="kulv-card__header">
+          <h2>Aed</h2>
+          <RaisedBedIcon className="kulv-icon" size={20} />
+        </div>
+
+        <dl className="kulv-stat-grid">
+          <div>
+            <dt>Peenrad</dt>
+            <dd>{bedCount}</dd>
+          </div>
+          <div>
+            <dt>Taimed</dt>
+            <dd>{plantCount}</dd>
+          </div>
+        </dl>
+
+        <button
+          type="button"
+          className="kulv-button kulv-button--secondary"
+          onClick={onOpenGarden}
+        >
+          Ava aiaplaan
+        </button>
+      </section>
+
+      <section className="kulv-card kulv-card--muted">
+        <div className="kulv-card__header">
+          <h2>Ilma</h2>
+          <SunIcon className="kulv-icon--accent" size={20} />
+        </div>
+
+        <p className="kulv-card__description">
+          {temperature !== undefined
+            ? `${temperature}°C · ${weatherSummary ?? 'Ilmaandmed puuduvad'}`
+            : 'Ilmaandmed pole veel saadaval.'}
+        </p>
+      </section>
+    </div>
+  );
+}
+```
+
+Lisa CSS:
+
+```css
+.kulv-home-overview {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.kulv-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+}
+
+.kulv-card--muted {
+  background: var(--kulv-surface-muted);
+}
+
+.kulv-card--focus {
+  border-color: var(--kulv-primary);
+  box-shadow: inset 0 0 0 1px var(--kulv-primary-soft);
+}
+
+.kulv-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kulv-card__header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--kulv-text);
+}
+
+.kulv-card__description {
+  margin: 0;
+  color: var(--kulv-text-muted);
+  line-height: 1.5;
+}
+
+.kulv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.kulv-stat-grid dt {
+  color: var(--kulv-text-muted);
+  font-size: 0.8rem;
+}
+
+.kulv-stat-grid dd {
+  margin: 4px 0 0;
+  color: var(--kulv-text);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.kulv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.kulv-badge--accent {
+  background: var(--kulv-accent-soft);
+  color: var(--kulv-accent-strong);
+}
+
+.kulv-button--secondary {
+  background: var(--kulv-primary-soft);
+  color: var(--kulv-primary-strong);
+  border-color: transparent;
+}
+
+.kulv-button--secondary:hover {
+  background: var(--kulv-primary);
+  color: var(--kulv-surface);
+}
+```
+
+## 6. Taimede kataloogi vaade
+
+Loo `src/components/plants/PlantCard.tsx`:
+
+```tsx
+import type { Plant } from '../../types';
+
+type PlantCardProps = {
+  plant: Plant;
+  onSelect: (plant: Plant) => void;
+};
+
+export function PlantCard({ plant, onSelect }: PlantCardProps) {
+  return (
+    <button
+      type="button"
+      className="kulv-plant-card"
+      onClick={() => onSelect(plant)}
+      aria-label={`Ava taime ${plant.name} üksikasjad`}
+    >
+      <span className="kulv-plant-card__icon" aria-hidden="true">
+        {plant.icon}
+      </span>
+
+      <span className="kulv-plant-card__body">
+        <span className="kulv-plant-card__name">{plant.name}</span>
+        <span className="kulv-plant-card__meta">
+          {plant.family} · {plant.daysToHarvest} päeva
+        </span>
+      </span>
+
+      <span className="kulv-plant-card__chevron" aria-hidden="true">
+        →
+      </span>
+    </button>
+  );
+}
+```
+
+Loo `src/components/plants/PlantsModule.tsx`:
+
+```tsx
+import { useMemo, useState } from 'react';
+import type { Plant } from '../../types';
+import { PlantCard } from './PlantCard';
+import { EmptyState } from '../common/EmptyState';
+import { PlantsEmptyIllustration } from '../common/EmptyStateIllustrations';
+
+type PlantsModuleProps = {
+  plants: Plant[];
+  onSelectPlant: (plant: Plant) => void;
+  onOpenAddPlant: () => void;
+};
+
+export function PlantsModule({
+  plants,
+  onSelectPlant,
+  onOpenAddPlant
+}: PlantsModuleProps) {
+  const [query, setQuery] = useState('');
+  const [selectedFamily, setSelectedFamily] = useState<string>('all');
+
+  const families = useMemo(() => {
+    return Array.from(new Set(plants.map((plant) => plant.family))).sort();
+  }, [plants]);
+
+  const filteredPlants = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return plants.filter((plant) => {
+      const matchesQuery =
+        !normalizedQuery ||
+        plant.name.toLowerCase().includes(normalizedQuery) ||
+        plant.family.toLowerCase().includes(normalizedQuery);
+
+      const matchesFamily =
+        selectedFamily === 'all' || plant.family === selectedFamily;
+
+      return matchesQuery && matchesFamily;
+    });
+  }, [plants, query, selectedFamily]);
+
+  return (
+    <section className="kulv-plants-module" aria-labelledby="plants-heading">
+      <header className="kulv-page-header">
+        <div>
+          <h1 id="plants-heading">Taimed</h1>
+          <p className="kulv-page-subtitle">
+            Vali taim, et näha kasvatusjuhiseid ja lisada see aeda.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="kulv-button kulv-button--primary"
+          onClick={onOpenAddPlant}
+        >
+          Lisa taim
+        </button>
+      </header>
+
+      <div className="kulv-filter-bar">
+        <label className="kulv-field">
+          <span className="kulv-field__label">Otsi</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Näiteks porgand või ristõielised"
+          />
+        </label>
+
+        <label className="kulv-field">
+          <span className="kulv-field__label">Perelikond</span>
+          <select
+            value={selectedFamily}
+            onChange={(event) => setSelectedFamily(event.target.value)}
+          >
+            <option value="all">Kõik</option>
+            {families.map((family) => (
+              <option key={family} value={family}>
+                {family}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {filteredPlants.length === 0 ? (
+        <EmptyState
+          illustration={<PlantsEmptyIllustration />}
+          title="Taimede kataloog on tühi"
+          description="Lisa esimene taim või muuda otsingut, et näha sobivaid taimeid."
+          actionLabel="Lisa taim"
+          onAction={onOpenAddPlant}
+          testId="plants-empty-state"
+        />
+      ) : (
+        <div className="kulv-plant-grid">
+          {filteredPlants.map((plant) => (
+            <PlantCard
+              key={plant.id}
+              plant={plant}
+              onSelect={onSelectPlant}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+```
+
+Lisa CSS:
+
+```css
+.kulv-plants-module {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.kulv-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kulv-page-header h1 {
+  margin: 0;
+  color: var(--kulv-text);
+}
+
+.kulv-page-subtitle {
+  margin: 4px 0 0;
+  color: var(--kulv-text-muted);
+}
+
+.kulv-filter-bar {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.kulv-plant-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.kulv-plant-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 76px;
+  padding: 14px;
+  text-align: left;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.kulv-plant-card:hover {
+  border-color: var(--kulv-primary);
+  transform: translateY(-1px);
+}
+
+.kulv-plant-card:focus-visible {
+  outline: 3px solid var(--kulv-focus);
+  outline-offset: 2px;
+}
+
+.kulv-plant-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--kulv-primary-soft);
+  color: var(--kulv-primary-strong);
+}
+
+.kulv-plant-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kulv-plant-card__name {
+  color: var(--kulv-text);
+  font-weight: 700;
+}
+
+.kulv-plant-card__meta {
+  color: var(--kulv-text-muted);
+  font-size: 0.8rem;
+}
+
+.kulv-plant-card__chevron {
+  margin-left: auto;
+  color: var(--kulv-text-muted);
+}
+```
+
+## 7. Kasutamine
+
+```tsx
+import { PlantsModule } from './components/plants/PlantsModule';
+import { EmptyState } from './components/common/EmptyState';
+import { GardenEmptyIllustration } from './components/common/EmptyStateIllustrations';
+import { RaisedBedIcon } from './components/icons/GardenIcons';
+
+{plants.length === 0 ? (
+  <EmptyState
+    illustration={<PlantsEmptyIllustration />}
+    title="Lisa esimene taim"
+    description="Vali taim kataloogist või loo oma kohandatud taim."
+    actionLabel="Lisa taim"
+    onAction={() => setShowAddPlant(true)}
+  />
+) : (
+  <PlantsModule
+    plants={plants}
+    onSelectPlant={setSelectedPlantDetail}
+    onOpenAddPlant={() => setShowAddPlant(true)}
+  />
+)}
+
+{beds.length === 0 ? (
+  <EmptyState
+    illustration={<GardenEmptyIllustration />}
+    title="Aiaplaan on tühi"
+    description="Lisa esimene peenar ja alusta oma aia planeerimist."
+    actionLabel="Lisa peenar"
+    onAction={() => setShowAddBed(true)}
+  />
+) : (
+  <GardenCanvasScreen onOpenAddBed={() => setShowAddBed(true)} />
+)}
+```
+
+## Järgmine samm
+
+Alusta kolme failiga: `IconBase.tsx`, `EmptyState.tsx` ja `EmptyStateIllustrations.tsx`. Seejärel asenda ainult üks tühi vaade — taimede kataloog — ja kontrolli `npm run lint && npm test && npm run build`. Alles seejärel lisa esilehe kaardid ning puistee/ilmastiku ikoonid.
+
+KÜLV-i olemasolev modulaarne struktuur toetab seda hästi: `HomeModule`, `PlantsModule`, `PlantCard`, `GardenCanvas` ja `QuickActions` on juba eraldi komponentidena kavandatud.

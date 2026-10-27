@@ -17,6 +17,7 @@ export interface Plant {
   rowSpacingCm: number;
   depthCm: number;
   daysToMaturity: number;
+  daysToHarvest?: number;
   sunNeed: 'full' | 'partial' | 'shade';
   sunHoursMin: number;
   waterNeed: 'low' | 'medium' | 'high';

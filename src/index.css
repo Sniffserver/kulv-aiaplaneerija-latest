@@ -24,9 +24,12 @@
   --kulv-border-hover: #70856a;
   --kulv-primary: #385a40;
   --kulv-primary-hover: #294733;
+  --kulv-primary-strong: #243d2b;
+  --kulv-primary-soft: #e2ece3;
   --kulv-button-text: #ffffff;
   --kulv-focus: #385a40;
   --kulv-accent: #c76d3a;
+  --kulv-accent-strong: #9e4c1f;
   --kulv-accent-soft: #f4d5c2;
   --kulv-success: #276749;
   --kulv-warning: #854d0e;
@@ -58,9 +61,12 @@
   --kulv-border-hover: #5a735c;
   --kulv-primary: #a7c080;
   --kulv-primary-hover: #b8d49a;
+  --kulv-primary-strong: #c5e0a5;
+  --kulv-primary-soft: #233526;
   --kulv-button-text: #131914;
   --kulv-focus: #c5e0a5;
   --kulv-accent: #e59b6e;
+  --kulv-accent-strong: #f0b58e;
   --kulv-accent-soft: #3d281e;
   --kulv-success: #a7c080;
   --kulv-warning: #e5bd70;
@@ -492,3 +498,332 @@ body {
   gap: 10px;
   color: var(--kulv-text-muted, #5f675a);
 }
+
+/* ==========================================================================
+   KÜLV Design System Components & Utilities
+   ========================================================================== */
+
+/* Empty States */
+.kulv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px 24px;
+  border-radius: 20px;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+  text-align: center;
+}
+
+.kulv-empty-state__illustration {
+  width: min(260px, 100%);
+}
+
+.kulv-empty-state__illustration svg {
+  width: 100%;
+  height: auto;
+}
+
+.kulv-empty-state__title {
+  margin: 0;
+  color: var(--kulv-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.kulv-empty-state__description {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--kulv-text-muted);
+  line-height: 1.5;
+}
+
+/* Buttons */
+.kulv-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.kulv-button:active {
+  transform: scale(0.98);
+}
+
+.kulv-button--primary {
+  background: var(--kulv-primary);
+  color: var(--kulv-button-text, #ffffff);
+}
+
+.kulv-button--primary:hover {
+  background: var(--kulv-primary-hover, #294733);
+}
+
+.kulv-button--secondary {
+  background: var(--kulv-primary-soft, #e2ece3);
+  color: var(--kulv-primary-strong, #243d2b);
+  border-color: transparent;
+}
+
+.kulv-button--secondary:hover {
+  background: var(--kulv-primary);
+  color: var(--kulv-button-text, #ffffff);
+}
+
+.kulv-button:focus-visible {
+  outline: 3px solid var(--kulv-focus);
+  outline-offset: 2px;
+}
+
+/* Icons */
+.kulv-icon {
+  color: var(--kulv-primary);
+}
+
+.kulv-icon--accent {
+  color: var(--kulv-accent-strong, #9e4c1f);
+}
+
+.kulv-icon-tile {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--kulv-primary-soft, #e2ece3);
+  color: var(--kulv-primary-strong, #243d2b);
+  flex-shrink: 0;
+}
+
+.kulv-icon-tile--accent {
+  background: var(--kulv-accent-soft, #f4d5c2);
+  color: var(--kulv-accent-strong, #9e4c1f);
+}
+
+/* Home Overview & Cards */
+.kulv-home-overview {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.kulv-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+  box-shadow: var(--kulv-shadow-card);
+}
+
+.kulv-card--muted {
+  background: var(--kulv-surface-muted);
+}
+
+.kulv-card--focus {
+  border-color: var(--kulv-primary);
+  box-shadow: inset 0 0 0 1px var(--kulv-primary-soft, rgba(56, 90, 64, 0.12));
+}
+
+.kulv-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kulv-card__header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--kulv-text);
+}
+
+.kulv-card__description {
+  margin: 0;
+  color: var(--kulv-text-muted);
+  line-height: 1.5;
+}
+
+.kulv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.kulv-stat-grid dt {
+  color: var(--kulv-text-muted);
+  font-size: 0.8rem;
+}
+
+.kulv-stat-grid dd {
+  margin: 4px 0 0;
+  color: var(--kulv-text);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.kulv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.kulv-badge--accent {
+  background: var(--kulv-accent-soft);
+  color: var(--kulv-accent-strong, #9e4c1f);
+}
+
+/* Plants Module & Catalog */
+.kulv-plants-module {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.kulv-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kulv-page-header h1 {
+  margin: 0;
+  color: var(--kulv-text);
+  font-family: var(--kulv-font-display, 'Fraunces', Georgia, serif);
+  font-size: 1.75rem;
+}
+
+.kulv-page-subtitle {
+  margin: 4px 0 0;
+  color: var(--kulv-text-muted);
+}
+
+.kulv-filter-bar {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.kulv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kulv-field__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--kulv-text);
+}
+
+.kulv-field input,
+.kulv-field select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--kulv-border);
+  background: var(--kulv-surface);
+  color: var(--kulv-text);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kulv-field input:focus,
+.kulv-field select:focus {
+  border-color: var(--kulv-primary);
+  box-shadow: 0 0 0 3px var(--kulv-primary-soft, rgba(56, 90, 64, 0.15));
+}
+
+.kulv-plant-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.kulv-plant-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 76px;
+  padding: 14px;
+  text-align: left;
+  background: var(--kulv-surface);
+  border: 1px solid var(--kulv-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--kulv-shadow-card);
+}
+
+.kulv-plant-card:hover {
+  border-color: var(--kulv-primary);
+  transform: translateY(-1px);
+}
+
+.kulv-plant-card:focus-visible {
+  outline: 3px solid var(--kulv-focus);
+  outline-offset: 2px;
+}
+
+.kulv-plant-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--kulv-primary-soft, #e2ece3);
+  color: var(--kulv-primary-strong, #243d2b);
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.kulv-plant-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.kulv-plant-card__name {
+  color: var(--kulv-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kulv-plant-card__meta {
+  color: var(--kulv-text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kulv-plant-card__chevron {
+  margin-left: auto;
+  color: var(--kulv-text-muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
