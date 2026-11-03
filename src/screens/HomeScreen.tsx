@@ -147,29 +147,64 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       )}
 
-      {/* Header Welcome Section */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--kulv-border,#C9BFA9)]">
-        <div>
-          <div className="text-xs uppercase font-bold tracking-wider text-[var(--kulv-primary,#4F6B45)] mb-1">
-            {formattedDate}
+      {/* Illustrated Welcome Hero Banner */}
+      <header className="p-5 sm:p-6 rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--kulv-primary,#4F6B45)] mb-2">
+            <CalendarIcon size={14} className="text-[var(--kulv-primary,#4F6B45)] shrink-0" />
+            <span>{formattedDate}</span>
+            <span aria-hidden="true" className="text-[var(--kulv-border,#C9BFA9)]">·</span>
+            <span className="text-[var(--kulv-text-muted,#5F675A)] font-normal normal-case">{weather.locationName}</span>
           </div>
+
           <h1 className="font-serif-display text-2xl sm:text-3xl font-bold text-[var(--kulv-text,#2A2E24)] m-0 tracking-tight">
             {isEn ? 'Welcome to the Garden' : 'Tere tulemast aeda!'}
           </h1>
-          <p className="text-sm text-[var(--kulv-text-muted,#5F675A)] mt-1 mb-0">
-            {isEn ? 'Nordic botanical field notebook' : 'Põhjamaine aiaplaneerija'} · {weather.locationName}
+          <p className="text-sm text-[var(--kulv-text-muted,#5F675A)] mt-1.5 mb-4 max-w-xl leading-relaxed">
+            {isEn
+              ? 'Nordic botanical field notebook · Local-first companion for raised beds, weather notes, and crop succession.'
+              : 'Põhjamaine aiaplaneerija ja märkmik · Kohalik abiline peenarde, ilmamärkmete ja külvikorra planeerimisel.'}
           </p>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={onOpenAddTask}
+              className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors cursor-pointer shadow-xs"
+            >
+              <Plus size={16} />
+              <span>{isEn ? 'Add Task' : 'Lisa ülesanne'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowBinderDialog(true)}
+              className="min-h-[44px] px-3.5 py-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs sm:text-sm font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] flex items-center gap-2 transition-colors cursor-pointer"
+            >
+              <Printer size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+              <span>{isEn ? 'Garden Binder Sheet' : 'Prindi aiavihik'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowPrintDialog(true)}
+              className="min-h-[44px] px-3.5 py-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs sm:text-sm font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] flex items-center gap-2 transition-colors cursor-pointer"
+            >
+              <FileText size={16} className="text-[var(--kulv-accent,#E08A3C)]" />
+              <span>{isEn ? 'Sowing Sheet' : 'Külvileht'}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onOpenAddTask}
-            className="min-h-[44px] px-4 py-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors cursor-pointer"
-          >
-            <Plus size={16} />
-            <span>{isEn ? 'Add Task' : 'Lisa ülesanne'}</span>
-          </button>
+        <div className="flex items-center justify-center shrink-0">
+          <div className="relative p-2 rounded-2xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs">
+            <img
+              src="/assets/aistudio/lisa-p_evik-kanne-m_rkmik-notebook-garden-aiaplaneerija_9c90ce5a.jpeg"
+              alt=""
+              aria-hidden="true"
+              className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-xl"
+            />
+          </div>
         </div>
       </header>
 
@@ -300,8 +335,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           {tasks.length === 0 ? (
-            <div className="p-6 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] text-center text-sm text-[var(--kulv-text-muted,#5F675A)]">
-              {isEn ? 'All tasks complete! Enjoy the garden 🌿' : 'Kõik tööd tehtud! Naudi aiarahu 🌿'}
+            <div className="p-6 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] text-center text-sm text-[var(--kulv-text-muted,#5F675A)] flex flex-col items-center justify-center gap-2.5">
+              <img
+                src="/assets/aistudio/sucess-illustration_364d8287.jpeg"
+                alt=""
+                aria-hidden="true"
+                className="w-14 h-14 object-contain rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-1 shadow-xs"
+              />
+              <p className="font-medium m-0">
+                {isEn ? 'All tasks complete! Enjoy the garden 🌿' : 'Kõik tööd tehtud! Naudi aiarahu 🌿'}
+              </p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -314,9 +357,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* Sowing Calendar Preview */}
           <div className="mt-2 pt-4 border-t border-[var(--kulv-border,#C9BFA9)]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--kulv-text-muted,#5F675A)] m-0">
-                {isEn ? 'Upcoming Sowing Windows' : 'Eelseisvad külviajad'}
-              </h3>
+              <div className="flex items-center gap-2">
+                <img
+                  src="/assets/aistudio/seeds-inventory_b3298eca.jpeg"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-7 h-7 object-contain rounded-lg border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] p-0.5"
+                />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--kulv-text-muted,#5F675A)] m-0">
+                  {isEn ? 'Upcoming Sowing Windows' : 'Eelseisvad külviajad'}
+                </h3>
+              </div>
               <button
                 type="button"
                 onClick={onNavigateToCalendar}
@@ -368,10 +419,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
 
             {recentNotes.length === 0 ? (
-              <div className="text-center py-4 text-xs text-[var(--kulv-text-muted,#5F675A)] bg-[var(--kulv-surface-muted,#EFE6D4)] rounded-xl p-4">
-                {isEn
-                  ? 'No journal entries logged yet. Record your first garden observation!'
-                  : 'Päevikus pole veel märkmeid. Pane kirja esimene aiavaatlus!'}
+              <div className="text-center py-5 text-xs text-[var(--kulv-text-muted,#5F675A)] bg-[var(--kulv-surface-muted,#EFE6D4)] rounded-xl p-4 flex flex-col items-center justify-center gap-2">
+                <img
+                  src="/assets/aistudio/empty-state-p_evik_600dc83a.jpeg"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-14 h-14 object-contain rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-1 shadow-xs"
+                />
+                <p className="m-0">
+                  {isEn
+                    ? 'No journal entries logged yet. Record your first garden observation!'
+                    : 'Päevikus pole veel märkmeid. Pane kirja esimene aiavaatlus!'}
+                </p>
               </div>
             ) : (
               <div className="flex flex-col gap-2">

@@ -106,7 +106,7 @@ export const AppShell: React.FC = () => {
         display: 'flex',
         flexDirection: 'row',
         minHeight: '100vh',
-        backgroundColor: 'var(--kulv-bg, #F9F6F0)',
+        backgroundColor: 'var(--kulv-bg, #F7F1E8)',
         color: 'var(--kulv-text, #2A2E24)'
       }}
     >

@@ -37,32 +37,50 @@ export function HomeOverview({
         aria-labelledby="home-focus-title"
       >
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <h2
-              id="home-focus-title"
-              className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display"
-            >
-              {isEn ? "Today's Focus" : 'Tänane fookus'}
-            </h2>
-            <span className="kulv-badge kulv-badge--accent px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--kulv-accent-soft,#F4D5C2)] text-[var(--kulv-accent-strong,#9E4C1F)]">
-              {taskCount} {isEn ? 'tasks' : 'ülesannet'}
-            </span>
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <h2
+                id="home-focus-title"
+                className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display truncate"
+              >
+                {isEn ? "Today's Focus" : 'Tänane fookus'}
+              </h2>
+              <p className="text-xs text-[var(--kulv-text-muted,#5F675A)] m-0 mt-0.5 truncate">
+                {taskCount > 0
+                  ? isEn
+                    ? `${taskCount} tasks awaiting attention`
+                    : `${taskCount} ülesannet ootab tegemist`
+                  : isEn
+                  ? 'All tasks completed'
+                  : 'Kõik ülesanded tehtud'}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] p-1 shrink-0 flex items-center justify-center">
+              <img
+                src="/assets/aistudio/kastmine-illustration_541cc1f3.jpeg"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
 
-          <p className="kulv-card__description text-xs text-[var(--kulv-text-muted,#5F675A)] leading-relaxed mb-4">
-            {taskCount > 0
-              ? isEn
-                ? 'Check high-priority tasks and watering advice for your beds.'
-                : 'Alusta tähtsaimast aiatoimest.'
-              : isEn
-              ? 'All daily garden tasks complete. Plan your next succession.'
-              : 'Täna pole ühtegi ülesannet. Planeeri järgmist külvit.'}
-          </p>
+          <div className="p-3 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] mb-4">
+            <p className="kulv-card__description text-xs text-[var(--kulv-text,#2A2E24)] leading-relaxed m-0">
+              {taskCount > 0
+                ? isEn
+                  ? 'Check high-priority tasks and watering advice for your beds.'
+                  : 'Alusta tähtsaimast aiatoimest ja peenarde kastmisest.'
+                : isEn
+                ? 'All daily garden tasks complete. Plan your next succession.'
+                : 'Täna pole ühtegi ülesannet. Planeeri järgmist külvi.'}
+            </p>
+          </div>
         </div>
 
         <button
           type="button"
-          className="kulv-button kulv-button--primary min-h-[44px] w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] cursor-pointer transition-colors"
+          className="kulv-button kulv-button--primary min-h-[44px] w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] cursor-pointer transition-colors shadow-xs"
           onClick={onOpenTasks}
         >
           <WateringIcon size={18} />
@@ -76,14 +94,26 @@ export function HomeOverview({
         aria-labelledby="home-garden-title"
       >
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <h2
-              id="home-garden-title"
-              className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display"
-            >
-              {isEn ? 'Garden Plan' : 'Aed'}
-            </h2>
-            <RaisedBedIcon className="kulv-icon text-[var(--kulv-primary,#4F6B45)]" size={20} />
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <h2
+                id="home-garden-title"
+                className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display truncate"
+              >
+                {isEn ? 'Garden Plan' : 'Aed'}
+              </h2>
+              <p className="text-xs text-[var(--kulv-text-muted,#5F675A)] m-0 mt-0.5 truncate">
+                {isEn ? '2D yard layout & succession' : '2D krundiplaan ja peenrad'}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] p-1 shrink-0 flex items-center justify-center">
+              <img
+                src="/assets/aistudio/lisa-peenar-seemned_fcd909da.jpeg"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
 
           <dl className="kulv-stat-grid grid grid-cols-2 gap-2 mb-3">
@@ -91,7 +121,7 @@ export function HomeOverview({
               <dt className="text-[11px] font-semibold text-[var(--kulv-text-muted,#5F675A)] uppercase tracking-wider">
                 {isEn ? 'Beds' : 'Peenrad'}
               </dt>
-              <dd className="text-xl font-bold font-mono text-[var(--kulv-text,#2A2E24)] m-0">
+              <dd className="text-xl font-bold font-mono tabular-nums text-[var(--kulv-text,#2A2E24)] m-0">
                 {bedCount}
               </dd>
             </div>
@@ -99,7 +129,7 @@ export function HomeOverview({
               <dt className="text-[11px] font-semibold text-[var(--kulv-text-muted,#5F675A)] uppercase tracking-wider">
                 {isEn ? 'Plants' : 'Taimed'}
               </dt>
-              <dd className="text-xl font-bold font-mono text-[var(--kulv-primary,#4F6B45)] m-0">
+              <dd className="text-xl font-bold font-mono tabular-nums text-[var(--kulv-primary,#4F6B45)] m-0">
                 {plantCount}
               </dd>
             </div>
@@ -140,17 +170,29 @@ export function HomeOverview({
         aria-labelledby="home-weather-title"
       >
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <h2
-              id="home-weather-title"
-              className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display"
-            >
-              {isEn ? 'Weather & Microclimate' : 'Ilma'}
-            </h2>
-            <SunIcon className="kulv-icon--accent text-[var(--kulv-accent,#E08A3C)]" size={20} />
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <h2
+                id="home-weather-title"
+                className="text-base font-bold text-[var(--kulv-text,#2A2E24)] m-0 font-serif-display truncate"
+              >
+                {isEn ? 'Weather & Microclimate' : 'Ilma'}
+              </h2>
+              <p className="text-xs text-[var(--kulv-text-muted,#5F675A)] m-0 mt-0.5 truncate">
+                {isEn ? 'Nordic frost & rain tracking' : 'Öökülmaoht ja sademete seire'}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] p-1 shrink-0 flex items-center justify-center">
+              <img
+                src="/assets/aistudio/ilmad_640480a6.jpeg"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
 
-          <div className="my-2">
+          <div className="p-2.5 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] mb-3">
             <p className="kulv-card__description text-sm font-semibold text-[var(--kulv-text,#2A2E24)] m-0">
               {temperature !== undefined
                 ? `${temperature}°C · ${weatherSummary ?? (isEn ? 'No weather data' : 'Ilmaandmed puuduvad')}`
@@ -160,17 +202,17 @@ export function HomeOverview({
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-[var(--kulv-border,#C9BFA9)]">
+          <div className="flex flex-col gap-2 pt-2 border-t border-[var(--kulv-border,#C9BFA9)]">
             <div className="flex items-center justify-between text-xs text-[var(--kulv-text-muted,#5F675A)]">
               <span>{isEn ? 'Rain probability' : 'Sadude tõenäosus'}</span>
-              <span className="font-mono font-bold text-[var(--kulv-text,#2A2E24)]">
+              <span className="font-mono tabular-nums font-bold text-[var(--kulv-text,#2A2E24)]">
                 {rainRiskPct}%
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs text-[var(--kulv-text-muted,#5F675A)]">
               <span>{isEn ? 'Autumn frost risk' : 'Öökülmaoht'}</span>
-              <span className="font-mono font-bold text-[var(--kulv-accent-strong,#9E4C1F)]">
+              <span className="font-mono tabular-nums font-bold text-[var(--kulv-accent-strong,#9E4C1F)]">
                 {frostRiskDays !== null
                   ? isEn
                     ? `In ${frostRiskDays} days`
@@ -183,10 +225,13 @@ export function HomeOverview({
           </div>
         </div>
 
-        <div className="mt-4 text-xs text-[var(--kulv-text-muted,#5F675A)] italic">
-          {isEn
-            ? 'Optimal Nordic sowing window monitored'
-            : 'Põhjamaine külviaken aktiivselt jälgimisel'}
+        <div className="mt-4 pt-3 border-t border-[var(--kulv-border,#C9BFA9)] flex items-center justify-between text-xs text-[var(--kulv-text-muted,#5F675A)]">
+          <span className="italic">
+            {isEn ? 'Nordic window monitored' : 'Põhjamaine aken jälgimisel'}
+          </span>
+          <span className="font-mono font-semibold text-[var(--kulv-primary,#4F6B45)]">
+            {isEn ? 'Active' : 'Aktiivne'}
+          </span>
         </div>
       </section>
     </div>

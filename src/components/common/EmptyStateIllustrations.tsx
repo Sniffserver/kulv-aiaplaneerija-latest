@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 // Uploaded high-fidelity botanical illustrations
-const YARD_EMPTY_IMG = './assets/aistudio/t_hi-aiaplaan_255327f6.jpeg';
-const PLANTS_EMPTY_IMG = './assets/aistudio/minimalist-empty-state-illustration-for-the_plant-catalog-screen_fc45c689.jpeg';
-const CALENDAR_EMPTY_IMG = './assets/aistudio/minimalistlik-empty-state-illustratioon-kalender_d9b9513f.jpeg';
-const JOURNAL_EMPTY_IMG = './assets/aistudio/empty-state-p_evik_600dc83a.jpeg';
+const YARD_EMPTY_IMG = '/assets/aistudio/t_hi-aiaplaan_255327f6.jpeg';
+const PLANTS_EMPTY_IMG = '/assets/aistudio/minimalist-empty-state-illustration-for-the_plant-catalog-screen_fc45c689.jpeg';
+const CALENDAR_EMPTY_IMG = '/assets/aistudio/minimalistlik-empty-state-illustratioon-kalender_d9b9513f.jpeg';
+const JOURNAL_EMPTY_IMG = '/assets/aistudio/empty-state-p_evik_600dc83a.jpeg';
 
 interface BotanicalImageProps {
   src: string;
@@ -26,7 +26,7 @@ function BotanicalArtwork({ src, fallback, alt = '' }: BotanicalImageProps) {
         alt={alt}
         referrerPolicy="no-referrer"
         onError={() => setHasError(true)}
-        className="max-h-[140px] w-auto max-w-[200px] object-contain rounded-xl shadow-xs border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] transition-transform hover:scale-[1.02]"
+        className="max-h-[120px] w-auto max-w-[160px] object-contain rounded-xl shadow-xs border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-1.5 transition-transform hover:scale-[1.02]"
       />
     </div>
   );

@@ -76,24 +76,22 @@
 
   try {
     const cachedTheme = localStorage.getItem('kulv-theme');
-    const prefersDark =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldUseDark =
-      cachedTheme === 'dark' || (cachedTheme !== 'light' && cachedTheme !== 'dark' && prefersDark);
+    // Stock theme default is the warm cream botanical theme (light mode).
+    // Dark mode is only activated if the user explicitly chose 'dark' previously.
+    const shouldUseDark = cachedTheme === 'dark';
     document.documentElement.classList.toggle('dark', shouldUseDark);
 
-    const paletteOptions = ['kulv', 'gruvbox', 'catppuccin', 'meadow'];
+    const paletteOptions = ['meadow', 'kulv', 'gruvbox', 'catppuccin'];
     const cachedPalette = localStorage.getItem('kulv-palette');
     const palette =
-      cachedPalette && paletteOptions.includes(cachedPalette) ? cachedPalette : 'kulv';
+      cachedPalette && paletteOptions.includes(cachedPalette) ? cachedPalette : 'meadow';
     document.documentElement.dataset.palette = palette;
 
     const paletteThemeColors: Record<string, { light: string; dark: string }> = {
-      kulv: { light: '#FAF6ED', dark: '#131914' },
+      meadow: { light: '#F7F1E8', dark: '#131914' },
+      kulv: { light: '#F7F1E8', dark: '#131914' },
       gruvbox: { light: '#FBF1C7', dark: '#282828' },
-      catppuccin: { light: '#EFF1F5', dark: '#1E1E2E' },
-      meadow: { light: '#F7F1E8', dark: '#131914' }
+      catppuccin: { light: '#EFF1F5', dark: '#1E1E2E' }
     };
 
     const themeColor = document.querySelector('meta[name="theme-color"]');
@@ -104,12 +102,8 @@
       );
     }
   } catch {
-    // Storage can be blocked in privacy modes; fallback gracefully to system preference
-    document.documentElement.classList.toggle(
-      'dark',
-      typeof window.matchMedia === 'function' &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches
-    );
-    document.documentElement.dataset.palette = 'kulv';
+    // Storage can be blocked in privacy modes; fallback to stock cream botanical theme
+    document.documentElement.classList.remove('dark');
+    document.documentElement.dataset.palette = 'meadow';
   }
 })();
