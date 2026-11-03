@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
+import { BotanicalPlantIcon } from './icons/BotanicalPlantIcon';
 
 export interface MobileCellSheetProps {
   isOpen: boolean;
@@ -170,7 +171,11 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                 border: '1px solid var(--kulv-border, #C9BFA9)'
               }}
             >
-              {cell ? cell.plantIcon : '🌱'}
+              {cell ? (
+                <BotanicalPlantIcon plantId={cell.plantId} plantName={cell.plantName} size={30} ariaHidden />
+              ) : (
+                <BotanicalPlantIcon plantId="sprout" plantName="seedling" size={30} ariaHidden />
+              )}
             </div>
             <div>
               <div
@@ -516,7 +521,12 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '28px' }}>{selectedDockPlant.icon}</span>
+                  <BotanicalPlantIcon
+                    plantId={selectedDockPlant.id}
+                    plantName={selectedDockPlant.name}
+                    size={28}
+                    ariaHidden
+                  />
                   <div>
                     <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)' }}>
                       Istuta aktiivne taim: {selectedDockPlant.name}
@@ -598,7 +608,7 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                       cursor: 'pointer'
                     }}
                   >
-                    <span style={{ fontSize: '24px' }}>{plant.icon}</span>
+                    <BotanicalPlantIcon plantId={plant.id} plantName={plant.name} size={24} ariaHidden />
                     <span
                       style={{
                         fontSize: '10px',

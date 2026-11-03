@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Droplet, Sprout, Info, Check, Calculator, Clock, Thermometer, Package } from 'lucide-react';
 import soilData from '../../assets/data/soilRecipes.json';
 import { useGarden } from '../../context/GardenContext';
+import { SoilRecipesIllustration } from '../common/EmptyStateIllustrations';
 
 export interface SoilRecipesDialogProps {
   isOpen: boolean;
@@ -309,44 +310,49 @@ export const SoilRecipesDialog: React.FC<SoilRecipesDialogProps> = ({ isOpen, on
               gap: '14px'
             }}
           >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                <span
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      fontWeight: 700,
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      backgroundColor:
+                        activeRecipe.category === 'muld' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(217, 122, 61, 0.15)',
+                      color:
+                        activeRecipe.category === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)'
+                    }}
+                  >
+                    {activeRecipe.category === 'muld'
+                      ? language === 'en'
+                        ? 'Raised Bed & Pot Substrate'
+                        : 'Kõrgpeenra & potimuld'
+                      : language === 'en'
+                        ? 'Organic Liquid Fertilizer'
+                        : 'Looduslik väetistee'}
+                  </span>
+                </div>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)' }}>
+                  {activeRecipe.name}
+                </h3>
+                <p
                   style={{
-                    fontSize: '10px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: '6px',
-                    backgroundColor:
-                      activeRecipe.category === 'muld' ? 'rgba(79, 107, 69, 0.15)' : 'rgba(217, 122, 61, 0.15)',
-                    color:
-                      activeRecipe.category === 'muld' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)'
+                    margin: '6px 0 0 0',
+                    fontSize: '13px',
+                    color: 'var(--kulv-text-muted, #5F675A)',
+                    lineHeight: 1.4
                   }}
                 >
-                  {activeRecipe.category === 'muld'
-                    ? language === 'en'
-                      ? 'Raised Bed & Pot Substrate'
-                      : 'Kõrgpeenra & potimuld'
-                    : language === 'en'
-                      ? 'Organic Liquid Fertilizer'
-                      : 'Looduslik väetistee'}
-                </span>
+                  {activeRecipe.description}
+                </p>
               </div>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--kulv-text, #2A2E24)' }}>
-                {activeRecipe.name}
-              </h3>
-              <p
-                style={{
-                  margin: '6px 0 0 0',
-                  fontSize: '13px',
-                  color: 'var(--kulv-text-muted, #5F675A)',
-                  lineHeight: 1.4
-                }}
-              >
-                {activeRecipe.description}
-              </p>
+              <div style={{ flexShrink: 0, width: '100px', display: 'flex', justifyContent: 'center' }}>
+                <SoilRecipesIllustration />
+              </div>
             </div>
 
             {/* Dynamic Batch Volume Sizing with Slider and Presets */}

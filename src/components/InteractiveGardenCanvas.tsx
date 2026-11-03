@@ -22,6 +22,7 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
+import { BotanicalPlantIcon } from './icons/BotanicalPlantIcon';
 
 interface InteractiveGardenCanvasProps {
   bed: GardenBed;
@@ -514,10 +515,11 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 aria-label={`${bed.name} istutusruudustik`}
                 style={{
                   flex: 1,
-                  backgroundColor: 'rgba(93, 64, 55, 0.12)',
-                  border: '2px dashed rgba(93, 64, 55, 0.5)',
-                  borderRadius: '14px',
-                  padding: '10px',
+                  backgroundColor: isDarkMode ? '#2B211A' : '#5A4638',
+                  border: '4px solid #79634F',
+                  boxShadow: 'inset 0 0 0 2px #433226, inset 0 2px 8px rgba(0,0,0,0.25)',
+                  borderRadius: '12px',
+                  padding: '12px',
                   display: 'grid',
                   gridTemplateColumns: `repeat(${cols}, 1fr)`,
                   gap: '8px',
@@ -535,26 +537,27 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       ? CompanionEngine.getPlantedCellSynergy(planted, bed.plantings, allPlants)
                       : null;
 
-                    // Determine cell background, border, and shadow cleanly without mixing shorthand 'border' and 'borderColor'
+                    // Determine cell background, border, and shadow with warm soil & wood palette
                     let cellBg = isInspected
-                      ? 'var(--kulv-accent-soft, #F3D8C2)'
+                      ? (isDarkMode ? '#5E381C' : '#8A542E')
                       : isHovered
-                        ? 'rgba(79, 107, 69, 0.35)'
+                        ? (isDarkMode ? '#31442D' : '#455E3C')
                         : planted
-                          ? 'rgba(79, 107, 69, 0.18)'
-                          : 'var(--kulv-surface, #FFFDF8)';
+                          ? (isDarkMode ? '#2C221A' : '#634E3E')
+                          : (isDarkMode ? '#1E1712' : '#4C3B2F');
 
                     let cellBorderWidth = isInspected ? '2px' : isHovered ? '2px' : planted ? '1.5px' : '1px';
+                    let cellBorderStyle: 'solid' | 'dashed' = planted || isInspected || isHovered ? 'solid' : 'dashed';
 
                     let cellBorderColor = isInspected
-                      ? 'var(--kulv-accent, #D97A3D)'
+                      ? '#E08A3C'
                       : isHovered
                         ? 'var(--kulv-primary, #4F6B45)'
                         : planted
-                          ? 'var(--kulv-primary, #4F6B45)'
-                          : 'var(--kulv-border, #C9BFA9)';
+                          ? (isDarkMode ? '#4D3B2C' : '#7D6553')
+                          : (isDarkMode ? '#3A2E24' : '#6A5343');
 
-                    let cellBoxShadow: string | undefined = undefined;
+                    let cellBoxShadow: string | undefined = isInspected ? '0 0 0 2px rgba(224, 138, 60, 0.45)' : undefined;
 
                     // Prospective synergy preview for empty cell
                     if (!planted && isHovered && selectedPlant) {
@@ -596,17 +599,17 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     // Visual styles for heatmap mode
                     if (heatmapActive && planted && cellSynergy) {
                       if (cellSynergy.status === 'positive') {
-                        cellBg = 'rgba(79, 107, 69, 0.32)';
+                        cellBg = 'rgba(79, 107, 69, 0.45)';
                         cellBorderColor = 'var(--kulv-primary, #4F6B45)';
                         cellBorderWidth = '2px';
                         cellBoxShadow = '0 0 10px rgba(79, 107, 69, 0.35)';
                       } else if (cellSynergy.status === 'negative') {
-                        cellBg = 'rgba(217, 122, 61, 0.32)';
+                        cellBg = 'rgba(217, 122, 61, 0.45)';
                         cellBorderColor = 'var(--kulv-accent, #D97A3D)';
                         cellBorderWidth = '2px';
                         cellBoxShadow = '0 0 10px rgba(217, 122, 61, 0.4)';
                       } else if (cellSynergy.status === 'mixed') {
-                        cellBg = 'rgba(217, 180, 61, 0.28)';
+                        cellBg = 'rgba(217, 180, 61, 0.35)';
                         cellBorderColor = '#D9A03D';
                         cellBorderWidth = '2px';
                       }
@@ -631,7 +634,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           borderRadius: '8px',
                           backgroundColor: cellBg,
                           borderWidth: cellBorderWidth,
-                          borderStyle: 'solid',
+                          borderStyle: cellBorderStyle,
                           borderColor: cellBorderColor,
                           boxShadow: cellBoxShadow,
                           display: 'flex',
@@ -681,17 +684,23 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               </div>
                             )}
 
-                            <span style={{ fontSize: '22px' }}>{planted.plantIcon}</span>
+                            <BotanicalPlantIcon
+                              plantId={planted.plantId}
+                              plantName={planted.plantName}
+                              size={28}
+                              ariaHidden
+                            />
                             <span
                               style={{
-                                fontSize: '9px',
+                                fontSize: '10px',
                                 fontWeight: 700,
-                                color: 'var(--kulv-text, #2A2E24)',
+                                color: '#FFFDF8',
                                 marginTop: '2px',
-                                maxWidth: '90%',
+                                maxWidth: '92%',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.6)'
                               }}
                             >
                               {planted.plantName}
@@ -706,7 +715,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                                   left: '2px',
                                   fontSize: '9px',
                                   fontWeight: 800,
-                                  color: cellSynergy.status === 'positive' ? 'white' : 'white',
+                                  color: 'white',
                                   backgroundColor:
                                     cellSynergy.status === 'positive'
                                       ? 'var(--kulv-primary, #4F6B45)'
@@ -743,7 +752,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                                 height: '16px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifySelf: 'center',
+                                justifyContent: 'center',
                                 fontSize: '10px',
                                 cursor: 'pointer',
                                 padding: 0
@@ -755,11 +764,11 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                         ) : (
                           <>
                             <span
-                              style={{ color: 'var(--kulv-text-muted, #5F675A)', fontSize: '14px', fontWeight: 600 }}
+                              style={{ color: '#D5C7B7', fontSize: '14px', fontWeight: 600 }}
                             >
                               {isHovered ? 'Istuta!' : '+'}
                             </span>
-                            <span style={{ fontSize: '8px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                            <span style={{ fontSize: '8px', color: '#B3A18F' }}>
                               {Math.round((bed.width / rows) * 100)}cm
                             </span>
                           </>
@@ -804,7 +813,12 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '26px' }}>{inspectingCell.planting.plantIcon}</span>
+                          <BotanicalPlantIcon
+                            plantId={inspectingCell.planting.plantId}
+                            plantName={inspectingCell.planting.plantName}
+                            size={32}
+                            ariaHidden
+                          />
                           <div>
                             <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
                               {inspectingCell.planting.plantName}
@@ -984,7 +998,12 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       transition: 'all 0.15s ease'
                     }}
                   >
-                    <span style={{ fontSize: '26px' }}>{plant.icon}</span>
+                    <BotanicalPlantIcon
+                      plantId={plant.id}
+                      plantName={plant.name}
+                      size={28}
+                      ariaHidden
+                    />
                     <span
                       style={{
                         fontSize: '10px',
@@ -1041,15 +1060,15 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           color: 'var(--kulv-primary, #4F6B45)',
                           border: '1px solid var(--kulv-primary, #4F6B45)',
                           borderRadius: '6px',
-                          padding: '2px 6px',
+                          padding: '2px 8px',
                           fontSize: '11px',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '3px'
+                          gap: '4px'
                         }}
                       >
-                        <span>{gp.icon}</span>
+                        <BotanicalPlantIcon plantId={gp.id} plantName={gp.name} size={14} ariaHidden />
                         <span>{gp.name}</span>
                       </button>
                     ))}
@@ -1068,14 +1087,14 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           color: 'var(--kulv-danger, #B85C33)',
                           border: '1px solid var(--kulv-danger, #B85C33)',
                           borderRadius: '6px',
-                          padding: '2px 6px',
+                          padding: '2px 8px',
                           fontSize: '11px',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '3px'
+                          gap: '4px'
                         }}
                       >
-                        <span>{bp.icon}</span>
+                        <BotanicalPlantIcon plantId={bp.id} plantName={bp.name} size={14} ariaHidden />
                         <span>{bp.name}</span>
                       </span>
                     ))}

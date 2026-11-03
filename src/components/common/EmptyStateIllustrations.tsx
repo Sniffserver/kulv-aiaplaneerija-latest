@@ -127,3 +127,114 @@ export function OfflineIllustration() {
     </svg>
   );
 }
+
+// Soil recipes & layered bed building artwork
+const SOIL_RECIPES_IMG = '/assets/aistudio/mulla-retseptid-illustration_726c3ec3.jpeg';
+export function SoilRecipesIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🪵
+    </div>
+  );
+  return <BotanicalArtwork src={SOIL_RECIPES_IMG} fallback={fallback} alt="Mullaretseptid ja peenra ehitus" />;
+}
+
+// Greenhouse structure artwork
+const GREENHOUSE_IMG = '/assets/aistudio/kasvuhoone-illustration_b1d4ea1c.jpeg';
+export function GreenhouseIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🏡
+    </div>
+  );
+  return <BotanicalArtwork src={GREENHOUSE_IMG} fallback={fallback} alt="Kasvuhoone" />;
+}
+
+// Watering & garden tasks artwork
+const WATERING_IMG = '/assets/aistudio/kastmine-illustration_541cc1f3.jpeg';
+export function WateringIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      💧
+    </div>
+  );
+  return <BotanicalArtwork src={WATERING_IMG} fallback={fallback} alt="Aia kastmine" />;
+}
+
+// Seed inventory artwork
+const SEEDS_INVENTORY_IMG = '/assets/aistudio/seeds-inventory_b3298eca.jpeg';
+export function SeedInventoryIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🌱
+    </div>
+  );
+  return <BotanicalArtwork src={SEEDS_INVENTORY_IMG} fallback={fallback} alt="Seemnevaru" />;
+}
+
+// Add new bed & sowing artwork
+const ADD_BED_IMG = '/assets/aistudio/lisa-peenar-seemned_fcd909da.jpeg';
+export function AddBedIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🪵
+    </div>
+  );
+  return <BotanicalArtwork src={ADD_BED_IMG} fallback={fallback} alt="Lisa peenar" />;
+}
+
+// Harvest artwork
+const HARVEST_IMG = '/assets/aistudio/botanical-illustration-harvest_bd847aa6.jpeg';
+export function HarvestIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🥕
+    </div>
+  );
+  return <BotanicalArtwork src={HARVEST_IMG} fallback={fallback} alt="Saagikoristus" />;
+}
+
+// Berry bush artwork
+const BERRY_BUSH_IMG = '/assets/aistudio/marjap__sas-illustration_2a0f7f3c.jpeg';
+export function BerryBushIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🫐
+    </div>
+  );
+  return <BotanicalArtwork src={BERRY_BUSH_IMG} fallback={fallback} alt="Marjapõõsad" />;
+}
+
+// Fruit trees artwork
+const FRUIT_TREE_IMG = '/assets/aistudio/viljapuud-illustration_b06f2e18.jpeg';
+export function FruitTreeIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🍎
+    </div>
+  );
+  return <BotanicalArtwork src={FRUIT_TREE_IMG} fallback={fallback} alt="Viljapuuaed" />;
+}
+
+// Water barrel artwork
+const WATER_BARREL_IMG = '/assets/aistudio/waterbarrel-veemahuti-t_nnl_5a48d892.jpeg';
+export function WaterBarrelIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      🛢️
+    </div>
+  );
+  return <BotanicalArtwork src={WATER_BARREL_IMG} fallback={fallback} alt="Veemahuti tünn" />;
+}
+
+// Winter garden artwork
+const WINTER_GARDEN_IMG = '/assets/aistudio/talvine-aed_cd4650e3.jpeg';
+export function WinterGardenIllustration() {
+  const fallback = (
+    <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
+      ❄️
+    </div>
+  );
+  return <BotanicalArtwork src={WINTER_GARDEN_IMG} fallback={fallback} alt="Talvine aed ja puhkeperiood" />;
+}
+

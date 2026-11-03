@@ -1683,19 +1683,38 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                           cx={widthPx / 2}
                           cy={lengthPx / 2}
                           r={Math.min(widthPx, lengthPx) / 2}
-                          fill={entity.category === 'water' ? 'url(#pondGradient)' : entity.color}
+                          fill={entity.category === 'water' ? '#6B8E88' : entity.color || '#4F6B45'}
                           stroke={
                             isSelected
                               ? 'var(--kulv-accent, #D97A3D)'
                               : isHovered
                                 ? 'var(--kulv-primary, #4F6B45)'
-                                : '#33442C'
+                                : '#3E5637'
                           }
                           strokeWidth={isSelected ? 3 : isHovered ? 2 : 1.5}
                         />
 
                         {entity.category === 'tree' && (
-                          <circle cx={widthPx / 2} cy={lengthPx / 2} r={Math.max(3, zoom * 0.2)} fill="#5A3D28" />
+                          <>
+                            {/* Inner botanical canopy ring */}
+                            <circle
+                              cx={widthPx / 2}
+                              cy={lengthPx / 2}
+                              r={(Math.min(widthPx, lengthPx) / 2) * 0.65}
+                              fill="#A9B89A"
+                              opacity={0.45}
+                            />
+                            <circle cx={widthPx / 2} cy={lengthPx / 2} r={Math.max(3, zoom * 0.18)} fill="#5A3D28" />
+                          </>
+                        )}
+                        {entity.category === 'shrub' && (
+                          <circle
+                            cx={widthPx / 2}
+                            cy={lengthPx / 2}
+                            r={(Math.min(widthPx, lengthPx) / 2) * 0.5}
+                            fill="#E08A3C"
+                            opacity={0.35}
+                          />
                         )}
                       </g>
                     ) : (
@@ -1705,26 +1724,36 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                           width={widthPx}
                           height={lengthPx}
                           rx={entity.category === 'bed' ? 4 : 2}
-                          fill={entity.color}
+                          fill={entity.category === 'bed' ? '#79634F' : entity.color}
                           stroke={
                             isSelected
                               ? 'var(--kulv-accent, #D97A3D)'
                               : isHovered
                                 ? 'var(--kulv-primary, #4F6B45)'
-                                : '#33442C'
+                                : entity.category === 'bed'
+                                  ? '#5E4939'
+                                  : '#33442C'
                           }
                           strokeWidth={isSelected ? 3 : isHovered ? 2 : 1.5}
                         />
 
                         {entity.category === 'bed' && (
-                          <rect
-                            x={3}
-                            y={3}
-                            width={Math.max(2, widthPx - 6)}
-                            height={Math.max(2, lengthPx - 6)}
-                            fill="#4A3B32"
-                            opacity={0.8}
-                          />
+                          <>
+                            {/* Inner Compost Soil Fill */}
+                            <rect
+                              x={3}
+                              y={3}
+                              width={Math.max(2, widthPx - 6)}
+                              height={Math.max(2, lengthPx - 6)}
+                              rx={2}
+                              fill="#4E3C2F"
+                            />
+                            {/* Timber Corner Joinery Accents */}
+                            <line x1={0} y1={3} x2={3} y2={3} stroke="#5E4939" strokeWidth={1} />
+                            <line x1={widthPx - 3} y1={3} x2={widthPx} y2={3} stroke="#5E4939" strokeWidth={1} />
+                            <line x1={0} y1={lengthPx - 3} x2={3} y2={lengthPx - 3} stroke="#5E4939" strokeWidth={1} />
+                            <line x1={widthPx - 3} y1={lengthPx - 3} x2={widthPx} y2={lengthPx - 3} stroke="#5E4939" strokeWidth={1} />
+                          </>
                         )}
 
                         {entity.category === 'structure' && entity.subType === 'dwelling_house' && (
@@ -1741,15 +1770,36 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                     )}
 
                     {/* Icon & Label */}
-                    <text
-                      x={widthPx / 2}
-                      y={lengthPx / 2 + 4}
-                      textAnchor="middle"
-                      fontSize={Math.max(12, Math.min(22, zoom * 0.7))}
-                      style={{ pointerEvents: 'none', userSelect: 'none' }}
-                    >
-                      {entity.icon || '🌱'}
-                    </text>
+                    {entity.category === 'bed' ? (
+                      <g style={{ pointerEvents: 'none', userSelect: 'none' }}>
+                        <text
+                          x={widthPx / 2}
+                          y={lengthPx / 2 + 4}
+                          textAnchor="middle"
+                          fill="#FFFDF8"
+                          fontSize={Math.max(10, Math.min(15, zoom * 0.55))}
+                          fontWeight={700}
+                        >
+                          {(() => {
+                            const matchingBed = beds.find((b) => b.id === entity.id);
+                            if (matchingBed && matchingBed.plantings.length > 0) {
+                              return `🌱 ${matchingBed.plantings.length}`;
+                            }
+                            return '🪵';
+                          })()}
+                        </text>
+                      </g>
+                    ) : (
+                      <text
+                        x={widthPx / 2}
+                        y={lengthPx / 2 + 4}
+                        textAnchor="middle"
+                        fontSize={Math.max(12, Math.min(22, zoom * 0.7))}
+                        style={{ pointerEvents: 'none', userSelect: 'none' }}
+                      >
+                        {entity.icon || '🌱'}
+                      </text>
+                    )}
 
                     {/* Name label badge if large enough */}
                     {zoom >= 18 && (

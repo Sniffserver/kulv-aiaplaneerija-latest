@@ -3,6 +3,7 @@ import { useYardStore } from '../../stores/yardStore';
 import { useCropRotationStore } from '../../stores/cropRotationStore';
 import { useGarden } from '../../context/GardenContext';
 import { BOTANICAL_FAMILY_DETAILS } from '../../logic/cropRotationEngine';
+import { BotanicalPlantIcon } from '../icons/BotanicalPlantIcon';
 import { Printer, X, MapPin, Calendar, Compass, FileText, CheckCircle2, Info, ShieldCheck, Leaf } from 'lucide-react';
 
 interface GardenBinderPrintDialogProps {
@@ -483,6 +484,49 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                       Peenrale pole veel lisatud aktiivseid järjestikülvi faase.
                     </div>
                   )}
+
+                  {/* Visual Bed Layout Strip with Soil Fill & Botanical Vector Stamps */}
+                  {bed.plantings && bed.plantings.length > 0 && (
+                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed #E5DFD3' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 700, color: '#4F6B45', marginBottom: '6px' }}>
+                        Külviasetus peenras ({bed.plantings.length} taime):
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: '6px',
+                          backgroundColor: '#5A4638',
+                          border: '2px solid #79634F',
+                          borderRadius: '8px',
+                          padding: '8px'
+                        }}
+                      >
+                        {bed.plantings.map((p) => (
+                          <div
+                            key={p.id}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              backgroundColor: '#6A5344',
+                              border: '1px solid #8A715F',
+                              borderRadius: '6px',
+                              padding: '2px 6px',
+                              color: '#FFFDF8',
+                              fontSize: '11px'
+                            }}
+                          >
+                            <BotanicalPlantIcon plantId={p.plantId} plantName={p.plantName} size={16} ariaHidden />
+                            <span style={{ fontWeight: 600 }}>{p.plantName}</span>
+                            <span style={{ fontSize: '9px', color: '#D5C7B7' }}>
+                              ({p.gridX + 1},{p.gridY + 1})
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -541,7 +585,10 @@ export const GardenBinderPrintDialog: React.FC<GardenBinderPrintDialogProps> = (
                   return (
                     <tr key={p.id} style={{ borderBottom: '1px solid #EAE5D9' }}>
                       <td style={{ padding: '8px 10px', fontWeight: 700 }}>
-                        {p.icon || '🌱'} {p.name}
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          <BotanicalPlantIcon plantId={p.id} plantName={p.name} size={18} ariaHidden />
+                          <span>{p.name}</span>
+                        </div>
                       </td>
                       <td style={{ padding: '8px 10px', color: '#555C4F' }}>{p.family}</td>
                       <td style={{ padding: '8px 10px', color: '#276749' }}>

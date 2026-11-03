@@ -14,6 +14,7 @@ import {
   Droplets,
   Layers
 } from 'lucide-react';
+import { BotanicalPlantIcon } from '../icons/BotanicalPlantIcon';
 
 export interface BedInspectorProps {
   isOpen: boolean;
@@ -139,7 +140,7 @@ export const BedInspector: React.FC<BedInspectorProps> = ({
                 className="flex items-center justify-between p-2 rounded-lg bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] text-xs"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-base">{p.plantIcon || '🌱'}</span>
+                  <BotanicalPlantIcon plantId={p.plantId} plantName={p.plantName} size={20} ariaHidden />
                   <span className="font-semibold text-[var(--kulv-text,#2A2E24)]">{p.plantName}</span>
                 </div>
                 <span className="text-[11px] text-[var(--kulv-text-muted,#5F675A)] font-mono">
