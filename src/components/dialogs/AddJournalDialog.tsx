@@ -175,13 +175,35 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3
-            id="add-journal-dialog-title"
-            className="font-serif-display"
-            style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
-          >
-            Uus sissekanne päevikusse
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img
+              src="/assets/aistudio/empty-state-p_evik_600dc83a.jpeg"
+              alt=""
+              aria-hidden="true"
+              style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '10px',
+                objectFit: 'contain',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                padding: '3px',
+                flexShrink: 0
+              }}
+            />
+            <div>
+              <h3
+                id="add-journal-dialog-title"
+                className="font-serif-display"
+                style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}
+              >
+                Uus sissekanne päevikusse
+              </h3>
+              <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                Botaaniline aiavaatlus ja märkmed
+              </p>
+            </div>
+          </div>
           <button
             onClick={onDismiss}
             aria-label="Sulge aken"
@@ -486,21 +508,22 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
               Sisu ja tähelepanekud *
             </label>
             <textarea
-              rows={3}
+              rows={4}
               value={content}
               placeholder="Kirjelda idanemist, taime arengut, kahjureid, maitseomadusi..."
               onChange={(e) => setContent(e.target.value)}
               data-testid="add_journal_content_input"
+              className="font-serif leading-relaxed"
               required
               style={{
                 width: '100%',
-                padding: '9px 10px',
+                padding: '10px 12px',
                 borderRadius: '8px',
                 border: '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: 'var(--kulv-surface, #FFFDF8)',
                 color: 'var(--kulv-text, #2A2E24)',
-                fontFamily: 'inherit',
-                fontSize: '13px'
+                fontSize: '14px',
+                lineHeight: '1.6'
               }}
             />
           </div>
@@ -527,17 +550,12 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
             />
 
             {photoUrl ? (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
+              <div className="relative inline-block aspect-[4/3] h-40 overflow-hidden rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] shadow-xs">
                 <img
                   src={photoUrl}
                   alt="Lisatud pilt"
-                  style={{
-                    width: '100%',
-                    maxHeight: '160px',
-                    objectFit: 'cover',
-                    borderRadius: '8px',
-                    border: '1px solid var(--kulv-border, #C9BFA9)'
-                  }}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
                 />
                 <button
                   type="button"

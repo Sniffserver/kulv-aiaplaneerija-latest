@@ -70,4 +70,17 @@ describe('PlantCard Component', () => {
 
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it('renders luminous life cycle status badge and visual progress bar', () => {
+    render(<PlantCard plant={mockPlant} onClick={() => {}} />);
+
+    const badge = screen.getByTestId('plant_growth_badge_carrot');
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveClass('kulv-badge--luminous');
+
+    const progress = screen.getByTestId('plant_growth_progress_carrot');
+    expect(progress).toBeInTheDocument();
+    expect(screen.getByText('Elutsükkel')).toBeInTheDocument();
+  });
 });
+

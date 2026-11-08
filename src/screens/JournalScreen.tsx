@@ -11,7 +11,9 @@ import {
   Tag,
   Sparkles,
   FileSpreadsheet,
-  Loader2
+  Loader2,
+  X,
+  ZoomIn
 } from 'lucide-react';
 import { JournalTimelineChart } from '../components/JournalTimelineChart';
 import { JournalEntry } from '../types';
@@ -415,19 +417,31 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
 
                 {/* Attached Photo Preview */}
                 {entry.photoUrl && (
-                  <div style={{ marginTop: '4px' }}>
-                    <img
-                      src={entry.photoUrl}
-                      alt={entry.title}
+                  <div className="mt-2.5">
+                    <div
                       onClick={() => setSelectedPhotoModal(entry.photoUrl!)}
-                      style={{
-                        maxHeight: '140px',
-                        borderRadius: '8px',
-                        border: '1px solid var(--kulv-border, #C9BFA9)',
-                        cursor: 'pointer',
-                        objectFit: 'cover'
+                      className="group relative inline-block aspect-[4/3] h-36 sm:h-40 overflow-hidden rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] cursor-pointer shadow-xs"
+                      title="Klõpsa suurendamiseks"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setSelectedPhotoModal(entry.photoUrl!);
+                        }
                       }}
-                    />
+                    >
+                      <img
+                        src={entry.photoUrl}
+                        alt={entry.title}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                        <div className="p-2 rounded-full bg-black/50 backdrop-blur-xs">
+                          <ZoomIn size={16} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -441,28 +455,29 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
         <div
           role="dialog"
           aria-modal="true"
+          aria-label="Suurendatud foto"
           onClick={() => setSelectedPhotoModal(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.85)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1100,
-            padding: '20px'
-          }}
+          className="fixed inset-0 z-[1100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xs animate-in fade-in duration-200 cursor-zoom-out"
         >
-          <img
-            src={selectedPhotoModal}
-            alt="Suurendatud foto"
-            style={{
-              maxWidth: '90vw',
-              maxHeight: '90vh',
-              borderRadius: '8px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
-            }}
-          />
+          <div
+            className="relative max-w-4xl max-h-[85vh] rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedPhotoModal(null)}
+              aria-label="Sule foto vaade"
+              className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={selectedPhotoModal}
+              alt="Suurendatud foto"
+              referrerPolicy="no-referrer"
+              className="max-w-[90vw] max-h-[80vh] object-contain rounded-2xl"
+            />
+          </div>
         </div>
       )}
 

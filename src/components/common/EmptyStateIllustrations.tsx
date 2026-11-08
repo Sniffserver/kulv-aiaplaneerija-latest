@@ -10,9 +10,10 @@ interface BotanicalImageProps {
   src: string;
   fallback: React.ReactNode;
   alt?: string;
+  className?: string;
 }
 
-function BotanicalArtwork({ src, fallback, alt = '' }: BotanicalImageProps) {
+function BotanicalArtwork({ src, fallback, alt = '', className = '' }: BotanicalImageProps) {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -20,14 +21,16 @@ function BotanicalArtwork({ src, fallback, alt = '' }: BotanicalImageProps) {
   }
 
   return (
-    <div className="flex items-center justify-center p-2">
-      <img
-        src={src}
-        alt={alt}
-        referrerPolicy="no-referrer"
-        onError={() => setHasError(true)}
-        className="max-h-[120px] w-auto max-w-[160px] object-contain rounded-xl shadow-xs border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-1.5 transition-transform hover:scale-[1.02]"
-      />
+    <div className={`flex items-center justify-center p-2 ${className}`}>
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-2 shadow-xs transition-transform hover:scale-[1.01]">
+        <img
+          src={src}
+          alt={alt}
+          referrerPolicy="no-referrer"
+          onError={() => setHasError(true)}
+          className="max-h-[160px] sm:max-h-[190px] w-auto max-w-[240px] sm:max-w-[280px] object-contain rounded-xl"
+        />
+      </div>
     </div>
   );
 }
@@ -237,4 +240,3 @@ export function WinterGardenIllustration() {
   );
   return <BotanicalArtwork src={WINTER_GARDEN_IMG} fallback={fallback} alt="Talvine aed ja puhkeperiood" />;
 }
-

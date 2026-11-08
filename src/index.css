@@ -443,7 +443,8 @@ body {
   border-right: 1px solid var(--kulv-border, #c9bfa9);
   justify-content: space-around;
   align-items: center;
-  height: 64px;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   z-index: 100;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
@@ -459,7 +460,7 @@ body {
   flex: 1;
   overflow-y: auto;
   background-color: var(--kulv-bg, #faf6ed);
-  padding-bottom: 78px;
+  padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 768px) {
@@ -687,6 +688,15 @@ body {
 .kulv-badge--accent {
   background: var(--kulv-accent-soft);
   color: var(--kulv-accent-strong, #9e4c1f);
+}
+
+.kulv-badge--luminous {
+  background: var(--kulv-primary-soft, #e2ece3);
+  color: var(--kulv-primary-strong, #243d2b);
+  border: 1px solid var(--kulv-primary, #4f6b45);
+  box-shadow: 0 0 10px rgba(79, 107, 69, 0.2);
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 /* Plants Module & Catalog */

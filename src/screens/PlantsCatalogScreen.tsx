@@ -826,8 +826,8 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '12px'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '16px'
           }}
         >
           {filteredPlants.map((plant) => (

@@ -1,22 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useGarden } from '../../context/GardenContext';
 import { Plant, ColorPalette } from '../../types';
 import { HomeScreen } from '../../screens/HomeScreen';
-import { GardenCanvasScreen } from '../../screens/GardenCanvasScreen';
-import { PlantsCatalogScreen } from '../../screens/PlantsCatalogScreen';
-import { CalendarScreen } from '../../screens/CalendarScreen';
-import { JournalScreen } from '../../screens/JournalScreen';
-import { BlogScreen } from '../../screens/BlogScreen';
 import { AddBedDialog } from '../dialogs/AddBedDialog';
 import { AddTaskDialog } from '../dialogs/AddTaskDialog';
 import { AddPlantDialog } from '../dialogs/AddPlantDialog';
 import { AddJournalDialog } from '../dialogs/AddJournalDialog';
 import { PlantDetailDialog } from '../dialogs/PlantDetailDialog';
-import { GardenBinderPrintDialog } from '../dialogs/GardenBinderPrintDialog';
-import { SoilRecipesDialog } from '../dialogs/SoilRecipesDialog';
-import { GrowTentDialog } from '../dialogs/GrowTentDialog';
 import { SettingsModal, applyPaletteToDOM } from '../SettingsModal';
 import appIconUrl from '../../assets/images/kulv_app_icon_1793083974365.jpg';
+
+// Lazy-loaded secondary screens for bundle optimization
+const GardenCanvasScreen = lazy(() =>
+  import('../../screens/GardenCanvasScreen').then((m) => ({ default: m.GardenCanvasScreen }))
+);
+const PlantsCatalogScreen = lazy(() =>
+  import('../../screens/PlantsCatalogScreen').then((m) => ({ default: m.PlantsCatalogScreen }))
+);
+const CalendarScreen = lazy(() =>
+  import('../../screens/CalendarScreen').then((m) => ({ default: m.CalendarScreen }))
+);
+const JournalScreen = lazy(() =>
+  import('../../screens/JournalScreen').then((m) => ({ default: m.JournalScreen }))
+);
+const BlogScreen = lazy(() =>
+  import('../../screens/BlogScreen').then((m) => ({ default: m.BlogScreen }))
+);
+
+// Lazy-loaded on-demand dialogs
+const GardenBinderPrintDialog = lazy(() =>
+  import('../dialogs/GardenBinderPrintDialog').then((m) => ({ default: m.GardenBinderPrintDialog }))
+);
+const SoilRecipesDialog = lazy(() =>
+  import('../dialogs/SoilRecipesDialog').then((m) => ({ default: m.SoilRecipesDialog }))
+);
+const GrowTentDialog = lazy(() =>
+  import('../dialogs/GrowTentDialog').then((m) => ({ default: m.GrowTentDialog }))
+);
+
+const ScreenSkeletonFallback: React.FC<{ label?: string }> = ({ label }) => (
+  <div
+    role="status"
+    aria-live="polite"
+    className="flex flex-col items-center justify-center p-12 min-h-[50vh] text-center"
+    style={{ color: 'var(--kulv-text-muted, #5F675A)' }}
+  >
+    <div
+      className="w-10 h-10 rounded-full border-2 border-[var(--kulv-border,#C9BFA9)] border-t-[var(--kulv-primary,#4F6B45)] animate-spin mb-3"
+      aria-hidden="true"
+    />
+    <p className="text-sm font-medium m-0">
+      {label || 'Laadin aiavaadet...'}
+    </p>
+  </div>
+);
 import {
   Home,
   Grid,
@@ -219,7 +256,7 @@ export const AppShell: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid var(--kulv-border, #958B79)',
+            borderBottom: '1px solid var(--kulv-border, #C9BFA9)',
             backgroundColor: 'var(--kulv-surface, #FFFDF8)'
           }}
         >
@@ -266,8 +303,8 @@ export const AppShell: React.FC = () => {
                 minWidth: '44px',
                 minHeight: '44px',
                 borderRadius: '8px',
-                border: '1px solid var(--kulv-border, #958B79)',
-                backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
                 cursor: 'pointer',
                 color: 'var(--kulv-primary, #4F6B45)',
                 transition: 'all 0.15s ease'
@@ -292,8 +329,8 @@ export const AppShell: React.FC = () => {
                 minWidth: '44px',
                 minHeight: '44px',
                 borderRadius: '8px',
-                border: '1px solid var(--kulv-border, #958B79)',
-                backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
                 cursor: 'pointer',
                 color: 'var(--kulv-primary, #4F6B45)',
                 transition: 'all 0.15s ease'
@@ -318,10 +355,10 @@ export const AppShell: React.FC = () => {
                 minWidth: '44px',
                 minHeight: '44px',
                 borderRadius: '8px',
-                border: '1px solid var(--kulv-border, #958B79)',
-                backgroundColor: 'var(--kulv-surface-muted, #F1EBDD)',
+                border: '1px solid var(--kulv-border, #C9BFA9)',
+                backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
                 cursor: 'pointer',
-                color: 'var(--kulv-text-muted, #52594D)',
+                color: 'var(--kulv-text-muted, #5F675A)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -330,35 +367,37 @@ export const AppShell: React.FC = () => {
           </div>
         </header>
 
-        {/* Main Content Area */}
+        {/* Main Content Area with Suspense boundary */}
         <main className="app-main-content" style={{ flex: 1 }}>
-          {currentScreen === 'home' && (
-            <HomeScreen
-              onNavigateToGarden={() => navigateTo('garden')}
-              onNavigateToPlants={() => navigateTo('plants')}
-              onNavigateToJournal={() => navigateTo('journal')}
-              onNavigateToCalendar={() => navigateTo('calendar')}
-              onOpenAddTask={() => setShowAddTask(true)}
-              onOpenAddJournal={() => setShowAddJournal(true)}
-              onOpenSoilRecipes={() => setShowSoilRecipes(true)}
-              onOpenGrowTent={() => setShowGrowTent(true)}
-            />
-          )}
+          <Suspense fallback={<ScreenSkeletonFallback label={language === 'en' ? 'Loading view...' : 'Laadin vaadet...'} />}>
+            {currentScreen === 'home' && (
+              <HomeScreen
+                onNavigateToGarden={() => navigateTo('garden')}
+                onNavigateToPlants={() => navigateTo('plants')}
+                onNavigateToJournal={() => navigateTo('journal')}
+                onNavigateToCalendar={() => navigateTo('calendar')}
+                onOpenAddTask={() => setShowAddTask(true)}
+                onOpenAddJournal={() => setShowAddJournal(true)}
+                onOpenSoilRecipes={() => setShowSoilRecipes(true)}
+                onOpenGrowTent={() => setShowGrowTent(true)}
+              />
+            )}
 
-          {currentScreen === 'garden' && <GardenCanvasScreen onOpenAddBed={() => setShowAddBed(true)} />}
+            {currentScreen === 'garden' && <GardenCanvasScreen onOpenAddBed={() => setShowAddBed(true)} />}
 
-          {currentScreen === 'plants' && (
-            <PlantsCatalogScreen
-              onSelectPlant={(plant) => setSelectedPlantDetail(plant)}
-              onOpenAddCustomPlant={() => setShowAddPlant(true)}
-            />
-          )}
+            {currentScreen === 'plants' && (
+              <PlantsCatalogScreen
+                onSelectPlant={(plant) => setSelectedPlantDetail(plant)}
+                onOpenAddCustomPlant={() => setShowAddPlant(true)}
+              />
+            )}
 
-          {currentScreen === 'calendar' && <CalendarScreen />}
+            {currentScreen === 'calendar' && <CalendarScreen />}
 
-          {currentScreen === 'journal' && <JournalScreen onOpenAddEntry={() => setShowAddJournal(true)} />}
+            {currentScreen === 'journal' && <JournalScreen onOpenAddEntry={() => setShowAddJournal(true)} />}
 
-          {currentScreen === 'blog' && <BlogScreen />}
+            {currentScreen === 'blog' && <BlogScreen />}
+          </Suspense>
         </main>
 
         {/* Bottom Navigation Bar (Mobile) */}
@@ -382,13 +421,16 @@ export const AppShell: React.FC = () => {
                   gap: '3px',
                   cursor: 'pointer',
                   color: active ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text-muted, #5F675A)',
-                  padding: '6px 12px',
-                  minWidth: '48px',
-                  minHeight: '48px'
+                  padding: '6px 8px',
+                  minWidth: '44px',
+                  minHeight: '44px',
+                  flex: '1 1 0'
                 }}
               >
                 {tab.icon}
-                <span style={{ fontSize: '11px', fontWeight: active ? 700 : 500 }}>{tab.label}</span>
+                <span className="truncate max-w-[56px] text-center" style={{ fontSize: '10px', fontWeight: active ? 700 : 500 }}>
+                  {tab.label}
+                </span>
               </button>
             );
           })}
@@ -456,17 +498,21 @@ export const AppShell: React.FC = () => {
         }}
       />
 
-      {showGrowTent && <GrowTentDialog isOpen={showGrowTent} onDismiss={() => setShowGrowTent(false)} />}
-      {showSoilRecipes && <SoilRecipesDialog isOpen={showSoilRecipes} onDismiss={() => setShowSoilRecipes(false)} />}
+      {/* Lazy Dialogs Boundary */}
+      <Suspense fallback={null}>
+        {showGrowTent && <GrowTentDialog isOpen={showGrowTent} onDismiss={() => setShowGrowTent(false)} />}
+        {showSoilRecipes && <SoilRecipesDialog isOpen={showSoilRecipes} onDismiss={() => setShowSoilRecipes(false)} />}
+        {showBinderDialog && (
+          <GardenBinderPrintDialog
+            isOpen={showBinderDialog}
+            onClose={() => setShowBinderDialog(false)}
+            language={language}
+          />
+        )}
+      </Suspense>
+
       {selectedPlantDetail && (
         <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
-      )}
-      {showBinderDialog && (
-        <GardenBinderPrintDialog
-          isOpen={showBinderDialog}
-          onClose={() => setShowBinderDialog(false)}
-          language={language}
-        />
       )}
 
       <SettingsModal

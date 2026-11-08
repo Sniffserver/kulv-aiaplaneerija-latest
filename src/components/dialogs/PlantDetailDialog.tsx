@@ -16,7 +16,9 @@ import {
   Leaf,
   Sparkles,
   Info,
-  HeartHandshake
+  HeartHandshake,
+  Scissors,
+  Check
 } from 'lucide-react';
 import { GddEngine } from '../../logic/gddEngine';
 import { useGarden } from '../../context/GardenContext';
@@ -41,8 +43,9 @@ type EncyclopediaDomain =
   | 'reliability';
 
 export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onDismiss }) => {
-  const { language } = useGarden();
+  const { language, addTask, weather } = useGarden();
   const [activeTab, setActiveTab] = useState<EncyclopediaDomain>('cultivation');
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     if (!plant) return;
@@ -62,6 +65,29 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
   const secondaryName = language === 'en' && plant.nameEn ? plant.name : plant.nameEn;
   const cropGdd = GddEngine.getCropStandard(plant.id || plant.name);
   const familyInfo = BOTANICAL_FAMILY_DETAILS[entry.family] || BOTANICAL_FAMILY_DETAILS.Other;
+  const isEn = language === 'en';
+
+  const handleQuickTask = (actionType: 'water' | 'prune' | 'soil') => {
+    if (!plant) return;
+    const today = new Date().toISOString().split('T')[0];
+    let title = '';
+    let category: 'water' | 'general' | 'feed' = 'general';
+
+    if (actionType === 'water') {
+      title = isEn ? `Water ${displayName}` : `Kasta: ${displayName}`;
+      category = 'water';
+    } else if (actionType === 'prune') {
+      title = isEn ? `Prune & pinch shoots: ${displayName}` : `Kärbi võrseid: ${displayName}`;
+      category = 'general';
+    } else {
+      title = isEn ? `Check soil moisture & aeration: ${displayName}` : `Kontrolli mulda ja niiskust: ${displayName}`;
+      category = 'feed';
+    }
+
+    addTask(title, today, category);
+    setActionFeedback(isEn ? `Added "${title}" to your tasks` : `Lisatud meelespeadesse: "${title}"`);
+    setTimeout(() => setActionFeedback(null), 3500);
+  };
 
   const tabs: { id: EncyclopediaDomain; labelEt: string; labelEn: string; icon: string }[] = [
     { id: 'cultivation', labelEt: 'Kasvatamine', labelEn: 'Cultivation', icon: '🌱' },
@@ -1243,6 +1269,138 @@ export const PlantDetailDialog: React.FC<PlantDetailDialogProps> = ({ plant, onD
               </div>
             </div>
           )}
+        </div>
+
+        {/* Weather-Aware Quick Action Button Group */}
+        <div
+          data-testid="plant_detail_quick_actions"
+          style={{
+            borderTop: '1px solid var(--kulv-border, #C9BFA9)',
+            backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
+            padding: '12px 24px'
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <Sparkles size={14} color="var(--kulv-accent, #E08A3C)" />
+                  <span>{isEn ? 'Seasonal Care Suggestions' : 'Hooajalised kiirtoimingud'}</span>
+                  <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--kulv-text-muted, #5F675A)', textTransform: 'none', letterSpacing: 'normal' }}>
+                    ({weather.temperature}°C · {weather.precipitation > 0 ? (isEn ? 'Rainy' : 'Sajune') : (isEn ? 'Dry' : 'Kuiv ilm')})
+                  </span>
+                </div>
+                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                  {isEn ? 'Suggested one-tap tasks based on current weather trends:' : 'Ilmatrendidest lähtuvad meelespead ühe klõpsuga:'}
+                </p>
+              </div>
+
+              {/* Quick Action Buttons */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => handleQuickTask('water')}
+                  data-testid="quick_action_water"
+                  aria-label={isEn ? `Water ${displayName}` : `Kasta ${displayName}`}
+                  style={{
+                    minHeight: '38px',
+                    padding: '6px 14px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                    color: 'var(--kulv-text, #2A2E24)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))'
+                  }}
+                >
+                  <Droplets size={14} color="var(--kulv-primary, #4F6B45)" />
+                  <span>{isEn ? 'Water' : 'Kasta'}</span>
+                  {weather.precipitation === 0 && (
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--kulv-accent, #E08A3C)' }} />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickTask('prune')}
+                  data-testid="quick_action_prune"
+                  aria-label={isEn ? `Prune ${displayName}` : `Kärbi ${displayName}`}
+                  style={{
+                    minHeight: '38px',
+                    padding: '6px 14px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                    color: 'var(--kulv-text, #2A2E24)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))'
+                  }}
+                >
+                  <Scissors size={14} color="var(--kulv-accent, #E08A3C)" />
+                  <span>{isEn ? 'Prune' : 'Kärbi'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickTask('soil')}
+                  data-testid="quick_action_soil"
+                  aria-label={isEn ? `Check soil for ${displayName}` : `Kontrolli mulda: ${displayName}`}
+                  style={{
+                    minHeight: '38px',
+                    padding: '6px 14px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--kulv-border, #C9BFA9)',
+                    backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                    color: 'var(--kulv-text, #2A2E24)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))'
+                  }}
+                >
+                  <Sprout size={14} color="var(--kulv-primary, #4F6B45)" />
+                  <span>{isEn ? 'Check Soil' : 'Kontrolli mulda'}</span>
+                  {weather.precipitation > 2 && (
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--kulv-primary, #4F6B45)' }} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {actionFeedback && (
+              <div
+                role="status"
+                style={{
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--kulv-surface, #FFFDF8)',
+                  border: '1px solid var(--kulv-primary, #4F6B45)',
+                  color: 'var(--kulv-primary, #4F6B45)',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Check size={13} />
+                <span>{actionFeedback}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer */}

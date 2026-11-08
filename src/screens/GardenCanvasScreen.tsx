@@ -13,7 +13,6 @@ import { Plus, Trash2, Sun, Map, Grid, ArrowLeft, Sparkles, Loader2, Calendar, P
 
 import { EmptyState } from '../components/common/EmptyState';
 import { GardenEmptyIllustration } from '../components/common/EmptyStateIllustrations';
-import emptyGardenImg from '../assets/images/kulv_empty_garden_1793083975050.jpg';
 
 interface GardenCanvasScreenProps {
   onOpenAddBed: () => void;

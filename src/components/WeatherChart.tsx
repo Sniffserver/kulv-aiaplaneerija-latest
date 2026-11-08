@@ -348,6 +348,20 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
           )}
         </div>
       </div>
+
+      {/* Actionable 2026 Nordic Garden Advice */}
+      <div
+        className="mt-1 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] flex items-start gap-2.5 text-xs text-[var(--kulv-text,#2A2E24)]"
+      >
+        <span className="font-bold text-[var(--kulv-primary,#4F6B45)] shrink-0">
+          {hasFrostRisk ? '🌱 Aiasoovitus:' : '✨ Aiasoovitus:'}
+        </span>
+        <span className="leading-relaxed">
+          {hasFrostRisk
+            ? 'Öökülmaoht! Kata soojanõudlikud taimed kattelooriga ja lükka avamaale külvamine edasi kuni öised temperatuurid püsivad üle +5°C.'
+            : 'Põhjamaine ilmastik on soodne: hea aeg karastatud taimede istutamiseks, multšimiseks ja leotistega väetamiseks.'}
+        </span>
+      </div>
     </div>
   );
 };

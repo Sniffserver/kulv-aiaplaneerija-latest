@@ -84,6 +84,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes('node_modules/three') || id.includes('@react-three')) {
+            return 'vendor-three';
+          }
           if (id.includes('node_modules/recharts')) {
             return 'vendor-recharts';
           }
