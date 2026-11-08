@@ -43,10 +43,12 @@ export function HomeOverview({
             <BotanicalImage
               src="/assets/aistudio/kastmine-illustration_541cc1f3.jpeg"
               alt={isEn ? "Garden watering illustration" : "Peenarde kastmise illustratsioon"}
-              aspectRatio="auto"
+              aspectRatio="1/1"
               objectFit="contain"
-              className="w-full h-full"
-              imageClassName="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-auto aspect-square flex items-center justify-center"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-semibold text-[var(--kulv-primary-strong,#243D2B)] shadow-xs">
               {taskCount > 0
@@ -113,10 +115,12 @@ export function HomeOverview({
             <BotanicalImage
               src="/assets/aistudio/lisa-peenar-seemned_fcd909da.jpeg"
               alt={isEn ? "Garden beds and seeds illustration" : "Aiapeenarde ja seemnete illustratsioon"}
-              aspectRatio="auto"
+              aspectRatio="1/1"
               objectFit="contain"
-              className="w-full h-full"
-              imageClassName="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-auto aspect-square flex items-center justify-center"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-mono tabular-nums font-semibold text-[var(--kulv-text,#2A2E24)] shadow-xs">
               {bedCount} {isEn ? 'beds' : 'peenart'}
@@ -196,10 +200,12 @@ export function HomeOverview({
             <BotanicalImage
               src="/assets/aistudio/ilmad_640480a6.jpeg"
               alt={isEn ? "Weather and microclimate illustration" : "Ilma ja mikrokliima illustratsioon"}
-              aspectRatio="auto"
+              aspectRatio="1/1"
               objectFit="contain"
-              className="w-full h-full"
-              imageClassName="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-auto aspect-square flex items-center justify-center"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-mono tabular-nums font-semibold text-[var(--kulv-accent-strong,#9E4C1F)] shadow-xs">
               {frostRiskDays !== null

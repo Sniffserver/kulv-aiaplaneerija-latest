@@ -26,9 +26,11 @@ function BotanicalArtwork({ src, fallback, alt = '', className = '' }: Botanical
         <img
           src={src}
           alt={alt}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           onError={() => setHasError(true)}
-          className="max-h-[160px] sm:max-h-[190px] w-auto max-w-[240px] sm:max-w-[280px] object-contain rounded-xl"
+          className="max-h-[160px] sm:max-h-[190px] w-auto max-w-[240px] sm:max-w-[280px] object-contain rounded-xl aspect-[4/3]"
         />
       </div>
     </div>

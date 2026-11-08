@@ -8,6 +8,8 @@ export interface BotanicalImageProps {
   imageClassName?: string;
   fallback?: React.ReactNode;
   objectFit?: 'cover' | 'contain';
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
   onClick?: () => void;
 }
 
@@ -28,6 +30,8 @@ export const BotanicalImage: React.FC<BotanicalImageProps> = ({
   imageClassName = '',
   fallback,
   objectFit = 'cover',
+  loading = 'lazy',
+  decoding = 'async',
   onClick
 }) => {
   const [hasError, setHasError] = useState(false);
@@ -80,10 +84,12 @@ export const BotanicalImage: React.FC<BotanicalImageProps> = ({
       <img
         src={src}
         alt={alt}
+        loading={loading}
+        decoding={decoding}
         referrerPolicy="no-referrer"
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
-        className={`w-full h-full ${fitClass} transition-opacity duration-300 ${
+        className={`w-full h-full ${fitClass} ${aspectClass} transition-opacity duration-300 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         } ${imageClassName}`}
       />

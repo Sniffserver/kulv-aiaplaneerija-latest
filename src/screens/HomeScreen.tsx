@@ -207,8 +207,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               alt={isEn ? "Botanical field notebook" : "Aiaplaneerija ja märkmik"}
               aspectRatio="1/1"
               objectFit="contain"
-              className="w-full h-full rounded-xl"
-              imageClassName="object-contain"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full rounded-xl aspect-square"
+              imageClassName="object-contain aspect-square"
             />
           </div>
         </div>
@@ -379,13 +381,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {tasks.length === 0 ? (
             <div className="p-6 rounded-2xl bg-[var(--kulv-surface-muted,#EFE6D4)] text-center text-sm text-[var(--kulv-text-muted,#5F675A)] flex flex-col items-center justify-center gap-3">
-              <div className="w-36 h-28 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs">
+              <div className="w-36 h-28 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs flex items-center justify-center">
                 <BotanicalImage
                   src="/assets/aistudio/sucess-illustration_364d8287.jpeg"
                   alt=""
                   aspectRatio="4/3"
                   objectFit="contain"
-                  className="w-full h-full p-2"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full p-2 aspect-[4/3]"
+                  imageClassName="object-contain aspect-[4/3]"
                 />
               </div>
               <p className="font-medium text-sm text-[var(--kulv-text,#2A2E24)] m-0 font-serif">
@@ -470,13 +475,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             {recentNotes.length === 0 ? (
               <div className="text-center py-6 text-xs text-[var(--kulv-text-muted,#5F675A)] bg-[var(--kulv-surface-muted,#EFE6D4)] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
-                <div className="w-32 h-24 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs">
+                <div className="w-32 h-24 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs flex items-center justify-center">
                   <BotanicalImage
                     src="/assets/aistudio/empty-state-p_evik_600dc83a.jpeg"
                     alt=""
                     aspectRatio="4/3"
                     objectFit="contain"
-                    className="w-full h-full p-2"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full p-2 aspect-[4/3]"
+                    imageClassName="object-contain aspect-[4/3]"
                   />
                 </div>
                 <p className="m-0 font-serif text-xs max-w-xs">
@@ -501,11 +509,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       </div>
                     </div>
                     {entry.photoUrl && (
-                      <div className="w-14 h-14 rounded-lg overflow-hidden border border-[var(--kulv-border,#C9BFA9)] shrink-0">
+                      <div className="w-14 h-14 rounded-lg overflow-hidden border border-[var(--kulv-border,#C9BFA9)] shrink-0 aspect-square">
                         <img
                           src={entry.photoUrl}
                           alt=""
-                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover aspect-square"
                           referrerPolicy="no-referrer"
                         />
                       </div>
