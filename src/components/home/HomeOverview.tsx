@@ -41,14 +41,16 @@ export function HomeOverview({
           {/* Compact Editorial Artwork Header */}
           <div className="relative w-full h-20 sm:h-24 bg-[var(--kulv-surface-muted,#EFE6D4)] border-b border-[var(--kulv-border,#C9BFA9)] overflow-hidden flex items-center justify-center p-2">
             <BotanicalImage
-              src="/assets/aistudio/kastmine-illustration_541cc1f3.jpeg"
+              src="/assets/aistudio/kastmine-illustration_541cc1f3.webp"
               alt={isEn ? "Garden watering illustration" : "Peenarde kastmise illustratsioon"}
               aspectRatio="1/1"
+              width={512}
+              height={512}
               objectFit="contain"
               loading="lazy"
               decoding="async"
               className="h-full w-auto aspect-square flex items-center justify-center"
-              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300 motion-reduce:transition-none"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-semibold text-[var(--kulv-primary-strong,#243D2B)] shadow-xs">
               {taskCount > 0
@@ -95,7 +97,7 @@ export function HomeOverview({
         <div className="p-4 sm:p-5 pt-3">
           <button
             type="button"
-            className="kulv-button kulv-button--primary min-h-[44px] w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] cursor-pointer transition-colors shadow-xs"
+            className="kulv-button kulv-button--primary min-h-[44px] w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-[var(--kulv-button-text,#FFFFFF)] text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] cursor-pointer transition-colors shadow-xs"
             onClick={onOpenTasks}
           >
             <WateringIcon size={18} />
@@ -113,14 +115,16 @@ export function HomeOverview({
           {/* Compact Editorial Artwork Header */}
           <div className="relative w-full h-20 sm:h-24 bg-[var(--kulv-surface-muted,#EFE6D4)] border-b border-[var(--kulv-border,#C9BFA9)] overflow-hidden flex items-center justify-center p-2">
             <BotanicalImage
-              src="/assets/aistudio/lisa-peenar-seemned_fcd909da.jpeg"
+              src="/assets/aistudio/lisa-peenar-seemned_fcd909da.webp"
               alt={isEn ? "Garden beds and seeds illustration" : "Aiapeenarde ja seemnete illustratsioon"}
               aspectRatio="1/1"
+              width={512}
+              height={512}
               objectFit="contain"
               loading="lazy"
               decoding="async"
               className="h-full w-auto aspect-square flex items-center justify-center"
-              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300 motion-reduce:transition-none"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-mono tabular-nums font-semibold text-[var(--kulv-text,#2A2E24)] shadow-xs">
               {bedCount} {isEn ? 'beds' : 'peenart'}
@@ -158,12 +162,12 @@ export function HomeOverview({
             </dl>
 
             {/* Mini 2D SVG preview */}
-            <div
-              className="w-full h-14 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-dashed border-[var(--kulv-border,#C9BFA9)] flex items-center justify-center overflow-hidden cursor-pointer hover:border-[var(--kulv-primary,#4F6B45)] transition-colors"
+            <button
+              type="button"
+              className="w-full h-14 rounded-xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-dashed border-[var(--kulv-border,#C9BFA9)] flex items-center justify-center overflow-hidden cursor-pointer hover:border-[var(--kulv-primary,#4F6B45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors p-0"
               onClick={onOpenGarden}
               title={isEn ? 'Click to zoom into 2D yard canvas' : 'Klõpsa krundiplaanile suumimiseks'}
-              role="img"
-              aria-label={isEn ? 'Miniature 2D yard overview map' : 'Miniatuurne 2D aia ülevaatekaart'}
+              aria-label={isEn ? 'Open miniature 2D yard overview map' : 'Ava miniatuurne 2D aia ülevaatekaart'}
             >
               <svg viewBox="0 0 200 60" className="w-full h-full px-2" aria-hidden="true">
                 <rect x="10" y="8" width="50" height="20" rx="3" fill="#79634F" opacity="0.85" />
@@ -173,7 +177,7 @@ export function HomeOverview({
                 <rect x="70" y="34" width="50" height="18" rx="3" fill="#79634F" opacity="0.85" />
                 <circle cx="160" cy="29" r="8" fill="#4F6B45" opacity="0.6" />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -183,7 +187,7 @@ export function HomeOverview({
             className="kulv-button kulv-button--secondary min-h-[44px] w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] text-[var(--kulv-text,#2A2E24)] text-sm font-semibold hover:bg-[var(--kulv-surface-muted,#EFE6D4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] cursor-pointer transition-colors"
             onClick={onOpenGarden}
           >
-            <Map size={16} />
+            <Map size={16} aria-hidden="true" />
             <span>{isEn ? 'Open Yard Plan' : 'Ava aiaplaan'}</span>
           </button>
         </div>
@@ -198,14 +202,16 @@ export function HomeOverview({
           {/* Compact Editorial Artwork Header */}
           <div className="relative w-full h-20 sm:h-24 bg-[var(--kulv-surface-muted,#EFE6D4)] border-b border-[var(--kulv-border,#C9BFA9)] overflow-hidden flex items-center justify-center p-2">
             <BotanicalImage
-              src="/assets/aistudio/ilmad_640480a6.jpeg"
+              src="/assets/aistudio/ilmad_640480a6.webp"
               alt={isEn ? "Weather and microclimate illustration" : "Ilma ja mikrokliima illustratsioon"}
               aspectRatio="1/1"
+              width={512}
+              height={512}
               objectFit="contain"
               loading="lazy"
               decoding="async"
               className="h-full w-auto aspect-square flex items-center justify-center"
-              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300"
+              imageClassName="object-contain aspect-square group-hover:scale-[1.03] transition-transform duration-300 motion-reduce:transition-none"
             />
             <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-[var(--kulv-surface,#FFFDF8)]/90 backdrop-blur-xs border border-[var(--kulv-border,#C9BFA9)] text-[10px] font-mono tabular-nums font-semibold text-[var(--kulv-accent-strong,#9E4C1F)] shadow-xs">
               {frostRiskDays !== null

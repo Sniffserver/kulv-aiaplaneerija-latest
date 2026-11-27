@@ -308,7 +308,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
               {data.displayDate} · {data.plantName}
             </span>
           </div>
-          <div style={{ color: 'var(--kulv-accent, #D97A3D)', fontWeight: 700, fontSize: '13px' }}>
+          <div style={{ color: 'var(--kulv-accent-strong, #8F3E14)', fontWeight: 700, fontSize: '13px' }}>
             Saak: +{data.cropYieldKg} kg
           </div>
           <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600, fontSize: '11px', marginTop: '2px' }}>
@@ -430,9 +430,9 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
         >
           <div style={{ fontWeight: 700, marginBottom: '4px' }}>{data.displayMonth}</div>
           <div style={{ fontSize: '11px', color: 'var(--kulv-primary, #4F6B45)' }}>Vaatlusi: {data.vaatlus}</div>
-          <div style={{ fontSize: '11px', color: 'var(--kulv-accent, #D97A3D)' }}>Saagikorjeid: {data.saak}</div>
-          <div style={{ fontSize: '11px', color: 'var(--kulv-danger, #B85C33)' }}>Probleeme: {data.probleem}</div>
-          <div style={{ fontSize: '11px', color: 'var(--kulv-info, #4F6B45)' }}>Ilmamärkmeid: {data.ilm}</div>
+          <div style={{ fontSize: '11px', color: 'var(--kulv-accent-strong, #8F3E14)' }}>Saagikorjeid: {data.saak}</div>
+          <div style={{ fontSize: '11px', color: 'var(--kulv-danger-text, #8C1D18)' }}>Probleeme: {data.probleem}</div>
+          <div style={{ fontSize: '11px', color: 'var(--kulv-info-text, #0F556D)' }}>Ilmamärkmeid: {data.ilm}</div>
           <div
             style={{
               fontSize: '11px',
@@ -510,6 +510,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
             }}
           >
             <button
+              type="button"
               role="tab"
               aria-selected={viewMode === 'yield'}
               onClick={() => setViewMode('yield')}
@@ -525,16 +526,17 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                 fontSize: '12px',
                 fontWeight: viewMode === 'yield' ? 700 : 500,
                 backgroundColor: viewMode === 'yield' ? 'var(--kulv-surface, #FFFDF8)' : 'transparent',
-                color: viewMode === 'yield' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
+                color: viewMode === 'yield' ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
                 boxShadow: viewMode === 'yield' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease'
               }}
             >
-              <Scale size={14} />
+              <Scale size={14} aria-hidden="true" />
               <span>Saagikus (kg)</span>
             </button>
 
             <button
+              type="button"
               role="tab"
               aria-selected={viewMode === 'growth'}
               onClick={() => setViewMode('growth')}
@@ -555,11 +557,12 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                 transition: 'all 0.15s ease'
               }}
             >
-              <Sprout size={14} />
+              <Sprout size={14} aria-hidden="true" />
               <span>Kasvuprogress (%)</span>
             </button>
 
             <button
+              type="button"
               role="tab"
               aria-selected={viewMode === 'activity'}
               onClick={() => setViewMode('activity')}
@@ -580,7 +583,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                 transition: 'all 0.15s ease'
               }}
             >
-              <Calendar size={14} />
+              <Calendar size={14} aria-hidden="true" />
               <span>Aktiivsus</span>
             </button>
           </div>
@@ -617,6 +620,8 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
           {viewMode === 'yield' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
               <button
+                type="button"
+                aria-pressed={comparePreviousYear}
                 onClick={() => setComparePreviousYear((prev) => !prev)}
                 data-testid="toggle_compare_previous_year"
                 title="Võrdle käesoleva hooaja saagikust varasema aastaga"
@@ -692,7 +697,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
           <span style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>Hooaja kogusaak</span>
           <span
             className="tabular-nums"
-            style={{ fontSize: '18px', fontWeight: 800, color: 'var(--kulv-accent, #D97A3D)' }}
+            style={{ fontSize: '18px', fontWeight: 800, color: 'var(--kulv-accent-strong, #8F3E14)' }}
           >
             {totalYieldKg} kg
           </span>
@@ -825,7 +830,7 @@ export const JournalTimelineChart: React.FC<JournalTimelineChartProps> = ({ entr
                         row.diffPercentage && row.diffPercentage > 0
                           ? 'var(--kulv-primary, #4F6B45)'
                           : row.diffPercentage && row.diffPercentage < 0
-                            ? 'var(--kulv-accent, #D97A3D)'
+                            ? 'var(--kulv-accent-strong, #8F3E14)'
                             : 'var(--kulv-text-muted, #5F675A)'
                     }}
                   >

@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface BotanicalImageProps {
   src: string;
   alt?: string;
   aspectRatio?: '16/9' | '4/3' | '1/1' | '21/9' | '3/2' | 'auto';
+  width?: number;
+  height?: number;
   className?: string;
   imageClassName?: string;
   fallback?: React.ReactNode;
   objectFit?: 'cover' | 'contain';
   loading?: 'lazy' | 'eager';
   decoding?: 'async' | 'sync' | 'auto';
+  fetchPriority?: 'high' | 'low' | 'auto';
   onClick?: () => void;
 }
 
@@ -26,16 +29,24 @@ export const BotanicalImage: React.FC<BotanicalImageProps> = ({
   src,
   alt = '',
   aspectRatio = '4/3',
+  width = 512,
+  height = 512,
   className = '',
   imageClassName = '',
   fallback,
   objectFit = 'cover',
   loading = 'lazy',
   decoding = 'async',
+  fetchPriority = 'auto',
   onClick
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+    setIsLoaded(false);
+  }, [src]);
 
   const aspectClass = ASPECT_RATIO_CLASSES[aspectRatio] || '';
   const fitClass = objectFit === 'contain' ? 'object-contain' : 'object-cover';
@@ -77,19 +88,22 @@ export const BotanicalImage: React.FC<BotanicalImageProps> = ({
       {/* Loading shimmer placeholder */}
       {!isLoaded && (
         <div
-          className="absolute inset-0 bg-[var(--kulv-surface-muted,#EFE6D4)] animate-pulse"
+          className="absolute inset-0 bg-[var(--kulv-surface-muted,#EFE6D4)] animate-pulse motion-reduce:animate-none"
           aria-hidden="true"
         />
       )}
       <img
         src={src}
         alt={alt}
+        width={width}
+        height={height}
         loading={loading}
         decoding={decoding}
+        fetchPriority={fetchPriority}
         referrerPolicy="no-referrer"
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
-        className={`w-full h-full ${fitClass} ${aspectClass} transition-opacity duration-300 ${
+        className={`w-full h-full ${fitClass} ${aspectClass} dark:brightness-95 transition-opacity duration-300 motion-reduce:transition-none ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         } ${imageClassName}`}
       />

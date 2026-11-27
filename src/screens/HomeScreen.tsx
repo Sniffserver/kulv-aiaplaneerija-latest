@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGarden } from '../context/GardenContext';
 import { WeatherWidget } from '../components/WeatherWidget';
 import { TaskCard } from '../components/TaskCard';
-import { WeatherChart } from '../components/WeatherChart';
 import { HomeOverview } from '../components/home/HomeOverview';
 import { BotanicalImage } from '../components/common/BotanicalImage';
 import {
@@ -20,6 +19,9 @@ import {
   CalendarClock
 } from 'lucide-react';
 
+const WeatherChart = React.lazy(() =>
+  import('../components/WeatherChart').then((m) => ({ default: m.WeatherChart }))
+);
 const SeasonalSowingPrintDialog = React.lazy(() =>
   import('../components/dialogs/SeasonalSowingPrintDialog').then((m) => ({ default: m.SeasonalSowingPrintDialog }))
 );
@@ -173,9 +175,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               type="button"
               onClick={onOpenAddTask}
-              className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+              className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[var(--kulv-primary,#4F6B45)] text-[var(--kulv-button-text,#FFFFFF)] text-sm font-semibold flex items-center gap-2 hover:bg-[var(--kulv-primary-hover,#3D5636)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kulv-focus,#4F6B45)] transition-colors cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <Plus size={16} />
+              <Plus size={16} aria-hidden="true" />
               <span>{isEn ? 'Add Task' : 'Lisa ülesanne'}</span>
             </button>
 
@@ -184,7 +186,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => setShowBinderDialog(true)}
               className="min-h-[44px] px-3.5 py-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs sm:text-sm font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap"
             >
-              <Printer size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+              <Printer size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
               <span>{isEn ? 'Garden Binder Sheet' : 'Prindi aiavihik'}</span>
             </button>
 
@@ -193,7 +195,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => setShowPrintDialog(true)}
               className="min-h-[44px] px-3.5 py-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs sm:text-sm font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap"
             >
-              <FileText size={16} className="text-[var(--kulv-accent,#E08A3C)]" />
+              <FileText size={16} className="text-[var(--kulv-accent-strong,#8F3E14)]" aria-hidden="true" />
               <span>{isEn ? 'Sowing Sheet' : 'Külvileht'}</span>
             </button>
           </div>
@@ -203,9 +205,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="flex items-center justify-center shrink-0">
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 p-2 rounded-2xl bg-[var(--kulv-surface-muted,#EFE6D4)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs flex items-center justify-center">
             <BotanicalImage
-              src="/assets/aistudio/lisa-p_evik-kanne-m_rkmik-notebook-garden-aiaplaneerija_9c90ce5a.jpeg"
+              src="/assets/aistudio/lisa-p_evik-kanne-m_rkmik-notebook-garden-aiaplaneerija_9c90ce5a.webp"
               alt={isEn ? "Botanical field notebook" : "Aiaplaneerija ja märkmik"}
               aspectRatio="1/1"
+              width={512}
+              height={512}
               objectFit="contain"
               loading="lazy"
               decoding="async"
@@ -282,62 +286,68 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         <div data-testid="quick_actions_section" className="kulv-toolstrip grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
           <button
+            type="button"
             onClick={handleQuickWater}
             data-testid="quick_action_water_plants"
             aria-label={isEn ? 'Water plants' : 'Kasta taimi'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Droplets size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <Droplets size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
             <span>{isEn ? 'Water Plants' : 'Kasta taimi'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onNavigateToCalendar}
             data-testid="quick_action_check_calendar"
             aria-label={isEn ? 'View sowing calendar' : 'Vaata külvikalendrit'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <CalendarIcon size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <CalendarIcon size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
             <span>{isEn ? 'Sowing Calendar' : 'Külvikalender'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onNavigateToGarden}
             data-testid="quick_action_crop_rotation"
             aria-label={isEn ? 'Crop rotation timeline' : 'Külvikorra ajajoon'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Sprout size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <Sprout size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
             <span>{isEn ? 'Crop Rotation' : 'Külvikord'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onOpenSoilRecipes}
             data-testid="quick_action_soil_recipes"
             aria-label={isEn ? 'Soil recipes and brews' : 'Mullaretseptid ja leotised'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <FlaskConical size={16} className="text-[var(--kulv-accent,#E08A3C)]" />
+            <FlaskConical size={16} className="text-[var(--kulv-accent-strong,#8F3E14)]" aria-hidden="true" />
             <span>{isEn ? 'Soil Recipes' : 'Mullaretseptid'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onOpenAddTask}
             data-testid="quick_action_add_task"
             aria-label={isEn ? 'Add garden task' : 'Lisa aiatöö'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <Plus size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <Plus size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
             <span>{isEn ? 'Add Task' : 'Lisa aiatöö'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onOpenAddJournal}
             data-testid="quick_action_add_journal"
             aria-label={isEn ? 'Add journal entry' : 'Lisa päeviku märge'}
             className="kulv-toolstrip__button min-h-[44px] flex items-center justify-center gap-2 p-2.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface,#FFFDF8)] hover:border-[var(--kulv-primary,#4F6B45)] transition-colors cursor-pointer"
           >
-            <BookOpen size={16} className="text-[var(--kulv-primary,#4F6B45)]" />
+            <BookOpen size={16} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
             <span>{isEn ? 'Garden Journal' : 'Aiapäevik'}</span>
           </button>
         </div>
@@ -370,11 +380,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </p>
             </div>
             <button
+              type="button"
               onClick={onOpenAddTask}
               aria-label={isEn ? 'Add new task' : 'Lisa uus aiatöö'}
               className="min-h-[40px] px-3.5 py-1.5 rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:bg-[var(--kulv-surface-muted,#EFE6D4)] flex items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <Plus size={14} />
+              <Plus size={14} aria-hidden="true" />
               <span>{isEn ? 'Add task' : 'Lisa ülesanne'}</span>
             </button>
           </div>
@@ -383,9 +394,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="p-6 rounded-2xl bg-[var(--kulv-surface-muted,#EFE6D4)] text-center text-sm text-[var(--kulv-text-muted,#5F675A)] flex flex-col items-center justify-center gap-3">
               <div className="w-36 h-28 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs flex items-center justify-center">
                 <BotanicalImage
-                  src="/assets/aistudio/sucess-illustration_364d8287.jpeg"
+                  src="/assets/aistudio/sucess-illustration_364d8287.webp"
                   alt=""
                   aspectRatio="4/3"
+                  width={512}
+                  height={512}
                   objectFit="contain"
                   loading="lazy"
                   decoding="async"
@@ -409,7 +422,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="mt-2 pt-4 border-t border-[var(--kulv-border,#C9BFA9)]">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <CalendarClock size={16} className="text-[var(--kulv-accent,#E08A3C)]" />
+                <CalendarClock size={16} className="text-[var(--kulv-accent-strong,#8F3E14)]" aria-hidden="true" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--kulv-text-muted,#5F675A)] m-0">
                   {isEn ? 'Upcoming Sowing Windows' : 'Eelseisvad külviajad'}
                 </h3>
@@ -420,7 +433,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 className="text-xs text-[var(--kulv-primary,#4F6B45)] font-semibold hover:underline flex items-center gap-1"
               >
                 <span>{isEn ? 'Full Calendar' : 'Kogu kalender'}</span>
-                <ArrowRight size={12} />
+                <ArrowRight size={12} aria-hidden="true" />
               </button>
             </div>
 
@@ -448,7 +461,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* Right Column: Weather Forecast & Recent Journal Activity */}
         <section className="flex flex-col gap-6">
           <WeatherWidget weather={weather} isLoading={isWeatherLoading} onRefresh={() => refreshWeather(true)} />
-          <WeatherChart weather={weather} />
+          <React.Suspense
+            fallback={
+              <div
+                aria-hidden="true"
+                className="min-h-[300px] rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] p-4 animate-pulse motion-reduce:animate-none"
+              />
+            }
+          >
+            <WeatherChart weather={weather} />
+          </React.Suspense>
 
           {/* Recent Journal Activity */}
           <div className="p-5 rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-sm flex flex-col gap-4">
@@ -464,7 +486,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     className="text-xs text-[var(--kulv-primary,#4F6B45)] font-semibold hover:underline flex items-center gap-1 cursor-pointer shrink-0"
                   >
                     <span>{isEn ? 'View Journal' : 'Vaata päevikut'}</span>
-                    <ArrowRight size={12} />
+                    <ArrowRight size={12} aria-hidden="true" />
                   </button>
                 </div>
                 <p className="text-xs text-[var(--kulv-text-muted,#5F675A)] m-0 mt-0.5 truncate">
@@ -477,9 +499,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div className="text-center py-6 text-xs text-[var(--kulv-text-muted,#5F675A)] bg-[var(--kulv-surface-muted,#EFE6D4)] rounded-xl p-4 flex flex-col items-center justify-center gap-3">
                 <div className="w-32 h-24 rounded-xl overflow-hidden bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] shadow-xs flex items-center justify-center">
                   <BotanicalImage
-                    src="/assets/aistudio/empty-state-p_evik_600dc83a.jpeg"
+                    src="/assets/aistudio/empty-state-p_evik_600dc83a.webp"
                     alt=""
                     aspectRatio="4/3"
+                    width={512}
+                    height={512}
                     objectFit="contain"
                     loading="lazy"
                     decoding="async"
@@ -513,6 +537,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         <img
                           src={entry.photoUrl}
                           alt=""
+                          width={56}
+                          height={56}
                           loading="lazy"
                           decoding="async"
                           className="w-full h-full object-cover aspect-square"
@@ -533,7 +559,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={onOpenAddJournal}
               className="min-h-[40px] px-3.5 py-2 rounded-xl border border-dashed border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] text-xs font-semibold text-[var(--kulv-text,#2A2E24)] hover:border-[var(--kulv-primary,#4F6B45)] hover:bg-[var(--kulv-surface,#FFFDF8)] flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
-              <Plus size={14} className="text-[var(--kulv-primary,#4F6B45)]" />
+              <Plus size={14} className="text-[var(--kulv-primary,#4F6B45)]" aria-hidden="true" />
               <span>{isEn ? 'Add Field Note' : 'Lisa uus aiamärge'}</span>
             </button>
           </div>

@@ -238,6 +238,8 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
+            type="button"
+            aria-expanded={showAdvancedFilters}
             onClick={() => setShowAdvancedFilters((prev) => !prev)}
             data-testid="toggle_advanced_filters"
             style={{
@@ -247,7 +249,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
               padding: '10px 14px',
               borderRadius: '8px',
               backgroundColor: showAdvancedFilters ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
-              color: showAdvancedFilters ? 'white' : 'var(--kulv-text, #2A2E24)',
+              color: showAdvancedFilters ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
               border: '1px solid var(--kulv-border, #C9BFA9)',
               fontSize: '13px',
               fontWeight: 600,
@@ -255,14 +257,14 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
               minHeight: '44px'
             }}
           >
-            <SlidersHorizontal size={16} />
+            <SlidersHorizontal size={16} aria-hidden="true" />
             <span>{language === 'en' ? 'Filters' : 'Filtrid'}</span>
             {activeFilterCount > 0 && (
               <span
                 style={{
                   fontSize: '11px',
-                  backgroundColor: showAdvancedFilters ? 'white' : 'var(--kulv-primary, #4F6B45)',
-                  color: showAdvancedFilters ? 'var(--kulv-primary, #4F6B45)' : 'white',
+                  backgroundColor: showAdvancedFilters ? 'var(--kulv-surface, #FFFDF8)' : 'var(--kulv-primary, #4F6B45)',
+                  color: showAdvancedFilters ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-button-text, #FFFFFF)',
                   borderRadius: '999px',
                   padding: '1px 6px',
                   fontWeight: 700
@@ -274,6 +276,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
           </button>
 
           <button
+            type="button"
             onClick={onOpenAddCustomPlant}
             data-testid="fab_add_plant"
             style={{
@@ -283,7 +286,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
               padding: '10px 18px',
               borderRadius: '8px',
               backgroundColor: 'var(--kulv-primary, #4F6B45)',
-              color: 'white',
+              color: 'var(--kulv-button-text, #FFFFFF)',
               border: 'none',
               fontSize: '13px',
               fontWeight: 600,
@@ -292,7 +295,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
               minHeight: '44px'
             }}
           >
-            <Plus size={16} />
+            <Plus size={16} aria-hidden="true" />
             <span>{language === 'en' ? 'Add Plant' : 'Lisa taim'}</span>
           </button>
         </div>
@@ -321,9 +324,10 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             minHeight: '44px'
           }}
         >
-          <Search size={18} color="var(--kulv-text-muted, #5F675A)" />
+          <Search size={18} color="var(--kulv-text-muted, #5F675A)" aria-hidden="true" />
           <input
             type="text"
+            aria-label={language === 'en' ? 'Search plants' : 'Otsi taimi'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
@@ -343,6 +347,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
           />
           {searchQuery.length > 0 && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
               aria-label={language === 'en' ? 'Clear search' : 'Tühjenda otsing'}
               style={{
@@ -357,7 +362,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                 borderRadius: '4px'
               }}
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -413,6 +418,8 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
           return (
             <button
               key={cat.id}
+              type="button"
+              aria-pressed={isSelected}
               onClick={() => setSelectedCategory(cat.id)}
               style={{
                 display: 'inline-flex',
@@ -427,7 +434,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                 minHeight: '44px',
                 border: isSelected ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: isSelected ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
-                color: isSelected ? 'white' : 'var(--kulv-text, #2A2E24)',
+                color: isSelected ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -470,6 +477,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             {/* Sunlight Need */}
             <div>
               <label
+                htmlFor="plant-filter-sun"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -480,10 +488,11 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                   marginBottom: '6px'
                 }}
               >
-                <Sun size={14} color="var(--kulv-accent, #D97A3D)" />
+                <Sun size={14} color="var(--kulv-accent-strong, #8F3E14)" aria-hidden="true" />
                 <span>{language === 'en' ? 'Sunlight' : 'Valgusvajadus'}</span>
               </label>
               <select
+                id="plant-filter-sun"
                 value={sunFilter}
                 onChange={(e) => setSunFilter(e.target.value as SunFilter)}
                 style={{
@@ -507,6 +516,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             {/* Water Need */}
             <div>
               <label
+                htmlFor="plant-filter-water"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -517,10 +527,11 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                   marginBottom: '6px'
                 }}
               >
-                <Droplets size={14} color="var(--kulv-primary, #4F6B45)" />
+                <Droplets size={14} color="var(--kulv-primary, #4F6B45)" aria-hidden="true" />
                 <span>{language === 'en' ? 'Water Requirement' : 'Kastmisvajadus'}</span>
               </label>
               <select
+                id="plant-filter-water"
                 value={waterFilter}
                 onChange={(e) => setWaterFilter(e.target.value as WaterFilter)}
                 style={{
@@ -544,6 +555,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             {/* Sowing Method */}
             <div>
               <label
+                htmlFor="plant-filter-sow-method"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -554,10 +566,11 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                   marginBottom: '6px'
                 }}
               >
-                <Sprout size={14} color="var(--kulv-primary, #4F6B45)" />
+                <Sprout size={14} color="var(--kulv-primary, #4F6B45)" aria-hidden="true" />
                 <span>{language === 'en' ? 'Sowing Method' : 'Külviviis'}</span>
               </label>
               <select
+                id="plant-filter-sow-method"
                 value={sowMethodFilter}
                 onChange={(e) => setSowMethodFilter(e.target.value as SowMethodFilter)}
                 style={{
@@ -584,6 +597,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             {/* Sowing Timing Window */}
             <div>
               <label
+                htmlFor="plant-filter-sow-timing"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -594,10 +608,11 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                   marginBottom: '6px'
                 }}
               >
-                <Calendar size={14} color="var(--kulv-text-muted, #5F675A)" />
+                <Calendar size={14} color="var(--kulv-text-muted, #5F675A)" aria-hidden="true" />
                 <span>{language === 'en' ? 'Sowing Window' : 'Külviperiood'}</span>
               </label>
               <select
+                id="plant-filter-sow-timing"
                 value={sowTimingFilter}
                 onChange={(e) => setSowTimingFilter(e.target.value as SowTimingFilter)}
                 style={{
@@ -631,6 +646,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
           {/* Reset Filters button inside drawer */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '4px' }}>
             <button
+              type="button"
               onClick={handleResetFilters}
               style={{
                 display: 'inline-flex',
@@ -645,7 +661,7 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
                 cursor: 'pointer'
               }}
             >
-              <RotateCcw size={13} />
+              <RotateCcw size={13} aria-hidden="true" />
               <span>{language === 'en' ? 'Reset all filters' : 'Lähtesta filtrid'}</span>
             </button>
           </div>
@@ -674,10 +690,12 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             >
               <span>{categories.find((c) => c.id === selectedCategory)?.[language === 'en' ? 'labelEn' : 'labelEt']}</span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Remove category filter' : 'Eemalda kategooria filter'}
                 onClick={() => setSelectedCategory('all')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
               >
-                <X size={12} />
+                <X size={12} aria-hidden="true" />
               </button>
             </span>
           )}
@@ -697,10 +715,12 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             >
               <span>{sunFilter === 'full' ? 'Täispäike' : sunFilter === 'partial' ? 'Poolvari' : 'Vari'}</span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Remove sunlight filter' : 'Eemalda valguse filter'}
                 onClick={() => setSunFilter('all')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
               >
-                <X size={12} />
+                <X size={12} aria-hidden="true" />
               </button>
             </span>
           )}
@@ -720,10 +740,12 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             >
               <span>{waterFilter === 'low' ? 'Madal vesi' : waterFilter === 'medium' ? 'Mõõdukas vesi' : 'Kõrge vesi'}</span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Remove water filter' : 'Eemalda kastmise filter'}
                 onClick={() => setWaterFilter('all')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
               >
-                <X size={12} />
+                <X size={12} aria-hidden="true" />
               </button>
             </span>
           )}
@@ -743,10 +765,12 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             >
               <span>{sowMethodFilter === 'indoor' ? 'Ettekasvatus' : 'Otsekülv'}</span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Remove sowing method filter' : 'Eemalda külviviisi filter'}
                 onClick={() => setSowMethodFilter('all')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
               >
-                <X size={12} />
+                <X size={12} aria-hidden="true" />
               </button>
             </span>
           )}
@@ -766,20 +790,23 @@ export const PlantsCatalogScreen: React.FC<PlantsCatalogScreenProps> = ({ onSele
             >
               <span>{sowTimingFilter}</span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Remove sowing window filter' : 'Eemalda külviperioodi filter'}
                 onClick={() => setSowTimingFilter('all')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
               >
-                <X size={12} />
+                <X size={12} aria-hidden="true" />
               </button>
             </span>
           )}
           <button
+            type="button"
             onClick={handleResetFilters}
             style={{
               background: 'none',
               border: 'none',
               fontSize: '11px',
-              color: 'var(--kulv-accent, #D97A3D)',
+              color: 'var(--kulv-accent-strong, #8F3E14)',
               fontWeight: 700,
               cursor: 'pointer',
               padding: '2px 4px'

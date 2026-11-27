@@ -2,13 +2,8 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useGarden } from '../../context/GardenContext';
 import { Plant, ColorPalette } from '../../types';
 import { HomeScreen } from '../../screens/HomeScreen';
-import { AddBedDialog } from '../dialogs/AddBedDialog';
-import { AddTaskDialog } from '../dialogs/AddTaskDialog';
-import { AddPlantDialog } from '../dialogs/AddPlantDialog';
-import { AddJournalDialog } from '../dialogs/AddJournalDialog';
-import { PlantDetailDialog } from '../dialogs/PlantDetailDialog';
-import { SettingsModal, applyPaletteToDOM } from '../SettingsModal';
-import appIconUrl from '../../assets/images/kulv_app_icon_1793083974365.jpg';
+import { applyPaletteToDOM } from '../../lib/theme';
+import appIconUrl from '../../assets/images/kulv_app_icon.webp';
 
 // Lazy-loaded secondary screens for bundle optimization
 const GardenCanvasScreen = lazy(() =>
@@ -28,6 +23,24 @@ const BlogScreen = lazy(() =>
 );
 
 // Lazy-loaded on-demand dialogs
+const AddBedDialog = lazy(() =>
+  import('../dialogs/AddBedDialog').then((m) => ({ default: m.AddBedDialog }))
+);
+const AddTaskDialog = lazy(() =>
+  import('../dialogs/AddTaskDialog').then((m) => ({ default: m.AddTaskDialog }))
+);
+const AddPlantDialog = lazy(() =>
+  import('../dialogs/AddPlantDialog').then((m) => ({ default: m.AddPlantDialog }))
+);
+const AddJournalDialog = lazy(() =>
+  import('../dialogs/AddJournalDialog').then((m) => ({ default: m.AddJournalDialog }))
+);
+const PlantDetailDialog = lazy(() =>
+  import('../dialogs/PlantDetailDialog').then((m) => ({ default: m.PlantDetailDialog }))
+);
+const SettingsModal = lazy(() =>
+  import('../SettingsModal').then((m) => ({ default: m.SettingsModal }))
+);
 const GardenBinderPrintDialog = lazy(() =>
   import('../dialogs/GardenBinderPrintDialog').then((m) => ({ default: m.GardenBinderPrintDialog }))
 );
@@ -129,12 +142,12 @@ export const AppShell: React.FC = () => {
   };
 
   const navItems = [
-    { id: 'home', label: t('nav_home'), icon: <Home size={18} /> },
-    { id: 'garden', label: t('nav_garden'), icon: <Grid size={18} /> },
-    { id: 'plants', label: t('nav_plants'), icon: <Sprout size={18} /> },
-    { id: 'calendar', label: t('nav_calendar'), icon: <Calendar size={18} /> },
-    { id: 'journal', label: t('nav_journal'), icon: <BookOpen size={18} /> },
-    { id: 'blog', label: t('nav_blog'), icon: <Newspaper size={18} /> }
+    { id: 'home', label: t('nav_home'), icon: <Home size={18} aria-hidden="true" /> },
+    { id: 'garden', label: t('nav_garden'), icon: <Grid size={18} aria-hidden="true" /> },
+    { id: 'plants', label: t('nav_plants'), icon: <Sprout size={18} aria-hidden="true" /> },
+    { id: 'calendar', label: t('nav_calendar'), icon: <Calendar size={18} aria-hidden="true" /> },
+    { id: 'journal', label: t('nav_journal'), icon: <BookOpen size={18} aria-hidden="true" /> },
+    { id: 'blog', label: t('nav_blog'), icon: <Newspaper size={18} aria-hidden="true" /> }
   ];
 
   return (
@@ -162,6 +175,9 @@ export const AppShell: React.FC = () => {
           <img
             src={appIconUrl}
             alt="KÜLV"
+            width={34}
+            height={34}
+            decoding="async"
             style={{
               width: '34px',
               height: '34px',
@@ -172,9 +188,10 @@ export const AppShell: React.FC = () => {
             referrerPolicy="no-referrer"
           />
           <div>
-            <h1
+            <span
               className="font-serif-display"
               style={{
+                display: 'block',
                 fontSize: '18px',
                 fontWeight: 700,
                 color: 'var(--kulv-primary, #4F6B45)',
@@ -183,7 +200,7 @@ export const AppShell: React.FC = () => {
               }}
             >
               KÜLV
-            </h1>
+            </span>
             <p style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', margin: 0 }}>Aiaplaneerija</p>
           </div>
         </div>
@@ -264,6 +281,9 @@ export const AppShell: React.FC = () => {
             <img
               src={appIconUrl}
               alt="KÜLV"
+              width={28}
+              height={28}
+              decoding="async"
               style={{
                 width: '28px',
                 height: '28px',
@@ -310,7 +330,7 @@ export const AppShell: React.FC = () => {
                 transition: 'all 0.15s ease'
               }}
             >
-              <Printer size={18} />
+              <Printer size={18} aria-hidden="true" />
             </button>
 
             {/* Soil Recipes Dialog Trigger */}
@@ -336,7 +356,7 @@ export const AppShell: React.FC = () => {
                 transition: 'all 0.15s ease'
               }}
             >
-              <FlaskConical size={18} />
+              <FlaskConical size={18} aria-hidden="true" />
             </button>
 
             {/* Settings Trigger */}
@@ -362,7 +382,7 @@ export const AppShell: React.FC = () => {
                 transition: 'all 0.15s ease'
               }}
             >
-              <Settings size={18} />
+              <Settings size={18} aria-hidden="true" />
             </button>
           </div>
         </header>
@@ -437,69 +457,76 @@ export const AppShell: React.FC = () => {
         </nav>
       </div>
 
-      {/* Active Modals */}
-      <AddBedDialog
-        isOpen={showAddBed}
-        onDismiss={() => setShowAddBed(false)}
-        onConfirm={(name, type, w, l, cover, notes) => {
-          addBed(name, type, w, l, cover, notes);
-          setShowAddBed(false);
-        }}
-      />
-
-      <AddTaskDialog
-        isOpen={showAddTask}
-        onDismiss={() => setShowAddTask(false)}
-        onConfirm={(title, dueDate, category) => {
-          addTask(title, dueDate, category);
-          setShowAddTask(false);
-        }}
-      />
-
-      <AddPlantDialog
-        isOpen={showAddPlant}
-        onDismiss={() => setShowAddPlant(false)}
-        onConfirm={(name, fam, icon, days, space, depth, desc) => {
-          addPlant(name, fam, icon, days, space, depth, desc);
-          setShowAddPlant(false);
-        }}
-      />
-
-      <AddJournalDialog
-        isOpen={showAddJournal}
-        onDismiss={() => setShowAddJournal(false)}
-        onConfirm={(
-          title,
-          content,
-          category,
-          date,
-          photoUrl,
-          plantId,
-          plantName,
-          yieldAmount,
-          yieldUnit,
-          growthStage,
-          growthProgressPct
-        ) => {
-          addJournalEntry(
-            title,
-            content,
-            category,
-            date,
-            photoUrl,
-            plantId,
-            plantName,
-            yieldAmount,
-            yieldUnit,
-            growthStage,
-            growthProgressPct
-          );
-          setShowAddJournal(false);
-        }}
-      />
-
       {/* Lazy Dialogs Boundary */}
       <Suspense fallback={null}>
+        {showAddBed && (
+          <AddBedDialog
+            isOpen={showAddBed}
+            onDismiss={() => setShowAddBed(false)}
+            onConfirm={(name, type, w, l, cover, notes) => {
+              addBed(name, type, w, l, cover, notes);
+              setShowAddBed(false);
+            }}
+          />
+        )}
+
+        {showAddTask && (
+          <AddTaskDialog
+            isOpen={showAddTask}
+            onDismiss={() => setShowAddTask(false)}
+            onConfirm={(title, dueDate, category) => {
+              addTask(title, dueDate, category);
+              setShowAddTask(false);
+            }}
+          />
+        )}
+
+        {showAddPlant && (
+          <AddPlantDialog
+            isOpen={showAddPlant}
+            onDismiss={() => setShowAddPlant(false)}
+            onConfirm={(name, fam, icon, days, space, depth, desc) => {
+              addPlant(name, fam, icon, days, space, depth, desc);
+              setShowAddPlant(false);
+            }}
+          />
+        )}
+
+        {showAddJournal && (
+          <AddJournalDialog
+            isOpen={showAddJournal}
+            onDismiss={() => setShowAddJournal(false)}
+            onConfirm={(
+              title,
+              content,
+              category,
+              date,
+              photoUrl,
+              plantId,
+              plantName,
+              yieldAmount,
+              yieldUnit,
+              growthStage,
+              growthProgressPct
+            ) => {
+              addJournalEntry(
+                title,
+                content,
+                category,
+                date,
+                photoUrl,
+                plantId,
+                plantName,
+                yieldAmount,
+                yieldUnit,
+                growthStage,
+                growthProgressPct
+              );
+              setShowAddJournal(false);
+            }}
+          />
+        )}
+
         {showGrowTent && <GrowTentDialog isOpen={showGrowTent} onDismiss={() => setShowGrowTent(false)} />}
         {showSoilRecipes && <SoilRecipesDialog isOpen={showSoilRecipes} onDismiss={() => setShowSoilRecipes(false)} />}
         {showBinderDialog && (
@@ -509,20 +536,22 @@ export const AppShell: React.FC = () => {
             language={language}
           />
         )}
+
+        {selectedPlantDetail && (
+          <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
+        )}
+
+        {showSettings && (
+          <SettingsModal
+            isOpen={showSettings}
+            onClose={() => setShowSettings(false)}
+            locationName={settings.locationName}
+            springFrostDate={settings.springFrostDate}
+            autumnFrostDate={settings.autumnFrostDate}
+            onSaveSettings={handleSaveSettings}
+          />
+        )}
       </Suspense>
-
-      {selectedPlantDetail && (
-        <PlantDetailDialog plant={selectedPlantDetail} onDismiss={() => setSelectedPlantDetail(null)} />
-      )}
-
-      <SettingsModal
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        locationName={settings.locationName}
-        springFrostDate={settings.springFrostDate}
-        autumnFrostDate={settings.autumnFrostDate}
-        onSaveSettings={handleSaveSettings}
-      />
     </div>
   );
 };

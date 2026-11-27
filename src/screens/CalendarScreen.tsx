@@ -236,6 +236,7 @@ export const CalendarScreen: React.FC = () => {
         {/* View Mode Switcher */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <button
+            type="button"
             onClick={() => setShowPrintDialog(true)}
             data-testid="open_sowing_print_dialog_btn"
             style={{
@@ -254,11 +255,13 @@ export const CalendarScreen: React.FC = () => {
               transition: 'all 0.15s ease'
             }}
           >
-            <Printer size={15} />
+            <Printer size={15} aria-hidden="true" />
             <span>{language === 'en' ? 'Print Schedule & CSV' : 'Külvikava print & CSV'}</span>
           </button>
 
           <div
+            role="tablist"
+            aria-label="Külvikalendri vaade"
             style={{
               display: 'flex',
               backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
@@ -268,6 +271,9 @@ export const CalendarScreen: React.FC = () => {
             }}
           >
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === 'gantt'}
               onClick={() => setViewMode('gantt')}
               className="touch-target"
               style={{
@@ -281,14 +287,17 @@ export const CalendarScreen: React.FC = () => {
                 cursor: 'pointer',
                 border: 'none',
                 backgroundColor: viewMode === 'gantt' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
-                color: viewMode === 'gantt' ? 'white' : 'var(--kulv-text, #2A2E24)',
+                color: viewMode === 'gantt' ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
             >
-              <CalendarRange size={15} />
+              <CalendarRange size={15} aria-hidden="true" />
               <span>Gantt ajatelg</span>
             </button>
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === 'cards'}
               onClick={() => setViewMode('cards')}
               className="touch-target"
               style={{
@@ -302,11 +311,11 @@ export const CalendarScreen: React.FC = () => {
                 cursor: 'pointer',
                 border: 'none',
                 backgroundColor: viewMode === 'cards' ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
-                color: viewMode === 'cards' ? 'white' : 'var(--kulv-text, #2A2E24)',
+                color: viewMode === 'cards' ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
             >
-              <LayoutGrid size={15} />
+              <LayoutGrid size={15} aria-hidden="true" />
               <span>Kaardid</span>
             </button>
           </div>
@@ -348,8 +357,8 @@ export const CalendarScreen: React.FC = () => {
                 padding: '2px 8px',
                 borderRadius: '6px',
                 fontWeight: 600,
-                backgroundColor: weather.isLive ? 'rgba(79, 107, 69, 0.15)' : 'rgba(217, 122, 61, 0.15)',
-                color: weather.isLive ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)'
+                backgroundColor: weather.isLive ? 'var(--kulv-primary-soft, #E2ECE3)' : 'var(--kulv-accent-soft, #F3D8C2)',
+                color: weather.isLive ? 'var(--kulv-primary-strong, #243D2B)' : 'var(--kulv-accent-strong, #8F3E14)'
               }}
             >
               {weather.isLive ? 'Open-Meteo otseallikas' : 'Kohalik aiaprognoos'}
@@ -361,6 +370,7 @@ export const CalendarScreen: React.FC = () => {
               {weather.locationName} ({weather.lat.toFixed(1)}°N) · Uuendatud {weather.lastUpdated || 'täna'}
             </span>
             <button
+              type="button"
               onClick={() => refreshWeather(true)}
               disabled={isWeatherLoading}
               title="Värskenda 7-päevast prognoosi"
@@ -380,10 +390,13 @@ export const CalendarScreen: React.FC = () => {
                 cursor: isWeatherLoading ? 'wait' : 'pointer'
               }}
             >
-              <RefreshCw size={12} style={{ animation: isWeatherLoading ? 'spin 1s linear infinite' : 'none' }} />
+              <RefreshCw size={12} aria-hidden="true" style={{ animation: isWeatherLoading ? 'spin 1s linear infinite' : 'none' }} />
               <span>Värskenda</span>
             </button>
             <button
+              type="button"
+              aria-expanded={showForecastDetails}
+              aria-label={showForecastDetails ? 'Peida detailne ilmapaneel' : 'Näita detailset ilmapaneeli'}
               onClick={() => setShowForecastDetails(!showForecastDetails)}
               title={showForecastDetails ? 'Peida detailne ilmapaneel' : 'Näita detailset ilmapaneeli'}
               className="touch-target"
@@ -394,7 +407,7 @@ export const CalendarScreen: React.FC = () => {
                 color: 'var(--kulv-text-muted, #5F675A)'
               }}
             >
-              {showForecastDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              {showForecastDetails ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -412,9 +425,9 @@ export const CalendarScreen: React.FC = () => {
               gap: '10px'
             }}
           >
-            <ShieldAlert size={20} color="var(--kulv-danger, #B85C33)" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <ShieldAlert size={20} color="var(--kulv-danger-text, #8C1D18)" aria-hidden="true" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-danger, #B85C33)' }}>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-danger-text, #8C1D18)' }}>
                 ❄️ Tähelepanu: eelseisva 7 päeva jooksul on tuvastatud öökülmaoht! (
                 {severeFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
               </div>
@@ -437,9 +450,9 @@ export const CalendarScreen: React.FC = () => {
               gap: '10px'
             }}
           >
-            <AlertTriangle size={20} color="var(--kulv-accent, #D97A3D)" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <AlertTriangle size={20} color="var(--kulv-accent-strong, #8F3E14)" aria-hidden="true" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-accent, #D97A3D)' }}>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--kulv-accent-strong, #8F3E14)' }}>
                 ⚠️ Hallaoht maapinnal: öised miinimumid langevad +1..+3°C juurde (
                 {lightFrostDays.map((d) => `${d.dayName} ${d.tempMin}°C`).join(', ')})
               </div>
@@ -570,9 +583,9 @@ export const CalendarScreen: React.FC = () => {
                           fontSize: '11px',
                           fontWeight: 700,
                           color: isFreezing
-                            ? 'var(--kulv-danger, #B85C33)'
+                            ? 'var(--kulv-danger-text, #8C1D18)'
                             : isChilly
-                              ? 'var(--kulv-accent, #D97A3D)'
+                              ? 'var(--kulv-accent-strong, #8F3E14)'
                               : 'var(--kulv-text-muted, #5F675A)'
                         }}
                       >
@@ -587,12 +600,14 @@ export const CalendarScreen: React.FC = () => {
                         padding: '1px 6px',
                         borderRadius: '4px',
                         fontWeight: 700,
-                        backgroundColor: isFreezing
-                          ? 'var(--kulv-danger, #B85C33)'
+                        backgroundColor: isFreezing || isChilly
+                          ? 'var(--kulv-accent-soft, #F3D8C2)'
+                          : 'var(--kulv-primary-soft, #E2ECE3)',
+                        color: isFreezing
+                          ? 'var(--kulv-danger-text, #8C1D18)'
                           : isChilly
-                            ? 'var(--kulv-accent, #D97A3D)'
-                            : 'rgba(79, 107, 69, 0.15)',
-                        color: isFreezing || isChilly ? 'white' : 'var(--kulv-primary, #4F6B45)'
+                            ? 'var(--kulv-warning-text, #7A4B00)'
+                            : 'var(--kulv-primary-strong, #243D2B)'
                       }}
                     >
                       {isFreezing ? '❄️ Öökülm' : isChilly ? '⚠️ Hallaoht' : '🌙 Ohutu'}
@@ -600,11 +615,11 @@ export const CalendarScreen: React.FC = () => {
 
                     {/* Precipitation info */}
                     {day.precipitationProbability !== undefined && day.precipitationProbability > 20 ? (
-                      <span style={{ fontSize: '9px', color: '#176B87', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: 'var(--kulv-info-text, #0F556D)', fontWeight: 600 }}>
                         🌧️ {day.precipitationProbability}%
                       </span>
                     ) : day.precipitationSum > 0 ? (
-                      <span style={{ fontSize: '9px', color: '#176B87', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: 'var(--kulv-info-text, #0F556D)', fontWeight: 600 }}>
                         {day.precipitationSum} mm
                       </span>
                     ) : (
@@ -662,17 +677,17 @@ export const CalendarScreen: React.FC = () => {
                 >
                   <strong>Aiatööde soovitus:</strong>{' '}
                   {selectedDay.tempMin <= 0 ? (
-                    <span style={{ color: 'var(--kulv-danger, #B85C33)' }}>
+                    <span style={{ color: 'var(--kulv-danger-text, #8C1D18)' }}>
                       Öökülmaoht! Ära istuta välja soojanõudlikke taimi. Kata avamaa varajased saagid ja sulge
                       kasvuhoone uksed.
                     </span>
                   ) : selectedDay.tempMin <= 3 ? (
-                    <span style={{ color: 'var(--kulv-accent, #D97A3D)' }}>
+                    <span style={{ color: 'var(--kulv-accent-strong, #8F3E14)' }}>
                       Jahe öö ja hallaoht maapinnal. Külmakindlad juurikad ja herned sobivad külvamiseks, õrnad istikud
                       kata kattelooriga.
                     </span>
                   ) : selectedDay.precipitationSum > 5 ? (
-                    <span style={{ color: '#176B87' }}>
+                    <span style={{ color: 'var(--kulv-info-text, #0F556D)' }}>
                       Märgatav vihmasadu. Hea päev vihmavee kogumiseks ja toas ettekasvatuseks; peenramuld võib olla
                       töötlemiseks liiga märg.
                     </span>
@@ -706,6 +721,7 @@ export const CalendarScreen: React.FC = () => {
         <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: '340px' }}>
           <Search
             size={16}
+            aria-hidden="true"
             style={{
               position: 'absolute',
               left: '10px',
@@ -716,6 +732,7 @@ export const CalendarScreen: React.FC = () => {
           />
           <input
             type="text"
+            aria-label="Otsi taime või sugukonda"
             placeholder="Otsi taime või sugukonda..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -742,6 +759,8 @@ export const CalendarScreen: React.FC = () => {
           ].map((f) => (
             <button
               key={f.id}
+              type="button"
+              aria-pressed={selectedFrostFilter === f.id}
               onClick={() => setSelectedFrostFilter(f.id as any)}
               className="touch-target"
               style={{
@@ -756,7 +775,7 @@ export const CalendarScreen: React.FC = () => {
                     : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor:
                   selectedFrostFilter === f.id ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
-                color: selectedFrostFilter === f.id ? 'white' : 'var(--kulv-text, #2A2E24)',
+                color: selectedFrostFilter === f.id ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                 whiteSpace: 'nowrap'
               }}
             >
@@ -933,7 +952,8 @@ export const CalendarScreen: React.FC = () => {
                       }}
                     >
                       {/* Left: Plant Name & Metadata (Clickable) */}
-                      <div
+                      <button
+                        type="button"
                         onClick={() => setInspectingPlant(plant)}
                         title={`Klõpsa ${plant.name} detailide avamiseks`}
                         style={{
@@ -942,10 +962,14 @@ export const CalendarScreen: React.FC = () => {
                           gap: '8px',
                           padding: '6px 14px',
                           cursor: 'pointer',
-                          userSelect: 'none'
+                          userSelect: 'none',
+                          background: 'transparent',
+                          border: 'none',
+                          textAlign: 'left',
+                          width: '100%'
                         }}
                       >
-                        <span style={{ fontSize: '20px' }}>{plant.icon}</span>
+                        <span style={{ fontSize: '20px' }} aria-hidden="true">{plant.icon}</span>
                         <div style={{ overflow: 'hidden' }}>
                           <div
                             style={{
@@ -963,7 +987,7 @@ export const CalendarScreen: React.FC = () => {
                             {plant.family} · ~{plant.daysToMaturity}p
                           </div>
                         </div>
-                      </div>
+                      </button>
 
                       {/* Right: Gantt Track Bar Container */}
                       <div
@@ -1128,8 +1152,9 @@ export const CalendarScreen: React.FC = () => {
       {viewMode === 'cards' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {filteredTimelines.map((timeline) => (
-            <div
+            <button
               key={timeline.plant.id}
+              type="button"
               onClick={() => setInspectingPlant(timeline.plant)}
               style={{
                 backgroundColor: 'var(--kulv-surface, #FFFDF8)',
@@ -1137,14 +1162,16 @@ export const CalendarScreen: React.FC = () => {
                 borderRadius: '12px',
                 padding: '14px',
                 boxShadow: 'var(--kulv-shadow-card, 0 1px 2px rgba(0,0,0,0.05))',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                textAlign: 'left',
+                width: '100%'
               }}
             >
               <div
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '24px' }}>{timeline.plant.icon}</span>
+                  <span style={{ fontSize: '24px' }} aria-hidden="true">{timeline.plant.icon}</span>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>
@@ -1161,8 +1188,8 @@ export const CalendarScreen: React.FC = () => {
                             fontSize: '10px',
                             padding: '2px 6px',
                             borderRadius: '4px',
-                            backgroundColor: 'rgba(79, 107, 69, 0.15)',
-                            color: 'var(--kulv-primary, #4F6B45)',
+                            backgroundColor: 'var(--kulv-primary-soft, #E2ECE3)',
+                            color: 'var(--kulv-primary-strong, #243D2B)',
                             fontWeight: 600
                           }}
                         >
@@ -1174,8 +1201,8 @@ export const CalendarScreen: React.FC = () => {
                             fontSize: '10px',
                             padding: '2px 6px',
                             borderRadius: '4px',
-                            backgroundColor: hasSevereFrost ? 'rgba(184, 92, 51, 0.15)' : 'rgba(217, 122, 61, 0.15)',
-                            color: hasSevereFrost ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-accent, #D97A3D)',
+                            backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
+                            color: hasSevereFrost ? 'var(--kulv-danger-text, #8C1D18)' : 'var(--kulv-accent-strong, #8F3E14)',
                             fontWeight: 600
                           }}
                         >
@@ -1207,13 +1234,13 @@ export const CalendarScreen: React.FC = () => {
                 {timeline.indoorSowStart && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Ettekülv toas:</span>
-                    <span style={{ fontWeight: 600, color: '#2E5A36' }}>{timeline.indoorSowStart}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--kulv-primary-strong, #243D2B)' }}>{timeline.indoorSowStart}</span>
                   </div>
                 )}
                 {timeline.greenhousePlantStart && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Kasvuhoonesse:</span>
-                    <span style={{ fontWeight: 600, color: '#70856A' }}>{timeline.greenhousePlantStart}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--kulv-primary, #4F6B45)' }}>{timeline.greenhousePlantStart}</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -1224,10 +1251,10 @@ export const CalendarScreen: React.FC = () => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Oodatav saak:</span>
-                  <span style={{ fontWeight: 600, color: 'var(--kulv-accent, #D97A3D)' }}>{timeline.harvestStart}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--kulv-accent-strong, #8F3E14)' }}>{timeline.harvestStart}</span>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}

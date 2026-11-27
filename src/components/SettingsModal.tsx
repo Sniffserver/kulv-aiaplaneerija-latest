@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import { useGarden } from '../context/GardenContext';
 import { NORDIC_REGIONAL_FROST_DATA } from '../logic/plantingCalendar';
+import { applyPaletteToDOM } from '../lib/theme';
+
+export { applyPaletteToDOM };
 
 export type ColorPalette = 'meadow' | 'kulv' | 'gruvbox' | 'catppuccin';
 
@@ -48,28 +51,6 @@ export const PRESET_LOCATIONS: { name: string; lat: number; lng: number }[] = [
   { name: 'Pärnu', lat: 58.385, lng: 24.497 },
   { name: 'Kuressaare', lat: 58.253, lng: 22.485 }
 ];
-
-export function applyPaletteToDOM(palette: ColorPalette) {
-  if (typeof document !== 'undefined') {
-    document.documentElement.dataset.palette = palette;
-    try {
-      localStorage.setItem('kulv-palette', palette);
-      const isDark = document.documentElement.classList.contains('dark');
-      const paletteThemeColors: Record<ColorPalette, { light: string; dark: string }> = {
-        meadow: { light: '#F7F1E8', dark: '#191D17' },
-        kulv: { light: '#FAF6ED', dark: '#171B17' },
-        gruvbox: { light: '#FBF1C7', dark: '#282828' },
-        catppuccin: { light: '#EFF1F5', dark: '#1E1E2E' }
-      };
-      const themeColor = document.querySelector('meta[name="theme-color"]');
-      if (themeColor && paletteThemeColors[palette]) {
-        themeColor.setAttribute('content', paletteThemeColors[palette][isDark ? 'dark' : 'light']);
-      }
-    } catch {
-      // Storage unavailable in restricted sandbox
-    }
-  }
-}
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,

@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { useGarden } from '../context/GardenContext';
 import { YardObjectDock } from '../components/garden/YardObjectDock';
 import { YardMasterPlanCanvas } from '../components/garden/YardMasterPlanCanvas';
-import { BedDetailDrawer } from '../components/garden/BedDetailDrawer';
 import { ConfirmDeleteDialog } from '../components/dialogs/ConfirmDeleteDialog';
 import { GardenBed } from '../types';
 import { EntityPreset } from '../data/gardenEntityPresets';
-import { CropRotationTimeline } from '../components/garden/CropRotationTimeline';
 import { PrintableGardenReport } from '../components/garden/PrintableGardenReport';
 import { Map, Grid, ArrowLeft, Calendar, Printer } from 'lucide-react';
+
+const BedDetailDrawer = lazy(() =>
+  import('../components/garden/BedDetailDrawer').then((m) => ({ default: m.BedDetailDrawer }))
+);
+const CropRotationTimeline = lazy(() =>
+  import('../components/garden/CropRotationTimeline').then((m) => ({ default: m.CropRotationTimeline }))
+);
 
 interface GardenCanvasScreenProps {
   onOpenAddBed: () => void;
@@ -41,7 +46,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '14px 16px', gap: '12px' }}>
-      {/* Top Planner Mode Switcher */}
+      {/* Top Workspace Header & Planner Mode Switcher */}
       <div
         className="kulv-paper-card"
         style={{
@@ -50,10 +55,23 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '10px',
-          padding: '8px 12px'
+          padding: '10px 14px'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <h1
+            className="font-serif-display"
+            style={{
+              fontSize: '20px',
+              fontWeight: 700,
+              color: 'var(--kulv-text, #2A2E24)',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}
+          >
+            {language === 'en' ? '2D Yard Master Plan' : '2D Aiakrundiplaan'}
+          </h1>
+
           <div
             role="tablist"
             aria-label={language === 'en' ? 'Planner view mode' : 'Planeerija vaate režiim'}
@@ -70,7 +88,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 plannerMode === 'yard' ? 'kulv-segmented-control__item--active' : ''
               }`}
             >
-              <Map size={15} />
+              <Map size={15} aria-hidden="true" />
               <span>
                 {language === 'en'
                   ? `2D Layout (${yardPlan.widthM}m × ${yardPlan.lengthM}m)`
@@ -89,7 +107,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
                 plannerMode === 'timeline' ? 'kulv-segmented-control__item--active' : ''
               }`}
             >
-              <Calendar size={15} />
+              <Calendar size={15} aria-hidden="true" />
               <span>{language === 'en' ? 'Crop Rotation & Timeline' : 'Külvikord & Ajajoon'}</span>
             </button>
           </div>
@@ -103,7 +121,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
               className="kulv-button kulv-button--secondary"
               style={{ minHeight: '40px', padding: '6px 12px', fontSize: '0.85rem' }}
             >
-              <ArrowLeft size={14} />
+              <ArrowLeft size={14} aria-hidden="true" />
               <span>{language === 'en' ? 'Back to Yard Plan' : 'Tagasi krundiplaanile'}</span>
             </button>
           )}
@@ -116,7 +134,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
             className="kulv-button kulv-button--secondary"
             style={{ minHeight: '40px', padding: '6px 14px', fontSize: '0.85rem' }}
           >
-            <Grid size={15} />
+            <Grid size={15} aria-hidden="true" />
             <span>{language === 'en' ? 'Bed Detail Grid' : 'Peenra detailvaade'}</span>
           </button>
 
@@ -126,7 +144,7 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
             className="kulv-button kulv-button--secondary"
             style={{ minHeight: '40px', padding: '6px 12px', fontSize: '0.85rem' }}
           >
-            <Printer size={15} />
+            <Printer size={15} aria-hidden="true" />
             <span>{language === 'en' ? 'Print Report' : 'Trüki raport'}</span>
           </button>
         </div>
@@ -147,22 +165,37 @@ export const GardenCanvasScreen: React.FC<GardenCanvasScreenProps> = ({ onOpenAd
       )}
 
       {/* MODE 2: MULTI-YEAR CROP ROTATION & SUCCESSION TIMELINE */}
-      {plannerMode === 'timeline' && <CropRotationTimeline beds={beds} plants={plants} language={language} />}
+      {plannerMode === 'timeline' && (
+        <Suspense
+          fallback={
+            <div
+              aria-hidden="true"
+              className="min-h-[320px] rounded-2xl bg-[var(--kulv-surface,#FFFDF8)] border border-[var(--kulv-border,#C9BFA9)] animate-pulse motion-reduce:animate-none"
+            />
+          }
+        >
+          <CropRotationTimeline beds={beds} plants={plants} language={language} />
+        </Suspense>
+      )}
 
       {/* Contextual Quick Bed Detail Drawer */}
-      <BedDetailDrawer
-        isOpen={isBedDrawerOpen}
-        onClose={() => setIsBedDrawerOpen(false)}
-        beds={beds}
-        currentBed={currentBed}
-        onSelectBed={(bedId) => setSelectedBedId(bedId)}
-        onOpenAddBed={onOpenAddBed}
-        onRequestDeleteBed={(bed) => setBedToDelete(bed)}
-        allPlants={plants}
-        onPlantInCell={plantInBed}
-        onRemoveFromCell={removePlantFromBed}
-        language={language}
-      />
+      {isBedDrawerOpen && (
+        <Suspense fallback={null}>
+          <BedDetailDrawer
+            isOpen={isBedDrawerOpen}
+            onClose={() => setIsBedDrawerOpen(false)}
+            beds={beds}
+            currentBed={currentBed}
+            onSelectBed={(bedId) => setSelectedBedId(bedId)}
+            onOpenAddBed={onOpenAddBed}
+            onRequestDeleteBed={(bed) => setBedToDelete(bed)}
+            allPlants={plants}
+            onPlantInCell={plantInBed}
+            onRemoveFromCell={removePlantFromBed}
+            language={language}
+          />
+        </Suspense>
+      )}
 
       {/* Delete confirmation modal */}
       <ConfirmDeleteDialog

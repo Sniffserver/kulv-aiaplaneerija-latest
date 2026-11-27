@@ -914,11 +914,11 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             border: '1px solid var(--kulv-accent, #D97A3D)',
             borderRadius: '8px',
             fontSize: '12px',
-            color: 'var(--kulv-accent, #D97A3D)'
+            color: 'var(--kulv-accent-strong, #8F3E14)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Pentagon size={15} />
+            <Pentagon size={15} aria-hidden="true" />
             <span>
               <strong>{toolMode === 'polygon' ? 'Polügooni joonistamine:' : 'Raja joonistamine:'}</strong> Klõpsa
               krundil punktide märkimiseks ({drawPoints.length} punkti). Topeltklõps lõpetab kujundi.
@@ -926,13 +926,14 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
           </div>
           <div style={{ display: 'flex', gap: '6px' }}>
             <button
+              type="button"
               onClick={finishDrawingShape}
               disabled={toolMode === 'polygon' ? drawPoints.length < 3 : drawPoints.length < 2}
               style={{
                 padding: '4px 10px',
                 borderRadius: '4px',
                 backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                color: 'white',
+                color: 'var(--kulv-button-text, #FFFFFF)',
                 border: 'none',
                 cursor: 'pointer',
                 fontSize: '11px',
@@ -1008,6 +1009,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
         >
           <svg
             ref={svgRef}
+            role="img"
+            aria-label={language === 'en' ? 'Interactive 2D yard master plan' : 'Interaktiivne 2D aiakrundiplaan'}
             width={Math.max(800, yardWidth * zoom + panOffset.x * 2)}
             height={Math.max(600, yardLength * zoom + panOffset.y * 2)}
             onMouseMove={handleMouseMove}
@@ -1589,6 +1592,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               onSelectSeason={setSolarSeasonId}
               hoveredInfo={hoveredHeatmapCell}
               language={language === 'en' ? 'en' : 'et'}
+              topOffset={plan.cadastralCode ? '48px' : '12px'}
             />
           )}
 
@@ -1616,7 +1620,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               position: 'absolute',
               bottom: '12px',
               right: '12px',
-              backgroundColor: 'rgba(255, 253, 248, 0.94)',
+              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
               border: '1px solid var(--kulv-border, #C9BFA9)',
               borderRadius: '6px',
               padding: '4px 10px',
@@ -1626,7 +1630,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               fontSize: '11px',
               pointerEvents: 'none',
               zIndex: 5,
-              boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
+              boxShadow: 'var(--kulv-shadow-card, 0 1px 4px rgba(0,0,0,0.06))'
             }}
           >
             <div
@@ -1666,7 +1670,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
 
           {/* Active Cadastral Parcel Badge (Top Left of Canvas) */}
           {plan.cadastralCode && (
-            <div
+            <button
+              type="button"
               data-testid="canvas_cadastral_badge"
               onClick={() => setShowCadastralDialog(true)}
               title="Vaata ja muuda krundipiire"
@@ -1674,7 +1679,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 position: 'absolute',
                 top: '12px',
                 left: '12px',
-                backgroundColor: 'rgba(255, 253, 248, 0.95)',
+                backgroundColor: 'var(--kulv-surface, #FFFDF8)',
                 border: '1px solid var(--kulv-primary, #4F6B45)',
                 borderRadius: '6px',
                 padding: '4px 10px',
@@ -1684,19 +1689,19 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 fontSize: '11px',
                 fontWeight: 600,
                 color: 'var(--kulv-primary, #4F6B45)',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                boxShadow: 'var(--kulv-shadow-card, 0 1px 4px rgba(0,0,0,0.06))',
                 cursor: 'pointer',
                 zIndex: 5
               }}
             >
-              <MapPin size={13} />
+              <MapPin size={13} aria-hidden="true" />
               <span>{plan.address || plan.cadastralCode}</span>
               {plan.cadastralAreaM2 && (
                 <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontWeight: 500 }}>
                   · {plan.cadastralAreaM2.toLocaleString('et-EE')} m²
                 </span>
               )}
-            </div>
+            </button>
           )}
 
           {/* Empty State Overlay */}
@@ -1708,7 +1713,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                backgroundColor: 'rgba(255, 253, 248, 0.98)',
+                backgroundColor: 'var(--kulv-surface, #FFFDF8)',
                 border: '1.5px dashed var(--kulv-border, #C9BFA9)',
                 borderRadius: '16px',
                 padding: '24px 28px',
@@ -1767,9 +1772,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                   addEntity(newBedEntity);
                   setSelectedEntityId(newBedEntity.id);
                 }}
-                className="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-lg bg-[var(--kulv-primary,#4F6B45)] text-white text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5436)] active:scale-95 transition-all shadow-xs cursor-pointer"
+                className="mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-lg bg-[var(--kulv-primary,#4F6B45)] text-[var(--kulv-button-text,#FFFFFF)] text-sm font-semibold hover:bg-[var(--kulv-primary-hover,#3D5436)] active:scale-95 transition-all shadow-xs cursor-pointer"
               >
-                <span>🌱</span>
+                <span aria-hidden="true">🌱</span>
                 <span>{language === 'en' ? 'Add First Raised Bed' : 'Lisa esimene peenar'}</span>
               </button>
             </div>
@@ -1787,10 +1792,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               gap: '6px',
               padding: '6px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(255, 253, 248, 0.95)',
+              backgroundColor: 'var(--kulv-surface, #FFFDF8)',
               backdropFilter: 'blur(8px)',
               border: '1px solid var(--kulv-border, #C9BFA9)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              boxShadow: 'var(--kulv-shadow-card, 0 2px 8px rgba(0,0,0,0.08))',
               zIndex: 6
             }}
           >
@@ -1942,17 +1947,18 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRadius: '8px',
-                      backgroundColor: 'rgba(217, 122, 61, 0.15)',
-                      border: '1px solid var(--kulv-accent, #D97A3D)',
-                      color: 'var(--kulv-accent, #D97A3D)',
+                      backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
+                      border: '1px solid var(--kulv-accent-strong, #8F3E14)',
+                      color: 'var(--kulv-accent-strong, #8F3E14)',
                       cursor: 'pointer'
                     }}
                   >
-                    <RotateCw size={18} />
+                    <RotateCw size={18} aria-hidden="true" />
                   </button>
                 )}
                 {!selectedEntity.locked && (
                   <button
+                    type="button"
                     onClick={() => {
                       deleteEntity(selectedEntity.id, true);
                       setSelectedEntityId(null);
@@ -1968,13 +1974,13 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRadius: '8px',
-                      backgroundColor: 'rgba(180, 35, 58, 0.12)',
-                      border: '1px solid var(--kulv-danger, #B4233A)',
-                      color: 'var(--kulv-danger, #B4233A)',
+                      backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
+                      border: '1px solid var(--kulv-danger, #B85C33)',
+                      color: 'var(--kulv-danger-text, #8C1D18)',
                       cursor: 'pointer'
                     }}
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={18} aria-hidden="true" />
                   </button>
                 )}
               </>
@@ -2029,7 +2035,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                         borderRadius: '4px',
                         padding: '2px 8px',
                         fontSize: '11px',
-                        color: 'var(--kulv-danger, #B85C33)',
+                        color: 'var(--kulv-danger-text, #8C1D18)',
                         cursor: 'pointer',
                         fontWeight: 600
                       }}
@@ -2039,6 +2045,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={() => setShowTrashDrawer(false)}
                     style={{
                       background: 'none',
@@ -2070,18 +2077,19 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span>{item.icon || '🌱'}</span>
+                      <span aria-hidden="true">{item.icon || '🌱'}</span>
                       <span style={{ fontWeight: 600 }}>{item.name}</span>
                     </div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                       <button
+                        type="button"
                         onClick={() => restoreEntity(item.id)}
                         title="Taasta aia krundiplaanile"
                         style={{
                           padding: '4px 8px',
                           borderRadius: '4px',
                           backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                          color: 'white',
+                          color: 'var(--kulv-button-text, #FFFFFF)',
                           border: 'none',
                           cursor: 'pointer',
                           fontWeight: 600
@@ -2090,18 +2098,20 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                         Taasta
                       </button>
                       <button
+                        type="button"
                         onClick={() => permanentlyDeleteEntity(item.id)}
                         title="Kustuta lõplikult"
+                        aria-label={`Kustuta lõplikult ${item.name}`}
                         style={{
                           padding: '4px 6px',
                           borderRadius: '4px',
                           backgroundColor: 'transparent',
-                          color: 'var(--kulv-danger, #B85C33)',
+                          color: 'var(--kulv-danger-text, #8C1D18)',
                           border: '1px solid var(--kulv-danger, #B85C33)',
                           cursor: 'pointer'
                         }}
                       >
-                        <Trash2 size={12} />
+                        <Trash2 size={12} aria-hidden="true" />
                       </button>
                     </div>
                   </div>
@@ -2113,7 +2123,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '20px' }}>{selectedEntity.icon || '🌱'}</span>
+                  <span style={{ fontSize: '20px' }} aria-hidden="true">{selectedEntity.icon || '🌱'}</span>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '13px', color: 'var(--kulv-text, #2A2E24)' }}>
                       {selectedEntity.name}
@@ -2125,16 +2135,19 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => toggleLayerLock(selectedEntity.layerId || 'structures')}
                   title={selectedEntity.locked ? 'Objekt on lukustatud' : 'Lukusta objekt'}
+                  aria-label={selectedEntity.locked ? 'Ava objekti lukustus' : 'Lukusta objekt'}
+                  aria-pressed={selectedEntity.locked}
                   style={{
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: selectedEntity.locked ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text-muted, #5F675A)'
+                    color: selectedEntity.locked ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text-muted, #5F675A)'
                   }}
                 >
-                  {selectedEntity.locked ? <Lock size={16} /> : <Unlock size={16} />}
+                  {selectedEntity.locked ? <Lock size={16} aria-hidden="true" /> : <Unlock size={16} aria-hidden="true" />}
                 </button>
               </div>
 
@@ -2204,22 +2217,24 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => {
                     deleteEntity(selectedEntity.id, true);
                     setSelectedEntityId(null);
                   }}
                   data-testid="delete_selected_entity_btn"
                   title="Kustuta objekt (saad hiljem prügikastist taastada)"
+                  aria-label={`Kustuta ${selectedEntity.name}`}
                   style={{
                     padding: '8px 12px',
                     borderRadius: '6px',
                     border: '1px solid var(--kulv-danger, #B85C33)',
                     backgroundColor: 'transparent',
-                    color: 'var(--kulv-danger, #B85C33)',
+                    color: 'var(--kulv-danger-text, #8C1D18)',
                     cursor: 'pointer'
                   }}
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={14} aria-hidden="true" />
                 </button>
               </div>
 
@@ -2343,8 +2358,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                                   harmony.harmonyPercentage >= 80
                                     ? 'var(--kulv-primary, #4F6B45)'
                                     : harmony.harmonyPercentage >= 50
-                                      ? 'var(--kulv-accent, #D97A3D)'
-                                      : 'var(--kulv-danger, #B85C33)'
+                                      ? 'var(--kulv-warning-text, #7A4B00)'
+                                      : 'var(--kulv-danger-text, #8C1D18)'
                               }}
                             >
                               {harmony.harmonyPercentage}%
@@ -2357,7 +2372,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                             </span>
                             {harmony.negativePairs > 0 && (
                               <span
-                                style={{ color: 'var(--kulv-danger, #B85C33)', fontWeight: 700, marginLeft: '4px' }}
+                                style={{ color: 'var(--kulv-danger-text, #8C1D18)', fontWeight: 700, marginLeft: '4px' }}
                               >
                                 -{harmony.negativePairs} {language === 'en' ? 'conflicts' : 'hoiatust'}
                               </span>
@@ -2384,6 +2399,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
 
                       {onSelectBedDetail && (
                         <button
+                          type="button"
                           onClick={() => onSelectBedDetail(selectedEntity.id)}
                           data-testid="open_bed_planting_cells_btn"
                           style={{
@@ -2395,13 +2411,13 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                             borderRadius: '8px',
                             border: 'none',
                             backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                            color: 'white',
+                            color: 'var(--kulv-button-text, #FFFFFF)',
                             cursor: 'pointer',
                             fontSize: '12px',
                             fontWeight: 700
                           }}
                         >
-                          <ExternalLink size={14} />
+                          <ExternalLink size={14} aria-hidden="true" />
                           <span>{language === 'en' ? 'Open Bed Planting Grid' : 'Ava peenra külviplaan'}</span>
                         </button>
                       )}
@@ -2457,7 +2473,10 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 >
                   <span>{layer.name}</span>
                   <button
+                    type="button"
                     onClick={() => toggleLayerVisibility(layer.id)}
+                    aria-label={`${layer.visible ? 'Peida kiht' : 'Näita kihti'} ${layer.name}`}
+                    aria-pressed={layer.visible}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -2465,7 +2484,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                       color: 'var(--kulv-text-muted, #5F675A)'
                     }}
                   >
-                    {layer.visible ? <Eye size={13} /> : <EyeOff size={13} />}
+                    {layer.visible ? <Eye size={13} aria-hidden="true" /> : <EyeOff size={13} aria-hidden="true" />}
                   </button>
                 </div>
               ))}
@@ -2478,6 +2497,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       {showShortcutsModal && (
         <div
           data-testid="shortcuts_modal_overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Klaviatuuri kiirklahvid"
           onClick={() => setShowShortcutsModal(false)}
           style={{
             position: 'fixed',
@@ -2508,7 +2530,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 Klaviatuuri kiirklahvid
               </div>
               <button
+                type="button"
                 onClick={() => setShowShortcutsModal(false)}
+                aria-label="Sulge kiirklahvide spikker"
                 style={{
                   background: 'none',
                   border: 'none',
@@ -2924,9 +2948,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                               flex: 1,
                               padding: '6px 10px',
                               borderRadius: '6px',
-                              border: 'none',
-                              backgroundColor: 'var(--kulv-danger, #B85C33)',
-                              color: 'white',
+                              border: '1px solid var(--kulv-danger, #B85C33)',
+                              backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
+                              color: 'var(--kulv-danger-text, #8C1D18)',
                               fontWeight: 700,
                               fontSize: '11px',
                               cursor: 'pointer'
@@ -2984,7 +3008,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                           borderRadius: '8px',
                           border: 'none',
                           backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                          color: 'white',
+                          color: 'var(--kulv-button-text, #FFFFFF)',
                           fontWeight: 700,
                           fontSize: '12px',
                           cursor: 'pointer',
@@ -3006,13 +3030,15 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       {/* Preset Toast Notification */}
       {presetToast && (
         <div
+          role="status"
+          aria-live="polite"
           style={{
             position: 'absolute',
             bottom: '24px',
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: 'var(--kulv-primary, #4F6B45)',
-            color: '#FFFFFF',
+            color: 'var(--kulv-button-text, #FFFFFF)',
             padding: '10px 18px',
             borderRadius: '10px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
@@ -3024,7 +3050,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             zIndex: 1200
           }}
         >
-          <Check size={16} />
+          <Check size={16} aria-hidden="true" />
           <span>{presetToast}</span>
         </div>
       )}

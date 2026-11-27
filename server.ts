@@ -219,6 +219,7 @@ function requestLogger(req: Request, res: Response, next: NextFunction) {
     req.path.endsWith('.svg') ||
     req.path.endsWith('.ico') ||
     req.path.endsWith('.png') ||
+    req.path.endsWith('.webp') ||
     req.path.endsWith('.woff2') ||
     req.path.endsWith('.json')
   ) {
@@ -521,7 +522,19 @@ export async function registerStaticServing(app: Express): Promise<void> {
     }
   }
 
-  app.use(express.static(distPath));
+  app.use(
+    express.static(distPath, {
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html') || filePath.endsWith('sw.js') || filePath.endsWith('manifest.json') || filePath.endsWith('precache-manifest.json')) {
+          res.setHeader('Cache-Control', 'no-cache');
+        } else if (filePath.includes(`${path.sep}assets${path.sep}`) && !filePath.includes(`${path.sep}aistudio${path.sep}`)) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        } else if (filePath.endsWith('.webp') || filePath.endsWith('.woff2') || filePath.endsWith('.png') || filePath.endsWith('.svg')) {
+          res.setHeader('Cache-Control', 'public, max-age=604800');
+        }
+      }
+    })
+  );
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.method !== 'GET') {

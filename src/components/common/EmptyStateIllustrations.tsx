@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-// Uploaded high-fidelity botanical illustrations
-const YARD_EMPTY_IMG = '/assets/aistudio/t_hi-aiaplaan_255327f6.jpeg';
-const PLANTS_EMPTY_IMG = '/assets/aistudio/minimalist-empty-state-illustration-for-the_plant-catalog-screen_fc45c689.jpeg';
-const CALENDAR_EMPTY_IMG = '/assets/aistudio/minimalistlik-empty-state-illustratioon-kalender_d9b9513f.jpeg';
-const JOURNAL_EMPTY_IMG = '/assets/aistudio/empty-state-p_evik_600dc83a.jpeg';
+// Optimized botanical illustrations (WebP, <=512px)
+const YARD_EMPTY_IMG = '/assets/aistudio/t_hi-aiaplaan_255327f6.webp';
+const PLANTS_EMPTY_IMG = '/assets/aistudio/minimalist-empty-state-illustration-for-the_plant-catalog-screen_fc45c689.webp';
+const CALENDAR_EMPTY_IMG = '/assets/aistudio/minimalistlik-empty-state-illustratioon-kalender_d9b9513f.webp';
+const JOURNAL_EMPTY_IMG = '/assets/aistudio/empty-state-p_evik_600dc83a.webp';
 
 interface BotanicalImageProps {
   src: string;
@@ -22,15 +22,17 @@ function BotanicalArtwork({ src, fallback, alt = '', className = '' }: Botanical
 
   return (
     <div className={`flex items-center justify-center p-2 ${className}`}>
-      <div className="relative overflow-hidden rounded-2xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-2 shadow-xs transition-transform hover:scale-[1.01]">
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface,#FFFDF8)] p-2 shadow-xs transition-transform motion-reduce:transition-none hover:scale-[1.01]">
         <img
           src={src}
           alt={alt}
+          width={512}
+          height={512}
           loading="lazy"
           decoding="async"
           referrerPolicy="no-referrer"
           onError={() => setHasError(true)}
-          className="max-h-[160px] sm:max-h-[190px] w-auto max-w-[240px] sm:max-w-[280px] object-contain rounded-xl aspect-[4/3]"
+          className="max-h-[160px] sm:max-h-[190px] w-auto max-w-[240px] sm:max-w-[280px] object-contain rounded-xl aspect-[4/3] dark:brightness-95"
         />
       </div>
     </div>
@@ -134,7 +136,7 @@ export function OfflineIllustration() {
 }
 
 // Soil recipes & layered bed building artwork
-const SOIL_RECIPES_IMG = '/assets/aistudio/mulla-retseptid-illustration_726c3ec3.jpeg';
+const SOIL_RECIPES_IMG = '/assets/aistudio/mulla-retseptid-illustration_726c3ec3.webp';
 export function SoilRecipesIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -145,7 +147,7 @@ export function SoilRecipesIllustration() {
 }
 
 // Greenhouse structure artwork
-const GREENHOUSE_IMG = '/assets/aistudio/kasvuhoone-illustration_b1d4ea1c.jpeg';
+const GREENHOUSE_IMG = '/assets/aistudio/kasvuhoone-illustration_b1d4ea1c.webp';
 export function GreenhouseIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -156,7 +158,7 @@ export function GreenhouseIllustration() {
 }
 
 // Watering & garden tasks artwork
-const WATERING_IMG = '/assets/aistudio/kastmine-illustration_541cc1f3.jpeg';
+const WATERING_IMG = '/assets/aistudio/kastmine-illustration_541cc1f3.webp';
 export function WateringIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -167,7 +169,7 @@ export function WateringIllustration() {
 }
 
 // Seed inventory artwork
-const SEEDS_INVENTORY_IMG = '/assets/aistudio/seeds-inventory_b3298eca.jpeg';
+const SEEDS_INVENTORY_IMG = '/assets/aistudio/seeds-inventory_b3298eca.webp';
 export function SeedInventoryIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -178,7 +180,7 @@ export function SeedInventoryIllustration() {
 }
 
 // Add new bed & sowing artwork
-const ADD_BED_IMG = '/assets/aistudio/lisa-peenar-seemned_fcd909da.jpeg';
+const ADD_BED_IMG = '/assets/aistudio/lisa-peenar-seemned_fcd909da.webp';
 export function AddBedIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -189,7 +191,7 @@ export function AddBedIllustration() {
 }
 
 // Harvest artwork
-const HARVEST_IMG = '/assets/aistudio/botanical-illustration-harvest_bd847aa6.jpeg';
+const HARVEST_IMG = '/assets/aistudio/botanical-illustration-harvest_bd847aa6.webp';
 export function HarvestIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -200,7 +202,7 @@ export function HarvestIllustration() {
 }
 
 // Berry bush artwork
-const BERRY_BUSH_IMG = '/assets/aistudio/marjap__sas-illustration_2a0f7f3c.jpeg';
+const BERRY_BUSH_IMG = '/assets/aistudio/marjap__sas-illustration_2a0f7f3c.webp';
 export function BerryBushIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -211,7 +213,7 @@ export function BerryBushIllustration() {
 }
 
 // Fruit trees artwork
-const FRUIT_TREE_IMG = '/assets/aistudio/viljapuud-illustration_b06f2e18.jpeg';
+const FRUIT_TREE_IMG = '/assets/aistudio/viljapuud-illustration_b06f2e18.webp';
 export function FruitTreeIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -222,7 +224,7 @@ export function FruitTreeIllustration() {
 }
 
 // Water barrel artwork
-const WATER_BARREL_IMG = '/assets/aistudio/waterbarrel-veemahuti-t_nnl_5a48d892.jpeg';
+const WATER_BARREL_IMG = '/assets/aistudio/waterbarrel-veemahuti-t_nnl_5a48d892.webp';
 export function WaterBarrelIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">
@@ -233,7 +235,7 @@ export function WaterBarrelIllustration() {
 }
 
 // Winter garden artwork
-const WINTER_GARDEN_IMG = '/assets/aistudio/talvine-aed_cd4650e3.jpeg';
+const WINTER_GARDEN_IMG = '/assets/aistudio/talvine-aed_cd4650e3.webp';
 export function WinterGardenIllustration() {
   const fallback = (
     <div className="w-16 h-16 rounded-xl bg-[var(--kulv-surface-muted)] flex items-center justify-center text-2xl">

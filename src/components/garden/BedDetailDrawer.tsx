@@ -61,7 +61,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
         data-testid="bed_detail_drawer"
         role="dialog"
         aria-modal="true"
-        aria-label={language === 'en' ? 'Bed Planting Grid Drawer' : 'Peenra külviplaani sahtel'}
+        aria-labelledby="bed-detail-drawer-title"
         onClick={(e) => e.stopPropagation()}
         style={{
           width: 'min(820px, 100vw)',
@@ -105,6 +105,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
             </div>
             <div style={{ minWidth: 0 }}>
               <h2
+                id="bed-detail-drawer-title"
                 className="font-serif-display"
                 style={{
                   margin: 0,
@@ -191,10 +192,12 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
                     backgroundColor: isSelected
                       ? 'var(--kulv-primary, #4F6B45)'
                       : 'var(--kulv-surface-muted, #EFE6D4)',
-                    color: isSelected ? 'white' : 'var(--kulv-text, #2A2E24)'
+                    color: isSelected ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)'
                   }}
                 >
-                  {isSelected && <Sun size={13} color="var(--kulv-accent, #D97A3D)" />}
+                  {isSelected && (
+                    <Sun size={13} color="var(--kulv-button-text, #FFFFFF)" aria-hidden="true" />
+                  )}
                   <span>{bed.name}</span>
                 </button>
               );
@@ -213,7 +216,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
               padding: '8px 12px',
               borderRadius: '8px',
               backgroundColor: 'var(--kulv-primary, #4F6B45)',
-              color: 'white',
+              color: 'var(--kulv-button-text, #FFFFFF)',
               border: 'none',
               fontSize: '12px',
               fontWeight: 600,
@@ -222,7 +225,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
               minHeight: '40px'
             }}
           >
-            <Plus size={15} />
+            <Plus size={15} aria-hidden="true" />
             <span>{language === 'en' ? 'Add Bed' : 'Lisa peenar'}</span>
           </button>
 
@@ -237,7 +240,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
                 background: 'none',
                 border: '1px solid var(--kulv-border, #C9BFA9)',
                 borderRadius: '8px',
-                color: 'var(--kulv-danger, #B85C33)',
+                color: 'var(--kulv-danger-text, #8C1D18)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -247,7 +250,7 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
                 minHeight: '40px'
               }}
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -303,14 +306,14 @@ export const BedDetailDrawer: React.FC<BedDetailDrawerProps> = ({
                   minHeight: '40px',
                   borderRadius: '8px',
                   backgroundColor: 'var(--kulv-primary, #4F6B45)',
-                  color: 'white',
+                  color: 'var(--kulv-button-text, #FFFFFF)',
                   border: 'none',
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer'
                 }}
               >
-                <Plus size={16} />
+                <Plus size={16} aria-hidden="true" />
                 <span>{language === 'en' ? 'Add Bed' : 'Lisa peenar'}</span>
               </button>
             </div>

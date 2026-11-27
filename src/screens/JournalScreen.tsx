@@ -51,11 +51,11 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
   const getCategoryInfo = (category: JournalEntry['category']) => {
     switch (category) {
       case 'harvest':
-        return { label: 'Saagikoristus', color: 'var(--kulv-accent, #D97A3D)' };
+        return { label: 'Saagikoristus', color: 'var(--kulv-accent-strong, #8F3E14)' };
       case 'problem':
-        return { label: 'Kahjurid & probleemid', color: 'var(--kulv-danger, #B85C33)' };
+        return { label: 'Kahjurid & probleemid', color: 'var(--kulv-danger-text, #8C1D18)' };
       case 'weather':
-        return { label: 'Ilmamärkmed', color: 'var(--kulv-info, #176B87)' };
+        return { label: 'Ilmamärkmed', color: 'var(--kulv-info-text, #0F556D)' };
       default:
         return { label: 'Vaatlus', color: 'var(--kulv-primary, #4F6B45)' };
     }
@@ -119,6 +119,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
 
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
+            type="button"
             onClick={exportBackup}
             title="Ekspordi aia ja päeviku varukoopia (JSON)"
             aria-label="Ekspordi aia ja päeviku varukoopia"
@@ -137,11 +138,12 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
               minHeight: '44px'
             }}
           >
-            <Download size={15} />
+            <Download size={15} aria-hidden="true" />
             <span>Varukoopia</span>
           </button>
 
           <button
+            type="button"
             onClick={exportHarvestCSV}
             data-testid="export_csv_btn"
             title="Ekspordi saagikoristuse kirjed CSV formaadis tabelarvutusse (Excel/Google Sheets)"
@@ -153,7 +155,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
               padding: '10px 14px',
               borderRadius: '8px',
               backgroundColor: 'var(--kulv-surface, #FFFDF8)',
-              color: 'var(--kulv-accent, #D97A3D)',
+              color: 'var(--kulv-accent-strong, #8F3E14)',
               border: '1px solid var(--kulv-border, #C9BFA9)',
               fontSize: '13px',
               fontWeight: 600,
@@ -161,11 +163,12 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
               minHeight: '44px'
             }}
           >
-            <FileSpreadsheet size={15} />
+            <FileSpreadsheet size={15} aria-hidden="true" />
             <span>Saagikus (CSV)</span>
           </button>
 
           <button
+            type="button"
             onClick={onOpenAddEntry}
             data-testid="fab_add_journal"
             style={{
@@ -175,7 +178,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
               padding: '10px 16px',
               borderRadius: '8px',
               backgroundColor: 'var(--kulv-primary, #4F6B45)',
-              color: 'white',
+              color: 'var(--kulv-button-text, #FFFFFF)',
               border: 'none',
               fontSize: '13px',
               fontWeight: 600,
@@ -184,7 +187,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
               minHeight: '44px'
             }}
           >
-            <Plus size={16} />
+            <Plus size={16} aria-hidden="true" />
             <span>Uus sissekanne</span>
           </button>
         </div>
@@ -219,6 +222,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
             return (
               <button
                 key={cat.id}
+                type="button"
                 role="tab"
                 aria-selected={active}
                 onClick={() => setSelectedCategory(cat.id)}
@@ -230,7 +234,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                   cursor: 'pointer',
                   border: active ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
                   backgroundColor: active ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
-                  color: active ? 'white' : 'var(--kulv-text, #2A2E24)',
+                  color: active ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                   transition: 'all 0.15s ease'
                 }}
               >
@@ -245,10 +249,12 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
           <Search
             size={15}
             color="var(--kulv-text-muted, #5F675A)"
+            aria-hidden="true"
             style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}
           />
           <input
             type="text"
+            aria-label="Otsi päeviku sissekannetest"
             value={searchQuery}
             placeholder="Otsi sissekannetest, taimedest..."
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -351,8 +357,8 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                           style={{
                             fontSize: '11px',
                             fontWeight: 700,
-                            color: 'var(--kulv-accent, #D97A3D)',
-                            backgroundColor: 'rgba(217, 122, 61, 0.12)',
+                            color: 'var(--kulv-accent-strong, #8F3E14)',
+                            backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
                             padding: '2px 6px',
                             borderRadius: '4px'
                           }}
@@ -389,6 +395,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
 
                   {/* Delete button */}
                   <button
+                    type="button"
                     onClick={() => setEntryToDelete(entry)}
                     title="Kustuta sissekanne"
                     aria-label={`Kustuta sissekanne ${entry.title}`}
@@ -406,7 +413,7 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                       minHeight: '40px'
                     }}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16} aria-hidden="true" />
                   </button>
                 </div>
 
@@ -418,17 +425,12 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                 {/* Attached Photo Preview */}
                 {entry.photoUrl && (
                   <div className="mt-2.5">
-                    <div
+                    <button
+                      type="button"
                       onClick={() => setSelectedPhotoModal(entry.photoUrl!)}
-                      className="group relative inline-block aspect-[4/3] h-36 sm:h-40 overflow-hidden rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] cursor-pointer shadow-xs"
+                      className="group relative inline-block aspect-[4/3] h-36 sm:h-40 overflow-hidden rounded-xl border border-[var(--kulv-border,#C9BFA9)] bg-[var(--kulv-surface-muted,#EFE6D4)] cursor-pointer shadow-xs p-0"
                       title="Klõpsa suurendamiseks"
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setSelectedPhotoModal(entry.photoUrl!);
-                        }
-                      }}
+                      aria-label={`Suurenda fotot: ${entry.title}`}
                     >
                       <img
                         src={entry.photoUrl}
@@ -438,10 +440,10 @@ export const JournalScreen: React.FC<JournalScreenProps> = ({ onOpenAddEntry }) 
                       />
                       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
                         <div className="p-2 rounded-full bg-black/50 backdrop-blur-xs">
-                          <ZoomIn size={16} />
+                          <ZoomIn size={16} aria-hidden="true" />
                         </div>
                       </div>
-                    </div>
+                    </button>
                   </div>
                 )}
               </div>

@@ -177,8 +177,12 @@ export const AddJournalDialog: React.FC<AddJournalDialogProps> = ({ isOpen, onDi
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img
-              src="/assets/aistudio/empty-state-p_evik_600dc83a.jpeg"
+              src="/assets/aistudio/empty-state-p_evik_600dc83a.webp"
               alt=""
+              width={42}
+              height={42}
+              loading="lazy"
+              decoding="async"
               aria-hidden="true"
               style={{
                 width: '42px',

@@ -51,8 +51,10 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
           Aiaobjektide dokk ({currentPresets.length} näidist)
         </span>
         <button
+          type="button"
           onClick={() => setIsCollapsed((prev) => !prev)}
           data-testid="dock_collapse_toggle"
+          aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? 'Laienda objektide dokk' : 'Ahenda objektide dokk'}
           className="touch-target"
           style={{
@@ -70,7 +72,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
           }}
         >
           <span>{isCollapsed ? 'Ava dokk' : 'Peida'}</span>
-          {isCollapsed ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          {isCollapsed ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
         </button>
       </div>
 
@@ -78,6 +80,8 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
         <>
           {/* Category Tabs with 44px thumb target height */}
           <div
+            role="tablist"
+            aria-label="Aiaobjektide kategooriad"
             style={{
               display: 'flex',
               borderBottom: '1px solid var(--kulv-border, #C9BFA9)',
@@ -90,6 +94,9 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
               return (
                 <button
                   key={tab.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
                   onClick={() => setActiveTab(tab.key)}
                   data-testid={`dock_tab_${tab.key}`}
                   style={{
@@ -109,7 +116,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  {tab.icon}
+                  <span aria-hidden="true">{tab.icon}</span>
                   <span>{tab.label}</span>
                 </button>
               );
@@ -183,6 +190,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
             </div>
 
             <button
+              type="button"
               onClick={() => onAddPreset(preset)}
               title={`Lisa aeda: ${preset.name}`}
               aria-label={`Lisa ${preset.name}`}
@@ -203,7 +211,7 @@ export const YardObjectDock: React.FC<YardObjectDockProps> = ({ onAddPreset, onD
                 flexShrink: 0
               }}
             >
-              <Plus size={18} />
+              <Plus size={18} aria-hidden="true" />
             </button>
           </div>
         ))}

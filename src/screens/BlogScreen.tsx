@@ -71,6 +71,7 @@ export const BlogScreen: React.FC = () => {
           }}
         >
           <button
+            type="button"
             onClick={() => setActiveArticle(null)}
             style={{
               display: 'inline-flex',
@@ -256,6 +257,8 @@ export const BlogScreen: React.FC = () => {
                 return (
                   <button
                     key={cat.id}
+                    type="button"
+                    aria-pressed={isSelected}
                     onClick={() => setSelectedCategory(cat.id)}
                     style={{
                       padding: '8px 14px',
@@ -264,7 +267,7 @@ export const BlogScreen: React.FC = () => {
                         ? '1px solid var(--kulv-primary, #4F6B45)'
                         : '1px solid var(--kulv-border, #C9BFA9)',
                       backgroundColor: isSelected ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface, #FFFDF8)',
-                      color: isSelected ? '#FFFFFF' : 'var(--kulv-text, #2A2E24)',
+                      color: isSelected ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                       fontSize: '12px',
                       fontWeight: isSelected ? 700 : 500,
                       cursor: 'pointer',
@@ -290,9 +293,10 @@ export const BlogScreen: React.FC = () => {
                 minWidth: '240px'
               }}
             >
-              <Search size={16} color="var(--kulv-text-muted, #5F675A)" />
+              <Search size={16} color="var(--kulv-text-muted, #5F675A)" aria-hidden="true" />
               <input
                 type="text"
+                aria-label={language === 'en' ? 'Search articles' : 'Otsi artikleid'}
                 placeholder={language === 'en' ? 'Search articles, topics...' : 'Otsi artiklit, märksõna...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -317,8 +321,9 @@ export const BlogScreen: React.FC = () => {
             }}
           >
             {filteredArticles.map((article) => (
-              <div
+              <button
                 key={article.id}
+                type="button"
                 onClick={() => setActiveArticle(article)}
                 style={{
                   backgroundColor: 'var(--kulv-surface, #FFFDF8)',
@@ -330,6 +335,8 @@ export const BlogScreen: React.FC = () => {
                   justifyContent: 'space-between',
                   boxShadow: 'var(--kulv-shadow-card, 0 2px 8px rgba(0,0,0,0.04))',
                   cursor: 'pointer',
+                  textAlign: 'left',
+                  width: '100%',
                   transition: 'transform 0.15s ease, box-shadow 0.15s ease'
                 }}
               >
@@ -348,11 +355,11 @@ export const BlogScreen: React.FC = () => {
                       {language === 'en' ? article.categoryLabelEn : article.categoryLabelEt}
                     </span>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                      <Clock size={12} /> {article.readTimeMinutes} min
+                      <Clock size={12} aria-hidden="true" /> {article.readTimeMinutes} min
                     </span>
                   </div>
 
-                  <h3
+                  <h2
                     className="font-serif-display"
                     style={{
                       fontSize: '18px',
@@ -363,7 +370,7 @@ export const BlogScreen: React.FC = () => {
                     }}
                   >
                     {language === 'en' ? article.titleEn : article.titleEt}
-                  </h3>
+                  </h2>
 
                   <p
                     style={{
@@ -377,7 +384,7 @@ export const BlogScreen: React.FC = () => {
                   </p>
                 </div>
 
-                <div>
+                <div style={{ width: '100%' }}>
                   <div
                     style={{
                       fontSize: '11px',
@@ -405,11 +412,11 @@ export const BlogScreen: React.FC = () => {
                       }}
                     >
                       <span>{language === 'en' ? 'Read article' : 'Loe edasi'}</span>
-                      <ArrowRight size={14} />
+                      <ArrowRight size={14} aria-hidden="true" />
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </>

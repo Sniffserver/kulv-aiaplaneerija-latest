@@ -53,10 +53,10 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
               {data.name} ({data.date})
             </span>
           </div>
-          <div style={{ color: 'var(--kulv-accent, #D97A3D)', fontWeight: 600 }}>Päevane maks: {data.maks}°C</div>
-          <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 600 }}>Öine miinimum: {data.min}°C</div>
+          <div style={{ color: 'var(--kulv-accent-strong, #8F3E14)', fontWeight: 600 }}>Päevane maks: {data.maks}°C</div>
+          <div style={{ color: 'var(--kulv-primary-strong, #243D2B)', fontWeight: 600 }}>Öine miinimum: {data.min}°C</div>
           {data.sademed > 0 && (
-            <div style={{ color: 'var(--kulv-info, #4F6B45)', fontSize: '11px', marginTop: '2px' }}>
+            <div style={{ color: 'var(--kulv-info-text, #0F556D)', fontSize: '11px', marginTop: '2px' }}>
               Sademed: {data.sademed} mm
             </div>
           )}
@@ -69,13 +69,13 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
                 marginTop: '4px',
                 fontSize: '10px',
                 fontWeight: 700,
-                color: 'var(--kulv-danger, #B85C33)',
+                color: 'var(--kulv-danger-text, #8C1D18)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '3px'
               }}
             >
-              <AlertTriangle size={12} /> Öökülmaoht!
+              <AlertTriangle size={12} aria-hidden="true" /> Öökülmaoht!
             </div>
           )}
         </div>
@@ -99,7 +99,7 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
           }}
         >
           <div style={{ fontWeight: 600 }}>{data.name}</div>
-          <div style={{ color: 'var(--kulv-primary, #4F6B45)', fontWeight: 700, marginTop: '2px' }}>
+          <div style={{ color: 'var(--kulv-primary-strong, #243D2B)', fontWeight: 700, marginTop: '2px' }}>
             Temperatuur: {data.temp}°C
           </div>
         </div>
@@ -131,12 +131,12 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <TrendingUp size={18} color="var(--kulv-primary, #4F6B45)" />
+          <TrendingUp size={18} color="var(--kulv-primary, #4F6B45)" aria-hidden="true" />
           <div>
             <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--kulv-text, #2A2E24)', margin: 0 }}>
               5 päeva temperatuurikõver
             </h2>
-            <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+            <div className="tabular-nums" style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)' }}>
               Asukoht: {weather.locationName} ({weather.lat.toFixed(2)}°N, {weather.lng.toFixed(2)}°E)
             </div>
           </div>
@@ -153,6 +153,7 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
         >
           <button
             type="button"
+            aria-pressed={chartMode === 'daily'}
             onClick={() => setChartMode('daily')}
             style={{
               padding: '4px 10px',
@@ -170,6 +171,7 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
           </button>
           <button
             type="button"
+            aria-pressed={chartMode === 'hourly'}
             onClick={() => setChartMode('hourly')}
             style={{
               padding: '4px 10px',
@@ -307,7 +309,9 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
                 backgroundColor: 'var(--kulv-accent, #D97A3D)'
               }}
             />
-            <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Päevane tipp ({max5DayTemp}°C)</span>
+            <span className="tabular-nums" style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
+              Päevane tipp ({max5DayTemp}°C)
+            </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <div
@@ -318,11 +322,14 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
                 backgroundColor: 'var(--kulv-primary, #4F6B45)'
               }}
             />
-            <span style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>Öine miinimum ({min5DayTemp}°C)</span>
+            <span className="tabular-nums" style={{ color: 'var(--kulv-text-muted, #5F675A)' }}>
+              Öine miinimum ({min5DayTemp}°C)
+            </span>
           </div>
         </div>
 
         <div
+          className="tabular-nums"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -337,12 +344,12 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
         >
           {hasFrostRisk ? (
             <>
-              <AlertTriangle size={12} />
+              <AlertTriangle size={12} aria-hidden="true" />
               <span>Öökülmaoht lähiajal (min {min5DayTemp}°C)</span>
             </>
           ) : (
             <>
-              <ShieldCheck size={12} />
+              <ShieldCheck size={12} aria-hidden="true" />
               <span>Öökülma pole oodata</span>
             </>
           )}

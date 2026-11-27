@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BedPlantingCell, GardenBed, Plant } from '../types';
 import { CompanionEngine, CellSynergyDetails } from '../logic/companionEngine';
 import { CropRotationEngine } from '../logic/cropRotationEngine';
-import { PlantGrowthProgressChart } from './PlantGrowthProgressChart';
+
+const PlantGrowthProgressChart = lazy(() =>
+  import('./PlantGrowthProgressChart').then((m) => ({ default: m.PlantGrowthProgressChart }))
+);
 import {
   X,
   Sprout,
@@ -424,7 +427,7 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                     backgroundColor: showGrowthChart
                       ? 'var(--kulv-primary, #4F6B45)'
                       : 'var(--kulv-surface-muted, #EFE6D4)',
-                    color: showGrowthChart ? 'white' : 'var(--kulv-text, #2A2E24)',
+                    color: showGrowthChart ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                     border: '1px solid var(--kulv-border, #C9BFA9)',
                     fontWeight: 700,
                     fontSize: '13px',
@@ -477,7 +480,7 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                   padding: '10px',
                   borderRadius: '10px',
                   backgroundColor: 'transparent',
-                  color: 'var(--kulv-danger, #B85C33)',
+                  color: 'var(--kulv-danger-text, #8C1D18)',
                   border: '1px solid var(--kulv-border, #C9BFA9)',
                   fontWeight: 600,
                   fontSize: '12px',
@@ -485,7 +488,7 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
                   marginTop: '4px'
                 }}
               >
-                <Trash2 size={15} />
+                <Trash2 size={15} aria-hidden="true" />
                 <span>Eemalda taim ruudustikult</span>
               </button>
             </div>
@@ -493,7 +496,9 @@ export const MobileCellSheet: React.FC<MobileCellSheetProps> = ({
             {/* Expandable Recharts Growth Chart */}
             {showGrowthChart && (
               <div style={{ marginTop: '8px' }}>
-                <PlantGrowthProgressChart planting={cell} plant={plantInfo} />
+                <Suspense fallback={null}>
+                  <PlantGrowthProgressChart planting={cell} plant={plantInfo} />
+                </Suspense>
               </div>
             )}
           </>

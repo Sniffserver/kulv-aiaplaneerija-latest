@@ -165,7 +165,7 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
             ...btnBase,
             border: '1.5px solid var(--kulv-primary, #4F6B45)',
             backgroundColor: showPresetsModal ? 'var(--kulv-primary, #4F6B45)' : 'rgba(79, 107, 69, 0.1)',
-            color: showPresetsModal ? '#FFFFFF' : 'var(--kulv-primary, #385A40)',
+            color: showPresetsModal ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-primary, #385A40)',
             fontWeight: 700
           }}
         >
@@ -332,14 +332,14 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
             ...btnBase,
             border:
               toolMode === 'polygon'
-                ? '1px solid var(--kulv-accent, #D97A3D)'
+                ? '1px solid var(--kulv-accent-strong, #8F3E14)'
                 : '1px solid var(--kulv-border, #C9BFA9)',
-            backgroundColor: toolMode === 'polygon' ? 'rgba(217, 122, 61, 0.14)' : 'transparent',
-            color: toolMode === 'polygon' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
+            backgroundColor: toolMode === 'polygon' ? 'var(--kulv-accent-soft, #F3D8C2)' : 'transparent',
+            color: toolMode === 'polygon' ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
             fontWeight: toolMode === 'polygon' ? 700 : 500
           }}
         >
-          <Pentagon size={14} />
+          <Pentagon size={14} aria-hidden="true" />
           <span>{t('action_polygon_tool')}</span>
         </button>
 
@@ -353,10 +353,10 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
             ...btnBase,
             border:
               toolMode === 'polyline'
-                ? '1px solid var(--kulv-accent, #D97A3D)'
+                ? '1px solid var(--kulv-accent-strong, #8F3E14)'
                 : '1px solid var(--kulv-border, #C9BFA9)',
-            backgroundColor: toolMode === 'polyline' ? 'rgba(217, 122, 61, 0.14)' : 'transparent',
-            color: toolMode === 'polyline' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
+            backgroundColor: toolMode === 'polyline' ? 'var(--kulv-accent-soft, #F3D8C2)' : 'transparent',
+            color: toolMode === 'polyline' ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
             fontWeight: toolMode === 'polyline' ? 700 : 500
           }}
         >
@@ -380,14 +380,14 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
           style={{
             ...btnBase,
             border: showSunHeatmap
-              ? '1px solid var(--kulv-accent, #D97A3D)'
+              ? '1.5px solid var(--kulv-accent-strong, #8F3E14)'
               : '1px solid var(--kulv-border, #C9BFA9)',
-            backgroundColor: showSunHeatmap ? 'var(--kulv-accent, #D97A3D)' : 'rgba(217, 122, 61, 0.08)',
-            color: showSunHeatmap ? '#FFFDF8' : 'var(--kulv-text, #2A2E24)',
+            backgroundColor: showSunHeatmap ? 'var(--kulv-accent-soft, #F3D8C2)' : 'rgba(217, 122, 61, 0.08)',
+            color: showSunHeatmap ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
             fontWeight: 700
           }}
         >
-          <Flame size={14} />
+          <Flame size={14} aria-hidden="true" />
           <span>{t('action_sun_heatmap')}</span>
         </button>
 
@@ -411,11 +411,11 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
               ? '1px solid var(--kulv-primary, #4F6B45)'
               : '1px solid var(--kulv-border, #C9BFA9)',
             backgroundColor: showCompanionOverlay ? 'var(--kulv-primary, #4F6B45)' : 'rgba(79, 107, 69, 0.08)',
-            color: showCompanionOverlay ? '#FFFDF8' : 'var(--kulv-text, #2A2E24)',
+            color: showCompanionOverlay ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
             fontWeight: 700
           }}
         >
-          <Leaf size={14} />
+          <Leaf size={14} aria-hidden="true" />
           <span>{t('action_companions_overlay')}</span>
         </button>
 
@@ -429,9 +429,9 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
             title={language === 'en' ? 'View and restore deleted objects' : 'Vaata ja taasta kustutatud objektid'}
             style={{
               ...btnBase,
-              border: '1px solid var(--kulv-accent, #D97A3D)',
-              backgroundColor: showTrashDrawer ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
-              color: 'var(--kulv-accent, #D97A3D)',
+              border: '1px solid var(--kulv-accent-strong, #8F3E14)',
+              backgroundColor: showTrashDrawer ? 'var(--kulv-accent-soft, #F3D8C2)' : 'transparent',
+              color: 'var(--kulv-accent-strong, #8F3E14)',
               fontWeight: 700
             }}
           >
@@ -457,7 +457,7 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
           minHeight: '38px'
         }}
       >
-        <Sun size={15} color="var(--kulv-accent, #D97A3D)" />
+        <Sun size={15} color="var(--kulv-accent-strong, #8F3E14)" aria-hidden="true" />
         <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>{t('action_sun_simulation')}:</span>
         <select
           aria-label={language === 'en' ? 'Solar season preset' : 'Päikese hooaeg'}
@@ -491,7 +491,7 @@ export const YardPlanToolbar: React.FC<YardPlanToolbarProps> = ({
           onChange={(e) => onChangeSolarHour(parseFloat(e.target.value))}
           style={{ width: '86px', accentColor: 'var(--kulv-accent, #D97A3D)', cursor: 'pointer' }}
         />
-        <span className="tabular-nums" style={{ fontWeight: 800, color: 'var(--kulv-accent, #D97A3D)' }}>
+        <span className="tabular-nums" style={{ fontWeight: 800, color: 'var(--kulv-accent-strong, #8F3E14)' }}>
           {Math.floor(solarHour)}:{solarHour % 1 !== 0 ? '30' : '00'}
         </span>
         <span className="tabular-nums" style={{ color: 'var(--kulv-text-muted, #5F675A)', fontSize: '10.5px' }}>

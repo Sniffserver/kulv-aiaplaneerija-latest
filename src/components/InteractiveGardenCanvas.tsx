@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { GardenBed, Plant, BedPlantingCell } from '../types';
 import { CompanionEngine, CompanionConflict } from '../logic/companionEngine';
 import { CropRotationEngine } from '../logic/cropRotationEngine';
 import { useGarden } from '../context/GardenContext';
 import { MobileCellSheet } from './MobileCellSheet';
-import { PlantGrowthProgressChart } from './PlantGrowthProgressChart';
+
+const PlantGrowthProgressChart = lazy(() =>
+  import('./PlantGrowthProgressChart').then((m) => ({ default: m.PlantGrowthProgressChart }))
+);
 import {
   Sun,
   AlertTriangle,
@@ -233,6 +236,8 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {/* Companion Harmony Badge & Breakdown Toggle */}
             <button
+              type="button"
+              aria-expanded={showHarmonyDrawer}
               onClick={() => setShowHarmonyDrawer((prev) => !prev)}
               data-testid="toggle_companion_harmony_drawer_btn"
               title={language === 'en' ? 'Click to inspect companion planting harmony breakdown' : 'Klõpsa peenra kaaslastaimede harmoonia vaatamiseks'}
@@ -250,28 +255,30 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                   ? (bedHarmony.harmonyPercentage >= 80 ? '1.5px solid #A7C080' : bedHarmony.harmonyPercentage >= 50 ? '1.5px solid #E5BD70' : '1.5px solid #F2A6A6')
                   : (bedHarmony.harmonyPercentage >= 80 ? '1px solid #4F6B45' : bedHarmony.harmonyPercentage >= 50 ? '1px solid #D9A03D' : '1px solid #D97A3D'),
                 backgroundColor: showHarmonyDrawer
-                  ? (bedHarmony.harmonyPercentage >= 80 ? '#385A40' : '#D9A03D')
+                  ? (bedHarmony.harmonyPercentage >= 80 ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent-soft, #F3D8C2)')
                   : isDarkMode
                     ? (bedHarmony.harmonyPercentage >= 80 ? 'rgba(26, 42, 28, 0.9)' : bedHarmony.harmonyPercentage >= 50 ? 'rgba(45, 36, 20, 0.9)' : 'rgba(46, 24, 25, 0.9)')
                     : (bedHarmony.harmonyPercentage >= 80 ? '#EBF4E8' : bedHarmony.harmonyPercentage >= 50 ? '#FFF8E6' : '#FDF0E9'),
                 color: showHarmonyDrawer
-                  ? 'white'
+                  ? (bedHarmony.harmonyPercentage >= 80 ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-accent-strong, #8F3E14)')
                   : isDarkMode
                     ? (bedHarmony.harmonyPercentage >= 80 ? '#CDE6A8' : bedHarmony.harmonyPercentage >= 50 ? '#F8DF9F' : '#FFC4C4')
-                    : (bedHarmony.harmonyPercentage >= 80 ? '#2F4F24' : bedHarmony.harmonyPercentage >= 50 ? '#8F5800' : '#9E3C12'),
+                    : (bedHarmony.harmonyPercentage >= 80 ? '#2F4F24' : bedHarmony.harmonyPercentage >= 50 ? '#7A4B00' : '#8C1D18'),
                 boxShadow: isDarkMode
                   ? (bedHarmony.harmonyPercentage >= 80 ? '0 0 10px rgba(167, 192, 128, 0.35)' : bedHarmony.harmonyPercentage >= 50 ? '0 0 10px rgba(229, 189, 112, 0.35)' : '0 0 10px rgba(242, 166, 166, 0.35)')
                   : undefined,
                 transition: 'all 0.15s ease'
               }}
             >
-              <Sprout size={14} />
+              <Sprout size={14} aria-hidden="true" />
               <span>{bedHarmony.harmonyPercentage}% {language === 'en' ? 'Harmony' : 'Koosmõju'}</span>
-              {showHarmonyDrawer ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              {showHarmonyDrawer ? <ChevronUp size={12} aria-hidden="true" /> : <ChevronDown size={12} aria-hidden="true" />}
             </button>
 
             {/* Companion Heatmap Toggle */}
             <button
+              type="button"
+              aria-pressed={heatmapActive}
               onClick={() => setHeatmapActive((prev) => !prev)}
               data-testid="toggle_companion_heatmap_btn"
               title="Lülita sisse kaaslastaimede sünergia soojuskaart"
@@ -289,11 +296,15 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                   ? '1px solid var(--kulv-primary, #4F6B45)'
                   : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: heatmapActive ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-surface-muted, #EFE6D4)',
-                color: heatmapActive ? 'white' : 'var(--kulv-text, #2A2E24)',
+                color: heatmapActive ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                 transition: 'all 0.15s ease'
               }}
             >
-              <Flame size={14} color={heatmapActive ? 'white' : 'var(--kulv-accent, #D97A3D)'} />
+              <Flame
+                size={14}
+                color={heatmapActive ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-accent-strong, #8F3E14)'}
+                aria-hidden="true"
+              />
               <span>Sünergia soojuskaart</span>
               {heatmapActive && <span style={{ fontSize: '10px', opacity: 0.9 }}>· Aktiivne</span>}
             </button>
@@ -305,14 +316,14 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 alignItems: 'center',
                 gap: '4px',
                 backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
-                color: 'var(--kulv-accent, #D97A3D)',
+                color: 'var(--kulv-accent-strong, #8F3E14)',
                 padding: '6px 10px',
                 borderRadius: '8px',
                 fontSize: '11px',
                 fontWeight: 700
               }}
             >
-              <Sun size={14} />
+              <Sun size={14} aria-hidden="true" />
               <span>Päike: {bed.calculatedSunHours}h/p</span>
             </div>
           </div>
@@ -337,13 +348,13 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
             <div
               style={{
                 fontWeight: 700,
-                color: activeSynergy.status === 'good' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent, #D97A3D)',
+                color: activeSynergy.status === 'good' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-accent-strong, #8F3E14)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px'
               }}
             >
-              {activeSynergy.status === 'good' ? <CheckCircle size={13} /> : <AlertTriangle size={13} />}
+              {activeSynergy.status === 'good' ? <CheckCircle size={13} aria-hidden="true" /> : <AlertTriangle size={13} aria-hidden="true" />}
               <span>{activeSynergy.reason}</span>
             </div>
           )}
@@ -369,10 +380,12 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 {language === 'en' ? 'Companion Planting Harmony Breakdown' : 'Kaaslastaimede harmoonia analüüs'} ({bedHarmony.harmonyPercentage}%)
               </span>
               <button
+                type="button"
+                aria-label={language === 'en' ? 'Close harmony breakdown' : 'Sulge harmoonia analüüs'}
                 onClick={() => setShowHarmonyDrawer(false)}
                 style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--kulv-text-muted, #5F675A)' }}
               >
-                <X size={14} />
+                <X size={14} aria-hidden="true" />
               </button>
             </div>
             <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', lineHeight: '1.4' }}>
@@ -453,13 +466,13 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 />
                 <span>Toetav sünergia ({bedHarmony.positivePairs})</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--kulv-accent, #D97A3D)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--kulv-accent-strong, #8F3E14)' }}>
                 <div
                   style={{
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: 'var(--kulv-accent, #D97A3D)'
+                    backgroundColor: 'var(--kulv-accent-strong, #8F3E14)'
                   }}
                 />
                 <span>Ebasoodne konflikt ({bedHarmony.negativePairs})</span>
@@ -526,8 +539,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                   minHeight: '160px'
                 }}
               >
-                {Array.from({ length: rows }).map((_, r) =>
-                  Array.from({ length: cols }).map((_, c) => {
+                {Array.from({ length: rows }).map((_, r) => (
+                  <div key={`row_${r}`} role="row" style={{ display: 'contents' }}>
+                    {Array.from({ length: cols }).map((_, c) => {
                     const planted = bed.plantings.find((p) => p.gridX === c && p.gridY === r);
                     const isHovered = hoveredCell?.x === c && hoveredCell?.y === r;
                     const isInspected = inspectingCell?.x === c && inspectingCell?.y === r;
@@ -619,164 +633,177 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       <div
                         key={`cell_${c}_${r}`}
                         role="gridcell"
-                        tabIndex={0}
-                        data-cell-coord={`${c}-${r}`}
-                        data-testid={`canvas_cell_${c}_${r}`}
-                        aria-label={`Rida ${r + 1}, veerg ${c + 1}: ${planted ? planted.plantName : 'Tühi muld, valmis istutamiseks'}`}
-                        onClick={() => handleCellClick(c, r)}
-                        onKeyDown={(e) => handleKeyDown(e, c, r)}
                         onMouseEnter={() => setHoveredCell({ x: c, y: r })}
                         onMouseLeave={() => setHoveredCell(null)}
                         onDragOver={(e) => handleDragOver(e, c, r)}
                         onDrop={(e) => handleDrop(e, c, r)}
                         style={{
                           aspectRatio: '1',
-                          borderRadius: '8px',
-                          backgroundColor: cellBg,
-                          borderWidth: cellBorderWidth,
-                          borderStyle: cellBorderStyle,
-                          borderColor: cellBorderColor,
-                          boxShadow: cellBoxShadow,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          position: 'relative',
-                          cursor: 'pointer',
-                          userSelect: 'none',
-                          transition: 'all 0.15s ease',
-                          outline: 'none'
+                          position: 'relative'
                         }}
                       >
-                        {planted ? (
-                          <>
-                            {/* Live neighbor companion synergy cue */}
-                            {neighborSynergy && (
-                              <div
+                        <button
+                          type="button"
+                          data-cell-coord={`${c}-${r}`}
+                          data-testid={`canvas_cell_${c}_${r}`}
+                          aria-label={`Rida ${r + 1}, veerg ${c + 1}: ${planted ? planted.plantName : 'Tühi muld, valmis istutamiseks'}`}
+                          onClick={() => handleCellClick(c, r)}
+                          onKeyDown={(e) => handleKeyDown(e, c, r)}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '8px',
+                            backgroundColor: cellBg,
+                            borderWidth: cellBorderWidth,
+                            borderStyle: cellBorderStyle,
+                            borderColor: cellBorderColor,
+                            boxShadow: cellBoxShadow,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                            transition: 'all 0.15s ease',
+                            padding: 0
+                          }}
+                        >
+                          {planted ? (
+                            <>
+                              {/* Live neighbor companion synergy cue */}
+                              {neighborSynergy && (
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '-6px',
+                                    right: '-6px',
+                                    backgroundColor: isDarkMode
+                                      ? (neighborSynergy === 'positive' ? 'rgba(26, 42, 28, 0.95)' : 'rgba(46, 24, 25, 0.95)')
+                                      : (neighborSynergy === 'positive' ? '#EBF4E8' : '#FDF0E9'),
+                                    color: isDarkMode
+                                      ? (neighborSynergy === 'positive' ? '#CDE6A8' : '#FFC4C4')
+                                      : (neighborSynergy === 'positive' ? '#2F4F24' : '#8C1D18'),
+                                    border: isDarkMode
+                                      ? `1.5px solid ${neighborSynergy === 'positive' ? '#A7C080' : '#F2A6A6'}`
+                                      : `1px solid ${neighborSynergy === 'positive' ? '#4F6B45' : '#D97A3D'}`,
+                                    borderRadius: '10px',
+                                    fontSize: '9px',
+                                    fontWeight: 800,
+                                    padding: '1px 5px',
+                                    boxShadow: isDarkMode
+                                      ? (neighborSynergy === 'positive' ? '0 0 8px rgba(167, 192, 128, 0.45)' : '0 0 8px rgba(242, 166, 166, 0.45)')
+                                      : '0 2px 5px rgba(0,0,0,0.2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '2px',
+                                    zIndex: 4
+                                  }}
+                                >
+                                  <span aria-hidden="true">{neighborSynergy === 'positive' ? '🌿' : '⚠️'}</span>
+                                  <span>{neighborSynergy === 'positive' ? '+' : '!'}</span>
+                                </div>
+                              )}
+
+                              <BotanicalPlantIcon
+                                plantId={planted.plantId}
+                                plantName={planted.plantName}
+                                size={28}
+                                ariaHidden
+                              />
+                              <span
                                 style={{
-                                  position: 'absolute',
-                                  top: '-6px',
-                                  right: '-6px',
-                                  backgroundColor: isDarkMode
-                                    ? (neighborSynergy === 'positive' ? 'rgba(26, 42, 28, 0.95)' : 'rgba(46, 24, 25, 0.95)')
-                                    : (neighborSynergy === 'positive' ? '#EBF4E8' : '#FDF0E9'),
-                                  color: isDarkMode
-                                    ? (neighborSynergy === 'positive' ? '#CDE6A8' : '#FFC4C4')
-                                    : (neighborSynergy === 'positive' ? '#2F4F24' : '#9E3C12'),
-                                  border: isDarkMode
-                                    ? `1.5px solid ${neighborSynergy === 'positive' ? '#A7C080' : '#F2A6A6'}`
-                                    : `1px solid ${neighborSynergy === 'positive' ? '#4F6B45' : '#D97A3D'}`,
-                                  borderRadius: '10px',
-                                  fontSize: '9px',
-                                  fontWeight: 800,
-                                  padding: '1px 5px',
-                                  boxShadow: isDarkMode
-                                    ? (neighborSynergy === 'positive' ? '0 0 8px rgba(167, 192, 128, 0.45)' : '0 0 8px rgba(242, 166, 166, 0.45)')
-                                    : '0 2px 5px rgba(0,0,0,0.2)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '2px',
-                                  zIndex: 4
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  color: '#FFFDF8',
+                                  marginTop: '2px',
+                                  maxWidth: '92%',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  textShadow: '0 1px 2px rgba(0,0,0,0.6)'
                                 }}
                               >
-                                <span>{neighborSynergy === 'positive' ? '🌿' : '⚠️'}</span>
-                                <span>{neighborSynergy === 'positive' ? '+' : '!'}</span>
-                              </div>
-                            )}
+                                {planted.plantName}
+                              </span>
 
-                            <BotanicalPlantIcon
-                              plantId={planted.plantId}
-                              plantName={planted.plantName}
-                              size={28}
-                              ariaHidden
-                            />
-                            <span
-                              style={{
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                color: '#FFFDF8',
-                                marginTop: '2px',
-                                maxWidth: '92%',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                textShadow: '0 1px 2px rgba(0,0,0,0.6)'
-                              }}
-                            >
-                              {planted.plantName}
-                            </span>
-
-                            {/* Heatmap synergy badge indicator */}
-                            {heatmapActive && cellSynergy && cellSynergy.status !== 'neutral' && (
-                              <div
-                                style={{
-                                  position: 'absolute',
-                                  top: '2px',
-                                  left: '2px',
-                                  fontSize: '9px',
-                                  fontWeight: 800,
-                                  color: 'white',
-                                  backgroundColor:
-                                    cellSynergy.status === 'positive'
-                                      ? 'var(--kulv-primary, #4F6B45)'
-                                      : 'var(--kulv-accent, #D97A3D)',
-                                  borderRadius: '6px',
-                                  padding: '1px 4px',
-                                  lineHeight: 1.2
-                                }}
+                              {/* Heatmap synergy badge indicator */}
+                              {heatmapActive && cellSynergy && cellSynergy.status !== 'neutral' && (
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '2px',
+                                    left: '2px',
+                                    fontSize: '9px',
+                                    fontWeight: 800,
+                                    color: 'var(--kulv-button-text, #FFFFFF)',
+                                    backgroundColor:
+                                      cellSynergy.status === 'positive'
+                                        ? 'var(--kulv-primary, #4F6B45)'
+                                        : 'var(--kulv-accent-strong, #8F3E14)',
+                                    borderRadius: '6px',
+                                    padding: '1px 4px',
+                                    lineHeight: 1.2
+                                  }}
+                                >
+                                  {cellSynergy.status === 'positive' ? `+${cellSynergy.goodCount}` : '!'}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              <span
+                                style={{ color: '#F5EFE6', fontSize: '14px', fontWeight: 600 }}
                               >
-                                {cellSynergy.status === 'positive' ? `+${cellSynergy.goodCount}` : '!'}
-                              </div>
-                            )}
+                                {isHovered ? 'Istuta!' : '+'}
+                              </span>
+                              <span style={{ fontSize: '8px', color: '#E2D8CA' }}>
+                                {Math.round((bed.width / rows) * 100)}cm
+                              </span>
+                            </>
+                          )}
+                        </button>
 
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onRemoveFromCell(bed.id, c, r);
-                                if (inspectingCell?.x === c && inspectingCell?.y === r) {
-                                  setInspectingCell(null);
-                                  setIsMobileSheetOpen(false);
-                                }
-                              }}
-                              title="Eemalda taim"
-                              aria-label={`Eemalda ${planted.plantName}`}
-                              style={{
-                                position: 'absolute',
-                                top: '2px',
-                                right: '2px',
-                                background: 'var(--kulv-surface, #FFFDF8)',
-                                color: 'var(--kulv-danger, #B85C33)',
-                                border: '1px solid var(--kulv-border, #C9BFA9)',
-                                borderRadius: '50%',
-                                width: '16px',
-                                height: '16px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '10px',
-                                cursor: 'pointer',
-                                padding: 0
-                              }}
-                            >
-                              <X size={10} />
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <span
-                              style={{ color: '#D5C7B7', fontSize: '14px', fontWeight: 600 }}
-                            >
-                              {isHovered ? 'Istuta!' : '+'}
-                            </span>
-                            <span style={{ fontSize: '8px', color: '#B3A18F' }}>
-                              {Math.round((bed.width / rows) * 100)}cm
-                            </span>
-                          </>
+                        {planted && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemoveFromCell(bed.id, c, r);
+                              if (inspectingCell?.x === c && inspectingCell?.y === r) {
+                                setInspectingCell(null);
+                                setIsMobileSheetOpen(false);
+                              }
+                            }}
+                            title="Eemalda taim"
+                            aria-label={`Eemalda ${planted.plantName}`}
+                            style={{
+                              position: 'absolute',
+                              top: '2px',
+                              right: '2px',
+                              background: 'var(--kulv-surface, #FFFDF8)',
+                              color: 'var(--kulv-danger-text, #8C1D18)',
+                              border: '1px solid var(--kulv-border, #C9BFA9)',
+                              borderRadius: '50%',
+                              width: '16px',
+                              height: '16px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '10px',
+                              cursor: 'pointer',
+                              padding: 0,
+                              zIndex: 5
+                            }}
+                          >
+                            <X size={10} aria-hidden="true" />
+                          </button>
                         )}
                       </div>
                     );
-                  })
-                )}
+                  })}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -832,6 +859,8 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
 
                         <div style={{ display: 'flex', gap: '6px' }}>
                           <button
+                            type="button"
+                            aria-pressed={showDesktopGrowthChart}
                             onClick={() => setShowDesktopGrowthChart((prev) => !prev)}
                             className="touch-target"
                             title="Vaata Recharts kasvu edenemise graafikut"
@@ -844,18 +873,19 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               backgroundColor: showDesktopGrowthChart
                                 ? 'var(--kulv-primary, #4F6B45)'
                                 : 'var(--kulv-surface-muted, #EFE6D4)',
-                              color: showDesktopGrowthChart ? 'white' : 'var(--kulv-text, #2A2E24)',
+                              color: showDesktopGrowthChart ? 'var(--kulv-button-text, #FFFFFF)' : 'var(--kulv-text, #2A2E24)',
                               border: '1px solid var(--kulv-border, #C9BFA9)',
                               fontSize: '11px',
                               fontWeight: 700,
                               cursor: 'pointer'
                             }}
                           >
-                            <LineChart size={13} />
+                            <LineChart size={13} aria-hidden="true" />
                             <span>Kasv</span>
                           </button>
 
                           <button
+                            type="button"
                             onClick={() => {
                               onRemoveFromCell(bed.id, inspectingCell.x, inspectingCell.y);
                               setInspectingCell(null);
@@ -868,18 +898,20 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               padding: '6px 10px',
                               borderRadius: '6px',
                               backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
-                              color: 'var(--kulv-danger, #B85C33)',
+                              color: 'var(--kulv-danger-text, #8C1D18)',
                               border: '1px solid var(--kulv-border, #C9BFA9)',
                               fontSize: '11px',
                               fontWeight: 700,
                               cursor: 'pointer'
                             }}
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={13} aria-hidden="true" />
                             <span>Eemalda</span>
                           </button>
 
                           <button
+                            type="button"
+                            aria-label="Sulge lahtri vaade"
                             onClick={() => setInspectingCell(null)}
                             style={{
                               background: 'none',
@@ -889,7 +921,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                               padding: '4px'
                             }}
                           >
-                            <X size={16} />
+                            <X size={16} aria-hidden="true" />
                           </button>
                         </div>
                       </div>
@@ -907,7 +939,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                           color: 'var(--kulv-text, #2A2E24)'
                         }}
                       >
-                        <RotateCcw size={14} color="var(--kulv-primary, #4F6B45)" />
+                        <RotateCcw size={14} color="var(--kulv-primary-strong, #243D2B)" aria-hidden="true" />
                         <span>
                           Viljavaheldus ({canonicalFam}): ära istuta samasse kohta järgmisel aastal sama sugukonna
                           liike.
@@ -917,7 +949,9 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       {/* Desktop Growth Chart inline preview */}
                       {showDesktopGrowthChart && plantInfo && (
                         <div style={{ marginTop: '4px' }}>
-                          <PlantGrowthProgressChart planting={inspectingCell.planting} plant={plantInfo} />
+                          <Suspense fallback={null}>
+                            <PlantGrowthProgressChart planting={inspectingCell.planting} plant={plantInfo} />
+                          </Suspense>
                         </div>
                       )}
                     </>
@@ -966,26 +1000,20 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
               {allPlants.map((plant) => {
                 const isSelected = selectedPlant?.id === plant.id;
                 return (
-                  <div
+                  <button
                     key={plant.id}
-                    role="button"
-                    tabIndex={0}
+                    type="button"
                     aria-pressed={isSelected}
                     data-testid={`dock_plant_${plant.id}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, plant)}
                     onClick={() => setSelectedPlant(plant)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setSelectedPlant(plant);
-                      }
-                    }}
                     style={{
                       backgroundColor: isSelected
                         ? 'var(--kulv-accent-soft, #F3D8C2)'
                         : 'var(--kulv-surface-muted, #EFE6D4)',
                       border: isSelected
-                        ? '2px solid var(--kulv-accent, #D97A3D)'
+                        ? '2px solid var(--kulv-accent-strong, #8F3E14)'
                         : '1px solid var(--kulv-border, #C9BFA9)',
                       borderRadius: '10px',
                       padding: '8px 6px',
@@ -994,7 +1022,6 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       alignItems: 'center',
                       cursor: 'pointer',
                       userSelect: 'none',
-                      outline: 'none',
                       transition: 'all 0.15s ease'
                     }}
                   >
@@ -1019,10 +1046,17 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                     >
                       {plant.name}
                     </span>
-                    <span style={{ fontSize: '8px', color: 'var(--kulv-text-muted, #5F675A)' }}>
+                    <span
+                      style={{
+                        fontSize: '8px',
+                        color: isSelected
+                          ? 'var(--kulv-text, #2A2E24)'
+                          : 'var(--kulv-text-muted, #5F675A)'
+                      }}
+                    >
                       {plant.spacingCm}cm
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -1046,7 +1080,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 </div>
                 {suggestedCompanions.good.length > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--kulv-primary, #4F6B45)', fontWeight: 700 }}>
+                    <span style={{ fontSize: '10px', color: 'var(--kulv-primary-strong, #243D2B)', fontWeight: 700 }}>
                       ✓ {language === 'en' ? 'Synergies:' : 'Toetavad:'}
                     </span>
                     {suggestedCompanions.good.slice(0, 4).map((gp) => (
@@ -1057,7 +1091,7 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                         title={language === 'en' ? `Select ${gp.name}` : `Vali ${gp.name}`}
                         style={{
                           backgroundColor: 'rgba(79, 107, 69, 0.12)',
-                          color: 'var(--kulv-primary, #4F6B45)',
+                          color: 'var(--kulv-primary-strong, #243D2B)',
                           border: '1px solid var(--kulv-primary, #4F6B45)',
                           borderRadius: '6px',
                           padding: '2px 8px',
@@ -1076,15 +1110,15 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                 )}
                 {suggestedCompanions.bad.length > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--kulv-danger, #B85C33)', fontWeight: 700 }}>
+                    <span style={{ fontSize: '10px', color: 'var(--kulv-danger-text, #8C1D18)', fontWeight: 700 }}>
                       ✕ {language === 'en' ? 'Avoid:' : 'Väldi kõrval:'}
                     </span>
                     {suggestedCompanions.bad.slice(0, 3).map((bp) => (
                       <span
                         key={bp.id}
                         style={{
-                          backgroundColor: 'rgba(184, 92, 51, 0.1)',
-                          color: 'var(--kulv-danger, #B85C33)',
+                          backgroundColor: 'var(--kulv-accent-soft, #F3D8C2)',
+                          color: 'var(--kulv-danger-text, #8C1D18)',
                           border: '1px solid var(--kulv-danger, #B85C33)',
                           borderRadius: '6px',
                           padding: '2px 8px',
@@ -1158,10 +1192,10 @@ export const InteractiveGardenCanvas: React.FC<InteractiveGardenCanvasProps> = (
                       gap: '6px',
                       fontSize: '11px',
                       fontWeight: 700,
-                      color: conflict.isHarmful ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-primary, #4F6B45)'
+                      color: conflict.isHarmful ? 'var(--kulv-danger-text, #8C1D18)' : 'var(--kulv-primary-strong, #243D2B)'
                     }}
                   >
-                    {conflict.isHarmful ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
+                    {conflict.isHarmful ? <AlertTriangle size={14} aria-hidden="true" /> : <CheckCircle size={14} aria-hidden="true" />}
                     <span style={{ flex: 1 }}>{conflict.message}</span>
                     {conflict.category && (
                       <span

@@ -105,6 +105,7 @@ interface SunHeatmapLegendProps {
   onSelectSeason: (id: SolarSeasonPresetId) => void;
   hoveredInfo: { x: number; y: number; sunHours: number } | null;
   language: 'et' | 'en';
+  topOffset?: string;
 }
 
 export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
@@ -112,7 +113,8 @@ export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
   seasonId,
   onSelectSeason,
   hoveredInfo,
-  language
+  language,
+  topOffset = '12px'
 }) => {
   return (
     <div
@@ -124,14 +126,14 @@ export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
       onTouchStart={(e) => e.stopPropagation()}
       style={{
         position: 'absolute',
-        top: '12px',
+        top: topOffset,
         left: '12px',
-        backgroundColor: 'rgba(255, 253, 248, 0.96)',
+        backgroundColor: 'var(--kulv-surface, #FFFDF8)',
         backdropFilter: 'blur(8px)',
         border: '1px solid var(--kulv-border, #C9BFA9)',
         borderRadius: '10px',
         padding: '10px 12px',
-        boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+        boxShadow: 'var(--kulv-shadow-card, 0 4px 14px rgba(0,0,0,0.1))',
         zIndex: 14,
         maxWidth: '300px',
         display: 'flex',
@@ -143,7 +145,7 @@ export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
-          <Sun size={14} color="var(--kulv-accent, #D97A3D)" />
+          <Sun size={14} color="var(--kulv-accent-strong, #8F3E14)" aria-hidden="true" />
           <span>{language === 'en' ? 'Daily Sun Exposure' : 'Päevane päikesevalgus'}</span>
         </div>
         <span className="tabular-nums" style={{ fontSize: '10px', fontWeight: 700, color: 'var(--kulv-text-muted, #5F675A)' }}>
@@ -178,13 +180,14 @@ export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
               type="button"
               onClick={() => onSelectSeason(preset.id)}
               data-testid={`heatmap_season_${preset.id}`}
+              aria-pressed={active}
               style={{
                 padding: '4px 6px',
                 borderRadius: '6px',
                 border: active
-                  ? '1px solid var(--kulv-accent, #D97A3D)'
+                  ? '1px solid var(--kulv-accent-strong, #8F3E14)'
                   : '1px solid var(--kulv-border, #C9BFA9)',
-                backgroundColor: active ? 'rgba(217, 122, 61, 0.14)' : 'var(--kulv-surface-muted, #EFE6D4)',
+                backgroundColor: active ? 'var(--kulv-accent-soft, #F3D8C2)' : 'var(--kulv-surface-muted, #EFE6D4)',
                 color: active ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
                 fontSize: '10px',
                 fontWeight: active ? 700 : 600,
