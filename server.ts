@@ -239,6 +239,35 @@ export function createWeatherLimiter(trustProxyHops: number = getTrustProxyHops(
   });
 }
 
+export function createApiLimiter(trustProxyHops: number = getTrustProxyHops()): RequestHandler {
+  return rateLimit({
+    windowMs: 60_000,
+    limit: 120,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    keyGenerator: (req: Request) => {
+      const forwardedIp = extractForwardedForIp(req, trustProxyHops);
+      const rawIp = forwardedIp ?? req.ip ?? req.socket?.remoteAddress ?? '127.0.0.1';
+      const clientIp =
+        isIP(rawIp) !== 0
+          ? rawIp
+          : req.socket?.remoteAddress && isIP(req.socket.remoteAddress) !== 0
+            ? req.socket.remoteAddress
+            : '127.0.0.1';
+      return ipKeyGenerator(clientIp);
+    },
+    handler: (_req: Request, res: Response) => {
+      if (!res.getHeader('Retry-After')) {
+        res.setHeader('Retry-After', '60');
+      }
+      res.status(429).json({
+        error: 'Too many API requests, please try again later.',
+        retryAfterSeconds: 60
+      });
+    }
+  });
+}
+
 function requestLogger(req: Request, res: Response, next: NextFunction) {
   // Skip logging internal Vite dev server module and static asset requests
   if (
@@ -636,7 +665,7 @@ export function createApp(deps: AppDependencies = {}): Express {
     });
   });
 
-  app.use('/api', (_req: Request, res: Response) => {
+  app.use('/api', createApiLimiter(trustProxyHops), (_req: Request, res: Response) => {
     res.status(404).json({
       error: 'Not found'
     });

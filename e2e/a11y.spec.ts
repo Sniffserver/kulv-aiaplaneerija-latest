@@ -1,6 +1,38 @@
 import { test, expect, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+const MOCK_OPEN_METEO_RESPONSE = {
+  current: {
+    temperature_2m: 15.6,
+    relative_humidity_2m: 64,
+    apparent_temperature: 14.9,
+    precipitation: 0,
+    weather_code: 2,
+    wind_speed_10m: 3.4
+  },
+  daily: {
+    time: [
+      '2026-05-15',
+      '2026-05-16',
+      '2026-05-17',
+      '2026-05-18',
+      '2026-05-19',
+      '2026-05-20',
+      '2026-05-21'
+    ],
+    weather_code: [2, 1, 61, 2, 0, 2, 1],
+    temperature_2m_max: [19, 20, 18, 15, 14, 17, 21],
+    temperature_2m_min: [8, 9, 7, 2, -1, 4, 10],
+    apparent_temperature_min: [7, 8, 6, 1, -2, 3, 9],
+    precipitation_sum: [0, 0, 3.2, 0.5, 0, 0, 0],
+    precipitation_probability_max: [10, 5, 60, 20, 0, 15, 5]
+  },
+  hourly: {
+    time: ['2026-05-15T09:00', '2026-05-15T12:00', '2026-05-15T15:00'],
+    temperature_2m: [13.2, 16.4, 19.0]
+  }
+};
+
 async function assertNoCriticalOrSeriousViolations(page: Page, viewLabel: string) {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa'])
@@ -63,15 +95,25 @@ async function navigateToTab(page: Page, tabId: 'home' | 'garden' | 'plants' | '
 }
 
 test.describe('KÜLV Accessibility Audit (axe-core WCAG 2.1 AA)', () => {
-  test('kõik vaated on ligipääsetavad ilma kriitiliste või tõsiste vigadeta', async ({ page }) => {
-    await page.goto('/');
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/api.open-meteo.com/**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_OPEN_METEO_RESPONSE)
+      });
+    });
+  });
 
-    // 1. Home view
+  test('avaleht ja pildid on ligipääsetavad', async ({ page }) => {
+    await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await assertAllVisibleImagesLoaded(page, 'home');
     await assertNoCriticalOrSeriousViolations(page, 'home');
+  });
 
-    // 2. Garden 2D Yard Plan + Sun Heatmap + Bed Detail Drawer
+  test('2D aiakrundiplaan, soojuskaart ja peenra sahtel on ligipääsetavad', async ({ page }) => {
+    await page.goto('/');
     await navigateToTab(page, 'garden');
     await expect(page.getByTestId('planner_mode_yard_btn')).toBeVisible();
     await assertNoCriticalOrSeriousViolations(page, 'garden-yard-plan');
@@ -85,8 +127,10 @@ test.describe('KÜLV Accessibility Audit (axe-core WCAG 2.1 AA)', () => {
     await assertNoCriticalOrSeriousViolations(page, 'garden-bed-detail-drawer');
     await page.getByTestId('close_bed_drawer_btn').click();
     await expect(page.getByTestId('bed_detail_drawer')).not.toBeVisible();
+  });
 
-    // 3. Plants Catalog + Advanced Filters
+  test('taimede kataloog ja kalender on ligipääsetavad', async ({ page }) => {
+    await page.goto('/');
     await navigateToTab(page, 'plants');
     await expect(page.getByTestId('plant_search_field')).toBeVisible();
     await assertNoCriticalOrSeriousViolations(page, 'plants');
@@ -95,21 +139,21 @@ test.describe('KÜLV Accessibility Audit (axe-core WCAG 2.1 AA)', () => {
     await expect(page.locator('#plant-filter-sun')).toBeVisible();
     await assertNoCriticalOrSeriousViolations(page, 'plants-advanced-filters');
 
-    // 4. Calendar (Gantt + Cards view)
     await navigateToTab(page, 'calendar');
     await expect(page.getByTestId('weather_calendar_section')).toBeVisible();
     await assertNoCriticalOrSeriousViolations(page, 'calendar-gantt');
 
     await page.getByRole('tab', { name: /Kaardid/i }).click();
     await assertNoCriticalOrSeriousViolations(page, 'calendar-cards');
+  });
 
-    // 5. Journal
+  test('aiapäevik ja blogi on ligipääsetavad', async ({ page }) => {
+    await page.goto('/');
     await navigateToTab(page, 'journal');
     await expect(page.getByTestId('fab_add_journal')).toBeVisible();
     await assertAllVisibleImagesLoaded(page, 'journal');
     await assertNoCriticalOrSeriousViolations(page, 'journal');
 
-    // 6. Blog (list + article view)
     await navigateToTab(page, 'blog');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await assertNoCriticalOrSeriousViolations(page, 'blog-list');

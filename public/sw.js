@@ -18,6 +18,24 @@ const CACHE_NAMES = {
   WEATHER: `kulv-weather-${BUILD_ID}`,
 };
 
+let swWeatherCooldownUntil = 0;
+
+function parseSwRetryAfterMs(headerValue) {
+  const fallbackMs = 60 * 1000;
+  if (!headerValue) return fallbackMs;
+  const trimmed = String(headerValue).trim();
+  const seconds = Number(trimmed);
+  if (Number.isFinite(seconds) && seconds >= 0) {
+    return Math.min(15 * 60 * 1000, Math.max(1000, Math.round(seconds * 1000)));
+  }
+  const parsedDate = Date.parse(trimmed);
+  if (Number.isFinite(parsedDate)) {
+    const delta = parsedDate - Date.now();
+    if (delta > 0) return Math.min(15 * 60 * 1000, Math.max(1000, delta));
+  }
+  return fallbackMs;
+}
+
 // CacheStorage is shared by all apps on an origin. Own only these exact namespaces;
 // a broad "kulv-" prefix can accidentally delete offline data owned by another app.
 const OWNED_CACHE_PREFIXES = [
@@ -149,27 +167,53 @@ self.addEventListener('fetch', (event) => {
     return; // Pass through directly to network
   }
 
-  // Strategy D: Weather API (Open-Meteo) -> NetworkFirst with offline cache fallback
+  // Strategy D: Weather API (Open-Meteo) -> NetworkFirst with 429 cooldown & offline/stale cache fallback
   if (url.hostname.includes('open-meteo.com')) {
     event.respondWith(
-      fetch(event.request)
-        .then((response) => {
+      (async () => {
+        const now = Date.now();
+        if (now < swWeatherCooldownUntil) {
+          const cached = await matchInCache(CACHE_NAMES.WEATHER, event.request);
+          if (cached) return cached;
+          const retrySeconds = Math.max(1, Math.ceil((swWeatherCooldownUntil - now) / 1000));
+          return new Response(JSON.stringify({ rateLimited: true, error: 'Rate limit cooldown active' }), {
+            status: 429,
+            headers: {
+              'Content-Type': 'application/json',
+              'Retry-After': String(retrySeconds),
+            },
+          });
+        }
+
+        try {
+          const response = await fetch(event.request);
           if (response && response.status === 200) {
+            swWeatherCooldownUntil = 0;
             const clone = response.clone();
             caches.open(CACHE_NAMES.WEATHER).then((cache) => {
               cache.put(event.request, clone);
             });
+            return response;
           }
+
+          if (response && (response.status === 429 || response.status >= 500)) {
+            if (response.status === 429) {
+              swWeatherCooldownUntil = Date.now() + parseSwRetryAfterMs(response.headers.get('retry-after'));
+            }
+            const cached = await matchInCache(CACHE_NAMES.WEATHER, event.request);
+            if (cached) return cached;
+          }
+
           return response;
-        })
-        .catch(async () => {
+        } catch {
           const cached = await matchInCache(CACHE_NAMES.WEATHER, event.request);
           if (cached) return cached;
           return new Response(JSON.stringify({ offline: true, error: 'Offline' }), {
             headers: { 'Content-Type': 'application/json' },
             status: 503,
           });
-        })
+        }
+      })()
     );
     return;
   }
