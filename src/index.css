@@ -241,10 +241,12 @@
   --kulv-accent: #e59b6e;
   --kulv-accent-strong: #f0b58e;
   --kulv-accent-soft: #3d281e;
+  --kulv-success: #a7c080;
   --kulv-warning: #e5bd70;
   --kulv-warning-text: #f8df9f;
   --kulv-danger: #f2a6a6;
   --kulv-danger-text: #ffc4c4;
+  --kulv-info: #8ec9db;
   --kulv-info-text: #8ec9db;
 }
 

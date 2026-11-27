@@ -199,7 +199,7 @@ describe('KÜLV server', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it('guarantees rate limit counters are isolated per injected limiter', async () => {
+  it('guarantees rate limit counters are isolated per injected limiter on uncached misses', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockImplementation(() =>
@@ -218,21 +218,125 @@ describe('KÜLV server', () => {
     const appA = createApp({ weatherLimiter: limiterA });
     const appB = createApp({ weatherLimiter: limiterB });
 
-    const query = { lat: '58.378', lon: '26.729' };
-
-    // Exhaust quota on limiter A (30 requests)
+    // Exhaust quota on limiter A (30 distinct uncached coordinate requests)
     for (let index = 0; index < 30; index += 1) {
-      const res = await request(appA).get('/api/weather').query(query);
+      const res = await request(appA)
+        .get('/api/weather')
+        .query({ lat: '58.378', lon: (26.0 + index * 0.01).toFixed(3) });
       expect(res.status).toBe(200);
     }
 
-    // Next request on appA must be blocked
-    const blockedA = await request(appA).get('/api/weather').query(query);
+    // Next uncached request on appA must be blocked
+    const blockedA = await request(appA)
+      .get('/api/weather')
+      .query({ lat: '58.378', lon: '26.999' });
     expect(blockedA.status).toBe(429);
+    expect(blockedA.headers['retry-after']).toBeDefined();
 
     // AppB with isolated limiterB must still accept requests
-    const allowedB = await request(appB).get('/api/weather').query(query);
+    const allowedB = await request(appB)
+      .get('/api/weather')
+      .query({ lat: '58.378', lon: '26.999' });
     expect(allowedB.status).toBe(200);
+  });
+
+  it('does not consume rate-limit quota on fresh cache hits', async () => {
+    const fetchMock = vi.fn().mockImplementation(() =>
+      Promise.resolve(
+        new Response(JSON.stringify(weatherResponse), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const app = createApp();
+    const query = { lat: '58.378', lon: '26.729' };
+
+    for (let index = 0; index < 45; index += 1) {
+      const res = await request(app).get('/api/weather').query(query);
+      expect(res.status).toBe(200);
+      expect(res.headers['x-cache']).toBe(index === 0 ? 'MISS' : 'HIT');
+    }
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('coalesces concurrent cache-miss requests for identical coordinates into one upstream fetch', async () => {
+    let resolveFetch!: (value: Response) => void;
+    const fetchPromise = new Promise<Response>((resolve) => {
+      resolveFetch = resolve;
+    });
+    const fetchMock = vi.fn().mockReturnValue(fetchPromise);
+    vi.stubGlobal('fetch', fetchMock);
+
+    const app = createApp();
+    const query = { lat: '59.100', lon: '24.500' };
+
+    const pending = Promise.all([
+      request(app).get('/api/weather').query(query),
+      request(app).get('/api/weather').query(query),
+      request(app).get('/api/weather').query(query)
+    ]);
+
+    await new Promise((r) => setTimeout(r, 20));
+    resolveFetch(
+      new Response(JSON.stringify(weatherResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    );
+
+    const responses = await pending;
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    for (const res of responses) {
+      expect(res.status).toBe(200);
+    }
+  });
+
+  it('honors upstream 429 Retry-After cooldown and serves stale cache when available', async () => {
+    let currentNow = 1_000_000;
+    const cache = new Map<string, CacheEntry>();
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(weatherResponse), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+      .mockResolvedValueOnce(
+        new Response('Rate limited', {
+          status: 429,
+          headers: { 'Retry-After': '30' }
+        })
+      );
+
+    vi.stubGlobal('fetch', fetchMock);
+    const app = createApp({ weatherCache: cache, now: () => currentNow });
+    const query = { lat: '59.222', lon: '24.333' };
+
+    const initial = await request(app).get('/api/weather').query(query);
+    expect(initial.status).toBe(200);
+    expect(initial.headers['x-cache']).toBe('MISS');
+
+    // Expire fresh TTL (5m) while remaining inside stale fallback TTL (60m)
+    currentNow += 6 * 60 * 1000;
+
+    const duringUpstream429 = await request(app).get('/api/weather').query(query);
+    expect(duringUpstream429.status).toBe(200);
+    expect(duringUpstream429.headers['x-cache']).toBe('STALE');
+    expect(duringUpstream429.headers['retry-after']).toBe('30');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    // Subsequent uncached lookup during active upstream cooldown returns 429 without calling upstream
+    const uncachedDuringCooldown = await request(app)
+      .get('/api/weather')
+      .query({ lat: '59.555', lon: '24.666' });
+    expect(uncachedDuringCooldown.status).toBe(429);
+    expect(uncachedDuringCooldown.headers['retry-after']).toBeDefined();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('evicts expired entries and oldest entries when MAX_WEATHER_CACHE_SIZE is reached', () => {
@@ -265,26 +369,31 @@ describe('KÜLV server', () => {
     expect(testCache.size).toBe(3);
   });
 
-  it('rate limits excessive weather requests on default limiter', async () => {
+  it('rate limits excessive uncached weather requests on default limiter', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        new Response(JSON.stringify(weatherResponse), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        })
+      vi.fn().mockImplementation(() =>
+        Promise.resolve(
+          new Response(JSON.stringify(weatherResponse), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          })
+        )
       )
     );
 
     const app = createApp();
-    const query = { lat: '58.378', lon: '26.729' };
 
     for (let index = 0; index < 30; index += 1) {
-      const response = await request(app).get('/api/weather').query(query);
+      const response = await request(app)
+        .get('/api/weather')
+        .query({ lat: '58.378', lon: (26.0 + index * 0.01).toFixed(3) });
       expect(response.status).toBe(200);
     }
 
-    const limited = await request(app).get('/api/weather').query(query);
+    const limited = await request(app)
+      .get('/api/weather')
+      .query({ lat: '58.378', lon: '26.999' });
 
     expect(limited.status).toBe(429);
     expect(limited.body.error).toMatch(/Too many weather requests/i);
@@ -379,22 +488,23 @@ describe('KÜLV server', () => {
   it('isolates rate-limit buckets per trusted Forwarded client IP and ignores spoofed leftmost hops', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        new Response(JSON.stringify(weatherResponse), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        })
+      vi.fn().mockImplementation(() =>
+        Promise.resolve(
+          new Response(JSON.stringify(weatherResponse), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          })
+        )
       )
     );
 
     const app = createApp();
-    const query = { lat: '59.437', lon: '24.754' };
 
     for (let index = 0; index < 30; index += 1) {
       const spoofedLeftHop = `198.51.100.${(index % 20) + 1}`;
       const response = await request(app)
         .get('/api/weather')
-        .query(query)
+        .query({ lat: '59.437', lon: (24.0 + index * 0.01).toFixed(3) })
         .set('Forwarded', `for=${spoofedLeftHop}, for="[2001:db8:1::1]:443";proto=https`);
 
       expect(response.status).toBe(200);
@@ -402,14 +512,14 @@ describe('KÜLV server', () => {
 
     const limited = await request(app)
       .get('/api/weather')
-      .query(query)
+      .query({ lat: '59.437', lon: '24.999' })
       .set('Forwarded', 'for=198.51.100.99, for="[2001:db8:1::2]:8443";proto=https');
 
     expect(limited.status).toBe(429);
 
     const otherClient = await request(app)
       .get('/api/weather')
-      .query(query)
+      .query({ lat: '59.437', lon: '24.999' })
       .set('Forwarded', 'for=203.0.113.55;proto=https');
 
     expect(otherClient.status).toBe(200);

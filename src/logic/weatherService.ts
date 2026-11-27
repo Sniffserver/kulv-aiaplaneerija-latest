@@ -65,7 +65,72 @@ function getEstonianDayName(dateStr: string, index: number): string {
 }
 
 const weatherMemoryCache = new Map<string, { timestamp: number; data: WeatherInfo }>();
+const inFlightWeatherRequests = new Map<string, Promise<WeatherInfo>>();
 export const WEATHER_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const WEATHER_BASE_BACKOFF_MS = 30_000;
+const WEATHER_MAX_BACKOFF_MS = 15 * 60 * 1000;
+
+let rateLimitCooldownUntil = 0;
+let consecutiveRateLimits = 0;
+
+export function resetWeatherServiceState(): void {
+  weatherMemoryCache.clear();
+  inFlightWeatherRequests.clear();
+  rateLimitCooldownUntil = 0;
+  consecutiveRateLimits = 0;
+}
+
+function parseClientRetryAfterMs(headerValue: string | null, nowMs: number, attempt: number): number {
+  const backoffFallback = Math.min(
+    WEATHER_MAX_BACKOFF_MS,
+    WEATHER_BASE_BACKOFF_MS * Math.pow(2, Math.max(0, attempt - 1))
+  );
+
+  if (!headerValue) {
+    return backoffFallback;
+  }
+
+  const trimmed = headerValue.trim();
+  const seconds = Number(trimmed);
+  if (Number.isFinite(seconds) && seconds >= 0) {
+    return Math.min(WEATHER_MAX_BACKOFF_MS, Math.max(1_000, Math.round(seconds * 1000)));
+  }
+
+  const parsedDate = Date.parse(trimmed);
+  if (Number.isFinite(parsedDate)) {
+    const delta = parsedDate - nowMs;
+    if (delta > 0) {
+      return Math.min(WEATHER_MAX_BACKOFF_MS, Math.max(1_000, delta));
+    }
+  }
+
+  return backoffFallback;
+}
+
+function getStoredWeatherEntry(cacheKey: string): { timestamp: number; data: WeatherInfo } | null {
+  const memCached = weatherMemoryCache.get(cacheKey);
+  if (memCached) {
+    return memCached;
+  }
+
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      const stored = sessionStorage.getItem(`kulv_weather_${cacheKey}`);
+      if (stored) {
+        const parsed = JSON.parse(stored) as { timestamp?: number; data?: WeatherInfo };
+        if (parsed && typeof parsed.timestamp === 'number' && parsed.data) {
+          const entry = { timestamp: parsed.timestamp, data: parsed.data };
+          weatherMemoryCache.set(cacheKey, entry);
+          return entry;
+        }
+      }
+    }
+  } catch {
+    // Ignore storage read failures
+  }
+
+  return null;
+}
 
 export async function fetchLiveWeather(
   lat: number,
@@ -74,41 +139,54 @@ export async function fetchLiveWeather(
   forceRefresh = false
 ): Promise<WeatherInfo> {
   const cacheKey = `${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  const nowMs = Date.now();
 
   if (!forceRefresh) {
-    const memCached = weatherMemoryCache.get(cacheKey);
-    if (memCached && Date.now() - memCached.timestamp < WEATHER_CACHE_TTL_MS) {
-      return { ...memCached.data, locationName };
+    const cached = getStoredWeatherEntry(cacheKey);
+    if (cached && nowMs - cached.timestamp < WEATHER_CACHE_TTL_MS) {
+      return { ...cached.data, locationName };
     }
+  }
 
-    try {
-      if (typeof sessionStorage !== 'undefined') {
-        const stored = sessionStorage.getItem(`kulv_weather_${cacheKey}`);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed && Date.now() - parsed.timestamp < WEATHER_CACHE_TTL_MS) {
-            weatherMemoryCache.set(cacheKey, parsed);
-            return { ...parsed.data, locationName };
-          }
-        }
-      }
-    } catch {}
+  // Respect active upstream rate-limit cooldown window before issuing network traffic
+  if (nowMs < rateLimitCooldownUntil) {
+    const stale = getStoredWeatherEntry(cacheKey);
+    if (stale) {
+      return { ...stale.data, locationName, isLive: false };
+    }
+    return getFallbackWeather(lat, lng, locationName);
+  }
+
+  const pendingRequest = inFlightWeatherRequests.get(cacheKey);
+  if (pendingRequest) {
+    return pendingRequest.then((result) => ({ ...result, locationName }));
   }
 
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_min,precipitation_sum,precipitation_probability_max&hourly=temperature_2m&forecast_days=7&timezone=auto`;
 
-  try {
+  const requestPromise = (async (): Promise<WeatherInfo> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
+    try {
+      const res = await fetch(url, { signal: controller.signal });
 
-    if (!res.ok) {
-      throw new Error(`Open-Meteo response not ok: ${res.status}`);
-    }
+      if (res.status === 429 || res.status === 503) {
+        consecutiveRateLimits += 1;
+        const currentNow = Date.now();
+        const retryMs = parseClientRetryAfterMs(res.headers.get('retry-after'), currentNow, consecutiveRateLimits);
+        rateLimitCooldownUntil = Math.max(rateLimitCooldownUntil, currentNow + retryMs);
+        throw new Error(`Open-Meteo rate limited: ${res.status}`);
+      }
 
-    const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`Open-Meteo response not ok: ${res.status}`);
+      }
+
+      consecutiveRateLimits = 0;
+      rateLimitCooldownUntil = 0;
+
+      const data = await res.json();
     const current = data.current;
     const daily = data.daily;
     const hourly = data.hourly;
@@ -268,18 +346,26 @@ export async function fetchLiveWeather(
       if (typeof sessionStorage !== 'undefined') {
         sessionStorage.setItem(`kulv_weather_${cacheKey}`, JSON.stringify(cacheEntry));
       }
-    } catch {}
+    } catch {
+      // Ignore storage write failures
+    }
 
     return result;
-  } catch {
-    // Check if we have stale cache before resorting to generic fallback
-    const stale = weatherMemoryCache.get(cacheKey);
-    if (stale) {
-      return { ...stale.data, locationName, isLive: false };
+    } catch {
+      // Check memory and sessionStorage stale cache before resorting to simulated fallback
+      const stale = getStoredWeatherEntry(cacheKey);
+      if (stale) {
+        return { ...stale.data, locationName, isLive: false };
+      }
+      return getFallbackWeather(lat, lng, locationName);
+    } finally {
+      clearTimeout(timeoutId);
+      inFlightWeatherRequests.delete(cacheKey);
     }
-    // Fallback based on latitude and seasonal simulation
-    return getFallbackWeather(lat, lng, locationName);
-  }
+  })();
+
+  inFlightWeatherRequests.set(cacheKey, requestPromise);
+  return requestPromise;
 }
 
 export function getFallbackWeather(lat: number, lng: number, locationName: string): WeatherInfo {

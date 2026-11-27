@@ -72,7 +72,7 @@ describe('GardenCanvasScreen 2D Only', () => {
     const bedBtn = screen.getByTestId('planner_mode_bed_btn');
     await user.click(bedBtn);
     expect(bedBtn).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByTestId('bed_detail_drawer')).toBeInTheDocument();
+    expect(await screen.findByTestId('bed_detail_drawer')).toBeInTheDocument();
 
     await user.click(screen.getByTestId('close_bed_drawer_btn'));
     expect(screen.queryByTestId('bed_detail_drawer')).toBeNull();

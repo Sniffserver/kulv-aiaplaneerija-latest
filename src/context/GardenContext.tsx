@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import {
   Plant,
   GardenBed,
@@ -342,21 +342,31 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return unsubscribe;
   }, []);
 
+  const locationNameRef = useRef(settings.locationName);
+  locationNameRef.current = settings.locationName;
+
   // Load live weather when settings latitude or longitude change (supports forceRefresh)
   const refreshWeather = useCallback(
     async (forceRefresh = false) => {
+      const currentName = locationNameRef.current;
       setIsWeatherLoading(true);
       try {
-        const data = await fetchLiveWeather(settings.lat, settings.lng, settings.locationName, forceRefresh);
+        const data = await fetchLiveWeather(settings.lat, settings.lng, currentName, forceRefresh);
         setWeather(data);
       } catch {
-        setWeather(getFallbackWeather(settings.lat, settings.lng, settings.locationName));
+        setWeather(getFallbackWeather(settings.lat, settings.lng, currentName));
       } finally {
         setIsWeatherLoading(false);
       }
     },
-    [settings.lat, settings.lng, settings.locationName]
+    [settings.lat, settings.lng]
   );
+
+  useEffect(() => {
+    setWeather((prev) =>
+      prev.locationName === settings.locationName ? prev : { ...prev, locationName: settings.locationName }
+    );
+  }, [settings.locationName]);
 
   useEffect(() => {
     refreshWeather();

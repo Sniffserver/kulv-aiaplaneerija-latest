@@ -9,7 +9,9 @@ import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { z } from 'zod';
 
 export const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
+export const WEATHER_STALE_TTL_MS = 60 * 60 * 1000;
 export const WEATHER_REQUEST_TIMEOUT_MS = 8_000;
+export const WEATHER_UPSTREAM_COOLDOWN_DEFAULT_MS = 60_000;
 export const MAX_WEATHER_CACHE_SIZE = 500;
 
 export const weatherQuerySchema = z.object({
@@ -21,6 +23,32 @@ export type CacheEntry = {
   expiresAt: number;
   data: unknown;
 };
+
+export function parseRetryAfterMs(
+  headerValue: string | null,
+  nowMs: number = Date.now(),
+  fallbackMs: number = WEATHER_UPSTREAM_COOLDOWN_DEFAULT_MS
+): number {
+  if (!headerValue) {
+    return fallbackMs;
+  }
+
+  const trimmed = headerValue.trim();
+  const seconds = Number(trimmed);
+  if (Number.isFinite(seconds) && seconds >= 0) {
+    return Math.min(15 * 60 * 1000, Math.max(1_000, Math.round(seconds * 1000)));
+  }
+
+  const parsedDateMs = Date.parse(trimmed);
+  if (Number.isFinite(parsedDateMs)) {
+    const delta = parsedDateMs - nowMs;
+    if (delta > 0) {
+      return Math.min(15 * 60 * 1000, Math.max(1_000, delta));
+    }
+  }
+
+  return fallbackMs;
+}
 
 export function setWeatherCache(
   cache: Map<string, CacheEntry>,
@@ -200,8 +228,12 @@ export function createWeatherLimiter(trustProxyHops: number = getTrustProxyHops(
           endpoint: '/api/weather'
         })
       );
+      if (!res.getHeader('Retry-After')) {
+        res.setHeader('Retry-After', '60');
+      }
       res.status(429).json({
-        error: 'Too many weather requests, please try again later.'
+        error: 'Too many weather requests, please try again later.',
+        retryAfterSeconds: 60
       });
     }
   });
@@ -348,7 +380,33 @@ export function createApp(deps: AppDependencies = {}): Express {
     });
   });
 
-  app.get('/api/weather', weatherLimiter, async (req: Request, res: Response) => {
+  type UpstreamWeatherResult =
+    | { kind: 'ok'; data: unknown }
+    | { kind: 'rate_limited'; retryAfterSeconds: number }
+    | { kind: 'upstream_error'; status: number }
+    | { kind: 'timeout' }
+    | { kind: 'exception' };
+
+  const inFlightWeather = new Map<string, Promise<UpstreamWeatherResult>>();
+  let upstreamCooldownUntil = 0;
+
+  const getFreshCached = (cacheKey: string, nowMs: number): CacheEntry | undefined => {
+    const cached = weatherCache.get(cacheKey);
+    if (cached && cached.expiresAt > nowMs) {
+      return cached;
+    }
+    return undefined;
+  };
+
+  const getStaleCached = (cacheKey: string, nowMs: number): CacheEntry | undefined => {
+    const cached = weatherCache.get(cacheKey);
+    if (cached && nowMs - cached.expiresAt <= WEATHER_STALE_TTL_MS) {
+      return cached;
+    }
+    return undefined;
+  };
+
+  const weatherCacheHitMiddleware: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const parsedQuery = weatherQuerySchema.safeParse(req.query);
     const requestId = req.header('x-request-id') ?? 'unknown';
 
@@ -376,10 +434,9 @@ export function createApp(deps: AppDependencies = {}): Express {
     }
 
     const cacheKey = `${lat.toFixed(3)},${lon.toFixed(3)}`;
-    const nowMs = getNow();
-    const cached = weatherCache.get(cacheKey);
+    const cached = getFreshCached(cacheKey, getNow());
 
-    if (cached && cached.expiresAt > nowMs) {
+    if (cached) {
       console.log(
         JSON.stringify({
           timestamp: new Date().toISOString(),
@@ -389,100 +446,194 @@ export function createApp(deps: AppDependencies = {}): Express {
         })
       );
       res.setHeader('X-Cache', 'HIT');
+      res.setHeader('Cache-Control', 'public, max-age=60');
       return res.json(cached.data);
     }
 
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        type: 'weather_cache_miss',
-        requestId
-      })
-    );
+    res.locals.weatherRequest = { lat, lon, cacheKey, apiKey, requestId };
+    next();
+  };
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(
-      () => controller.abort(),
-      WEATHER_REQUEST_TIMEOUT_MS
-    );
+  app.get('/api/weather', weatherCacheHitMiddleware, weatherLimiter, async (_req: Request, res: Response) => {
+    const { lat, lon, cacheKey, apiKey, requestId } = res.locals.weatherRequest as {
+      lat: number;
+      lon: number;
+      cacheKey: string;
+      apiKey: string;
+      requestId: string;
+    };
 
-    const upstreamStart = process.hrtime.bigint();
+    const nowMs = getNow();
+    const freshCached = getFreshCached(cacheKey, nowMs);
+    if (freshCached) {
+      res.setHeader('X-Cache', 'HIT');
+      res.setHeader('Cache-Control', 'public, max-age=60');
+      return res.json(freshCached.data);
+    }
 
-    try {
-      const upstreamUrl = new URL('https://api.openweathermap.org/data/2.5/weather');
-      upstreamUrl.searchParams.set('lat', lat.toString());
-      upstreamUrl.searchParams.set('lon', lon.toString());
-      upstreamUrl.searchParams.set('appid', apiKey);
-      upstreamUrl.searchParams.set('units', 'metric');
-
-      const response = await fetch(upstreamUrl, {
-        signal: controller.signal
+    const staleCached = getStaleCached(cacheKey, nowMs);
+    if (nowMs < upstreamCooldownUntil) {
+      const retryAfterSeconds = Math.max(1, Math.ceil((upstreamCooldownUntil - nowMs) / 1000));
+      res.setHeader('Retry-After', String(retryAfterSeconds));
+      if (staleCached) {
+        res.setHeader('X-Cache', 'STALE');
+        return res.json(staleCached.data);
+      }
+      return res.status(429).json({
+        error: 'Weather provider rate limit exceeded, please try again later.',
+        retryAfterSeconds
       });
+    }
 
-      const upstreamDurationMs = Number(process.hrtime.bigint() - upstreamStart) / 1_000_000;
+    let requestPromise = inFlightWeather.get(cacheKey);
+    const coalesced = Boolean(requestPromise);
 
+    if (!requestPromise) {
       console.log(
         JSON.stringify({
           timestamp: new Date().toISOString(),
           level: 'info',
-          type: 'upstream_weather_response',
-          requestId,
-          status: response.status,
-          latencyMs: Number(upstreamDurationMs.toFixed(2))
-        })
-      );
-
-      if (!response.ok) {
-        console.error(
-          JSON.stringify({
-            timestamp: new Date().toISOString(),
-            level: 'error',
-            type: 'upstream_weather_failure',
-            requestId,
-            status: response.status
-          })
-        );
-        return res.status(502).json({
-          error: 'Weather provider unavailable or returned an error'
-        });
-      }
-
-      const data: unknown = await response.json();
-
-      setWeatherCache(weatherCache, cacheKey, data, MAX_WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL_MS, getNow());
-
-      res.setHeader('X-Cache', 'MISS');
-      return res.json(data);
-    } catch (error: unknown) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.error(
-          JSON.stringify({
-            timestamp: new Date().toISOString(),
-            level: 'error',
-            type: 'upstream_weather_timeout',
-            requestId
-          })
-        );
-        return res.status(504).json({
-          error: 'Weather request timed out'
-        });
-      }
-
-      console.error(
-        JSON.stringify({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          type: 'weather_fetch_exception',
+          type: 'weather_cache_miss',
           requestId
         })
       );
-      return res.status(500).json({
-        error: 'Failed to fetch weather data'
+
+      requestPromise = (async (): Promise<UpstreamWeatherResult> => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), WEATHER_REQUEST_TIMEOUT_MS);
+        const upstreamStart = process.hrtime.bigint();
+
+        try {
+          const upstreamUrl = new URL('https://api.openweathermap.org/data/2.5/weather');
+          upstreamUrl.searchParams.set('lat', lat.toString());
+          upstreamUrl.searchParams.set('lon', lon.toString());
+          upstreamUrl.searchParams.set('appid', apiKey);
+          upstreamUrl.searchParams.set('units', 'metric');
+
+          const response = await fetch(upstreamUrl, {
+            signal: controller.signal
+          });
+
+          const upstreamDurationMs = Number(process.hrtime.bigint() - upstreamStart) / 1_000_000;
+
+          console.log(
+            JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'info',
+              type: 'upstream_weather_response',
+              requestId,
+              status: response.status,
+              latencyMs: Number(upstreamDurationMs.toFixed(2))
+            })
+          );
+
+          if (response.status === 429) {
+            const currentNow = getNow();
+            const retryMs = parseRetryAfterMs(response.headers.get('retry-after'), currentNow);
+            upstreamCooldownUntil = Math.max(upstreamCooldownUntil, currentNow + retryMs);
+            console.warn(
+              JSON.stringify({
+                timestamp: new Date().toISOString(),
+                level: 'warn',
+                type: 'upstream_weather_rate_limited',
+                requestId,
+                retryAfterMs: retryMs
+              })
+            );
+            return {
+              kind: 'rate_limited',
+              retryAfterSeconds: Math.max(1, Math.ceil(retryMs / 1000))
+            };
+          }
+
+          if (!response.ok) {
+            console.error(
+              JSON.stringify({
+                timestamp: new Date().toISOString(),
+                level: 'error',
+                type: 'upstream_weather_failure',
+                requestId,
+                status: response.status
+              })
+            );
+            return { kind: 'upstream_error', status: response.status };
+          }
+
+          const data: unknown = await response.json();
+          setWeatherCache(weatherCache, cacheKey, data, MAX_WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL_MS, getNow());
+          return { kind: 'ok', data };
+        } catch (error: unknown) {
+          if (error instanceof Error && error.name === 'AbortError') {
+            console.error(
+              JSON.stringify({
+                timestamp: new Date().toISOString(),
+                level: 'error',
+                type: 'upstream_weather_timeout',
+                requestId
+              })
+            );
+            return { kind: 'timeout' };
+          }
+
+          console.error(
+            JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'error',
+              type: 'weather_fetch_exception',
+              requestId
+            })
+          );
+          return { kind: 'exception' };
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      })().finally(() => {
+        inFlightWeather.delete(cacheKey);
       });
-    } finally {
-      clearTimeout(timeoutId);
+
+      inFlightWeather.set(cacheKey, requestPromise);
     }
+
+    const result = await requestPromise;
+
+    if (result.kind === 'ok') {
+      res.setHeader('X-Cache', coalesced ? 'HIT' : 'MISS');
+      res.setHeader('Cache-Control', 'public, max-age=60');
+      return res.json(result.data);
+    }
+
+    if (result.kind === 'rate_limited') {
+      res.setHeader('Retry-After', String(result.retryAfterSeconds));
+      if (staleCached) {
+        res.setHeader('X-Cache', 'STALE');
+        return res.json(staleCached.data);
+      }
+      return res.status(429).json({
+        error: 'Weather provider rate limit exceeded, please try again later.',
+        retryAfterSeconds: result.retryAfterSeconds
+      });
+    }
+
+    if (staleCached) {
+      res.setHeader('X-Cache', 'STALE');
+      return res.json(staleCached.data);
+    }
+
+    if (result.kind === 'upstream_error') {
+      return res.status(502).json({
+        error: 'Weather provider unavailable or returned an error'
+      });
+    }
+
+    if (result.kind === 'timeout') {
+      return res.status(504).json({
+        error: 'Weather request timed out'
+      });
+    }
+
+    return res.status(500).json({
+      error: 'Failed to fetch weather data'
+    });
   });
 
   app.use('/api', (_req: Request, res: Response) => {
