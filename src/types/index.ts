@@ -76,20 +76,20 @@ export interface GardenEntity {
   elevationM?: number; // Elevation from ground level (for terrace pots, raised platforms)
   rotation: number; // Degrees clockwise (0 - 360°) around centre
 
-  // Dimensions & Shape (metres) - shared geometry contract for 2D and 3D
+  // Dimensions & Shape (metres) - metric 2D geometry contract
   shapeType: 'rectangle' | 'circle' | 'polygon' | 'polyline';
   width: number; // Width in metres
   length: number; // Length in metres
-  heightM: number; // 3D physical height in metres (critical for solar shadows & 3D mesh extrusion)
+  heightM: number; // Physical height in metres (used for solar shadow & heatmap calculations)
 
   // Custom boundary vertices for irregular shapes
   customPolygon?: Point2D[];
   pathPoints?: Point2D[]; // For pathways / fences
   pathWidthM?: number; // Width of path or hedge
 
-  // Physics & Optical properties (for solar shadows & 3D rendering)
+  // Physics & Optical properties (for solar shadows & sun-exposure heatmap)
   shadowCasting: boolean;
-  foliageOpacity?: number; // 0.0 - 1.0 (light transparency through tree crowns)
+  foliageOpacity?: number; // 0.0 - 1.0 (light attenuation through tree crowns)
   materialType?: string; // 'wood' | 'glass' | 'stone' | 'foliage' | 'metal' | 'water' | 'soil'
   color?: string; // 2D schematic color fallback
 

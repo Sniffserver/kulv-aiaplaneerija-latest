@@ -341,21 +341,21 @@ console.log(`- Heap memory: before ${e2e500.heapUsedBeforeMB.toFixed(2)} MB -> a
 console.log(`- RBush load() calls during drag: ${e2e500.rbushLoadCallCountDuringDrag} (target = 0)`);
 
 if (e2e500.p95FrameDeltaMs > 16.0) {
-  console.error('\n❌ End-to-end P95 exceeds 16ms! Must optimize 2D before starting 3D.');
+  console.error('\n❌ End-to-end P95 exceeds 16ms! Must optimize 2D canvas rendering.');
   process.exit(1);
 } else {
-  console.log('\n✅ 2D End-to-end performance verified (P95 well below 16ms threshold). Proceeding with 3D integration.');
+  console.log('\n✅ 2D End-to-end performance verified (P95 well below 16ms threshold).');
 }
 
 // Generate updated PERFORMANCE.md
 const perfDocPath = join(process.cwd(), 'docs', 'PERFORMANCE.md');
 const markdown = `# KÜLV Jõudluse Sihttasemed ja Mõõdikud (PERFORMANCE.md)
 
-See dokument määrab kindlaks KÜLV rakenduse renderdusjõudluse baastasemed, 2D ja 3D mõõdikud, optimeerimisreeglid ja kontrollitud testmõõtmised.
+See dokument määrab kindlaks KÜLV rakenduse 2D renderdusjõudluse baastasemed, optimeerimisreeglid ja kontrollitud testmõõtmised.
 
 ---
 
-## 1. Osa A: 2D Jõudluse Baastaseme Verifitseerimine
+## 1. 2D Jõudluse Baastaseme Verifitseerimine
 
 Mõõdetud \`scripts/perf-baseline.ts\` skriptiga. Mõõtmised eristavad rangelt:
 1. **JS handler time** (üksikute funktsioonide ja arvutuste kestus ilma renderduseta)
@@ -390,24 +390,8 @@ Mõõdab täielikku tsüklit: sündmus → RBush otsing → magnet-nakkumine →
 
 ## 2. 2D Arhitektuursed Garantiid
 - **Rebuild ainult commit'il:** Drag-liigutuse ajal uuendatakse ainult visuaalset eelvaadet (\`dragPreviewPos\`). RBush ruumiline puu ehitatakse uuesti ümber AINULT siis, kui objekt kohale langetatakse (\`handleMouseUp\` / \`moveEntity\`).
-- **Varjude arvutuse optimeering:** Trigonomeetria on memoiseeritud vahemällu (\`SolarEngine.getCachedShadowVector\`).
+- **Varjude ja päikesekaardi optimeering:** Trigonomeetria on memoiseeritud vahemällu (\`SolarEngine.getCachedShadowVector\`) ja hooajaline päikese soojuskaart arvutatakse deterministlikul ruudustikul.
 - **Undo isolatsioon ja salvestuse puhtus:** Zundo \`partialize\` salvestab ainult \`plan\` objekti ning \`plan.trash\` säilitab kustutatud objektid undo-tsüklite ajal.
-
----
-
-## 3. Osa B: 3D-Mooduli Baastase ja Eelarved (3D Baseline)
-
-3D-vaade (Three.js + React Three Fiber) on teostatud laisalt laetava lisakihina järgmiste rangete eelarvetega:
-
-| Mõõdik | Eelarve / Sihttase | Teostus ja Garantii |
-|---|---|---|
-| **Laadimisstrateegia** | Lazy load chunk | \`React.lazy(() => import(...))\` + Suspense, \`vendor-three\` eraldi Vite chunkis |
-| **WebGL tugi ja tagavararežiim** | WebGL2 kontroll | Kui WebGL2 puudub, kuvatakse kasutajasõbralik teade ja 2D režiim jääb puutumatult tööle |
-| **Draw call eelarve** | < 100 draw call'i 500 objekti juures | Geomeetriate taaskasutus ja InstancedMesh puudele ja korduvatele objektidele (> 20 puud) |
-| **FPS eesmärk** | 60 FPS lauaarvutis, 30 FPS mobiilis | DPR piiratud \`Math.min(devicePixelRatio, 2)\`, mobiilis [1, 1.5] |
-| **Päikesevarjud** | Reaalajas kellaaja liuguriga | DirectionalLight paigutatakse olemasoleva \`SolarEngine\` asimuudi ja kõrguse järgi |
-| **Mälu vabastamine (\`dispose\`)** | 10× ava/sulge lekkevaba | Unmountimisel kutsutakse kõigile geomeetriatele, materjalidele \`.dispose()\` ning rendererile \`forceContextLoss()\` |
-| **Heap kasv 10× tsüklis** | < 10 MB | Kontrollitud mälulekete vältimiseks |
 `;
 
 writeFileSync(perfDocPath, markdown, 'utf8');

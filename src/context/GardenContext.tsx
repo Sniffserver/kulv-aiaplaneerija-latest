@@ -257,6 +257,91 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     saveToStorage('yard_plan', yardPlan);
   }, [yardPlan, saveToStorage]);
 
+  // Keep React yardPlan & beds synchronized with Zustand useYardStore (presets, polygon beds, drag/delete/restore)
+  useEffect(() => {
+    const unsubscribe = useYardStore.subscribe((state, prevState) => {
+      if (state.plan === prevState.plan) return;
+      const nextPlan = state.plan;
+      setYardPlan(nextPlan);
+
+      const activeBedEntities = nextPlan.entities.filter((e) => e.category === 'bed' && !e.deletedAt);
+      setBeds((prevBeds) => {
+        const prevById = new Map(prevBeds.map((b) => [b.id, b]));
+        const nextBeds: GardenBed[] = [];
+
+        for (const ent of activeBedEntities) {
+          const existing = prevById.get(ent.id);
+          const entPlantings = ent.bedData?.plantings;
+          if (existing) {
+            nextBeds.push({
+              ...existing,
+              name: ent.name,
+              x: ent.x,
+              y: ent.y,
+              width: ent.width,
+              length: ent.length,
+              height: ent.heightM,
+              rotation: ent.rotation,
+              coverType: ent.bedData?.coverType || existing.coverType,
+              notes: ent.notes ?? ent.bedData?.notes ?? existing.notes,
+              plantings: entPlantings !== undefined ? entPlantings : existing.plantings,
+              calculatedSunHours: ent.bedData?.calculatedSunHours ?? existing.calculatedSunHours,
+              rotationPlan: ent.bedData?.rotationPlan ?? existing.rotationPlan
+            });
+          } else {
+            const converted = convertEntityToBed(ent);
+            if (converted) {
+              nextBeds.push(converted);
+            } else {
+              nextBeds.push({
+                id: ent.id,
+                name: ent.name,
+                type: 'raisedBed',
+                x: ent.x,
+                y: ent.y,
+                width: ent.width,
+                length: ent.length,
+                height: ent.heightM || 0.35,
+                rotation: ent.rotation || 0,
+                coverType: 'none',
+                notes: ent.notes || '',
+                plantings: entPlantings || [],
+                calculatedSunHours: 7.5
+              });
+            }
+          }
+        }
+
+        // Fast equality check to avoid redundant state updates during non-bed entity drags
+        if (
+          nextBeds.length === prevBeds.length &&
+          nextBeds.every((b, i) => {
+            const p = prevBeds[i];
+            return (
+              p &&
+              b.id === p.id &&
+              b.name === p.name &&
+              b.x === p.x &&
+              b.y === p.y &&
+              b.width === p.width &&
+              b.length === p.length &&
+              b.height === p.height &&
+              b.rotation === p.rotation &&
+              b.plantings === p.plantings &&
+              b.calculatedSunHours === p.calculatedSunHours &&
+              b.rotationPlan === p.rotationPlan
+            );
+          })
+        ) {
+          return prevBeds;
+        }
+        return nextBeds;
+      });
+    });
+
+    return unsubscribe;
+  }, []);
+
   // Load live weather when settings latitude or longitude change (supports forceRefresh)
   const refreshWeather = useCallback(
     async (forceRefresh = false) => {
@@ -450,41 +535,31 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       plantings: [],
       calculatedSunHours: 7.5
     };
+    const entity = convertBedToGardenEntity(newBed);
     setBeds((prev) => [...prev, newBed]);
-    setYardPlan((prev) => ({
-      ...prev,
-      entities: [...prev.entities, convertBedToGardenEntity(newBed)],
-      updatedAt: new Date().toISOString()
-    }));
+    useYardStore.getState().addEntity(entity);
   };
 
   const deleteBed = (bedId: string) => {
     setBeds((prev) => prev.filter((b) => b.id !== bedId));
-    setYardPlan((prev) => ({
-      ...prev,
-      entities: prev.entities.filter((e) => e.id !== bedId),
-      updatedAt: new Date().toISOString()
-    }));
+    useYardStore.getState().deleteEntity(bedId, false);
   };
 
   const updateBedRotationPlan = useCallback((bedId: string, plan: RotationCyclePlan) => {
     setBeds((prev) => prev.map((b) => (b.id === bedId ? { ...b, rotationPlan: plan } : b)));
-    setYardPlan((prev) => ({
-      ...prev,
-      entities: prev.entities.map((e) => {
-        if (e.id === bedId && e.bedData) {
-          return {
-            ...e,
-            bedData: {
-              ...e.bedData,
-              rotationPlan: plan
-            }
-          };
+    const storeEnt = useYardStore.getState().plan.entities.find((e) => e.id === bedId);
+    if (storeEnt) {
+      useYardStore.getState().updateEntity(bedId, {
+        bedData: {
+          type: storeEnt.bedData?.type || 'raisedBed',
+          coverType: storeEnt.bedData?.coverType || 'none',
+          plantings: storeEnt.bedData?.plantings || [],
+          calculatedSunHours: storeEnt.bedData?.calculatedSunHours || 7.5,
+          notes: storeEnt.bedData?.notes,
+          rotationPlan: plan
         }
-        return e;
-      }),
-      updatedAt: new Date().toISOString()
-    }));
+      });
+    }
   }, []);
 
   const addYardEntity = (preset: any, x?: number, y?: number): string => {
@@ -545,17 +620,13 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       botanicalData: preset.botanicalData
     };
 
-    setYardPlan((prev) => ({
-      ...prev,
-      entities: [...prev.entities, newEntity],
-      updatedAt: now
-    }));
+    useYardStore.getState().addEntity(newEntity);
 
     // If category is bed, also register in beds array
     if (newEntity.category === 'bed') {
       const newBed = convertEntityToBed(newEntity);
       if (newBed) {
-        setBeds((prev) => [...prev, newBed]);
+        setBeds((prev) => (prev.some((b) => b.id === newBed.id) ? prev : [...prev, newBed]));
       }
     }
 
@@ -563,73 +634,27 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateYardEntity = (id: string, updates: Partial<GardenEntity>) => {
-    const now = new Date().toISOString();
-    setYardPlan((prev) => {
-      const updatedEntities = prev.entities.map((e) => {
-        if (e.id !== id) return e;
-        const updated = { ...e, ...updates, updatedAt: now };
-
-        // Keep beds in sync
-        if (updated.category === 'bed') {
-          setBeds((prevBeds) =>
-            prevBeds.map((b) => {
-              if (b.id !== id) return b;
-              return {
-                ...b,
-                name: updated.name,
-                x: updated.x,
-                y: updated.y,
-                width: updated.width,
-                length: updated.length,
-                height: updated.heightM,
-                rotation: updated.rotation
-              };
-            })
-          );
-        }
-        return updated;
-      });
-
-      return {
-        ...prev,
-        entities: updatedEntities,
-        updatedAt: now
-      };
-    });
+    useYardStore.getState().updateEntity(id, updates);
   };
 
   const deleteYardEntity = (id: string) => {
-    setYardPlan((prev) => ({
-      ...prev,
-      entities: prev.entities.filter((e) => e.id !== id),
-      updatedAt: new Date().toISOString()
-    }));
+    useYardStore.getState().deleteEntity(id, false);
     setBeds((prev) => prev.filter((b) => b.id !== id));
   };
 
   const toggleLayerVisibility = (layerId: string) => {
-    setYardPlan((prev) => ({
-      ...prev,
-      layers: prev.layers.map((l) => (l.id === layerId ? { ...l, visible: !l.visible } : l))
-    }));
+    useYardStore.getState().toggleLayerVisibility(layerId);
   };
 
   const toggleLayerLock = (layerId: string) => {
-    setYardPlan((prev) => ({
-      ...prev,
-      layers: prev.layers.map((l) => (l.id === layerId ? { ...l, locked: !l.locked } : l))
-    }));
+    useYardStore.getState().toggleLayerLock(layerId);
   };
 
   const updateYardDimensions = (widthM: number, lengthM: number, northAngleDeg?: number) => {
-    const now = new Date().toISOString();
-    setYardPlan((prev) => ({
-      ...prev,
-      widthM,
-      lengthM,
-      northAngleDeg: northAngleDeg !== undefined ? northAngleDeg : prev.northAngleDeg,
-      updatedAt: now
-    }));
+    useYardStore.getState().updateYardDimensions(widthM, lengthM);
+    if (northAngleDeg !== undefined) {
+      useYardStore.getState().updateNorthAngle(northAngleDeg);
+    }
     setSettings((prev) => ({
       ...prev,
       yardWidthM: widthM,
@@ -639,20 +664,21 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const plantInBed = (bedId: string, plant: Plant, gridX: number, gridY: number) => {
+    const newCell: BedPlantingCell = {
+      id: generateSafeId(`cell_${gridX}_${gridY}`),
+      bedId,
+      plantId: plant.id,
+      plantName: plant.name,
+      plantIcon: plant.icon,
+      gridX,
+      gridY,
+      year: new Date().getFullYear(),
+      dateAdded: new Date().toISOString().split('T')[0]
+    };
+
     setBeds((prev) =>
       prev.map((bed) => {
         if (bed.id !== bedId) return bed;
-        const newCell: BedPlantingCell = {
-          id: generateSafeId(`cell_${gridX}_${gridY}`),
-          bedId,
-          plantId: plant.id,
-          plantName: plant.name,
-          plantIcon: plant.icon,
-          gridX,
-          gridY,
-          year: new Date().getFullYear(),
-          dateAdded: new Date().toISOString().split('T')[0]
-        };
         const filtered = bed.plantings.filter((c) => !(c.gridX === gridX && c.gridY === gridY));
         return {
           ...bed,
@@ -660,6 +686,22 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         };
       })
     );
+
+    const storeEnt = useYardStore.getState().plan.entities.find((e) => e.id === bedId);
+    if (storeEnt) {
+      const existingPlantings = storeEnt.bedData?.plantings || beds.find((b) => b.id === bedId)?.plantings || [];
+      const nextPlantings = [...existingPlantings.filter((c) => !(c.gridX === gridX && c.gridY === gridY)), newCell];
+      useYardStore.getState().updateEntity(bedId, {
+        bedData: {
+          type: storeEnt.bedData?.type || 'raisedBed',
+          coverType: storeEnt.bedData?.coverType || 'none',
+          plantings: nextPlantings,
+          calculatedSunHours: storeEnt.bedData?.calculatedSunHours || 7.5,
+          notes: storeEnt.bedData?.notes,
+          rotationPlan: storeEnt.bedData?.rotationPlan
+        }
+      });
+    }
   };
 
   const removePlantFromBed = (bedId: string, gridX: number, gridY: number) => {
@@ -672,6 +714,22 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         };
       })
     );
+
+    const storeEnt = useYardStore.getState().plan.entities.find((e) => e.id === bedId);
+    if (storeEnt) {
+      const existingPlantings = storeEnt.bedData?.plantings || beds.find((b) => b.id === bedId)?.plantings || [];
+      const nextPlantings = existingPlantings.filter((c) => !(c.gridX === gridX && c.gridY === gridY));
+      useYardStore.getState().updateEntity(bedId, {
+        bedData: {
+          type: storeEnt.bedData?.type || 'raisedBed',
+          coverType: storeEnt.bedData?.coverType || 'none',
+          plantings: nextPlantings,
+          calculatedSunHours: storeEnt.bedData?.calculatedSunHours || 7.5,
+          notes: storeEnt.bedData?.notes,
+          rotationPlan: storeEnt.bedData?.rotationPlan
+        }
+      });
+    }
   };
 
   const addPlant = (

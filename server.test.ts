@@ -349,4 +349,69 @@ describe('KÜLV server', () => {
 
     expect(server.listening).toBe(false);
   });
+
+  it('handles X-Forwarded-For and Forwarded headers without express-rate-limit validation errors', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify(weatherResponse), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+    );
+
+    const app = createApp();
+    const response = await request(app)
+      .get('/api/weather')
+      .query({ lat: '59.437', lon: '24.754' })
+      .set('X-Forwarded-For', '203.0.113.10')
+      .set('Forwarded', 'for="203.0.113.10";proto=https');
+
+    expect(response.status).toBe(200);
+    expect(errorSpy).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('isolates rate-limit buckets per trusted Forwarded client IP and ignores spoofed leftmost hops', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify(weatherResponse), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      )
+    );
+
+    const app = createApp();
+    const query = { lat: '59.437', lon: '24.754' };
+
+    for (let index = 0; index < 30; index += 1) {
+      const spoofedLeftHop = `198.51.100.${(index % 20) + 1}`;
+      const response = await request(app)
+        .get('/api/weather')
+        .query(query)
+        .set('Forwarded', `for=${spoofedLeftHop}, for="[2001:db8:1::1]:443";proto=https`);
+
+      expect(response.status).toBe(200);
+    }
+
+    const limited = await request(app)
+      .get('/api/weather')
+      .query(query)
+      .set('Forwarded', 'for=198.51.100.99, for="[2001:db8:1::2]:8443";proto=https');
+
+    expect(limited.status).toBe(429);
+
+    const otherClient = await request(app)
+      .get('/api/weather')
+      .query(query)
+      .set('Forwarded', 'for=203.0.113.55;proto=https');
+
+    expect(otherClient.status).toBe(200);
+  });
 });

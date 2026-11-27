@@ -68,4 +68,115 @@ describe('SolarEngine', () => {
     expect(evening.isAboveHorizon).toBe(true);
     expect(evening.azimuthDeg).toBeGreaterThan(180);
   });
+
+  it('computes higher max possible daylight hours in midsummer than spring equinox', () => {
+    const midsummer = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 12,
+      yardLengthM: 12,
+      lat: tallinnLat,
+      seasonId: 'midsummer',
+      entities: [],
+      resolutionM: 1
+    });
+
+    const spring = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 12,
+      yardLengthM: 12,
+      lat: tallinnLat,
+      seasonId: 'spring_equinox',
+      entities: [],
+      resolutionM: 1
+    });
+
+    expect(midsummer.maxPossibleHours).toBeGreaterThan(spring.maxPossibleHours);
+    expect(midsummer.averageYardSunHours).toBe(midsummer.maxPossibleHours);
+    expect(spring.averageYardSunHours).toBe(spring.maxPossibleHours);
+  });
+
+  it('reduces sun hours north of a tall house and computes entity footprint exposure', () => {
+    const house = {
+      x: 4,
+      y: 8,
+      width: 6,
+      length: 4,
+      heightM: 5,
+      shapeType: 'rectangle' as const,
+      shadowCasting: true,
+      visible: true
+    };
+
+    const heatmap = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 14,
+      yardLengthM: 16,
+      northAngleDeg: 0,
+      lat: tallinnLat,
+      seasonId: 'spring_equinox',
+      entities: [house],
+      resolutionM: 0.5
+    });
+
+    // Bed right on the north side of the house (smaller Y = North in plan coords when northAngleDeg=0)
+    const northBed = SolarEngine.getEntitySunExposure({ x: 5, y: 6.2, width: 2, length: 1.2 }, heatmap);
+    // Bed well to the south of the house
+    const southBed = SolarEngine.getEntitySunExposure({ x: 5, y: 13.5, width: 2, length: 1.2 }, heatmap);
+
+    expect(northBed.averageHours).toBeLessThan(southBed.averageHours);
+    expect(southBed.category).toBe('full_sun');
+  });
+
+  it('does not double-count overlapping shadows in the same timestep and respects tree foliage opacity', () => {
+    const denseHouse = {
+      x: 4,
+      y: 8,
+      width: 4,
+      length: 3,
+      heightM: 4,
+      shapeType: 'rectangle' as const,
+      shadowCasting: true
+    };
+    const overlappingHouse = { ...denseHouse };
+
+    const singleHeatmap = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 12,
+      yardLengthM: 12,
+      lat: tallinnLat,
+      seasonId: 'midsummer',
+      entities: [denseHouse],
+      resolutionM: 1
+    });
+
+    const doubleHeatmap = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 12,
+      yardLengthM: 12,
+      lat: tallinnLat,
+      seasonId: 'midsummer',
+      entities: [denseHouse, overlappingHouse],
+      resolutionM: 1
+    });
+
+    expect(doubleHeatmap.averageYardSunHours).toBe(singleHeatmap.averageYardSunHours);
+
+    const dappledTree = {
+      x: 4,
+      y: 8,
+      width: 4,
+      length: 4,
+      heightM: 4,
+      shapeType: 'circle' as const,
+      shadowCasting: true,
+      foliageOpacity: 0.45
+    };
+    const treeHeatmap = SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: 12,
+      yardLengthM: 12,
+      lat: tallinnLat,
+      seasonId: 'midsummer',
+      entities: [dappledTree],
+      resolutionM: 1
+    });
+
+    const underTree = SolarEngine.getEntitySunExposure({ x: 5, y: 8.5, width: 2, length: 2 }, treeHeatmap);
+    expect(underTree.averageHours).toBeGreaterThan(0);
+    expect(underTree.averageHours).toBeLessThan(treeHeatmap.maxPossibleHours);
+  });
 });
