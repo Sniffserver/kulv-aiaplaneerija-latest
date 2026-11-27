@@ -332,7 +332,7 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather }) => {
             fontWeight: 700,
             fontSize: '10px',
             backgroundColor: hasFrostRisk ? 'var(--kulv-accent-soft, #F3D8C2)' : 'rgba(79, 107, 69, 0.12)',
-            color: hasFrostRisk ? 'var(--kulv-danger, #B85C33)' : 'var(--kulv-primary, #4F6B45)'
+            color: hasFrostRisk ? 'var(--kulv-danger-text, #8C1D18)' : 'var(--kulv-primary-strong, #243D2B)'
           }}
         >
           {hasFrostRisk ? (

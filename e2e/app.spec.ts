@@ -22,7 +22,10 @@ test('loads home and navigates to garden', async ({ page }) => {
 
   await expect(page.getByText('KÜLV').first()).toBeVisible();
 
-  await page.locator('[data-testid="nav_item_garden"]:visible').first().click();
+  await page
+    .locator('[data-testid="desktop_nav_item_garden"]:visible, [data-testid="nav_item_garden"]:visible')
+    .first()
+    .click();
 
   await expect(page).toHaveURL(/#garden/);
 });

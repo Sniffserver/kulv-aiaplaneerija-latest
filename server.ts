@@ -2,9 +2,10 @@ import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import http from 'node:http';
+import { isIP } from 'node:net';
 import express, { type Express, type Request, type Response, type NextFunction, type RequestHandler } from 'express';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { z } from 'zod';
 
 export const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
@@ -90,23 +91,105 @@ export function getAllowedOrigins(): Set<string> {
 }
 
 export function isProduction(): boolean {
-  return process.env.NODE_ENV === 'production';
+  if (process.env.NODE_ENV === 'production') {
+    return true;
+  }
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    return false;
+  }
+  return Boolean(process.env.K_SERVICE) || Boolean(process.env.K_REVISION);
 }
 
 export function getHost(): string {
-  if (process.env.HOST) {
-    return process.env.HOST;
+  const envHost = process.env.HOST?.trim();
+  if (envHost && envHost !== 'das') {
+    return envHost;
   }
 
   return '0.0.0.0';
 }
 
-export function createWeatherLimiter(): RequestHandler {
+function getTrustProxyHops(): number {
+  const raw = process.env.TRUST_PROXY_HOPS;
+  if (raw !== undefined && raw.trim() !== '') {
+    const parsed = Number.parseInt(raw, 10);
+    if (Number.isInteger(parsed) && parsed >= 0 && parsed <= 10) {
+      return parsed;
+    }
+  }
+  return 1;
+}
+
+function parseForwardedForCandidate(entry: string): string | null {
+  for (const part of entry.split(';')) {
+    const match = /^\s*for\s*=\s*(.+?)\s*$/i.exec(part);
+    if (!match) {
+      continue;
+    }
+
+    let value = match[1].trim();
+    if (value.startsWith('"') && value.endsWith('"') && value.length >= 2) {
+      value = value.slice(1, -1).trim();
+    }
+
+    if (value.startsWith('[')) {
+      const closingBracket = value.indexOf(']');
+      if (closingBracket > 1) {
+        value = value.slice(1, closingBracket);
+      }
+    } else if (value.includes('.') && value.includes(':')) {
+      value = value.slice(0, value.indexOf(':'));
+    }
+
+    if (isIP(value) !== 0) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function extractForwardedForIp(req: Request, trustProxyHops: number): string | null {
+  if (trustProxyHops <= 0) {
+    return null;
+  }
+
+  const header = req.headers.forwarded;
+  const raw = Array.isArray(header) ? header.join(',') : header;
+  if (!raw) {
+    return null;
+  }
+
+  const entries = raw
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  if (entries.length === 0) {
+    return null;
+  }
+
+  const trustedIndex = Math.max(0, entries.length - trustProxyHops);
+  return parseForwardedForCandidate(entries[trustedIndex]);
+}
+
+export function createWeatherLimiter(trustProxyHops: number = getTrustProxyHops()): RequestHandler {
   return rateLimit({
     windowMs: 60_000,
     limit: 30,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
+    keyGenerator: (req: Request) => {
+      const forwardedIp = extractForwardedForIp(req, trustProxyHops);
+      const rawIp = forwardedIp ?? req.ip ?? req.socket?.remoteAddress ?? '127.0.0.1';
+      const clientIp =
+        isIP(rawIp) !== 0
+          ? rawIp
+          : req.socket?.remoteAddress && isIP(req.socket.remoteAddress) !== 0
+            ? req.socket.remoteAddress
+            : '127.0.0.1';
+      return ipKeyGenerator(clientIp);
+    },
     handler: (req: Request, res: Response) => {
       console.warn(
         JSON.stringify({
@@ -176,13 +259,12 @@ export interface AppDependencies {
 export function createApp(deps: AppDependencies = {}): Express {
   const app = express();
   const allowedOrigins = getAllowedOrigins();
+  const trustProxyHops = getTrustProxyHops();
   const weatherCache = deps.weatherCache ?? new Map<string, CacheEntry>();
-  const weatherLimiter = deps.weatherLimiter ?? createWeatherLimiter();
+  const weatherLimiter = deps.weatherLimiter ?? createWeatherLimiter(trustProxyHops);
   const getNow = deps.now ?? (() => Date.now());
 
-  if (isProduction()) {
-    app.set('trust proxy', 1);
-  }
+  app.set('trust proxy', trustProxyHops);
   app.disable('x-powered-by');
 
   const production = isProduction();
@@ -413,21 +495,30 @@ export function createApp(deps: AppDependencies = {}): Express {
 
 export async function registerStaticServing(app: Express): Promise<void> {
   const distPath = path.resolve(process.cwd(), 'dist');
-  const isDev = !isProduction();
+  const hasBuiltClient = fs.existsSync(path.join(distPath, 'index.html'));
+  const shouldUseVite =
+    !isProduction() &&
+    (process.env.NODE_ENV === 'development' || !hasBuiltClient);
 
-  if (isDev) {
-    const { createServer: createViteServer } = await import('vite');
+  if (shouldUseVite) {
+    try {
+      const { createServer: createViteServer } = await import('vite');
 
-    const vite = await createViteServer({
-      server: {
-        middlewareMode: true,
-        hmr: false
-      },
-      appType: 'spa'
-    });
+      const vite = await createViteServer({
+        server: {
+          middlewareMode: true,
+          hmr: false
+        },
+        appType: 'spa'
+      });
 
-    app.use(vite.middlewares);
-    return;
+      app.use(vite.middlewares);
+      return;
+    } catch (error) {
+      if (!hasBuiltClient) {
+        throw error;
+      }
+    }
   }
 
   app.use(express.static(distPath));
@@ -564,5 +655,15 @@ export async function startServer(): Promise<http.Server> {
 
 // Start only when executed directly; tests import createApp() instead.
 if (process.env.NODE_ENV !== 'test') {
-  startServer();
+  startServer().catch((error: unknown) => {
+    console.error(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        type: 'server_startup_failed',
+        message: error instanceof Error ? error.message : String(error)
+      })
+    );
+    process.exit(1);
+  });
 }

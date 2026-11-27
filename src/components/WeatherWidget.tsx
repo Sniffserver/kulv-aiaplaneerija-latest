@@ -293,9 +293,9 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ weather, isLoading
                     style={{
                       fontSize: '9px',
                       color: isFreezing
-                        ? 'var(--kulv-danger, #B85C33)'
+                        ? 'var(--kulv-danger-text, #8C1D18)'
                         : hasFrostRisk
-                          ? 'var(--kulv-accent, #D97A3D)'
+                          ? 'var(--kulv-accent-strong, #8F3E14)'
                           : 'var(--kulv-text-muted, #5F675A)',
                       fontWeight: hasFrostRisk ? 700 : 500
                     }}
@@ -303,7 +303,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ weather, isLoading
                     öö {day.tempMin}° {isFreezing ? '❄️' : hasFrostRisk ? '⚠️' : ''}
                   </span>
                   {day.precipitationProbability !== undefined && day.precipitationProbability > 20 ? (
-                    <span style={{ fontSize: '8px', color: '#176B87', fontWeight: 600 }}>
+                    <span style={{ fontSize: '8px', color: 'var(--kulv-info-text, #0F556D)', fontWeight: 600 }}>
                       🌧️ {day.precipitationProbability}%
                     </span>
                   ) : day.precipitationSum > 0 ? (
@@ -347,7 +347,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ weather, isLoading
                   {alert.advice}
                 </div>
                 {alert.affectedCrops && (
-                  <div style={{ fontSize: '11px', color: 'var(--kulv-text-muted, #5F675A)', marginTop: '2px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--kulv-text, #2A2E24)', marginTop: '2px' }}>
                     Mõjutatud: {alert.affectedCrops}
                   </div>
                 )}

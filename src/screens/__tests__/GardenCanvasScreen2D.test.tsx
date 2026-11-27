@@ -57,7 +57,7 @@ describe('GardenCanvasScreen 2D Only', () => {
     expect(screen.queryByText(/3D/i)).toBeNull();
   });
 
-  it('switches between 2D Layout, Crop Rotation timeline, and Bed Detail grid', async () => {
+  it('switches between 2D Layout, Crop Rotation timeline, and opens the Bed Detail drawer', async () => {
     const user = userEvent.setup();
     render(<GardenCanvasScreen onOpenAddBed={vi.fn()} />);
 
@@ -65,8 +65,16 @@ describe('GardenCanvasScreen 2D Only', () => {
     await user.click(timelineBtn);
     expect(timelineBtn).toHaveAttribute('aria-selected', 'true');
 
+    const yardBtn = screen.getByTestId('planner_mode_yard_btn');
+    await user.click(yardBtn);
+    expect(yardBtn).toHaveAttribute('aria-selected', 'true');
+
     const bedBtn = screen.getByTestId('planner_mode_bed_btn');
     await user.click(bedBtn);
-    expect(bedBtn).toHaveAttribute('aria-selected', 'true');
+    expect(bedBtn).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByTestId('bed_detail_drawer')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('close_bed_drawer_btn'));
+    expect(screen.queryByTestId('bed_detail_drawer')).toBeNull();
   });
 });

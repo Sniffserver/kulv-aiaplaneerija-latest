@@ -16,11 +16,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, onDelete }) 
       case 'water':
         return { label: 'Kastmine', color: 'var(--kulv-info, #4F6B45)' };
       case 'feed':
-        return { label: 'Väetamine', color: 'var(--kulv-accent, #D97A3D)' };
+        return { label: 'Väetamine', color: 'var(--kulv-accent-strong, #8F3E14)' };
       case 'plant':
         return { label: 'Istutamine', color: 'var(--kulv-primary, #4F6B45)' };
       case 'harvest':
-        return { label: 'Koristus', color: 'var(--kulv-warning, #B8761B)' };
+        return { label: 'Koristus', color: 'var(--kulv-warning-text, #7A4B00)' };
       default:
         return { label: 'Üldine', color: 'var(--kulv-text-muted, #5F675A)' };
     }

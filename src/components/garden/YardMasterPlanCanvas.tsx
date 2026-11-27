@@ -8,7 +8,6 @@ import { EntityPreset, YARD_PLAN_PRESETS, YardPlanPreset } from '../../data/gard
 import { useYardStore, useYardTemporal } from '../../stores/yardStore';
 import { isSimplePolygon } from '../../lib/validation/yardPlanSchema';
 import {
-  Sun,
   Compass,
   RotateCw,
   Trash2,
@@ -19,30 +18,16 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
-  Grid,
   Layers,
-  ChevronRight,
   ExternalLink,
   Info,
-  Clock,
-  Undo2,
-  Redo2,
   ArchiveRestore,
-  Magnet,
-  MousePointer,
   Pentagon,
-  Spline,
-  Copy,
   Sparkles,
   AlertTriangle,
-  Box,
-  LayoutTemplate,
   Check,
   Package,
-  Leaf,
   MapPin,
-  Printer,
-  BookOpen,
   HelpCircle
 } from 'lucide-react';
 import { CadastralPlotSearchDialog } from '../dialogs/CadastralPlotSearchDialog';
@@ -56,6 +41,8 @@ import {
 import { CompanionOverlayLayer } from './CompanionOverlayLayer';
 import { CompanionInspectorPanel } from './CompanionInspectorPanel';
 import { CompanionLegend } from './CompanionLegend';
+import { SunHeatmapOverlayLayer, SunHeatmapLegend } from './SunHeatmapOverlayLayer';
+import { YardPlanToolbar } from './YardPlanToolbar';
 import { BedInspector } from './BedInspector';
 import { GardenEmptyIllustration } from '../common/EmptyStateIllustrations';
 
@@ -92,6 +79,8 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
   const toggleLayerVisibility = useYardStore((state) => state.toggleLayerVisibility);
   const toggleLayerLock = useYardStore((state) => state.toggleLayerLock);
   const spatialIndex = useYardStore((state) => state.spatialIndex);
+  const solarSeasonId = useYardStore((state) => state.solarSeasonId);
+  const setSolarSeasonId = useYardStore((state) => state.setSolarSeasonId);
 
   // Undo / Redo temporal middleware hook
   const { undo, redo, canUndo, canRedo } = useYardTemporal();
@@ -117,9 +106,15 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
     targetName?: string;
   }>({ x: null, y: null, alignLineX: null, alignLineY: null });
 
-  // Solar simulation state (hour of day: 7.0 to 21.0)
+  // Solar simulation & seasonal heatmap state
   const [solarHour, setSolarHour] = useState<number>(14.0); // 14:00 default
-  const [isSimulatingSun, setIsSimulatingSun] = useState<boolean>(true);
+  const [isSimulatingSun] = useState<boolean>(true);
+  const [showSunHeatmap, setShowSunHeatmap] = useState<boolean>(false);
+  const [hoveredHeatmapCell, setHoveredHeatmapCell] = useState<{
+    x: number;
+    y: number;
+    sunHours: number;
+  } | null>(null);
   const [showTrashDrawer, setShowTrashDrawer] = useState<boolean>(false);
   const [showShortcutsModal, setShowShortcutsModal] = useState<boolean>(false);
   const [showPresetsModal, setShowPresetsModal] = useState<boolean>(false);
@@ -414,11 +409,12 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
     moveEntity
   ]);
 
-  // Sun azimuth & altitude for midsummer (day 172) at local latitude
+  // Sun azimuth & altitude for selected season preset at local latitude
   const { solarAltitude, solarAzimuth } = useMemo(() => {
     const lat = settings.lat || 59.437;
+    const season = SolarEngine.getSeasonPreset(solarSeasonId);
     const hourDelta = solarHour - 13.25;
-    const peakAltitude = SolarEngine.calculateSolarNoonAltitude(lat, 172);
+    const peakAltitude = SolarEngine.calculateSolarNoonAltitude(lat, season.dayOfYear);
     const altitude = Math.max(5.0, peakAltitude - Math.pow(hourDelta, 2) * 1.05);
     const azimuth = 180 + hourDelta * 15;
 
@@ -426,7 +422,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       solarAltitude: altitude,
       solarAzimuth: azimuth
     };
-  }, [settings.lat, solarHour]);
+  }, [settings.lat, solarHour, solarSeasonId]);
 
   // Convert SVG client mouse point to world metres
   const svgPointToWorld = useCallback(
@@ -705,7 +701,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!svgRef.current) return;
 
-    // 1. RBush Spatial Index Hover Query (sub-millisecond O(log N) lookup)
+    // 1. RBush Spatial Index Hover Query + Sun Heatmap cursor readout
     if (!draggedEntityId) {
       const rect = svgRef.current.getBoundingClientRect();
       const worldX = (e.clientX - rect.left - panOffset.x) / zoom;
@@ -713,6 +709,15 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
       const hits = spatialIndex.searchPoint(worldX, worldY, 0.35);
       const topHit = hits.find((h) => isLayerVisible(h.layerId));
       setHoveredEntityId(topHit ? topHit.id : null);
+
+      if (showSunHeatmap && sunHeatmap && worldX >= 0 && worldX <= yardWidth && worldY >= 0 && worldY <= yardLength) {
+        const col = Math.min(sunHeatmap.cols - 1, Math.max(0, Math.floor(worldX / sunHeatmap.cellSizeM)));
+        const row = Math.min(sunHeatmap.rows - 1, Math.max(0, Math.floor(worldY / sunHeatmap.cellSizeM)));
+        const cell = sunHeatmap.cells[row * sunHeatmap.cols + col];
+        setHoveredHeatmapCell(cell ? { x: worldX, y: worldY, sunHours: cell.sunHours } : null);
+      } else if (hoveredHeatmapCell) {
+        setHoveredHeatmapCell(null);
+      }
       return;
     }
 
@@ -761,6 +766,28 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
     },
     [plan.layers]
   );
+
+  // Memoized cumulative seasonal sun-exposure heatmap (computed only while overlay is active)
+  const sunHeatmap = useMemo(() => {
+    if (!showSunHeatmap) return null;
+    return SolarEngine.calculateSunExposureHeatmap({
+      yardWidthM: yardWidth,
+      yardLengthM: yardLength,
+      northAngleDeg: plan.northAngleDeg || 0,
+      lat: settings.lat || 59.437,
+      seasonId: solarSeasonId,
+      entities: activeEntities.filter((e) => isLayerVisible(e.layerId))
+    });
+  }, [
+    showSunHeatmap,
+    yardWidth,
+    yardLength,
+    plan.northAngleDeg,
+    settings.lat,
+    solarSeasonId,
+    activeEntities,
+    isLayerVisible
+  ]);
 
   // Effective solar azimuth on the plan taking compass north orientation (northAngleDeg) into account
   const effSolarAzimuth = (((solarAzimuth - (plan.northAngleDeg || 0)) % 360) + 360) % 360;
@@ -824,447 +851,56 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
         position: 'relative'
       }}
     >
-      {/* Top Toolbar: View Controls, Undo/Redo & Solar Simulation */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '10px',
-          paddingBottom: '8px',
-          borderBottom: '1px solid var(--kulv-border, #C9BFA9)'
+      {/* Top Toolbar: View Controls, Undo/Redo, Sun Heatmap, Companions & Solar Simulation */}
+      <YardPlanToolbar
+        language={language === 'en' ? 'en' : 'et'}
+        t={t}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={() => undo()}
+        onRedo={() => redo()}
+        showShortcutsModal={showShortcutsModal}
+        onOpenShortcuts={() => setShowShortcutsModal(true)}
+        showPresetsModal={showPresetsModal}
+        onOpenPresets={() => setShowPresetsModal(true)}
+        cadastralCode={plan.cadastralCode}
+        onOpenCadastral={() => setShowCadastralDialog(true)}
+        onOpenBinder={() => setShowBinderDialog(true)}
+        onZoomIn={() => setZoom((z) => Math.min(48, z + 4))}
+        onZoomOut={() => setZoom((z) => Math.max(14, z - 4))}
+        onFitView={() => {
+          setZoom(22);
+          setPanOffset({ x: 30, y: 30 });
         }}
-      >
-        {/* Left: Undo/Redo, Zoom, Snap, Fit */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          {/* Undo Button */}
-          <button
-            onClick={() => undo()}
-            disabled={!canUndo}
-            data-testid="yard_undo_btn"
-            title="Pööra tagasi (Ctrl+Z)"
-            aria-label="Pööra tagasi"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: canUndo ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
-              color: canUndo ? 'var(--kulv-text, #2A2E24)' : 'var(--kulv-text-muted, #A0A59C)',
-              cursor: canUndo ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontWeight: 600,
-              opacity: canUndo ? 1 : 0.4
-            }}
-          >
-            <Undo2 size={14} />
-            <span>Tagasi</span>
-          </button>
-
-          {/* Redo Button */}
-          <button
-            onClick={() => redo()}
-            disabled={!canRedo}
-            data-testid="yard_redo_btn"
-            title="Tee uuesti (Ctrl+Y)"
-            aria-label="Tee uuesti"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: canRedo ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
-              color: canRedo ? 'var(--kulv-text, #2A2E24)' : 'var(--kulv-text-muted, #A0A59C)',
-              cursor: canRedo ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontWeight: 600,
-              opacity: canRedo ? 1 : 0.4
-            }}
-          >
-            <Redo2 size={14} />
-            <span>Uuesti</span>
-          </button>
-
-          {/* Keyboard Shortcuts Help Button */}
-          <button
-            onClick={() => setShowShortcutsModal(true)}
-            data-testid="keyboard_shortcuts_btn"
-            title="Klaviatuuri kiirklahvid (?)"
-            aria-label="Klaviatuuri kiirklahvid"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: showShortcutsModal ? 'rgba(79, 107, 69, 0.15)' : 'var(--kulv-surface-muted, #EFE6D4)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontWeight: 700
-            }}
-          >
-            <span>?</span>
-            <span>{language === 'en' ? 'Shortcuts' : 'Otseteed'}</span>
-          </button>
-
-          {/* Starter Yard Presets Modal Trigger */}
-          <button
-            onClick={() => setShowPresetsModal(true)}
-            data-testid="starter_presets_btn"
-            title={t('action_templates')}
-            aria-label={t('action_templates')}
-            style={{
-              padding: '6px 11px',
-              borderRadius: '6px',
-              border: '1.5px solid var(--kulv-primary, #4F6B45)',
-              backgroundColor: showPresetsModal ? 'var(--kulv-primary, #4F6B45)' : 'rgba(79, 107, 69, 0.12)',
-              color: showPresetsModal ? '#FFFFFF' : 'var(--kulv-primary, #4F6B45)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              fontSize: '11px',
-              fontWeight: 700,
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <LayoutTemplate size={14} />
-            <span>{t('action_templates')}</span>
-          </button>
-
-          {/* Cadastral / Plot Boundary Search Button */}
-          <button
-            onClick={() => setShowCadastralDialog(true)}
-            data-testid="yard_open_cadastral_search_btn"
-            title="Leia oma krunt (katastritunnus ja ametlikud krundipiirid)"
-            aria-label="Leia krunt"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '6px 11px',
-              borderRadius: '6px',
-              border: plan.cadastralCode
-                ? '1px solid var(--kulv-primary, #4F6B45)'
-                : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: plan.cadastralCode ? 'rgba(79, 107, 69, 0.12)' : 'var(--kulv-surface-muted, #EFE6D4)',
-              color: plan.cadastralCode ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 700,
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <MapPin size={14} />
-            <span>
-              {plan.cadastralCode ? `Krunt: ${plan.cadastralCode}` : language === 'en' ? 'Find Parcel' : 'Leia krunt'}
-            </span>
-          </button>
-
-          {/* High-Resolution Printable Garden Binder Button */}
-          <button
-            onClick={() => setShowBinderDialog(true)}
-            data-testid="yard_open_binder_dialog_btn"
-            title="Ava ja trüki aia täisköide (krundipass, peenrad, seltsilised ja kalender)"
-            aria-label="Aiamapp"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '6px 11px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              color: 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 700,
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Printer size={14} />
-            <span>{language === 'en' ? 'Binder' : 'Aiamapp'}</span>
-          </button>
-
-          <div
-            style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }}
-          />
-
-          <button
-            onClick={() => setZoom((z) => Math.min(48, z + 4))}
-            title="Suurenda"
-            aria-label="Suurenda"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontWeight: 600
-            }}
-          >
-            <ZoomIn size={14} />
-            <span>Suurenda</span>
-          </button>
-
-          <button
-            onClick={() => setZoom((z) => Math.max(14, z - 4))}
-            title="Vähenda"
-            aria-label="Vähenda"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '11px',
-              fontWeight: 600
-            }}
-          >
-            <ZoomOut size={14} />
-            <span>Vähenda</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setZoom(22);
-              setPanOffset({ x: 30, y: 30 });
-            }}
-            title="Lähtesta vaade"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 600
-            }}
-          >
-            Sobita
-          </button>
-
-          <button
-            onClick={() => setSnapToGrid((s) => !s)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: snapToGrid ? '1px solid var(--kulv-primary, #4F6B45)' : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: snapToGrid ? 'rgba(79, 107, 69, 0.15)' : 'transparent',
-              color: snapToGrid ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text-muted, #5F675A)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: snapToGrid ? 700 : 500
-            }}
-          >
-            <Magnet size={14} />
-            <span>Nakkumine (0.5m)</span>
-          </button>
-
-          <div
-            style={{ width: '1px', height: '18px', backgroundColor: 'var(--kulv-border, #C9BFA9)', margin: '0 2px' }}
-          />
-
-          {/* Drawing Tool Buttons */}
-          <button
-            onClick={() => {
-              setToolMode('select');
-              setDrawPoints([]);
-              setDrawError(null);
-            }}
-            data-testid="tool_select_btn"
-            title="Valimistööriist (V)"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border:
-                toolMode === 'select'
-                  ? '1px solid var(--kulv-primary, #4F6B45)'
-                  : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: toolMode === 'select' ? 'var(--kulv-surface-muted, #EFE6D4)' : 'transparent',
-              color: toolMode === 'select' ? 'var(--kulv-primary, #4F6B45)' : 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: toolMode === 'select' ? 700 : 500
-            }}
-          >
-            <MousePointer size={14} />
-            <span>Vali (V)</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setToolMode('polygon');
-              setDrawPoints([]);
-              setDrawError(null);
-              setSelectedEntityId(null);
-            }}
-            data-testid="tool_polygon_btn"
-            title="Vabakujuline polügoon-peenar (P)"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border:
-                toolMode === 'polygon'
-                  ? '1px solid var(--kulv-accent, #D97A3D)'
-                  : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: toolMode === 'polygon' ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
-              color: toolMode === 'polygon' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: toolMode === 'polygon' ? 700 : 500
-            }}
-          >
-            <Pentagon size={14} />
-            <span>Polügoon (P)</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setToolMode('polyline');
-              setDrawPoints([]);
-              setDrawError(null);
-              setSelectedEntityId(null);
-            }}
-            data-testid="tool_polyline_btn"
-            title="Aiarada / jooneline hekk"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border:
-                toolMode === 'polyline'
-                  ? '1px solid var(--kulv-accent, #D97A3D)'
-                  : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: toolMode === 'polyline' ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
-              color: toolMode === 'polyline' ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: toolMode === 'polyline' ? 700 : 500
-            }}
-          >
-            <Spline size={14} />
-            <span>Rada / joon</span>
-          </button>
-
-          {/* Soft-deleted Trash recovery button */}
-          {deletedEntities.length > 0 && (
-            <button
-              onClick={() => setShowTrashDrawer((prev) => !prev)}
-              data-testid="trash_drawer_toggle_btn"
-              title="Vaata ja taasta kustutatud objektid"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                border: '1px solid var(--kulv-accent, #D97A3D)',
-                backgroundColor: showTrashDrawer ? 'rgba(217, 122, 61, 0.15)' : 'transparent',
-                color: 'var(--kulv-accent, #D97A3D)',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 700
-              }}
-            >
-              <ArchiveRestore size={14} />
-              <span>Prügikast ({deletedEntities.length})</span>
-            </button>
-          )}
-
-          {/* Toggleable Companion Intelligence Overlay */}
-          <button
-            type="button"
-            onClick={() => setShowCompanionOverlay((prev) => !prev)}
-            data-testid="companion_overlay_toggle_btn"
-            title={
-              showCompanionOverlay
-                ? language === 'en'
-                  ? 'Hide Companion Intelligence Overlay'
-                  : 'Peida kaaslastaimede kiht'
-                : language === 'en'
-                  ? 'Show Companion Intelligence'
-                  : 'Kaaslastaimede sünergia ja seosed'
-            }
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '6px 10px',
-              borderRadius: '6px',
-              border: showCompanionOverlay
-                ? '1px solid var(--kulv-primary, #4F6B45)'
-                : '1px solid var(--kulv-border, #C9BFA9)',
-              backgroundColor: showCompanionOverlay ? 'var(--kulv-primary, #4F6B45)' : 'transparent',
-              color: showCompanionOverlay ? '#FFFDF8' : 'var(--kulv-text, #2A2E24)',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 700,
-              boxShadow: showCompanionOverlay ? '0 1px 3px rgba(0,0,0,0.15)' : 'none',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Leaf size={14} />
-            <span>{language === 'en' ? 'Companions' : 'Kaaslased'}</span>
-          </button>
-        </div>
-
-        {/* Right: Real-time Sun Simulation Slider */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: 'var(--kulv-surface-muted, #EFE6D4)',
-            padding: '4px 10px',
-            borderRadius: '8px',
-            fontSize: '11px'
-          }}
-        >
-          <Sun size={15} color="var(--kulv-accent, #D97A3D)" />
-          <span style={{ fontWeight: 700, color: 'var(--kulv-text, #2A2E24)' }}>Päike ja varjud:</span>
-          <input
-            type="range"
-            min="7"
-            max="21"
-            step="0.5"
-            value={solarHour}
-            onChange={(e) => setSolarHour(parseFloat(e.target.value))}
-            style={{ width: '90px', accentColor: 'var(--kulv-accent, #D97A3D)', cursor: 'pointer' }}
-          />
-          <span className="tabular-nums" style={{ fontWeight: 800, color: 'var(--kulv-accent, #D97A3D)' }}>
-            {Math.floor(solarHour)}:{solarHour % 1 !== 0 ? '30' : '00'}
-          </span>
-          <span style={{ color: 'var(--kulv-text-muted, #5F675A)', fontSize: '10px' }}>
-            ({Math.round(solarAltitude)}° kõrgus)
-          </span>
-        </div>
-      </div>
+        snapToGrid={snapToGrid}
+        onToggleSnap={() => setSnapToGrid((s) => !s)}
+        toolMode={toolMode}
+        onSelectTool={(mode) => {
+          setToolMode(mode);
+          setDrawPoints([]);
+          setDrawError(null);
+          if (mode !== 'select') {
+            setSelectedEntityId(null);
+          }
+        }}
+        deletedCount={deletedEntities.length}
+        showTrashDrawer={showTrashDrawer}
+        onToggleTrash={() => setShowTrashDrawer((prev) => !prev)}
+        showSunHeatmap={showSunHeatmap}
+        onToggleSunHeatmap={() => {
+          setShowSunHeatmap((prev) => {
+            if (prev) setHoveredHeatmapCell(null);
+            return !prev;
+          });
+        }}
+        showCompanionOverlay={showCompanionOverlay}
+        onToggleCompanionOverlay={() => setShowCompanionOverlay((prev) => !prev)}
+        solarHour={solarHour}
+        onChangeSolarHour={setSolarHour}
+        solarAltitude={solarAltitude}
+        solarSeasonId={solarSeasonId}
+        onChangeSolarSeason={setSolarSeasonId}
+      />
 
       {/* Active Drawing Tool Helper Bar */}
       {toolMode !== 'select' && (
@@ -1375,6 +1011,7 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
             width={Math.max(800, yardWidth * zoom + panOffset.x * 2)}
             height={Math.max(600, yardLength * zoom + panOffset.y * 2)}
             onMouseMove={handleMouseMove}
+            onMouseLeave={() => setHoveredHeatmapCell(null)}
             onMouseUp={handleMouseUp}
             onTouchStart={handleCanvasTouchStart}
             onTouchMove={handleCanvasTouchMove}
@@ -1456,6 +1093,9 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
                 fill="url(#yardGrid5m)"
                 pointerEvents="none"
               />
+
+              {/* Cumulative seasonal sun-exposure heatmap */}
+              {showSunHeatmap && sunHeatmap && <SunHeatmapOverlayLayer heatmap={sunHeatmap} zoom={zoom} />}
 
               {/* Cadastral Boundary Polygon (if present on plan) */}
               {plan.boundaryPolygon && plan.boundaryPolygon.length >= 3 && (
@@ -1940,6 +1580,17 @@ export const YardMasterPlanCanvas: React.FC<YardMasterPlanCanvasProps> = ({ onSe
               )}
             </g>
           </svg>
+
+          {/* Sun-Exposure Heatmap Legend */}
+          {showSunHeatmap && sunHeatmap && (
+            <SunHeatmapLegend
+              heatmap={sunHeatmap}
+              seasonId={solarSeasonId}
+              onSelectSeason={setSolarSeasonId}
+              hoveredInfo={hoveredHeatmapCell}
+              language={language === 'en' ? 'en' : 'et'}
+            />
+          )}
 
           {/* Contextual Companion Intelligence Inspector Panel */}
           {showCompanionOverlay && (

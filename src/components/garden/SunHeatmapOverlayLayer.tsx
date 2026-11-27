@@ -185,7 +185,7 @@ export const SunHeatmapLegend: React.FC<SunHeatmapLegendProps> = ({
                   ? '1px solid var(--kulv-accent, #D97A3D)'
                   : '1px solid var(--kulv-border, #C9BFA9)',
                 backgroundColor: active ? 'rgba(217, 122, 61, 0.14)' : 'var(--kulv-surface-muted, #EFE6D4)',
-                color: active ? 'var(--kulv-accent, #D97A3D)' : 'var(--kulv-text, #2A2E24)',
+                color: active ? 'var(--kulv-accent-strong, #8F3E14)' : 'var(--kulv-text, #2A2E24)',
                 fontSize: '10px',
                 fontWeight: active ? 700 : 600,
                 cursor: 'pointer',
